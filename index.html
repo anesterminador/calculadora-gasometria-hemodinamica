@@ -45,7 +45,8 @@
       text-decoration: none;
     }
     .logo {
-      max-width: 600px;
+      max-width: 100%;
+      width: auto;
       height: auto;
       margin-bottom: -2.5rem;
       display: block;
@@ -192,6 +193,15 @@
     .footer-link:hover {
       filter: brightness(1.15);
       transform: scale(1.03);
+    }
+    @media (max-width: 480px) {
+      .logo-link {
+        padding: 0 0.5rem;
+        box-sizing: border-box;
+      }
+      .logo {
+        max-width: calc(100vw - 2rem);
+      }
     }
   </style>
 </head>

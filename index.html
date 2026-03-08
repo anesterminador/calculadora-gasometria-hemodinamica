@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Calculadora de Gasometria – Monitorização Hemodinâmica</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 1.5rem;
+      background: #f5f5f5;
+      color: #222;
+    }
+    h1 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 0 0 0.5rem;
+      color: #1a1a1a;
+    }
+    .subtitle { color: #555; font-size: 0.9rem; margin-bottom: 1.5rem; }
+    section {
+      background: #fff;
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    section h2 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin: 0 0 0.75rem;
+      color: #333;
+    }
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.6rem;
+    }
+    .row:last-child { margin-bottom: 0; }
+    label { flex: 1; font-size: 0.9rem; color: #444; }
+    input {
+      width: 90px;
+      padding: 0.4rem 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      text-align: right;
+    }
+    input:focus {
+      outline: none;
+      border-color: #0066cc;
+      box-shadow: 0 0 0 2px rgba(0,102,204,0.2);
+    }
+    .result-row {
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+    .result-row .name { color: #444; }
+    .result-row .value { font-weight: 600; color: #0066cc; }
+    .formula { font-size: 0.75rem; color: #666; margin-top: 0.2rem; }
+    footer { text-align: center; font-size: 0.8rem; color: #777; margin-top: 1.5rem; }
+  </style>
+</head>
+<body>
+  <h1>Calculadora de Gasometria Aplicada à Monitorização Hemodinâmica</h1>
+  <p class="subtitle">Introduza os dados e os parâmetros são calculados automaticamente.</p>
+
+  <section>
+    <h2>Dados de entrada</h2>
+    <div class="row"><label>Hb (g/dL)</label><input type="number" id="Hb" value="14" step="0.1" min="0"></div>
+    <div class="row"><label>SaO2 (%)</label><input type="number" id="SaO2" value="98" step="0.1" min="0" max="100"></div>
+    <div class="row"><label>PaO2 (mmHg)</label><input type="number" id="PaO2" value="100" step="0.1" min="0"></div>
+    <div class="row"><label>SvO2 (%)</label><input type="number" id="SvO2" value="75" step="0.1" min="0" max="100"></div>
+    <div class="row"><label>PvO2 (mmHg)</label><input type="number" id="PvO2" value="40" step="0.1" min="0"></div>
+    <div class="row"><label>PaCO2 (mmHg)</label><input type="number" id="PaCO2" value="40" step="0.1" min="0"></div>
+    <div class="row"><label>PvCO2 (mmHg)</label><input type="number" id="PvCO2" value="46" step="0.1" min="0"></div>
+    <div class="row"><label>Débito cardíaco – CO (L/min)</label><input type="number" id="CO" value="5" step="0.1" min="0"></div>
+    <div class="row"><label>Altura (cm)</label><input type="number" id="Altura" value="170" step="0.1" min="0"></div>
+    <div class="row"><label>Peso (kg)</label><input type="number" id="Peso" value="70" step="0.1" min="0"></div>
+  </section>
+
+  <section>
+    <h2>Parâmetros calculados</h2>
+    <div class="result-row"><span class="name">BSA – Superfície corporal (m²) [DuBois & DuBois]</span><span class="value" id="BSA">—</span></div>
+    <div class="formula">BSA = 0,007184 × Peso^0,425 × Altura^0,725</div>
+
+    <div class="result-row"><span class="name">CaO2 (conteúdo arterial O2) – mL/dL</span><span class="value" id="CaO2">—</span></div>
+    <div class="formula">CaO2 = (Hb × 1,34 × SaO2/100) + (0,0031 × PaO2)</div>
+
+    <div class="result-row"><span class="name">CvO2 (conteúdo venoso O2) – mL/dL</span><span class="value" id="CvO2">—</span></div>
+    <div class="formula">CvO2 = (Hb × 1,34 × SvO2/100) + (0,0031 × PvO2)</div>
+
+    <div class="result-row"><span class="name">DO2 (oferta de O2) – mL/min</span><span class="value" id="DO2">—</span></div>
+    <div class="formula">DO2 = CaO2 × CO × 10</div>
+
+    <div class="result-row"><span class="name">DO2i (oferta de O2 indexada) – mL/min/m²</span><span class="value" id="DO2i">—</span></div>
+    <div class="formula">DO2i = DO2 / BSA</div>
+
+    <div class="result-row"><span class="name">VO2 (consumo de O2) – mL/min</span><span class="value" id="VO2">—</span></div>
+    <div class="formula">VO2 = (CaO2 − CvO2) × CO × 10</div>
+
+    <div class="result-row"><span class="name">VO2i (consumo de O2 indexado) – mL/min/m²</span><span class="value" id="VO2i">—</span></div>
+    <div class="formula">VO2i = VO2 / BSA</div>
+
+    <div class="result-row"><span class="name">Taxa de extração (VO2/DO2)</span><span class="value" id="TaxaExt">—</span></div>
+    <div class="formula">Taxa de extração = VO2 / DO2</div>
+
+    <div class="result-row"><span class="name">Gap CO2 (PvCO2 − PaCO2) – mmHg</span><span class="value" id="GapCO2">—</span></div>
+    <div class="formula">Gap CO2 = PvCO2 − PaCO2</div>
+
+    <div class="result-row"><span class="name">Quociente respiratório modificado (Pv-aCO2/Ca-vO2)</span><span class="value" id="QR">—</span></div>
+    <div class="formula">Quociente respiratório modificado = Pv-aCO2 / (CaO2 − CvO2)</div>
+  </section>
+
+  <footer>Calculadora de Gasometria – Monitorização Hemodinâmica · Uso clínico</footer>
+
+  <script>
+    const ids = ['Hb','SaO2','PaO2','SvO2','PvO2','PaCO2','PvCO2','CO','Altura','Peso'];
+    const outIds = ['BSA','CaO2','CvO2','DO2','DO2i','VO2','VO2i','TaxaExt','GapCO2','QR'];
+
+    function get(id) {
+      const v = parseFloat(document.getElementById(id).value);
+      return isNaN(v) ? NaN : v;
+    }
+
+    function set(id, value) {
+      const el = document.getElementById(id);
+      if (value === undefined || value !== value) el.textContent = '—';
+      else el.textContent = typeof value === 'number' ? value.toFixed(4) : value;
+    }
+
+    function calc() {
+      const Hb = get('Hb'), SaO2 = get('SaO2'), PaO2 = get('PaO2');
+      const SvO2 = get('SvO2'), PvO2 = get('PvO2'), PaCO2 = get('PaCO2'), PvCO2 = get('PvCO2');
+      const CO = get('CO'), Altura = get('Altura'), Peso = get('Peso');
+
+      if ([Hb,SaO2,PaO2,SvO2,PvO2,PaCO2,PvCO2,CO,Altura,Peso].some(isNaN)) {
+        outIds.forEach(id => set(id, undefined));
+        return;
+      }
+
+      const BSA = 0.007184 * Math.pow(Peso, 0.425) * Math.pow(Altura, 0.725);
+      const CaO2 = (Hb * 1.34 * SaO2 / 100) + (0.0031 * PaO2);
+      const CvO2 = (Hb * 1.34 * SvO2 / 100) + (0.0031 * PvO2);
+      const DO2 = CaO2 * CO * 10;
+      const DO2i = DO2 / BSA;
+      const VO2 = (CaO2 - CvO2) * CO * 10;
+      const VO2i = VO2 / BSA;
+      const TaxaExt = DO2 > 0 ? VO2 / DO2 : NaN;
+      const GapCO2 = PvCO2 - PaCO2;
+      const Ca_vO2 = CaO2 - CvO2;
+      const QR = Ca_vO2 > 0 ? (PvCO2 - PaCO2) / Ca_vO2 : NaN;
+
+      set('BSA', BSA);
+      set('CaO2', CaO2);
+      set('CvO2', CvO2);
+      set('DO2', DO2);
+      set('DO2i', DO2i);
+      set('VO2', VO2);
+      set('VO2i', VO2i);
+      set('TaxaExt', TaxaExt);
+      set('GapCO2', GapCO2);
+      set('QR', QR);
+    }
+
+    ids.forEach(id => document.getElementById(id).addEventListener('input', calc));
+    calc();
+  </script>
+</body>
+</html>

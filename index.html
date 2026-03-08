@@ -20,6 +20,7 @@
       --accent-soft: rgba(88, 166, 255, 0.15);
       --green: #3fb950;
       --green-soft: rgba(63, 185, 80, 0.12);
+      --result-abnormal: #ff7b72;
     }
     body {
       font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
@@ -38,6 +39,10 @@
     header {
       text-align: center;
       margin-bottom: 0.75rem;
+    }
+    .logo-link {
+      display: block;
+      text-decoration: none;
     }
     .logo {
       max-width: 600px;
@@ -154,7 +159,11 @@
       color: var(--accent);
       text-align: center;
       font-variant-numeric: tabular-nums;
+      /* Alinhamento vertical: positivo = desce, negativo = sobe (ex: 0.2rem, -0.15rem) */
+      transform: translateY(-0.3rem);
     }
+    .result-box.normal { color: var(--accent); }
+    .result-box.abnormal { color: var(--result-abnormal); }
     .formula {
       font-size: 0.75rem;
       color: var(--text-muted);
@@ -166,15 +175,32 @@
       text-align: center;
       font-size: 0.8rem;
       color: var(--text-muted);
-      margin-top: 2rem;
+      margin-top: 0rem;
       opacity: 0.8;
+    }
+    .footer-link {
+      display: inline-block;
+      padding: 0.5rem 1.25rem;
+      background: var(--accent);
+      color: #0f1419;
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: filter 0.2s, transform 0.15s;
+    }
+    .footer-link:hover {
+      filter: brightness(1.15);
+      transform: scale(1.03);
     }
   </style>
 </head>
 <body>
   <div class="wrap">
     <header>
-      <img src="Logo Hemodinâmica_regular.png" alt="Hemodinâmica" class="logo">
+      <a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="logo-link">
+        <img src="Logo Hemodinâmica_regular.png" alt="Hemodinâmica" class="logo">
+      </a>
       <h1>Calculadora de Gasometria</h1>
       <p class="subtitle">Monitorização hemodinâmica · Resultados em tempo real</p>
     </header>
@@ -267,7 +293,7 @@
       </div>
     </section>
 
-    <footer>Calculadora de Gasometria – Monitorização Hemodinâmica · Uso clínico</footer>
+    <footer><a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="footer-link">Contato</a></footer>
   </div>
 
   <script>
@@ -285,13 +311,19 @@
       else el.textContent = typeof value === 'number' ? value.toFixed(2) : value;
     }
 
+    function setResultStyle(id, state) {
+      const el = document.getElementById(id);
+      el.classList.remove('normal', 'abnormal');
+      if (state === 'normal' || state === 'abnormal') el.classList.add(state);
+    }
+
     function calc() {
       const Hb = get('Hb'), SaO2 = get('SaO2'), PaO2 = get('PaO2');
       const SvO2 = get('SvO2'), PvO2 = get('PvO2'), PaCO2 = get('PaCO2'), PvCO2 = get('PvCO2');
       const CO = get('CO'), Altura = get('Altura'), Peso = get('Peso');
 
       if ([Hb,SaO2,PaO2,SvO2,PvO2,PaCO2,PvCO2,CO,Altura,Peso].some(isNaN)) {
-        outIds.forEach(id => set(id, undefined));
+        outIds.forEach(id => { set(id, undefined); setResultStyle(id, null); });
         return;
       }
 
@@ -317,6 +349,17 @@
       set('TaxaExt', TaxaExt);
       set('GapCO2', GapCO2);
       set('QR', QR);
+
+      setResultStyle('BSA', 'normal');
+      setResultStyle('CaO2', CaO2 >= 17 ? 'normal' : 'abnormal');
+      setResultStyle('CvO2', null);
+      setResultStyle('DO2', null);
+      setResultStyle('DO2i', DO2i > 500 ? 'normal' : 'abnormal');
+      setResultStyle('VO2', null);
+      setResultStyle('VO2i', !isNaN(VO2i) ? (VO2i >= 110 && VO2i <= 160 ? 'normal' : 'abnormal') : null);
+      setResultStyle('TaxaExt', !isNaN(TaxaExt) ? (TaxaExt >= 0.20 && TaxaExt <= 0.30 ? 'normal' : 'abnormal') : null);
+      setResultStyle('GapCO2', !isNaN(GapCO2) ? (GapCO2 <= 6 ? 'normal' : 'abnormal') : null);
+      setResultStyle('QR', !isNaN(QR) ? (QR < 1.4 ? 'normal' : 'abnormal') : null);
     }
 
     ids.forEach(id => document.getElementById(id).addEventListener('input', calc));

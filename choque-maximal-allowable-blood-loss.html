@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Maximal Allowable Blood Loss (Perda Sanguínea Máxima Permitida) – Choque e Hemorragia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f1419; --bg-card: #1a2129; --bg-input: #252d36; --border: #2d3843;
+      --text: #e6edf3; --text-muted: #8b9cad; --accent: #58a6ff; --accent-soft: rgba(88, 166, 255, 0.15);
+    }
+    body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; min-height: 100vh; background: var(--bg);
+      background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(88, 166, 255, 0.08), transparent);
+      color: var(--text); line-height: 1.5; padding: 0rem 1rem 3rem; }
+    .wrap { max-width: 520px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 0.75rem; }
+    .logo-link { display: block; text-decoration: none; }
+    .logo { max-width: 600px; height: auto; margin-bottom: -2.5rem; display: block; margin-left: auto; margin-right: auto; background: transparent; transform: translateX(-3.2rem); clip-path: inset(0 0 25 0); }
+    h1 { font-size: 1.5rem; font-weight: 700; color: var(--text); margin-bottom: 0.35rem; }
+    .subtitle { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+    section { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.35rem 1.5rem; margin-bottom: 1.25rem; }
+    section h2 { font-size: 1.2rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #ffd139; margin-bottom: 0.4rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--border); text-align: center; }
+    .row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 0.75rem; }
+    .row:last-of-type { margin-bottom: 0; }
+    label { flex: 1; font-size: 0.9rem; color: var(--text); font-weight: 500; min-width: 0; }
+    input, select {
+      padding: 0.5rem 0.65rem; background: var(--bg-input); border: 1px solid var(--border);
+      border-radius: 8px; font-size: 0.95rem; font-family: inherit; color: var(--text);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input { width: 88px; text-align: right; }
+    select { min-width: 160px; cursor: pointer; }
+    input:focus, select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+    .result-block { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; padding: 0.35rem 0 0.7rem 0; border-bottom: 1px solid var(--border); min-height: 3rem; }
+    .result-block:first-of-type { padding-top: 1rem; }
+    .result-block:last-of-type { border-bottom: none; margin-bottom: 0; }
+    .result-block-content { flex: 1; min-width: 0; }
+    .result-row .name { color: var(--text); font-weight: 700; font-size: 0.95rem; }
+    .result-box {
+      flex-shrink: 0; width: 88px; padding: 0.5rem 0.65rem; background: var(--bg-input); border: 1px solid var(--border);
+      border-radius: 8px; font-size: 0.95rem; font-weight: 700; color: var(--accent); text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+    .formula { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem; }
+    .formula-eq { color: #fef9c3; }
+    .guidelines-text { font-size: 0.9rem; color: var(--text); text-align: justify; }
+    .guidelines-text p { margin-bottom: 0.75rem; }
+    .guidelines-text p:last-child { margin-bottom: 0; }
+    .guidelines-text strong { color: var(--accent); }
+    .guidelines-text .ref { font-size: 0.8rem; color: var(--text-muted); margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--border); }
+    .custom-ebv { display: none; }
+    .custom-ebv.visible { display: flex; }
+    footer { text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 0; opacity: 0.8; }
+    .footer-buttons { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; }
+    .footer-link { display: inline-block; padding: 0.5rem 1.25rem; background: var(--accent); color: #0f1419; font-weight: 700; font-size: 0.9rem; text-decoration: none; border-radius: 8px; transition: filter 0.2s, transform 0.15s; }
+    .footer-link:hover { filter: brightness(1.15); transform: scale(1.03); }
+    @media (max-width: 768px) { .logo { min-width: 240px; max-width: min(600px, calc(100vw - 2rem)); transform: translateX(0); } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="logo-link"><img src="Logo Hemodinâmica_regular.png" alt="Hemodinâmica" class="logo"></a>
+      <h1>Maximal Allowable Blood Loss <p>(Perda Sanguínea Máxima Permitida)</h1>
+      <p class="subtitle">Choque e Hemorragia · Paciente pediátrico (não neonato)</p>
+    </header>
+
+    <section>
+      <h2>Calculadora MABL</h2>
+      <p class="formula" style="margin-bottom: 0.75rem;">O volume sanguíneo estimado (EBV) varia com a idade. MABL = (peso × EBV) × (Hct inicial − Hct desejado) / Hct inicial.</p>
+      <div class="row">
+        <label for="age-group">Faixa etária (volume sanguíneo estimado)</label>
+        <select id="age-group">
+          <option value="110">Pretermo (110 mL/kg)</option>
+          <option value="90">Recém-nascido a termo (90 mL/kg)</option>
+          <option value="75">3–12 meses (75 mL/kg)</option>
+          <option value="70">&gt;1 ano (70 mL/kg)</option>
+          <option value="custom">Personalizado (mL/kg)</option>
+        </select>
+      </div>
+      <div class="row custom-ebv" id="row-custom-ebv">
+        <label for="custom-ebv">Volume Sanguíneo Estimado (mL/kg)</label>
+        <input type="number" id="custom-ebv" min="50" max="150" step="1" value="70" placeholder="mL/kg">
+      </div>
+      <div class="row">
+        <label for="weight">Peso (kg)</label>
+        <input type="number" id="weight" min="0.1" max="200" step="0.1" value="15" placeholder="kg">
+      </div>
+      <div class="row">
+        <label for="hct-start">Hematócrito inicial (%)</label>
+        <input type="number" id="hct-start" min="1" max="99" step="0.1" value="38" placeholder="%">
+      </div>
+      <div class="row">
+        <label for="hct-desired">Hematócrito desejado pós-operatório (%)</label>
+        <input type="number" id="hct-desired" min="1" max="99" step="0.1" value="25" placeholder="%">
+      </div>
+      <div class="result-block">
+        <div class="result-block-content">
+          <div class="result-row"><span class="name">MABL</span></div>
+          <div class="formula formula-eq">MABL = (peso × VSE) × (Hct<sub>inicial</sub> − Hct<sub>desejado</sub>) / Hct<sub>inicial</sub></div>
+        </div>
+        <div class="result-box" id="result-mabl">—</div>
+      </div>
+      <div class="result-block">
+        <div class="result-block-content">
+          <div class="result-row"><span class="name">Reposição com Ringer lactato <p>(3 mL por mL de perda sanguínea)</span></div>
+          <div class="formula">3 × MABL</div>
+        </div>
+        <div class="result-box" id="result-ringer">—</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Recomendações</h2>
+      <div class="guidelines-text">
+        <p>As diretrizes de transfusão para pacientes pediátricos não neonatais são semelhantes às do adulto. No cálculo da necessidade de reposição sanguínea, deve-se considerar a <strong>perda sanguínea máxima permitida (MABL)</strong> que o paciente tolera mantendo um hematócrito aceitável. <p></p>A MABL considera o efeito da idade, do peso e do hematócrito inicial no volume sanguíneo. Os volumes por quilograma são apenas estimativas.</p>
+        <p>Se a perda for <strong>menor ou igual à MABL</strong> e não houver perda significativa adicional esperada no pós-operatório, em geral <strong>não é necessária transfusão de concentrado de hemácias (CH)</strong>. A decisão de transfundir deve ser guiada pelo débito urinário, frequência cardíaca, frequência respiratória e estabilidade cardiovascular. O desenvolvimento de acidose láctica é um sinal tardio de capacidade de transporte de oxigênio inadequada.</p>
+        <p>Se a criança atingir a MABL e ainda estiver sangrando durante a cirurgia, a reposição devera continuar com concentrado de hemácias em quantidade suficiente para manter o hematócrito na faixa de 20% a 25%.
+      </div>
+    </section>
+
+    <footer class="footer-buttons">
+      <a href="index.html" class="footer-link">Todas as Calculadoras</a>
+      <a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="footer-link">Contato</a>
+    </footer>
+  </div>
+  <script>
+    (function() {
+      var ageGroup = document.getElementById('age-group');
+      var rowCustom = document.getElementById('row-custom-ebv');
+      var customEbv = document.getElementById('custom-ebv');
+      var weight = document.getElementById('weight');
+      var hctStart = document.getElementById('hct-start');
+      var hctDesired = document.getElementById('hct-desired');
+      var resultMabl = document.getElementById('result-mabl');
+      var resultRinger = document.getElementById('result-ringer');
+
+      function getEbv() {
+        if (ageGroup.value === 'custom') {
+          var v = parseFloat(customEbv.value);
+          return isNaN(v) ? 70 : Math.max(50, Math.min(150, v));
+        }
+        return parseFloat(ageGroup.value) || 70;
+      }
+
+      function update() {
+        if (ageGroup.value === 'custom') rowCustom.classList.add('visible');
+        else rowCustom.classList.remove('visible');
+
+        var w = parseFloat(weight.value);
+        var h0 = parseFloat(hctStart.value);
+        var h1 = parseFloat(hctDesired.value);
+        var ebv = getEbv();
+
+        if (isNaN(w) || w <= 0 || isNaN(h0) || h0 <= 0 || isNaN(h1) || h1 >= h0) {
+          resultMabl.textContent = '—';
+          resultRinger.textContent = '—';
+          return;
+        }
+        var mabl = (w * ebv) * (h0 - h1) / h0;
+        resultMabl.textContent = Math.round(mabl) + ' mL';
+        resultRinger.textContent = Math.round(3 * mabl) + ' mL';
+      }
+
+      ageGroup.addEventListener('change', update);
+      customEbv.addEventListener('input', update);
+      weight.addEventListener('input', update);
+      hctStart.addEventListener('input', update);
+      hctDesired.addEventListener('input', update);
+      update();
+    })();
+  </script>
+</body>
+</html>

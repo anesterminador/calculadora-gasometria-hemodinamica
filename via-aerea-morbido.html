@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mórbido – Via Aérea</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f1419; --bg-card: #1a2129; --border: #2d3843;
+      --text: #e6edf3; --text-muted: #8b9cad; --accent: #58a6ff;
+    }
+    body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; min-height: 100vh; background: var(--bg);
+      background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(88, 166, 255, 0.08), transparent);
+      color: var(--text); line-height: 1.5; padding: 0rem 1rem 3rem; }
+    .wrap { max-width: 520px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 0.75rem; }
+    .logo-link { display: block; text-decoration: none; }
+    .logo { max-width: 600px; height: auto; margin-bottom: -2.5rem; display: block; margin-left: auto; margin-right: auto; background: transparent; transform: translateX(-3.2rem); clip-path: inset(0 0 25 0); }
+    h1 { font-size: 1.5rem; font-weight: 700; color: var(--text); margin-bottom: 0.35rem; }
+    .subtitle { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+    section { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.35rem 1.5rem; margin-bottom: 1.25rem; }
+    section h2 { font-size: 1.2rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #ffd139; margin-bottom: 0.4rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--border); text-align: center; }
+    .morbido-intro { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.25rem; text-align: left; }
+    .morbido-row { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 0.9rem; text-align: left; }
+    .morbido-row:last-child { margin-left: -0.9rem; }
+    .morbido-letter { flex-shrink: 0; width: 2.5rem; height: 2.5rem; border: 2px solid #e67e22; border-radius: 8px; background: transparent; color: var(--text); font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+    .morbido-oh-wrap { display: flex; align-items: center; gap: 0.2rem; flex-shrink: 0; }
+    .morbido-h { font-size: 1rem; font-weight: 400; color: var(--text); }
+    .morbido-text { font-size: 1rem; color: var(--text); line-height: 1.4; padding-top: 0.15rem; }
+    .morbido-text .hl { color: #f0c674; font-weight: 600; }
+    footer { text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 0; opacity: 0.8; }
+    .footer-buttons { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; }
+    .footer-link { display: inline-block; padding: 0.5rem 1.25rem; background: var(--accent); color: #0f1419; font-weight: 700; font-size: 0.9rem; text-decoration: none; border-radius: 8px; transition: filter 0.2s, transform 0.15s; }
+    .footer-link:hover { filter: brightness(1.15); transform: scale(1.03); }
+    @media (max-width: 768px) { .logo { min-width: 240px; max-width: min(600px, calc(100vw - 2rem)); transform: translateX(0); } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="logo-link"><img src="Logo Hemodinâmica_regular.png" alt="Hemodinâmica" class="logo"></a>
+      <h1>Mórbido</h1>
+      <p class="subtitle">Via Aérea · Mnemônico para fatores de risco de ventilação difícil</p>
+    </header>
+    <section>
+      <h2>Fatores de risco (MÓRBIDO)</h2>
+      <p class="morbido-intro">Referência rápida dos fatores associados à ventilação sob máscara difícil. Não é um escore — use para consulta.</p>
+
+      <div class="morbido-row">
+        <span class="morbido-letter">M</span>
+        <p class="morbido-text"><span class="hl">Mallampati III ou IV</span><br>Mandíbula</p>
+      </div>
+      <div class="morbido-row">
+        <span class="morbido-letter">Ó</span>
+        <p class="morbido-text">Obeso</p>
+      </div>
+      <div class="morbido-row">
+        <span class="morbido-letter">R</span>
+        <p class="morbido-text">Radiação / Ronco / Apneia obstrutiva do sono.</p>
+      </div>
+      <div class="morbido-row">
+        <span class="morbido-letter">B</span>
+        <p class="morbido-text">Barba</p>
+      </div>
+      <div class="morbido-row">
+        <span class="morbido-letter">I</span>
+        <p class="morbido-text">Idade <span class="hl">&gt; 55</span></p>
+      </div>
+      <div class="morbido-row">
+        <span class="morbido-letter">D</span>
+        <p class="morbido-text">Dentes ausentes</p>
+      </div>
+      <div class="morbido-row">
+        <span class="morbido-oh-wrap"><span class="morbido-h">H</span><span class="morbido-letter">O</span><span class="morbido-h">mem</span></span>
+      </div>
+    </section>
+    <footer class="footer-buttons">
+      <a href="index.html" class="footer-link">Todas as Calculadoras</a>
+      <a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="footer-link">Contato</a>
+    </footer>
+  </div>
+</body>
+</html>

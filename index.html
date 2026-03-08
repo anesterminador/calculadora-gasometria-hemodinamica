@@ -199,8 +199,8 @@
       .logo {
         /* Largura mínima no mobile: a logo não fica menor que isso (aumente o valor para logo maior) */
         min-width: 240px;
-        /* Largura máxima: o menor entre 600px e (tela inteira menos 2rem), para não vazar nas bordas */
-        max-width: min(600px, calc(100vw - 2rem));
+        /* Largura máxima: no celular usa a largura da tela menos 2rem; em telas maiores não passa de 600px */
+        max-width: min(600px, calc(100vw - 0rem));
         /* Remove o deslocamento para a esquerda no mobile, mantendo a logo centralizada */
         transform: translateX(-2%);
       }

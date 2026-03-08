@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DASI – Risco pré-operatório</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f1419; --bg-card: #1a2129; --bg-input: #252d36; --border: #2d3843;
+      --text: #e6edf3; --text-muted: #8b9cad; --accent: #58a6ff; --accent-soft: rgba(88, 166, 255, 0.15);
+    }
+    body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; min-height: 100vh; background: var(--bg);
+      background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(88, 166, 255, 0.08), transparent);
+      color: var(--text); line-height: 1.5; padding: 0rem 1rem 3rem; }
+    .wrap { max-width: 520px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 0.75rem; }
+    .logo-link { display: block; text-decoration: none; }
+    .logo { max-width: 600px; height: auto; margin-bottom: -2.5rem; display: block; margin-left: auto; margin-right: auto; background: transparent; transform: translateX(-3.2rem); clip-path: inset(0 0 25 0); }
+    h1 { font-size: 1.5rem; font-weight: 700; color: var(--text); margin-bottom: 0.35rem; }
+    .subtitle { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+    section { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.35rem 1.5rem; margin-bottom: 1.25rem; }
+    section h2 { font-size: 1.2rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #ffd139; margin-bottom: 0.4rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--border); text-align: center; }
+    .check-item { display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: 0.85rem; text-align: left; }
+    .check-item input { margin-top: 0.25rem; flex-shrink: 0; width: 1.15rem; height: 1.15rem; accent-color: var(--accent); cursor: pointer; }
+    .check-item label { font-size: 0.9rem; color: var(--text); line-height: 1.4; cursor: pointer; }
+    .dasi-result { padding: 1rem; background: var(--bg-input); border-radius: 8px; margin-top: 0.5rem; }
+    .dasi-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem; font-size: 0.95rem; }
+    .dasi-row:last-child { margin-bottom: 0; }
+    .dasi-label { color: var(--text-muted); }
+    .dasi-value { font-weight: 700; color: var(--accent); }
+    .dasi-result.alert .dasi-score { color: #f85149; }
+    .dasi-interpretation { font-size: 0.9rem; color: var(--text); margin-top: 1rem; padding: 1rem; background: rgba(248, 81, 73, 0.12); border: 1px solid rgba(248, 81, 73, 0.4); border-radius: 8px; text-align: justify; line-height: 1.5; }
+    .dasi-interpretation.hidden { display: none; }
+    .dasi-ref { font-size: 0.8rem; color: var(--text-muted); margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--border); text-align: justify; }
+    footer { text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 0; opacity: 0.8; }
+    .footer-buttons { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; }
+    .footer-link { display: inline-block; padding: 0.5rem 1.25rem; background: var(--accent); color: #0f1419; font-weight: 700; font-size: 0.9rem; text-decoration: none; border-radius: 8px; transition: filter 0.2s, transform 0.15s; }
+    .footer-link:hover { filter: brightness(1.15); transform: scale(1.03); }
+    @media (max-width: 768px) { .logo { min-width: 240px; max-width: min(600px, calc(100vw - 2rem)); transform: translateX(0); } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="logo-link"><img src="Logo Hemodinâmica_regular.png" alt="Hemodinâmica" class="logo"></a>
+      <h1>DASI (Duke Activity Status Index)</h1>
+      <p class="subtitle">Risco pré-operatório · Capacidade funcional</p>
+    </header>
+    <section>
+      <h2>Questionário DASI (Duke Activity Status Index)</h2>
+      <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem; text-align: left;">Marque as atividades que o paciente consegue realizar. Entre parênteses, o peso do item para o escore.</p>
+      <div class="check-item">
+        <input type="checkbox" id="d1" data-weight="2.75" aria-label="Cuidar de si mesmo">
+        <label for="d1">Você consegue cuidar de si mesmo (comer, vestir-se, tomar banho ou utilizar o vaso sanitário)? (2,75)</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="d2" data-weight="1.75" aria-label="Andar dentro de casa">
+        <label for="d2">Você consegue andar dentro de casa? (1,75)</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="d3" data-weight="2.75" aria-label="Andar um ou dois quarteirões">
+        <label for="d3">Você consegue andar um ou dois quarteirões em terreno plano? (2,75)</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="d4" data-weight="5.50" aria-label="Subir escada ou ladeira">
+        <label for="d4">Você consegue subir uma escada ou uma ladeira? (5,50)</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="d5" data-weight="8.00" aria-label="Correr curta distância">
+        <label for="d5">Você consegue correr uma distância curta? (8,00)</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="d6" data-weight="2.70" aria-label="Tarefas leves de casa">
+        <label for="d6">Você consegue realizar tarefas leves de casa, como tirar o pó ou lavar a louça? (2,70)</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="d7" data-weight="3.50" aria-label="Trabalho moderado em casa">
+        <label for="d7">Você consegue fazer trabalho moderado em casa como aspirar, varrer o chão ou guardar as compras? (3,50)</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="d8" data-weight="8.00" aria-label="Trabalho pesado em casa">
+        <label for="d8">Você consegue fazer trabalho pesado em casa, como esfregar o piso ou levantar e movimentar móveis pesados? (8,00)</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="d9" data-weight="4.50" aria-label="Apanhar folhas ou cortar grama">
+        <label for="d9">Você consegue realizar tarefas como apanhar folhas caídas ou cortar a grama? (4,50)</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="d10" data-weight="5.25" aria-label="Relações sexuais">
+        <label for="d10">Você consegue ter relações sexuais? (5,25)</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="d11" data-weight="6.00" aria-label="Atividades de lazer moderadas">
+        <label for="d11">Você consegue participar de atividades de lazer moderadas (boliche, dança, tênis ou chutar uma bola)? (6,00)</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="d12" data-weight="7.50" aria-label="Esportes vigorosos">
+        <label for="d12">Você consegue participar de esportes vigorosos (natação, futebol, basquete ou voleibol)? (7,50)</label>
+      </div>
+    </section>
+    <section>
+      <h2>Parâmetros calculados</h2>
+      <div class="dasi-result" id="dasi-result">
+        <div class="dasi-row">
+          <span class="dasi-label">Escore DASI</span>
+          <span class="dasi-value dasi-score" id="dasi-score">0</span>
+        </div>
+        <div class="dasi-row">
+          <span class="dasi-label">VO<sub>2</sub> (ml/kg/min)</span>
+          <span class="dasi-value" id="dasi-vo2">—</span>
+        </div>
+        <div class="dasi-row">
+          <span class="dasi-label">METs</span>
+          <span class="dasi-value" id="dasi-mets">—</span>
+        </div>
+      </div>
+      <div class="dasi-interpretation hidden" id="dasi-interpretation">
+        <strong>Interpretação — DASI ≤ 34:</strong> Está associado a um aumento nas chances de morte ou infarto do miocárdio em 30 dias, além de riscos elevados de lesão miocárdica, complicações moderadas a graves e nova incapacidade pós-operatória. Considerar investigação adicional.
+      </div>
+      <p class="dasi-ref">Fórmulas: VO<sub>2</sub> = DASI × 0,43 + 9,6; METs = VO<sub>2</sub> ÷ 3,5.<br>Referência: <a href="https://doi.org/10.1590/S0103-51502013000300017" target="_blank" rel="noopener noreferrer" style="color: var(--accent);">doi.org/10.1590/S0103-51502013000300017</a></p>
+    </section>
+    <script>
+      var inputs = document.querySelectorAll('.check-item input');
+      var scoreEl = document.getElementById('dasi-score');
+      var vo2El = document.getElementById('dasi-vo2');
+      var metsEl = document.getElementById('dasi-mets');
+      var resultDiv = document.getElementById('dasi-result');
+      var interpDiv = document.getElementById('dasi-interpretation');
+      function update() {
+        var dasi = 0;
+        inputs.forEach(function(cb) {
+          if (cb.checked) dasi += parseFloat(cb.getAttribute('data-weight') || 0);
+        });
+        scoreEl.textContent = dasi.toFixed(2).replace('.', ',');
+        var vo2 = dasi * 0.43 + 9.6;
+        var mets = vo2 / 3.5;
+        vo2El.textContent = vo2.toFixed(1).replace('.', ',');
+        metsEl.textContent = mets.toFixed(2).replace('.', ',');
+        if (dasi <= 34) {
+          resultDiv.classList.add('alert');
+          interpDiv.classList.remove('hidden');
+        } else {
+          resultDiv.classList.remove('alert');
+          interpDiv.classList.add('hidden');
+        }
+      }
+      inputs.forEach(function(cb) { cb.addEventListener('change', update); });
+      update();
+    </script>
+    <footer class="footer-buttons">
+      <a href="index.html" class="footer-link">Todas as Calculadoras</a>
+      <a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="footer-link">Contato</a>
+    </footer>
+  </div>
+</body>
+</html>

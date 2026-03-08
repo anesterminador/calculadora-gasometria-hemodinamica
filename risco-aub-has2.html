@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AUB-HAS2 – Risco pré-operatório</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f1419; --bg-card: #1a2129; --bg-input: #252d36; --border: #2d3843;
+      --text: #e6edf3; --text-muted: #8b9cad; --accent: #58a6ff; --accent-soft: rgba(88, 166, 255, 0.15);
+    }
+    body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; min-height: 100vh; background: var(--bg);
+      background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(88, 166, 255, 0.08), transparent);
+      color: var(--text); line-height: 1.5; padding: 0rem 1rem 3rem; }
+    .wrap { max-width: 520px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 0.75rem; }
+    .logo-link { display: block; text-decoration: none; }
+    .logo { max-width: 600px; height: auto; margin-bottom: -2.5rem; display: block; margin-left: auto; margin-right: auto; background: transparent; transform: translateX(-3.2rem); clip-path: inset(0 0 25 0); }
+    h1 { font-size: 1.5rem; font-weight: 700; color: var(--text); margin-bottom: 0.35rem; }
+    .subtitle { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+    section { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.35rem 1.5rem; margin-bottom: 1.25rem; }
+    section h2 { font-size: 1.2rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #ffd139; margin-bottom: 0.4rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--border); text-align: center; }
+    .check-item { display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: 0.85rem; text-align: left; }
+    .check-item input { margin-top: 0.25rem; flex-shrink: 0; width: 1.15rem; height: 1.15rem; accent-color: var(--accent); cursor: pointer; }
+    .check-item label { font-size: 0.95rem; color: var(--text); line-height: 1.45; cursor: pointer; }
+    .rcri-result { text-align: center; padding: 1rem; background: var(--bg-input); border-radius: 8px; margin-top: 0.5rem; }
+    .rcri-score { font-size: 1.25rem; font-weight: 700; color: var(--accent); }
+    .rcri-risk { font-size: 0.95rem; color: var(--text-muted); margin-top: 0.35rem; }
+    .rcri-legend { font-size: 0.85rem; color: var(--text-muted); margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); text-align: justify; line-height: 1.5; }
+    footer { text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 0; opacity: 0.8; }
+    .footer-buttons { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; }
+    .footer-link { display: inline-block; padding: 0.5rem 1.25rem; background: var(--accent); color: #0f1419; font-weight: 700; font-size: 0.9rem; text-decoration: none; border-radius: 8px; transition: filter 0.2s, transform 0.15s; }
+    .footer-link:hover { filter: brightness(1.15); transform: scale(1.03); }
+    @media (max-width: 768px) { .logo { min-width: 240px; max-width: min(600px, calc(100vw - 2rem)); transform: translateX(0); } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="logo-link"><img src="Logo Hemodinâmica_regular.png" alt="Hemodinâmica" class="logo"></a>
+      <h1>AUB-HAS2 Cardiovascular Risk Index</h1>
+      <p class="subtitle">Risco pré-operatório · Risco cardiovascular</p>
+    </header>
+    <section>
+      <h2>Critérios do AUB-HAS2 Cardiovascular Risk Index</h2>
+      <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem; text-align: left;">Marque cada critério presente (1 ponto por item).</p>
+      <div class="check-item">
+        <input type="checkbox" id="aub1" aria-label="História de doença cardíaca">
+        <label for="aub1">História de doença cardíaca</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="aub2" aria-label="Angina ou dispneia">
+        <label for="aub2">Angina ou dispneia (sintomas de doença cardíaca)</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="aub3" aria-label="Idade 75 anos ou mais">
+        <label for="aub3">Idade ≥75 anos</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="aub4" aria-label="Hemoglobina baixa">
+        <label for="aub4">Hemoglobina &lt;12 g/dL (anemia)</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="aub5" aria-label="Cirurgia vascular">
+        <label for="aub5">Cirurgia vascular arterial</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="aub6" aria-label="Cirurgia de emergência">
+        <label for="aub6">Cirurgia de emergência</label>
+      </div>
+    </section>
+    <section>
+      <h2>Estratificação de risco cardiovascular</h2>
+      <div class="rcri-result">
+        <p class="rcri-score" id="aub-score">Pontuação: 0</p>
+        <p class="rcri-risk" id="aub-risk">Risco: baixo (0–1)</p>
+      </div>
+      <p class="rcri-legend">Para fins de conduta pré-operatória, de acordo com o guideline americano de 2024 para avaliação perioperatória, a presença de dois ou mais fatores de risco já define risco elevado.</p>
+    </section>
+    <script>
+      var inputs = document.querySelectorAll('.check-item input');
+      var scoreEl = document.getElementById('aub-score');
+      var riskEl = document.getElementById('aub-risk');
+      function update() {
+        var n = 0;
+        inputs.forEach(function(cb) { if (cb.checked) n++; });
+        scoreEl.textContent = 'Pontuação: ' + n;
+        var riskText = n <= 1 ? 'Risco: baixo (0–1)' : (n <= 3 ? 'Risco: intermediário (2–3)' : 'Risco: alto (≥4)');
+        riskEl.textContent = riskText;
+      }
+      inputs.forEach(function(cb) { cb.addEventListener('change', update); });
+    </script>
+    <footer class="footer-buttons">
+      <a href="index.html" class="footer-link">Todas as Calculadoras</a>
+      <a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="footer-link">Contato</a>
+    </footer>
+  </div>
+</body>
+</html>

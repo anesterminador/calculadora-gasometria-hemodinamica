@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Calculadora POCUS – Volume Gástrico</title>
+  <title>Mechanical Power (VCV) – Ventilação Mecânica</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -19,6 +19,7 @@
       --accent: #58a6ff;
       --accent-soft: rgba(88, 166, 255, 0.15);
       --result-abnormal: #ff7b72;
+      --result-warning: #eedc82;
     }
     body {
       font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
@@ -66,7 +67,6 @@
       margin: 1rem 0 0.5rem; padding-bottom: 0.25rem;
     }
     .input-subheader:first-of-type { margin-top: 0; }
-    .input-hint { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem; }
     label { flex: 1; font-size: 0.9rem; color: var(--text); font-weight: 500; }
     input {
       width: 88px; padding: 0.5rem 0.65rem;
@@ -88,10 +88,7 @@
     }
     .result-block:first-of-type { padding-top: 1.35rem; }
     .result-block:last-of-type { border-bottom: none; margin-bottom: 0; }
-    .result-block-content {
-      flex: 1; min-width: 0; align-self: stretch;
-      display: flex; flex-direction: column; justify-content: center;
-    }
+    .result-block-content { flex: 1; min-width: 0; align-self: stretch; display: flex; flex-direction: column; justify-content: center; }
     .result-row { font-size: 0.9rem; margin-top: -0.8rem; }
     .result-row .name { color: var(--text); font-weight: 700; }
     .result-box {
@@ -103,14 +100,20 @@
       transform: translateY(-0.3rem);
     }
     .result-box.normal { color: var(--accent); }
+    .result-box.warning { color: var(--result-warning); }
     .result-box.abnormal { color: var(--result-abnormal); }
-    .formula {
-      font-size: 0.75rem; color: var(--text-muted);
-      margin-top: 0.15rem; margin-bottom: 0; opacity: 0.9;
-      text-align: justify;
-    }
+    .result-box.very-high { color: #e03e3e; }
+    .formula { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.15rem; margin-bottom: 0; opacity: 0.9; text-align: justify; }
     .formula-eq { color: #fef9c3; }
-    .formula-ref { color: #b0bcc9; }
+    .formula-ref { color: #b0bcc9; margin-top: 0.35rem; }
+    .resumo-table {
+      width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-top: 1rem;
+    }
+    .resumo-table th, .resumo-table td {
+      border: 1px solid var(--border); padding: 0.5rem 0.6rem; text-align: center;
+    }
+    .resumo-table th { color: var(--text-muted); font-weight: 600; }
+    .resumo-table .faixa { white-space: nowrap; }
     footer { text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 0; opacity: 0.8; }
     .footer-buttons { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; }
     .footer-link {
@@ -121,11 +124,7 @@
     }
     .footer-link:hover { filter: brightness(1.15); transform: scale(1.03); }
     @media (max-width: 768px) {
-      .logo {
-        min-width: 240px;
-        max-width: min(600px, calc(100vw - 2rem));
-        transform: translateX(0);
-      }
+      .logo { min-width: 240px; max-width: min(600px, calc(100vw - 2rem)); transform: translateX(0); }
     }
   </style>
 </head>
@@ -135,53 +134,59 @@
       <a href="index.html" class="logo-link">
         <img src="Logo Hemodinâmica_regular.png" alt="Hemodinâmica" class="logo">
       </a>
-      <h1>Calculadora POCUS – Volume Gástrico</h1>
-      <p class="subtitle">ASTAG e volume gástrico em adultos</p>
+      <h1>Mechanical Power (VCV)</h1>
+      <p class="subtitle">Ventilação controlada por volume · Potência mecânica (J/min)</p>
     </header>
 
     <section>
       <h2>Dados de entrada</h2>
-      <p class="input-subheader">Paciente</p>
       <div class="row">
-        <label>Idade (anos)</label>
-        <input type="number" id="Idade" value="45" step="1" min="0" max="120" placeholder="anos">
+        <label>Frequência respiratória (ciclos/min)</label>
+        <input type="number" id="FR" value="14" step="1" min="0" placeholder="ciclos/min">
       </div>
       <div class="row">
-        <label>Peso (kg)</label>
-        <input type="number" id="Peso" value="70" step="0.1" min="0" placeholder="kg">
-      </div>
-      <p class="input-subheader">Medidas do Ântro</p>
-      <p class="input-hint">Insira os dois diâmetros <strong>ou</strong> a área (ASTAG) diretamente.</p>
-      <div class="row">
-        <label>Diâmetro anteroposterior (cm)</label>
-        <input type="number" id="DAP" value="5" step="0.1" min="0" placeholder="cm">
+        <label>Volume corrente (L)</label>
+        <input type="number" id="VT" value="0.45" step="0.01" min="0" placeholder="L">
       </div>
       <div class="row">
-        <label>Diâmetro craniocaudal (cm)</label>
-        <input type="number" id="DCC" value="6" step="0.1" min="0" placeholder="cm">
+        <label>Pressão de pico (cmH₂O)</label>
+        <input type="number" id="Ppico" value="22" step="0.1" min="0" placeholder="cmH₂O">
       </div>
       <div class="row">
-        <label>Ou área de secção transversa do antro gástrico (cm²)</label>
-        <input type="number" id="ATAG_dir" value="" step="0.1" min="0" placeholder="ex.: 23,5">
+        <label>Driving pressure (cmH₂O)</label>
+        <input type="number" id="DP" value="12" step="0.1" min="0" placeholder="cmH₂O" title="ΔP = P_platô − PEEP">
       </div>
+      <p class="formula-ref" style="margin-top: 0.5rem;">ΔP = P. platô − PEEP.</p>
     </section>
 
     <section>
       <h2>Parâmetros calculados</h2>
       <div class="result-block">
         <div class="result-block-content">
-          <div class="result-row"><span class="name">Área de secção transversa do antro gástrico</span></div>
-          <div class="formula"><span class="formula-eq">ASTAG = (dm anteroposterior × dm craniocaudal × π) / 4</span> · <span class="formula-ref"></span></div>
+          <div class="result-row"><span class="name">MP – Mechanical Power (J/min)</span></div>
+          <div class="formula">
+            <div class="formula-eq">MP = 0,098 × FR × VT × (P_pico − ΔP/2)</div>
+            <div class="formula-ref">0,098: fator de conversão de L·cmH₂O para Joules. FR: frequência respiratória (ciclos/min). VT: volume corrente (L). P_pico: pressão de pico (cmH₂O). ΔP: driving pressure (P_platô − PEEP).</div>
+          </div>
         </div>
-        <span class="result-box" id="ATAG">—</span>
+        <span class="result-box" id="MP">—</span>
       </div>
-      <div class="result-block">
-        <div class="result-block-content">
-          <div class="result-row"><span class="name">Volume gástrico (mL)</span></div>
-          <div class="formula"><span class="formula-eq">VG(mL) = 27 + (14,6 × ASTAG) − (1,28 × Idade)</span><br><span class="formula-ref">Interpretação (decúbito lateral direito):<br>→ Conteúdo sólido: Estômago cheio (independente do cálculo).<br>→ Conteúdo líquido: Considerar estômago cheio se volume &gt; 1,5 ml/kg.</span></div>
-        </div>
-        <span class="result-box" id="VG">—</span>
-      </div>
+
+      <table class="resumo-table" aria-label="Resumo dos valores de Mechanical Power">
+        <caption style="text-align: left; font-weight: 700; margin-bottom: 0.4rem;">Resumo dos valores</caption>
+        <thead>
+          <tr>
+            <th>Faixa de MP (J/min)</th>
+            <th>Nível de risco</th>
+            <th>Implicação clínica</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="faixa">&lt; 12</td><td>Baixo</td><td>Meta ideal para ventilação protetora.</td></tr>
+          <tr><td class="faixa">12 – 17</td><td>Moderado</td><td>Monitorar componentes (Volume, Driving Pressure, FR).</td></tr>
+          <tr><td class="faixa">&gt; 17</td><td>Alto</td><td>Associado a aumento na mortalidade hospitalar.</td></tr>
+        </tbody>
+      </table>
     </section>
 
     <footer class="footer-buttons">
@@ -191,13 +196,10 @@
   </div>
 
   <script>
-    const ids = ['DAP', 'DCC', 'ATAG_dir', 'Idade', 'Peso'];
-    const outIds = ['ATAG', 'VG'];
+    const ids = ['FR', 'VT', 'Ppico', 'DP'];
 
     function get(id) {
-      const el = document.getElementById(id);
-      if (!el) return NaN;
-      const v = parseFloat(el.value);
+      const v = parseFloat(document.getElementById(id).value);
       return isNaN(v) ? NaN : v;
     }
 
@@ -209,63 +211,31 @@
 
     function setResultStyle(id, state) {
       const el = document.getElementById(id);
-      el.classList.remove('normal', 'abnormal');
+      el.classList.remove('normal', 'warning', 'abnormal', 'very-high');
       if (state) el.classList.add(state);
     }
 
     function calc() {
-      const Idade = get('Idade'), Peso = get('Peso');
-      const atagDirRaw = document.getElementById('ATAG_dir').value.trim();
-      const atagDir = atagDirRaw === '' ? NaN : get('ATAG_dir');
-      const DAP = get('DAP'), DCC = get('DCC');
+      const FR = get('FR'), VT = get('VT'), Ppico = get('Ppico'), DP = get('DP');
 
-      let ATAG;
-      if (!isNaN(atagDir)) {
-        ATAG = atagDir;
-      } else if (!isNaN(DAP) && !isNaN(DCC)) {
-        ATAG = (DAP * DCC * Math.PI) / 4;
-      } else {
-        ATAG = NaN;
-      }
-
-      if (isNaN(ATAG) || isNaN(Idade) || isNaN(Peso)) {
-        outIds.forEach(id => { set(id, undefined); setResultStyle(id, null); });
+      if ([FR, VT, Ppico, DP].some(isNaN)) {
+        set('MP', undefined);
+        setResultStyle('MP', null);
         return;
       }
 
-      const VG = 27 + (14.6 * ATAG) - (1.28 * Idade);
+      const MP = 0.098 * FR * VT * (Ppico - DP / 2);
+      set('MP', MP);
 
-      set('ATAG', ATAG);
-      set('VG', VG);
-
-      setResultStyle('ATAG', null);
-      setResultStyle('VG', Peso > 0 ? (VG > 1.5 * Peso ? 'abnormal' : 'normal') : null);
+      let style = null;
+      if (MP < 12) style = 'normal';
+      else if (MP <= 17) style = 'warning';
+      else if (MP <= 22) style = 'abnormal';
+      else style = 'very-high';
+      setResultStyle('MP', style);
     }
 
-    const elATAG = document.getElementById('ATAG_dir');
-    const elDAP = document.getElementById('DAP'), elDCC = document.getElementById('DCC');
-
-    elATAG.addEventListener('input', () => {
-      elATAG.dataset.userTouched = '1';
-      elATAG.classList.add('user-edited');
-      elDAP.value = ''; elDCC.value = '';
-      elDAP.classList.remove('user-edited'); elDCC.classList.remove('user-edited');
-      elDAP.removeAttribute('data-user-touched'); elDCC.removeAttribute('data-user-touched');
-      calc();
-    });
-
-    [elDAP, elDCC].forEach(el => {
-      el.addEventListener('input', () => {
-        el.dataset.userTouched = '1';
-        el.classList.add('user-edited');
-        elATAG.value = '';
-        elATAG.classList.remove('user-edited');
-        elATAG.removeAttribute('data-user-touched');
-        calc();
-      });
-    });
-
-    ['Idade', 'Peso'].forEach(id => {
+    ids.forEach(id => {
       const el = document.getElementById(id);
       el.addEventListener('input', () => {
         el.dataset.userTouched = '1';

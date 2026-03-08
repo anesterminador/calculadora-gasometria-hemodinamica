@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Calculadora POCUS – Volume Gástrico</title>
+  <title>Obesidade – Escalares de peso</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -18,7 +18,6 @@
       --text-muted: #8b9cad;
       --accent: #58a6ff;
       --accent-soft: rgba(88, 166, 255, 0.15);
-      --result-abnormal: #ff7b72;
     }
     body {
       font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
@@ -60,38 +59,30 @@
       gap: 1rem; margin-bottom: 0.75rem;
     }
     .row:last-child { margin-bottom: 0; }
-    .input-subheader {
-      font-size: 0.8rem; font-weight: 600; text-transform: uppercase;
-      letter-spacing: 0.05em; color: var(--text-muted);
-      margin: 1rem 0 0.5rem; padding-bottom: 0.25rem;
-    }
-    .input-subheader:first-of-type { margin-top: 0; }
-    .input-hint { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem; }
     label { flex: 1; font-size: 0.9rem; color: var(--text); font-weight: 500; }
-    input {
-      width: 88px; padding: 0.5rem 0.65rem;
+    input, select {
+      padding: 0.5rem 0.65rem;
       background: var(--bg-input); border: 1px solid var(--border);
       border-radius: 8px; font-size: 0.95rem; font-family: inherit;
-      color: var(--text); text-align: right;
+      color: var(--text);
       transition: border-color 0.2s, box-shadow 0.2s;
     }
-    input:focus {
+    input { width: 88px; text-align: right; }
+    select { min-width: 140px; cursor: pointer; }
+    input:focus, select:focus {
       outline: none; border-color: var(--accent);
       box-shadow: 0 0 0 3px var(--accent-soft);
     }
-    input.user-edited { color: #fef9c3; }
+    input.user-edited, select.user-edited { color: #fef9c3; }
     .result-block {
       display: flex; align-items: center; gap: 1rem;
       margin-bottom: 1rem; padding: 0.35rem 0 0.7rem 0;
       border-bottom: 1px solid var(--border);
-      min-height: 4.25rem;
+      min-height: 3.5rem;
     }
     .result-block:first-of-type { padding-top: 1.35rem; }
     .result-block:last-of-type { border-bottom: none; margin-bottom: 0; }
-    .result-block-content {
-      flex: 1; min-width: 0; align-self: stretch;
-      display: flex; flex-direction: column; justify-content: center;
-    }
+    .result-block-content { flex: 1; min-width: 0; align-self: stretch; display: flex; flex-direction: column; justify-content: center; }
     .result-row { font-size: 0.9rem; margin-top: -0.8rem; }
     .result-row .name { color: var(--text); font-weight: 700; }
     .result-box {
@@ -102,15 +93,9 @@
       font-variant-numeric: tabular-nums;
       transform: translateY(-0.3rem);
     }
-    .result-box.normal { color: var(--accent); }
-    .result-box.abnormal { color: var(--result-abnormal); }
-    .formula {
-      font-size: 0.75rem; color: var(--text-muted);
-      margin-top: 0.15rem; margin-bottom: 0; opacity: 0.9;
-      text-align: justify;
-    }
+    .formula { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.15rem; margin-bottom: 0; opacity: 0.9; text-align: justify; }
     .formula-eq { color: #fef9c3; }
-    .formula-ref { color: #b0bcc9; }
+    .formula-ref { color: #b0bcc9; margin-top: 0.2rem; }
     footer { text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 0; opacity: 0.8; }
     .footer-buttons { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; }
     .footer-link {
@@ -121,11 +106,7 @@
     }
     .footer-link:hover { filter: brightness(1.15); transform: scale(1.03); }
     @media (max-width: 768px) {
-      .logo {
-        min-width: 240px;
-        max-width: min(600px, calc(100vw - 2rem));
-        transform: translateX(0);
-      }
+      .logo { min-width: 240px; max-width: min(600px, calc(100vw - 2rem)); transform: translateX(0); }
     }
   </style>
 </head>
@@ -135,52 +116,90 @@
       <a href="index.html" class="logo-link">
         <img src="Logo Hemodinâmica_regular.png" alt="Hemodinâmica" class="logo">
       </a>
-      <h1>Calculadora POCUS – Volume Gástrico</h1>
-      <p class="subtitle">ASTAG e volume gástrico em adultos</p>
+      <h1>Obesidade</h1>
+      <p class="subtitle">Escalares de peso (Common Weight Scalars)</p>
     </header>
 
     <section>
       <h2>Dados de entrada</h2>
-      <p class="input-subheader">Paciente</p>
       <div class="row">
-        <label>Idade (anos)</label>
-        <input type="number" id="Idade" value="45" step="1" min="0" max="120" placeholder="anos">
+        <label>Altura (cm)</label>
+        <input type="number" id="Altura" value="170" step="0.1" min="0" placeholder="cm">
       </div>
       <div class="row">
-        <label>Peso (kg)</label>
-        <input type="number" id="Peso" value="70" step="0.1" min="0" placeholder="kg">
-      </div>
-      <p class="input-subheader">Medidas do Ântro</p>
-      <p class="input-hint">Insira os dois diâmetros <strong>ou</strong> a área (ASTAG) diretamente.</p>
-      <div class="row">
-        <label>Diâmetro anteroposterior (cm)</label>
-        <input type="number" id="DAP" value="5" step="0.1" min="0" placeholder="cm">
+        <label>Peso corporal total – TBW (kg)</label>
+        <input type="number" id="TBW" value="70" step="0.1" min="0" placeholder="kg">
       </div>
       <div class="row">
-        <label>Diâmetro craniocaudal (cm)</label>
-        <input type="number" id="DCC" value="6" step="0.1" min="0" placeholder="cm">
-      </div>
-      <div class="row">
-        <label>Ou área de secção transversa do antro gástrico (cm²)</label>
-        <input type="number" id="ATAG_dir" value="" step="0.1" min="0" placeholder="ex.: 23,5">
+        <label>Sexo</label>
+        <select id="Sexo">
+          <option value="M">Masculino</option>
+          <option value="F">Feminino</option>
+        </select>
       </div>
     </section>
 
     <section>
       <h2>Parâmetros calculados</h2>
+
       <div class="result-block">
         <div class="result-block-content">
-          <div class="result-row"><span class="name">Área de secção transversa do antro gástrico</span></div>
-          <div class="formula"><span class="formula-eq">ASTAG = (dm anteroposterior × dm craniocaudal × π) / 4</span> · <span class="formula-ref"></span></div>
+          <div class="result-row"><span class="name">Peso corporal ideal – IBW (kg)</span></div>
+          <div class="formula">
+            <span class="formula-eq">Masculino: 50 + 0,91 kg por cada cm acima de 152 cm. Feminino: 45,5 + 0,91 kg por cada cm acima de 152 cm.</span>
+          </div>
         </div>
-        <span class="result-box" id="ATAG">—</span>
+        <span class="result-box" id="IBW">—</span>
       </div>
+
       <div class="result-block">
         <div class="result-block-content">
-          <div class="result-row"><span class="name">Volume gástrico (mL)</span></div>
-          <div class="formula"><span class="formula-eq">VG(mL) = 27 + (14,6 × ASTAG) − (1,28 × Idade)</span><br><span class="formula-ref">Interpretação (decúbito lateral direito):<br>→ Conteúdo sólido: Estômago cheio (independente do cálculo).<br>→ Conteúdo líquido: Considerar estômago cheio se volume &gt; 1,5 ml/kg.</span></div>
+          <div class="result-row"><span class="name">Peso corrigido (kg)</span></div>
+          <div class="formula">
+            <span class="formula-eq">IBW + 0,4 × (TBW − IBW)</span>
+          </div>
         </div>
-        <span class="result-box" id="VG">—</span>
+        <span class="result-box" id="Corrigido">—</span>
+      </div>
+
+      <div class="result-block">
+        <div class="result-block-content">
+          <div class="result-row"><span class="name">Massa magra – LBM (kg)</span></div>
+          <div class="formula">
+            <span class="formula-eq">Eq. de James: M: 1,1×TBW − 128×(TBW/altura)². F: 1,07×TBW − 148×(TBW/altura)². Altura em cm.</span>
+          </div>
+        </div>
+        <span class="result-box" id="LBM">—</span>
+      </div>
+
+      <div class="result-block">
+        <div class="result-block-content">
+          <div class="result-row"><span class="name">Massa livre de gordura – FFM (kg)</span></div>
+          <div class="formula">
+            <span class="formula-eq">Eq. de Janmahasatian: M: (9270×TBW)/(6680+216×BMI). F: (9270×TBW)/(8780+244×BMI). BMI = TBW/(altura_m)².</span>
+          </div>
+        </div>
+        <span class="result-box" id="FFM">—</span>
+      </div>
+
+      <div class="result-block">
+        <div class="result-block-content">
+          <div class="result-row"><span class="name">Massa farmacocinética (kg)</span></div>
+          <div class="formula">
+            <span class="formula-eq">52 / [1 + 196,4×e^(−0,025×(TBW−53,66)) / 100] · Apenas fentanil.</span>
+          </div>
+        </div>
+        <span class="result-box" id="PK">—</span>
+      </div>
+
+      <div class="result-block">
+        <div class="result-block-content">
+          <div class="result-row"><span class="name">Massa livre de gordura modificada (kg)</span></div>
+          <div class="formula">
+            <span class="formula-eq">FFM + 0,4 × (TBW − FFM)</span>
+          </div>
+        </div>
+        <span class="result-box" id="FFMmod">—</span>
       </div>
     </section>
 
@@ -191,13 +210,13 @@
   </div>
 
   <script>
-    const ids = ['DAP', 'DCC', 'ATAG_dir', 'Idade', 'Peso'];
-    const outIds = ['ATAG', 'VG'];
+    const alturaEl = document.getElementById('Altura');
+    const tbwEl = document.getElementById('TBW');
+    const sexoEl = document.getElementById('Sexo');
+    const outIds = ['IBW', 'Corrigido', 'LBM', 'FFM', 'PK', 'FFMmod'];
 
     function get(id) {
-      const el = document.getElementById(id);
-      if (!el) return NaN;
-      const v = parseFloat(el.value);
+      const v = parseFloat(document.getElementById(id).value);
       return isNaN(v) ? NaN : v;
     }
 
@@ -207,71 +226,56 @@
       else el.textContent = typeof value === 'number' ? value.toFixed(2) : value;
     }
 
-    function setResultStyle(id, state) {
-      const el = document.getElementById(id);
-      el.classList.remove('normal', 'abnormal');
-      if (state) el.classList.add(state);
-    }
-
     function calc() {
-      const Idade = get('Idade'), Peso = get('Peso');
-      const atagDirRaw = document.getElementById('ATAG_dir').value.trim();
-      const atagDir = atagDirRaw === '' ? NaN : get('ATAG_dir');
-      const DAP = get('DAP'), DCC = get('DCC');
+      const H = get('Altura'), TBW = get('TBW');
+      const sexo = sexoEl.value;
 
-      let ATAG;
-      if (!isNaN(atagDir)) {
-        ATAG = atagDir;
-      } else if (!isNaN(DAP) && !isNaN(DCC)) {
-        ATAG = (DAP * DCC * Math.PI) / 4;
-      } else {
-        ATAG = NaN;
-      }
-
-      if (isNaN(ATAG) || isNaN(Idade) || isNaN(Peso)) {
-        outIds.forEach(id => { set(id, undefined); setResultStyle(id, null); });
+      if (isNaN(H) || isNaN(TBW)) {
+        outIds.forEach(id => set(id, undefined));
         return;
       }
 
-      const VG = 27 + (14.6 * ATAG) - (1.28 * Idade);
+      const Hm = H / 100;
+      const BMI = Hm > 0 ? TBW / (Hm * Hm) : NaN;
 
-      set('ATAG', ATAG);
-      set('VG', VG);
+      let IBW;
+      const cmOver152 = Math.max(0, H - 152);
+      if (sexo === 'M') IBW = 50 + 0.91 * cmOver152;
+      else IBW = 45.5 + 0.91 * cmOver152;
+      set('IBW', IBW);
 
-      setResultStyle('ATAG', null);
-      setResultStyle('VG', Peso > 0 ? (VG > 1.5 * Peso ? 'abnormal' : 'normal') : null);
+      const Corrigido = IBW + 0.4 * (TBW - IBW);
+      set('Corrigido', Corrigido);
+
+      let LBM;
+      const ratio = H > 0 ? TBW / H : 0;
+      if (sexo === 'M') LBM = 1.1 * TBW - 128 * (ratio * ratio);
+      else LBM = 1.07 * TBW - 148 * (ratio * ratio);
+      set('LBM', LBM);
+
+      let FFM;
+      if (sexo === 'M') FFM = (9270 * TBW) / (6680 + 216 * BMI);
+      else FFM = (9270 * TBW) / (8780 + 244 * BMI);
+      set('FFM', FFM);
+
+      const PK = 52 / (1 + (196.4 * Math.exp(-0.025 * (TBW - 53.66))) / 100);
+      set('PK', PK);
+
+      const FFMmod = FFM + 0.4 * (TBW - FFM);
+      set('FFMmod', FFMmod);
     }
 
-    const elATAG = document.getElementById('ATAG_dir');
-    const elDAP = document.getElementById('DAP'), elDCC = document.getElementById('DCC');
-
-    elATAG.addEventListener('input', () => {
-      elATAG.dataset.userTouched = '1';
-      elATAG.classList.add('user-edited');
-      elDAP.value = ''; elDCC.value = '';
-      elDAP.classList.remove('user-edited'); elDCC.classList.remove('user-edited');
-      elDAP.removeAttribute('data-user-touched'); elDCC.removeAttribute('data-user-touched');
+    [alturaEl, tbwEl].forEach(el => {
+      el.addEventListener('input', () => {
+        el.dataset.userTouched = '1';
+        el.classList.add('user-edited');
+        calc();
+      });
+    });
+    sexoEl.addEventListener('change', () => {
+      sexoEl.dataset.userTouched = '1';
+      sexoEl.classList.add('user-edited');
       calc();
-    });
-
-    [elDAP, elDCC].forEach(el => {
-      el.addEventListener('input', () => {
-        el.dataset.userTouched = '1';
-        el.classList.add('user-edited');
-        elATAG.value = '';
-        elATAG.classList.remove('user-edited');
-        elATAG.removeAttribute('data-user-touched');
-        calc();
-      });
-    });
-
-    ['Idade', 'Peso'].forEach(id => {
-      const el = document.getElementById(id);
-      el.addEventListener('input', () => {
-        el.dataset.userTouched = '1';
-        el.classList.add('user-edited');
-        calc();
-      });
     });
     calc();
   </script>

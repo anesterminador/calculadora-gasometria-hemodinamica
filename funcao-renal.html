@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Função renal – Calculadoras</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f1419;
+      --bg-card: #1a2129;
+      --bg-input: #252d36;
+      --border: #2d3843;
+      --text: #e6edf3;
+      --text-muted: #8b9cad;
+      --accent: #58a6ff;
+      --accent-soft: rgba(88, 166, 255, 0.15);
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      min-height: 100vh;
+      background: var(--bg);
+      background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(88, 166, 255, 0.08), transparent);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 0rem 1rem 3rem;
+    }
+    .wrap { max-width: 520px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 0.75rem; }
+    .logo-link { display: block; text-decoration: none; }
+    .logo {
+      max-width: 600px; height: auto; margin-bottom: -2.5rem;
+      display: block; margin-left: auto; margin-right: auto;
+      background: transparent;
+      transform: translateX(-3.2rem);
+      clip-path: inset(0 0 25 0);
+    }
+    h1 { font-size: 1.5rem; font-weight: 700; color: var(--text); margin-bottom: 0.35rem; }
+    .subtitle { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+    section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.35rem 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    section h2 {
+      font-size: 1.2rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.06em; color: #ffd139;
+      margin-bottom: 0.4rem; padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+    }
+    .row {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem; margin-bottom: 0.75rem;
+    }
+    .row:last-child { margin-bottom: 0; }
+    label { flex: 1; font-size: 0.9rem; color: var(--text); font-weight: 500; }
+    input, select {
+      padding: 0.5rem 0.65rem;
+      background: var(--bg-input); border: 1px solid var(--border);
+      border-radius: 8px; font-size: 0.95rem; font-family: inherit;
+      color: var(--text);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input { width: 88px; text-align: right; }
+    select { min-width: 140px; cursor: pointer; }
+    input:focus, select:focus {
+      outline: none; border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+    input.user-edited, select.user-edited { color: #fef9c3; }
+    .result-block {
+      display: flex; align-items: flex-start; gap: 1rem;
+      margin-bottom: 1rem; padding: 0.35rem 0 0.7rem 0;
+      border-bottom: 1px solid var(--border);
+      min-height: 3.8rem;
+    }
+    .result-block:first-of-type { padding-top: 1.35rem; }
+    .result-block:last-of-type { border-bottom: none; margin-bottom: 0; }
+    .result-block-content { flex: 1; min-width: 0; align-self: stretch; display: flex; flex-direction: column; justify-content: center; }
+    .result-block-right {
+      display: flex; flex-direction: column; align-items: flex-end; gap: 0.4rem;
+      flex-shrink: 0;
+    }
+    .result-class-row {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-size: 0.75rem; color: var(--text-muted);
+    }
+    .result-row { font-size: 0.9rem; margin-top: -0.8rem; }
+    .result-row .name { color: var(--text); font-weight: 700; }
+    .result-box {
+      flex-shrink: 0; width: 88px; padding: 0.5rem 0.65rem;
+      background: var(--bg-input); border: 1px solid var(--border);
+      border-radius: 8px; font-size: 0.95rem; font-family: inherit;
+      font-weight: 700; color: var(--accent); text-align: center;
+      font-variant-numeric: tabular-nums;
+      transform: translateY(-0.3rem);
+    }
+    .result-box-class { width: 88px; font-size: 0.85rem; padding: 0.35rem 0.5rem; transform: none; }
+    .formula { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.15rem; margin-bottom: 0; opacity: 0.9; text-align: justify; }
+    .formula-eq { color: #fef9c3; }
+    .formula-ref { color: #b0bcc9; margin-top: 0.25rem; }
+    footer { text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 0; opacity: 0.8; }
+    .footer-buttons { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; }
+    .footer-link {
+      display: inline-block; padding: 0.5rem 1.25rem;
+      background: var(--accent); color: #0f1419; font-weight: 700;
+      font-size: 0.9rem; text-decoration: none; border-radius: 8px;
+      transition: filter 0.2s, transform 0.15s;
+    }
+    .footer-link:hover { filter: brightness(1.15); transform: scale(1.03); }
+    @media (max-width: 768px) {
+      .logo { min-width: 240px; max-width: min(600px, calc(100vw - 2rem)); transform: translateX(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a href="index.html" class="logo-link">
+        <img src="Logo Hemodinâmica_regular.png" alt="Hemodinâmica" class="logo">
+      </a>
+      <h1>Função renal</h1>
+      <p class="subtitle">ClCr e TFG · Cockcroft-Gault, MDRD e CKD-EPI</p>
+    </header>
+
+    <section>
+      <h2>Dados de entrada</h2>
+      <div class="row">
+        <label>Idade (anos)</label>
+        <input type="number" id="Idade" value="50" step="1" min="0" max="120" placeholder="anos">
+      </div>
+      <div class="row">
+        <label>Peso (kg)</label>
+        <input type="number" id="Peso" value="70" step="0.1" min="0" placeholder="kg">
+      </div>
+      <div class="row">
+        <label>Creatinina sérica (mg/dL)</label>
+        <input type="number" id="Cr" value="1" step="0.01" min="0.01" placeholder="mg/dL">
+      </div>
+      <div class="row">
+        <label>Sexo</label>
+        <select id="Sexo">
+          <option value="M">Masculino</option>
+          <option value="F">Feminino</option>
+        </select>
+      </div>
+      <div class="row">
+        <label>Etnia negra (apenas MDRD)</label>
+        <select id="Etnia">
+          <option value="N">Não</option>
+          <option value="S">Sim</option>
+        </select>
+      </div>
+      <div class="row">
+        <label>Albuminúria</label>
+        <select id="Albuminuria">
+          <option value="N" selected>Não informado</option>
+          <option value="A1">&lt; 30 mg/g</option>
+          <option value="A2">30 a 300 mg/g</option>
+          <option value="A3">&gt; 300 mg/g</option>
+        </select>
+      </div>
+    </section>
+
+    <section>
+      <h2>Parâmetros calculados</h2>
+
+      <div class="result-block">
+        <div class="result-block-content">
+          <div class="result-row"><span class="name">Cockcroft-Gault (mL/min)</span></div>
+          <div class="formula">
+            <div class="formula-eq">ClCr = ((140 − idade) × peso) / (72 × creatinina) × (0,85 se mulher)</div>
+            <div class="formula-ref">Estimativa de clearance de creatinina (não TFG). Uso principal: ajuste de dose de medicamentos. Não corrigida para superfície corporal. Pode superestimar a função e ser imprecisa em obesidade ou edema.</div>
+          </div>
+        </div>
+        <div class="result-block-right">
+          <span class="result-box" id="ClCr">—</span>
+          <div class="result-class-row">
+            <span>Classificação DRC</span>
+            <span class="result-box result-box-class" id="ClassClCr">—</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="result-block">
+        <div class="result-block-content">
+          <div class="result-row"><span class="name">MDRD (mL/min/1,73 m²)</span></div>
+          <div class="formula">
+            <div class="formula-eq">TFG = 175 × Cr^(−1,154) × idade^(−0,203) × (0,742 se mulher) × (1,212 se etnia negra)</div>
+            <div class="formula-ref">Equação de 4 variáveis. Desenvolvida para DRC. Foi referência por anos, sobretudo para TFG &lt; 60. Subestima TFG em indivíduos saudáveis ou com perda leve (TFG &gt; 60).</div>
+          </div>
+        </div>
+        <div class="result-block-right">
+          <span class="result-box" id="TFGmdrd">—</span>
+          <div class="result-class-row">
+            <span>Classificação DRC</span>
+            <span class="result-box result-box-class" id="ClassTFGmdrd">—</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="result-block">
+        <div class="result-block-content">
+          <div class="result-row"><span class="name">CKD-EPI 2021 (mL/min/1,73 m²)</span></div>
+          <div class="formula">
+            <div class="formula-eq">TFG = 142 × min(Cr/k, 1)^α × max(Cr/k, 1)^(−1,200) × 0,993^idade × (1,012 se mulher). k e α conforme sexo. Versão 2021 sem variável raça/etnia.</div>
+            <div class="formula-ref">Recomendada pelas diretrizes (ex.: KDIGO). Mais precisa em todos os níveis, principalmente em valores normais ou levemente reduzidos.</div>
+          </div>
+        </div>
+        <div class="result-block-right">
+          <span class="result-box" id="TFGckdepi">—</span>
+          <div class="result-class-row">
+            <span>Classificação DRC</span>
+            <span class="result-box result-box-class" id="ClassTFGckdepi">—</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer-buttons">
+      <a href="index.html" class="footer-link">Todas as Calculadoras</a>
+      <a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="footer-link">Contato</a>
+    </footer>
+  </div>
+
+  <script>
+    const ids = ['Idade', 'Peso', 'Cr'];
+    const sexoEl = document.getElementById('Sexo');
+    const etniaEl = document.getElementById('Etnia');
+    const albuminuriaEl = document.getElementById('Albuminuria');
+
+    function get(id) {
+      const v = parseFloat(document.getElementById(id).value);
+      return isNaN(v) ? NaN : v;
+    }
+
+    function set(id, value) {
+      const el = document.getElementById(id);
+      if (value === undefined || value !== value) el.textContent = '—';
+      else el.textContent = typeof value === 'number' ? value.toFixed(2) : value;
+    }
+
+    function setText(id, text) {
+      document.getElementById(id).textContent = text;
+    }
+
+    function calc() {
+      const idade = get('Idade'), peso = get('Peso'), Cr = get('Cr');
+      const mulher = sexoEl.value === 'F';
+      const etniaNegra = etniaEl.value === 'S';
+
+      if (Cr <= 0) {
+        set('ClCr', undefined);
+        set('TFGmdrd', undefined);
+        set('TFGckdepi', undefined);
+        setText('ClassClCr', '—');
+        setText('ClassTFGmdrd', '—');
+        setText('ClassTFGckdepi', '—');
+        return;
+      }
+
+      if (!isNaN(idade) && !isNaN(peso) && peso > 0) {
+        const ClCr = ((140 - idade) * peso) / (72 * Cr) * (mulher ? 0.85 : 1);
+        set('ClCr', ClCr);
+      } else {
+        set('ClCr', undefined);
+      }
+
+      if (!isNaN(idade)) {
+        const TFGmdrd = 175 * Math.pow(Cr, -1.154) * Math.pow(idade, -0.203) * (mulher ? 0.742 : 1) * (etniaNegra ? 1.212 : 1);
+        set('TFGmdrd', TFGmdrd);
+      } else {
+        set('TFGmdrd', undefined);
+      }
+
+      let TFGckdepiVal = NaN;
+      if (!isNaN(idade)) {
+        const k = mulher ? 0.7 : 0.9;
+        const alpha = mulher ? -0.241 : -0.302;
+        const ratio = Cr / k;
+        const term1 = Math.pow(Math.min(ratio, 1), alpha);
+        const term2 = Math.pow(Math.max(ratio, 1), -1.2);
+        TFGckdepiVal = 142 * term1 * term2 * Math.pow(0.993, idade) * (mulher ? 1.012 : 1);
+        set('TFGckdepi', TFGckdepiVal);
+      } else {
+        set('TFGckdepi', undefined);
+      }
+
+      function gStage(val) {
+        if (val === undefined || isNaN(val)) return null;
+        if (val >= 90) return 'G1';
+        if (val >= 60) return 'G2';
+        if (val >= 45) return 'G3a';
+        if (val >= 30) return 'G3b';
+        if (val >= 15) return 'G4';
+        return 'G5';
+      }
+      const albuminuria = albuminuriaEl.value;
+      const showA = albuminuria !== 'N';
+      const ClCrVal = !isNaN(idade) && !isNaN(peso) && peso > 0 ? ((140 - idade) * peso) / (72 * Cr) * (mulher ? 0.85 : 1) : NaN;
+      const TFGmdrdVal = !isNaN(idade) ? 175 * Math.pow(Cr, -1.154) * Math.pow(idade, -0.203) * (mulher ? 0.742 : 1) * (etniaNegra ? 1.212 : 1) : NaN;
+      const gClCr = gStage(ClCrVal);
+      const gMDRD = gStage(TFGmdrdVal);
+      const gCKD = gStage(TFGckdepiVal);
+      const fmt = (g) => g ? (showA ? g + ' ' + albuminuria : g) : '—';
+      setText('ClassClCr', fmt(gClCr));
+      setText('ClassTFGmdrd', fmt(gMDRD));
+      setText('ClassTFGckdepi', fmt(gCKD));
+    }
+
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      el.addEventListener('input', () => {
+        el.dataset.userTouched = '1';
+        el.classList.add('user-edited');
+        calc();
+      });
+    });
+    sexoEl.addEventListener('change', () => {
+      sexoEl.dataset.userTouched = '1';
+      sexoEl.classList.add('user-edited');
+      calc();
+    });
+    etniaEl.addEventListener('change', () => {
+      etniaEl.dataset.userTouched = '1';
+      etniaEl.classList.add('user-edited');
+      calc();
+    });
+    albuminuriaEl.addEventListener('change', () => {
+      albuminuriaEl.dataset.userTouched = '1';
+      albuminuriaEl.classList.add('user-edited');
+      calc();
+    });
+    calc();
+  </script>
+</body>
+</html>

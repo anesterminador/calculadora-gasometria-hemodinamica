@@ -197,10 +197,12 @@
     /* Ajustes só para telas de celular/tablet (largura até 768px) */
     @media (max-width: 768px) {
       .logo {
+        /* Largura mínima no mobile: a logo não fica menor que isso (aumente o valor para logo maior) */
+        min-width: 240px;
         /* Largura máxima: o menor entre 600px e (tela inteira menos 2rem), para não vazar nas bordas */
         max-width: min(600px, calc(100vw - 2rem));
         /* Remove o deslocamento para a esquerda no mobile, mantendo a logo centralizada */
-        transform: translateX(-5%);
+        transform: translateX(-2%);
       }
     }
   </style>

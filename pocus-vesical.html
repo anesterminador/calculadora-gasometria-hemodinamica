@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Calculadora POCUS – Volume Vesical</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f1419;
+      --bg-card: #1a2129;
+      --bg-input: #252d36;
+      --border: #2d3843;
+      --text: #e6edf3;
+      --text-muted: #8b9cad;
+      --accent: #58a6ff;
+      --accent-soft: rgba(88, 166, 255, 0.15);
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      min-height: 100vh;
+      background: var(--bg);
+      background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(88, 166, 255, 0.08), transparent);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 0rem 1rem 3rem;
+    }
+    .wrap { max-width: 520px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 0.75rem; }
+    .logo-link { display: block; text-decoration: none; }
+    .logo {
+      max-width: 600px; height: auto; margin-bottom: -2.5rem;
+      display: block; margin-left: auto; margin-right: auto;
+      background: transparent;
+      transform: translateX(-3.2rem);
+      clip-path: inset(0 0 25 0);
+    }
+    h1 { font-size: 1.5rem; font-weight: 700; color: var(--text); margin-bottom: 0.35rem; }
+    .subtitle { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+    section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.35rem 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    section h2 {
+      font-size: 1.2rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.06em; color: #ffd139;
+      margin-bottom: 0.4rem; padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+    }
+    .row {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem; margin-bottom: 0.75rem;
+    }
+    .row:last-child { margin-bottom: 0; }
+    .input-subheader {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin: 1rem 0 0.5rem;
+      padding-bottom: 0.25rem;
+    }
+    .input-subheader:first-of-type { margin-top: 0; }
+    .section-fig {
+      display: block; max-width: 100%; height: auto;
+      margin: 0.75rem 0 1rem; border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    label { flex: 1; font-size: 0.9rem; color: var(--text); font-weight: 500; }
+    input, select {
+      padding: 0.5rem 0.65rem;
+      background: var(--bg-input); border: 1px solid var(--border);
+      border-radius: 8px; font-size: 0.95rem; font-family: inherit;
+      color: var(--text);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input { width: 88px; text-align: right; }
+    select { min-width: 140px; cursor: pointer; }
+    input:focus, select:focus {
+      outline: none; border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+    input.user-edited, select.user-edited { color: #fef9c3; }
+    .result-block {
+      display: flex; align-items: center; gap: 1rem;
+      margin-bottom: 1rem; padding: 0.35rem 0 0.7rem 0;
+      border-bottom: 1px solid var(--border);
+      min-height: 4.25rem;
+    }
+    .result-block:first-of-type { padding-top: 1.35rem; }
+    .result-block:last-of-type { border-bottom: none; margin-bottom: 0; }
+    .result-block-content {
+      flex: 1; min-width: 0; align-self: stretch;
+      display: flex; flex-direction: column; justify-content: center;
+    }
+    .result-row { font-size: 0.9rem; margin-top: -0.8rem; }
+    .result-row .name { color: var(--text); font-weight: 700; }
+    .result-box {
+      flex-shrink: 0; width: 88px; padding: 0.5rem 0.65rem;
+      background: var(--bg-input); border: 1px solid var(--border);
+      border-radius: 8px; font-size: 0.95rem; font-family: inherit;
+      font-weight: 700; color: var(--accent); text-align: center;
+      font-variant-numeric: tabular-nums;
+      transform: translateY(-0.3rem);
+    }
+    .result-box.normal { color: var(--accent); }
+    .result-box.abnormal { color: #ff7b72; }
+    .formula {
+      font-size: 0.75rem; color: var(--text-muted);
+      margin-top: 0.15rem; margin-bottom: 0; opacity: 0.9;
+      text-align: justify;
+    }
+    .formula-eq { color: #fef9c3; }
+    .formula-ref { color: #b0bcc9; margin-top: 0.35rem; }
+    footer { text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 0; opacity: 0.8; }
+    .footer-buttons { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; }
+    .footer-link {
+      display: inline-block; padding: 0.5rem 1.25rem;
+      background: var(--accent); color: #0f1419; font-weight: 700;
+      font-size: 0.9rem; text-decoration: none; border-radius: 8px;
+      transition: filter 0.2s, transform 0.15s;
+    }
+    .footer-link:hover { filter: brightness(1.15); transform: scale(1.03); }
+    @media (max-width: 768px) {
+      .logo {
+        min-width: 240px;
+        max-width: min(600px, calc(100vw - 2rem));
+        transform: translateX(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a href="index.html" class="logo-link">
+        <img src="Logo Hemodinâmica_regular.png" alt="Hemodinâmica" class="logo">
+      </a>
+      <h1>Calculadora POCUS – Volume Vesical</h1>
+      <p class="subtitle">Volume da bexiga por ecografia · Fórmula elipsoide e fatores de correção</p>
+    </header>
+
+    <section>
+      <h2>Dados de entrada</h2>
+      <p class="input-subheader">Medidas (corte transversal e longitudinal)</p>
+      <img src="volume-vesical-medidas.png" alt="Janela transversal: L largura, P profundidade. Janela longitudinal: A altura." class="section-fig">
+      <div class="row">
+        <label>L – Largura/transverso (cm)</label>
+        <input type="number" id="L" value="4" step="0.1" min="0" placeholder="cm">
+      </div>
+      <div class="row">
+        <label>P – Profundidade/anteroposterior (cm)</label>
+        <input type="number" id="P" value="4" step="0.1" min="0" placeholder="cm">
+      </div>
+      <div class="row">
+        <label>A – Altura/longitudinal (cm)</label>
+        <input type="number" id="A" value="5" step="0.1" min="0" placeholder="cm">
+      </div>
+      <p class="input-subheader">Formato da bexiga</p>
+      <div class="row">
+        <label>Formato (fator de correção)</label>
+        <select id="formato">
+          <option value="0.52">Esférico (0,52)</option>
+          <option value="0.66">Triangular (0,66)</option>
+          <option value="0.72" selected>Não sei (0,72)</option>
+          <option value="0.81">Cilíndrico (0,81)</option>
+          <option value="0.89">Cuboide (0,89)</option>
+        </select>
+      </div>
+    </section>
+
+    <section>
+      <h2>Parâmetros calculados</h2>
+      <div class="result-block">
+        <div class="result-block-content">
+          <div class="result-row"><span class="name">Volume vesical (mL)</span></div>
+          <div class="formula">
+            <div class="formula-eq">Volume (mL) = L × P × A × fator</div>
+            <div class="formula-ref">Volume > 400 mL e incapacidade de urinar: Alta com cateter.</div>
+          </div>
+        </div>
+        <span class="result-box" id="Volume">—</span>
+      </div>
+    </section>
+
+    <footer class="footer-buttons">
+      <a href="index.html" class="footer-link">Todas as Calculadoras</a>
+      <a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="footer-link">Contato</a>
+    </footer>
+  </div>
+
+  <script>
+    const inputIds = ['L', 'P', 'A'];
+    const formatoEl = document.getElementById('formato');
+
+    function get(id) {
+      const v = parseFloat(document.getElementById(id).value);
+      return isNaN(v) ? NaN : v;
+    }
+
+    function getFactor() {
+      return parseFloat(formatoEl.value);
+    }
+
+    function set(id, value) {
+      const el = document.getElementById(id);
+      if (value === undefined || value !== value) el.textContent = '—';
+      else el.textContent = typeof value === 'number' ? Math.round(value) : value;
+    }
+
+    function calc() {
+      const L = get('L'), P = get('P'), A = get('A');
+      const factor = getFactor();
+
+      if ([L, P, A].some(isNaN)) {
+        set('Volume', undefined);
+        document.getElementById('Volume').classList.remove('normal', 'abnormal');
+        return;
+      }
+
+      const volume = L * P * A * factor;
+      set('Volume', volume);
+      const volEl = document.getElementById('Volume');
+      volEl.classList.remove('normal', 'abnormal');
+      volEl.classList.add(volume > 400 ? 'abnormal' : 'normal');
+    }
+
+    inputIds.forEach(id => {
+      const el = document.getElementById(id);
+      el.addEventListener('input', () => {
+        el.dataset.userTouched = '1';
+        el.classList.add('user-edited');
+        calc();
+      });
+    });
+
+    formatoEl.dataset.initialIndex = formatoEl.selectedIndex;
+    formatoEl.addEventListener('change', () => {
+      formatoEl.dataset.userTouched = '1';
+      formatoEl.classList.add('user-edited');
+      calc();
+    });
+
+    calc();
+  </script>
+</body>
+</html>

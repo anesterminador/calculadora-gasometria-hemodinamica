@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LEMON – Via Aérea</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f1419; --bg-card: #1a2129; --bg-input: #252d36; --border: #2d3843;
+      --text: #e6edf3; --text-muted: #8b9cad; --accent: #58a6ff; --accent-soft: rgba(88, 166, 255, 0.15);
+    }
+    body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; min-height: 100vh; background: var(--bg);
+      background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(88, 166, 255, 0.08), transparent);
+      color: var(--text); line-height: 1.5; padding: 0rem 1rem 3rem; }
+    .wrap { max-width: 520px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 0.75rem; }
+    .logo-link { display: block; text-decoration: none; }
+    .logo { max-width: 600px; height: auto; margin-bottom: -2.5rem; display: block; margin-left: auto; margin-right: auto; background: transparent; transform: translateX(-3.2rem); clip-path: inset(0 0 25 0); }
+    h1 { font-size: 1.5rem; font-weight: 700; color: var(--text); margin-bottom: 0.35rem; }
+    .subtitle { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+    section { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.35rem 1.5rem; margin-bottom: 1.25rem; text-align: justify; }
+    section h2 { font-size: 1.2rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #ffd139; margin-bottom: 0.4rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--border); text-align: center; }
+    .lemon-item { margin-bottom: 1.25rem; }
+    .lemon-item:last-child { margin-bottom: 0; }
+    .lemon-letter { font-size: 1.1rem; font-weight: 700; color: var(--accent); margin-bottom: 0.25rem; }
+    .lemon-title { font-weight: 600; color: var(--text); margin-bottom: 0.35rem; }
+    .lemon-desc { font-size: 0.95rem; color: var(--text-muted); line-height: 1.5; }
+    footer { text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 0; opacity: 0.8; }
+    .footer-buttons { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; }
+    .footer-link { display: inline-block; padding: 0.5rem 1.25rem; background: var(--accent); color: #0f1419; font-weight: 700; font-size: 0.9rem; text-decoration: none; border-radius: 8px; transition: filter 0.2s, transform 0.15s; }
+    .footer-link:hover { filter: brightness(1.15); transform: scale(1.03); }
+    @media (max-width: 768px) { .logo { min-width: 240px; max-width: min(600px, calc(100vw - 2rem)); transform: translateX(0); } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="logo-link"><img src="Logo Hemodinâmica_regular.png" alt="Hemodinâmica" class="logo"></a>
+      <h1>LEMON</h1>
+      <p class="subtitle">Via Aérea · Intubação difícil</p>
+    </header>
+    <section>
+      <h2>Avaliação LEMON</h2>
+      <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">Ferramenta rápida de avaliação da via aérea para prever intubação difícil. Avalie cada componente.</p>
+
+      <div class="lemon-item">
+        <p class="lemon-letter">L — Look (Aspecto externo)</p>
+        <p class="lemon-title">Observar características que sugerem dificuldade</p>
+        <p class="lemon-desc">Incisivos proeminentes, distância interincisal reduzida, distância tireomentoniana reduzida, mandíbula retraída, pescoço curto ou grosso.</p>
+      </div>
+
+      <div class="lemon-item">
+        <p class="lemon-letter">E — Evaluate (Regra 3-3-2)</p>
+        <p class="lemon-title">Avaliar três medidas</p>
+        <p class="lemon-desc">Abertura de boca ≥ 3 dedos (≈ 3 cm); distância mento-hióide ≥ 3 dedos; distância tireomentoniana ≥ 2 dedos. Alteração em qualquer uma sugere maior dificuldade.</p>
+      </div>
+
+      <div class="lemon-item">
+        <p class="lemon-letter">M — Mallampati</p>
+        <p class="lemon-title">Classificação da orofaringe</p>
+        <p class="lemon-desc">Classes III e IV associam-se a maior chance de intubação difícil. Na versão modificada (emergência), o Mallampati pode ser omitido quando não for possível avaliar.</p>
+      </div>
+
+      <div class="lemon-item">
+        <p class="lemon-letter">O — Obstructed (Via aérea obstruída)</p>
+        <p class="lemon-title">Obstrução ou edema</p>
+        <p class="lemon-desc">Presença de corpo estranho, edema, trauma, tumor ou estenose que possa dificultar a visualização ou a passagem do tubo.</p>
+      </div>
+
+      <div class="lemon-item">
+        <p class="lemon-letter">N — Neck mobility (Mobilidade cervical)</p>
+        <p class="lemon-title">Amplitude de movimento do pescoço</p>
+        <p class="lemon-desc">Mobilidade cervical limitada (ex.: artrose, imobilização, trauma) dificulta o alinhamento da via aérea para laringoscopia. É um preditor independente em alguns estudos.</p>
+      </div>
+    </section>
+    <section>
+      <h2>Uso na prática</h2>
+      <p class="lemon-desc">Quanto mais itens alterados, maior a probabilidade de intubação difícil. A versão modificada (sem Mallampati) é útil em cenários de emergência quando a avaliação completa não é viável.</p>
+    </section>
+    <footer class="footer-buttons">
+      <a href="index.html" class="footer-link">Todas as Calculadoras</a>
+      <a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="footer-link">Contato</a>
+    </footer>
+  </div>
+</body>
+</html>

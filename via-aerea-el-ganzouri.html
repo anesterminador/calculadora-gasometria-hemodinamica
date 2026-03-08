@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>El-Ganzouri – Via Aérea</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f1419; --bg-card: #1a2129; --bg-input: #252d36; --border: #2d3843;
+      --text: #e6edf3; --text-muted: #8b9cad; --accent: #58a6ff; --accent-soft: rgba(88, 166, 255, 0.15);
+    }
+    body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; min-height: 100vh; background: var(--bg);
+      background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(88, 166, 255, 0.08), transparent);
+      color: var(--text); line-height: 1.5; padding: 0rem 1rem 3rem; }
+    .wrap { max-width: 520px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 0.75rem; }
+    .logo-link { display: block; text-decoration: none; }
+    .logo { max-width: 600px; height: auto; margin-bottom: -2.5rem; display: block; margin-left: auto; margin-right: auto; background: transparent; transform: translateX(-3.2rem); clip-path: inset(0 0 25 0); }
+    h1 { font-size: 1.5rem; font-weight: 700; color: var(--text); margin-bottom: 0.35rem; }
+    .subtitle { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+    section { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.35rem 1.5rem; margin-bottom: 1.25rem; }
+    section h2 { font-size: 1.2rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #ffd139; margin-bottom: 0.4rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--border); text-align: center; }
+    .va-group-label { font-size: 0.95rem; font-weight: 600; color: var(--text-muted); margin: 1rem 0 0.5rem; display: block; }
+    .va-group-label:first-of-type { margin-top: 0.5rem; }
+    .check-item { display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: 0.6rem; text-align: left; }
+    .check-item input { margin-top: 0.25rem; flex-shrink: 0; width: 1.15rem; height: 1.15rem; accent-color: var(--accent); cursor: pointer; }
+    .check-item label { font-size: 0.9rem; color: var(--text); line-height: 1.4; cursor: pointer; }
+    .va-divider { border: none; border-top: 1px solid var(--border); margin: 1rem 0; }
+    .va-result { text-align: center; padding: 1rem; background: var(--bg-input); border-radius: 8px; margin-top: 0.5rem; }
+    .va-score { font-size: 1.25rem; font-weight: 700; color: var(--accent); }
+    .va-risk { font-size: 0.95rem; color: var(--text-muted); margin-top: 0.35rem; }
+    .va-result.alert .va-score { color: #f85149; }
+    footer { text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 0; opacity: 0.8; }
+    .footer-buttons { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; }
+    .footer-link { display: inline-block; padding: 0.5rem 1.25rem; background: var(--accent); color: #0f1419; font-weight: 700; font-size: 0.9rem; text-decoration: none; border-radius: 8px; transition: filter 0.2s, transform 0.15s; }
+    .footer-link:hover { filter: brightness(1.15); transform: scale(1.03); }
+    @media (max-width: 768px) { .logo { min-width: 240px; max-width: min(600px, calc(100vw - 2rem)); transform: translateX(0); } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="logo-link"><img src="Logo Hemodinâmica_regular.png" alt="Hemodinâmica" class="logo"></a>
+      <h1>El-Ganzouri (Índice de Risco)</h1>
+      <p class="subtitle">Via Aérea · Intubação difícil</p>
+    </header>
+    <section>
+      <h2>Critérios do El-Ganzouri</h2>
+      <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem; text-align: left;">Marque uma opção por critério. Escore total de 0 a 12; ≥ 4 sugere via aérea difícil.</p>
+
+      <span class="va-group-label">1. Abertura de boca (distância interincisivos)</span>
+      <div class="check-item">
+        <input type="radio" name="eg-mouth" id="eg-mouth-0" value="0" checked>
+        <label for="eg-mouth-0">≥ 4 cm (0 pontos)</label>
+      </div>
+      <div class="check-item">
+        <input type="radio" name="eg-mouth" id="eg-mouth-1" value="1">
+        <label for="eg-mouth-1">&lt; 4 cm (1 ponto)</label>
+      </div>
+      <hr class="va-divider">
+
+      <span class="va-group-label">2. Distância tireomentoniana</span>
+      <div class="check-item">
+        <input type="radio" name="eg-thyro" id="eg-thyro-0" value="0" checked>
+        <label for="eg-thyro-0">&gt; 6,5 cm (0 pontos)</label>
+      </div>
+      <div class="check-item">
+        <input type="radio" name="eg-thyro" id="eg-thyro-1" value="1">
+        <label for="eg-thyro-1">6,0 a 6,5 cm (1 ponto)</label>
+      </div>
+      <div class="check-item">
+        <input type="radio" name="eg-thyro" id="eg-thyro-2" value="2">
+        <label for="eg-thyro-2">&lt; 6,0 cm (2 pontos)</label>
+      </div>
+      <hr class="va-divider">
+
+      <span class="va-group-label">3. Mallampati</span>
+      <div class="check-item">
+        <input type="radio" name="eg-mall" id="eg-mall-0" value="0" checked>
+        <label for="eg-mall-0">Classes I–II (0 pontos)</label>
+      </div>
+      <div class="check-item">
+        <input type="radio" name="eg-mall" id="eg-mall-1" value="1">
+        <label for="eg-mall-1">Classe III (1 ponto)</label>
+      </div>
+      <div class="check-item">
+        <input type="radio" name="eg-mall" id="eg-mall-2" value="2">
+        <label for="eg-mall-2">Classe IV (2 pontos)</label>
+      </div>
+      <hr class="va-divider">
+
+      <span class="va-group-label">4. Mobilidade cervical</span>
+      <div class="check-item">
+        <input type="radio" name="eg-neck" id="eg-neck-0" value="0" checked>
+        <label for="eg-neck-0">&gt; 90° (0 pontos)</label>
+      </div>
+      <div class="check-item">
+        <input type="radio" name="eg-neck" id="eg-neck-1" value="1">
+        <label for="eg-neck-1">80° a 90° (1 ponto)</label>
+      </div>
+      <div class="check-item">
+        <input type="radio" name="eg-neck" id="eg-neck-2" value="2">
+        <label for="eg-neck-2">&lt; 80° (2 pontos)</label>
+      </div>
+      <hr class="va-divider">
+
+      <span class="va-group-label">5. Protrusão da mandíbula: Incisivos inferiores ultrapassam os superiores?</span>
+      <div class="check-item">
+        <input type="radio" name="eg-jaw" id="eg-jaw-0" value="0" checked>
+        <label for="eg-jaw-0">Sim (0 pontos)</label>
+      </div>
+      <div class="check-item">
+        <input type="radio" name="eg-jaw" id="eg-jaw-1" value="1">
+        <label for="eg-jaw-1">Não (1 ponto)</label>
+      </div>
+      <hr class="va-divider">
+
+      <span class="va-group-label">6. Peso corporal</span>
+      <div class="check-item">
+        <input type="radio" name="eg-weight" id="eg-weight-0" value="0" checked>
+        <label for="eg-weight-0">&lt; 90 kg (0 pontos)</label>
+      </div>
+      <div class="check-item">
+        <input type="radio" name="eg-weight" id="eg-weight-1" value="1">
+        <label for="eg-weight-1">90 a 110 kg (1 ponto)</label>
+      </div>
+      <div class="check-item">
+        <input type="radio" name="eg-weight" id="eg-weight-2" value="2">
+        <label for="eg-weight-2">&gt; 110 kg (2 pontos)</label>
+      </div>
+      <hr class="va-divider">
+
+      <span class="va-group-label">7. História de intubação difícil</span>
+      <div class="check-item">
+        <input type="radio" name="eg-history" id="eg-history-0" value="0" checked>
+        <label for="eg-history-0">Nenhuma (0 pontos)</label>
+      </div>
+      <div class="check-item">
+        <input type="radio" name="eg-history" id="eg-history-1" value="1">
+        <label for="eg-history-1">Questionável (1 ponto)</label>
+      </div>
+      <div class="check-item">
+        <input type="radio" name="eg-history" id="eg-history-2" value="2">
+        <label for="eg-history-2">Definitiva (2 pontos)</label>
+      </div>
+    </section>
+    <section>
+      <h2>Resultado</h2>
+      <div class="va-result" id="eg-result">
+        <p class="va-score" id="eg-score">Pontuação: 0</p>
+        <p class="va-risk" id="eg-risk">Via aérea provavelmente fácil</p>
+      </div>
+    </section>
+    <script>
+      function egUpdate() {
+        var n = 0;
+        ['eg-mouth','eg-thyro','eg-mall','eg-neck','eg-jaw','eg-weight','eg-history'].forEach(function(name) {
+          var el = document.querySelector('input[name="' + name + '"]:checked');
+          if (el) n += parseInt(el.value, 10);
+        });
+        document.getElementById('eg-score').textContent = 'Pontuação: ' + n;
+        document.getElementById('eg-risk').textContent = n >= 4 ? 'Risco de via aérea difícil (≥ 4)' : 'Via aérea provavelmente fácil';
+        document.getElementById('eg-result').classList.toggle('alert', n >= 4);
+      }
+      document.querySelectorAll('input[name^="eg-"]').forEach(function(el) { el.addEventListener('change', egUpdate); });
+      egUpdate();
+    </script>
+    <footer class="footer-buttons">
+      <a href="index.html" class="footer-link">Todas as Calculadoras</a>
+      <a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="footer-link">Contato</a>
+    </footer>
+  </div>
+</body>
+</html>

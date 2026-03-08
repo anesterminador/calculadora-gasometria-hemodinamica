@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Caprini – Risco de Tromboembolismo Venoso</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f1419; --bg-card: #1a2129; --bg-input: #252d36; --border: #2d3843;
+      --text: #e6edf3; --text-muted: #8b9cad; --accent: #58a6ff; --accent-soft: rgba(88, 166, 255, 0.15);
+    }
+    body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; min-height: 100vh; background: var(--bg);
+      background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(88, 166, 255, 0.08), transparent);
+      color: var(--text); line-height: 1.5; padding: 0rem 1rem 3rem; }
+    .wrap { max-width: 520px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 0.75rem; }
+    .logo-link { display: block; text-decoration: none; }
+    .logo { max-width: 600px; height: auto; margin-bottom: -2.5rem; display: block; margin-left: auto; margin-right: auto; background: transparent; transform: translateX(-3.2rem); clip-path: inset(0 0 25 0); }
+    h1 { font-size: 1.5rem; font-weight: 700; color: var(--text); margin-bottom: 0.35rem; }
+    .subtitle { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+    section { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.35rem 1.5rem; margin-bottom: 1.25rem; }
+    section h2 { font-size: 1.2rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #ffd139; margin-bottom: 0.4rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--border); text-align: center; }
+    .cap-group-label { font-size: 0.95rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.5rem; display: block; }
+    .cap-group-label .pts { color: var(--accent); font-weight: 500; }
+    .check-item { display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: 0.85rem; text-align: left; }
+    .check-item input { margin-top: 0.25rem; flex-shrink: 0; width: 1.15rem; height: 1.15rem; accent-color: var(--accent); cursor: pointer; }
+    .check-item label { font-size: 0.95rem; color: var(--text); line-height: 1.45; cursor: pointer; }
+    .cap-divider { border: none; border-top: 1px solid var(--border); margin: 1rem 0; }
+    .caprini-result { text-align: center; padding: 1rem; background: var(--bg-input); border-radius: 8px; margin-top: 0.5rem; }
+    .caprini-score { font-size: 1.25rem; font-weight: 700; color: var(--accent); }
+    .caprini-risk { font-size: 0.95rem; color: var(--text-muted); margin-top: 0.35rem; }
+    .caprini-legend { font-size: 0.85rem; color: var(--text-muted); margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); text-align: justify; line-height: 1.5; }
+    footer { text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 0; opacity: 0.8; }
+    .footer-buttons { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; }
+    .footer-link { display: inline-block; padding: 0.5rem 1.25rem; background: var(--accent); color: #0f1419; font-weight: 700; font-size: 0.9rem; text-decoration: none; border-radius: 8px; transition: filter 0.2s, transform 0.15s; }
+    .footer-link:hover { filter: brightness(1.15); transform: scale(1.03); }
+    @media (max-width: 768px) { .logo { min-width: 240px; max-width: min(600px, calc(100vw - 2rem)); transform: translateX(0); } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="logo-link"><img src="Logo Hemodinâmica_regular.png" alt="Hemodinâmica" class="logo"></a>
+      <h1>Escore Caprini (2005)</h1>
+      <p class="subtitle">Risco pré-operatório · Tromboembolismo venoso (TEV)</p>
+    </header>
+
+    <section>
+      <h2>Escore Caprini para TEV</h2>
+      <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem; text-align: left;">Marque a faixa etária, a cirurgia prevista e todos os fatores presentes. Modelo Caprini modificado.</p>
+
+      <span class="cap-group-label">Idade <span class="pts">(escolha uma)</span></span>
+      <div class="check-item">
+        <input type="radio" name="cap-age" id="cap-age-0" value="0" checked aria-label="Menor que 41 anos">
+        <label for="cap-age-0">&lt;41 anos (0 pontos)</label>
+      </div>
+      <div class="check-item">
+        <input type="radio" name="cap-age" id="cap-age-1" value="1" aria-label="41 a 60 anos">
+        <label for="cap-age-1">41 a 60 anos (1 ponto)</label>
+      </div>
+      <div class="check-item">
+        <input type="radio" name="cap-age" id="cap-age-2" value="2" aria-label="61 a 74 anos">
+        <label for="cap-age-2">61 a 74 anos (2 pontos)</label>
+      </div>
+      <div class="check-item">
+        <input type="radio" name="cap-age" id="cap-age-3" value="3" aria-label="75 anos ou mais">
+        <label for="cap-age-3">≥75 anos (3 pontos)</label>
+      </div>
+      <hr class="cap-divider">
+
+      <span class="cap-group-label">Cirurgia prevista? <span class="pts">(escolha uma)</span></span>
+      <div class="check-item">
+        <input type="radio" name="cap-surgery" id="cap-surg-0" value="0" checked aria-label="Não">
+        <label for="cap-surg-0">Não</label>
+      </div>
+      <div class="check-item">
+        <input type="radio" name="cap-surgery" id="cap-surg-minor" value="1" aria-label="Cirurgia de pequeno porte">
+        <label for="cap-surg-minor">Cirurgia de pequeno porte (1 ponto)</label>
+      </div>
+      <div class="check-item">
+        <input type="radio" name="cap-surgery" id="cap-surg-arthro" value="2" aria-label="Cirurgia artroscópica">
+        <label for="cap-surg-arthro">Cirurgia artroscópica (2 pontos)</label>
+      </div>
+      <div class="check-item">
+        <input type="radio" name="cap-surgery" id="cap-surg-45" value="2" aria-label="Cirurgia aberta de grande porte ou laparoscópica maior que 45 minutos">
+        <label for="cap-surg-45">Cirurgia aberta de grande porte ou laparoscópica (&gt;45 min) (2 pontos)</label>
+      </div>
+      <div class="check-item">
+        <input type="radio" name="cap-surgery" id="cap-surg-elective" value="5" aria-label="Artroplastia eletiva">
+        <label for="cap-surg-elective">Artroplastia eletiva (5 pontos)</label>
+      </div>
+      <hr class="cap-divider">
+
+      <span class="cap-group-label">Fatores de <span class="pts">1 ponto</span></span>
+      <div class="check-item"><input type="checkbox" id="c-obesity" data-pts="1"><label for="c-obesity">IMC &gt;25 kg/m²</label></div>
+      <div class="check-item"><input type="checkbox" id="c-swollen" data-pts="1"><label for="c-swollen">Pernas inchadas</label></div>
+      <div class="check-item"><input type="checkbox" id="c-varicose" data-pts="1"><label for="c-varicose">Varizes</label></div>
+      <div class="check-item"><input type="checkbox" id="c-postpartum" data-pts="1"><label for="c-postpartum">Gravidez ou pós-parto</label></div>
+      <div class="check-item"><input type="checkbox" id="c-abortion" data-pts="1"><label for="c-abortion">História de aborto espontâneo inexplicado ou recorrente</label></div>
+      <div class="check-item"><input type="checkbox" id="c-hrt" data-pts="1"><label for="c-hrt">Anticoncepcionais orais ou terapia de reposição hormonal</label></div>
+      <div class="check-item"><input type="checkbox" id="c-sepsis" data-pts="1"><label for="c-sepsis">Sepse (&lt;1 mês)</label></div>
+      <div class="check-item"><input type="checkbox" id="c-lung" data-pts="1"><label for="c-lung">Doença pulmonar grave, incluindo pneumonia (&lt;1 mês)</label></div>
+      <div class="check-item"><input type="checkbox" id="c-copd" data-pts="1"><label for="c-copd">Função pulmonar anormal</label></div>
+      <div class="check-item"><input type="checkbox" id="c-ami" data-pts="1"><label for="c-ami">Infarto agudo do miocárdio</label></div>
+      <div class="check-item"><input type="checkbox" id="c-chf" data-pts="1"><label for="c-chf">Insuficiência cardíaca congestiva (&lt;1 mês)</label></div>
+      <div class="check-item"><input type="checkbox" id="c-ibd" data-pts="1"><label for="c-ibd">História de doença inflamatória intestinal</label></div>
+      <div class="check-item"><input type="checkbox" id="c-immobile" data-pts="1"><label for="c-immobile">Paciente clínico em repouso no leito</label></div>
+      <hr class="cap-divider">
+
+      <span class="cap-group-label">Fatores de <span class="pts">2 pontos</span></span>
+      <div class="check-item"><input type="checkbox" id="c-cancer" data-pts="2"><label for="c-cancer">Malignidade</label></div>
+      <div class="check-item"><input type="checkbox" id="c-bedrest" data-pts="2"><label for="c-bedrest">Confinado ao leito (&gt;72 horas)</label></div>
+      <div class="check-item"><input type="checkbox" id="c-cast" data-pts="2"><label for="c-cast">Gesso imobilizador</label></div>
+      <div class="check-item"><input type="checkbox" id="c-cvc" data-pts="2"><label for="c-cvc">Acesso venoso central</label></div>
+      <hr class="cap-divider">
+
+      <span class="cap-group-label">Fatores de <span class="pts">3 pontos</span></span>
+      <div class="check-item"><input type="checkbox" id="c-dvt" data-pts="3"><label for="c-dvt">História de TEV</label></div>
+      <div class="check-item"><input type="checkbox" id="c-fam-vte" data-pts="3"><label for="c-fam-vte">História familiar de TEV</label></div>
+      <div class="check-item"><input type="checkbox" id="c-thrombophilia" data-pts="3"><label for="c-thrombophilia">Trombofilia congênita ou adquirida (Fator V Leiden, protrombina 20210A, anticoagulante lúpico, anticardiolipina, homocisteína elevada, etc.)</label></div>
+      <div class="check-item"><input type="checkbox" id="c-hit" data-pts="3"><label for="c-hit">Trombocitopenia induzida por heparina (HIT)</label></div>
+      <hr class="cap-divider">
+
+      <span class="cap-group-label">Fatores de <span class="pts">5 pontos</span></span>
+      <div class="check-item"><input type="checkbox" id="c-stroke" data-pts="5"><label for="c-stroke">AVC (&lt;1 mês)</label></div>
+      <div class="check-item"><input type="checkbox" id="c-fracture" data-pts="5"><label for="c-fracture">Fratura de quadril, pelve ou perna</label></div>
+      <div class="check-item"><input type="checkbox" id="c-spinal" data-pts="5"><label for="c-spinal">Lesão medular aguda (&lt;1 mês)</label></div>
+    </section>
+
+    <section>
+      <h2>Resultado – Risco de TEV</h2>
+      <div class="caprini-result">
+        <p class="caprini-score" id="caprini-score">Pontuação total: 0</p>
+        <p class="caprini-risk" id="caprini-risk">Categoria: Muito baixo risco</p>
+      </div>
+      <p class="caprini-legend">Modelo Caprini modificado para TEV em pacientes cirúrgicos. Categorias: <strong>Muito baixo</strong> (0 pts, risco &lt;0,5%), <strong>Baixo</strong> (1–2 pts, risco 1,5%), <strong>Moderado</strong> (3–4 pts, risco 3,0%), <strong>Alto</strong> (≥5 pts, risco 6,0%) — risco de TEV na ausência de profilaxia. Não substitui o julgamento clínico.</p>
+    </section>
+
+    <section>
+      <h2>Referência</h2>
+      <p class="caprini-legend" style="margin-top: 0; padding-top: 0; border-top: none;">Modelo de avaliação de risco Caprini <em>modificado</em> para TEV em pacientes cirúrgicos gerais (baseado em Caprini JA. <em>Dis Mon.</em> 2005).</p>
+    </section>
+
+    <script>
+      (function() {
+        var ageRadios = document.querySelectorAll('input[name="cap-age"]');
+        var surgeryRadios = document.querySelectorAll('input[name="cap-surgery"]');
+        var checkboxes = document.querySelectorAll('section .check-item input[data-pts]');
+        var scoreEl = document.getElementById('caprini-score');
+        var riskEl = document.getElementById('caprini-risk');
+        var riskLabels = [
+          { max: 0, label: 'Muito baixo risco' },
+          { max: 2, label: 'Baixo risco' },
+          { max: 4, label: 'Moderado risco' },
+          { max: 999, label: 'Alto risco' }
+        ];
+        function getAgePts() {
+          var r = document.querySelector('input[name="cap-age"]:checked');
+          return r ? parseInt(r.value, 10) : 0;
+        }
+        function getSurgeryPts() {
+          var r = document.querySelector('input[name="cap-surgery"]:checked');
+          return r ? parseInt(r.value, 10) : 0;
+        }
+        function getCheckboxPts() {
+          var total = 0;
+          checkboxes.forEach(function(cb) {
+            if (cb.checked) total += parseInt(cb.getAttribute('data-pts'), 10);
+          });
+          return total;
+        }
+        function getCategory(score) {
+          for (var i = 0; i < riskLabels.length; i++) {
+            if (score <= riskLabels[i].max) return riskLabels[i].label;
+          }
+          return riskLabels[riskLabels.length - 1].label;
+        }
+        function update() {
+          var total = getAgePts() + getSurgeryPts() + getCheckboxPts();
+          scoreEl.textContent = 'Pontuação total: ' + total;
+          riskEl.textContent = 'Categoria: ' + getCategory(total);
+        }
+        ageRadios.forEach(function(r) { r.addEventListener('change', update); });
+        surgeryRadios.forEach(function(r) { r.addEventListener('change', update); });
+        checkboxes.forEach(function(cb) { cb.addEventListener('change', update); });
+      })();
+    </script>
+
+    <footer class="footer-buttons">
+      <a href="index.html" class="footer-link">Todas as Calculadoras</a>
+      <a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="footer-link">Contato</a>
+    </footer>
+  </div>
+</body>
+</html>

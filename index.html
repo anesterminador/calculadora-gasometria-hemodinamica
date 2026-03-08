@@ -67,6 +67,59 @@
       font-size: 0.9rem;
       font-weight: 500;
     }
+    .search-wrap {
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    .search-input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: #0f1419;
+      font-size: 1rem;
+      font-family: inherit;
+    }
+    .search-input::placeholder {
+      color: var(--text-muted);
+    }
+    .search-input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--accent-soft);
+    }
+    .search-results {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 100%;
+      margin-top: 0.35rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      max-height: 280px;
+      overflow-y: auto;
+      z-index: 10;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+    .search-results[hidden] {
+      display: none;
+    }
+    .search-results a {
+      display: block;
+      padding: 0.7rem 1rem;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.95rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .search-results a:last-child {
+      border-bottom: none;
+    }
+    .search-results a:hover {
+      background: var(--accent-soft);
+    }
     .card-list {
       display: flex;
       flex-direction: column;
@@ -150,6 +203,11 @@
       <p class="subtitle">Ferramentas do curso Hemodinâmica · Anest-Review</p>
     </header>
 
+    <div class="search-wrap">
+      <input type="search" class="search-input" id="home-search" placeholder="Buscar calculadora ou escore (ex.: KDIGO, ASA, Lee, gasometria…)" autocomplete="off">
+      <div class="search-results" id="search-results" hidden></div>
+    </div>
+
     <nav class="card-list">
       <details class="pocus-menu">
         <summary class="card-link">Calculadoras POCUS</summary>
@@ -204,5 +262,65 @@
       <a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="footer-link">Contato</a>
     </footer>
   </div>
+  <script>
+    (function() {
+      var index = [
+        { label: 'Gasometria Arterial e Venosa (Hemodinâmica)', url: 'calculadora.html', terms: 'gasometria gases' },
+        { label: 'Obesidade', url: 'obesidade.html', terms: 'obesidade IMC peso escalar' },
+        { label: 'Calculadoras POCUS · Diafragma', url: 'pocus-diafragma.html', terms: 'pocus diafragma' },
+        { label: 'Calculadoras POCUS · Volume Gástrico', url: 'pocus-gastrico.html', terms: 'pocus gástrico ASTAG' },
+        { label: 'Calculadoras POCUS · Volume Vesical', url: 'pocus-vesical.html', terms: 'pocus vesical bexiga' },
+        { label: 'Função Renal · Doença Renal Aguda', url: 'funcao-renal-aguda.html', terms: 'renal aguda IRA KDIGO RIFLE AKIN' },
+        { label: 'Função Renal · Doença Renal Crônica', url: 'funcao-renal.html', terms: 'renal crônica CKD MDRD Cockcroft CKD-EPI TFG clearance' },
+        { label: 'Risco pré-operatório · ASA', url: 'risco-asa.html', terms: 'ASA risco' },
+        { label: 'Risco pré-operatório · RCRI / Índice de Lee', url: 'risco-rcri.html', terms: 'RCRI Lee índice de Lee cardíaco' },
+        { label: 'Risco pré-operatório · AUB-HAS2', url: 'risco-aub-has2.html', terms: 'AUB HAS2 cardiovascular' },
+        { label: 'Risco pré-operatório · ARISCAT', url: 'risco-ariscat.html', terms: 'ARISCAT respiratório pulmonar' },
+        { label: 'Risco pré-operatório · Fragilidade (Fried)', url: 'risco-fragilidade.html', terms: 'fragilidade Fried fenótipo' },
+        { label: 'Risco pré-operatório · DASI (Duke)', url: 'risco-dasi.html', terms: 'DASI Duke atividade' },
+        { label: 'Risco pré-operatório · Mini-Cog', url: 'risco-mini-cog.html', terms: 'Mini-Cog cognitivo' },
+        { label: 'Via Aérea · DIFFMASK', url: 'via-aerea-diffmask.html', terms: 'DIFFMASK máscara ventilação' },
+        { label: 'Via Aérea · El-Ganzouri', url: 'via-aerea-el-ganzouri.html', terms: 'El-Ganzouri intubação' },
+        { label: 'Via Aérea · LEMON', url: 'via-aerea-lemon.html', terms: 'LEMON intubação' },
+        { label: 'Via Aérea · Mórbido', url: 'via-aerea-morbido.html', terms: 'mórbido mnemônico ventilação' },
+        { label: 'Ventilação Mecânica · Peso Predito', url: 'ventilacao-peso-predito.html', terms: 'peso predito IBW ideal' },
+        { label: 'Ventilação Mecânica · Mechanical Power (VCV)', url: 'ventilacao-mp-vcv.html', terms: 'mechanical power VCV volume' },
+        { label: 'Ventilação Mecânica · Mechanical Power (PCV)', url: 'ventilacao-mp-pcv.html', terms: 'mechanical power PCV pressão' }
+      ];
+      var input = document.getElementById('home-search');
+      var resultsEl = document.getElementById('search-results');
+      function normalize(s) { return (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
+      function match(q, item) {
+        var nq = normalize(q);
+        if (!nq) return false;
+        if (normalize(item.label).indexOf(nq) !== -1) return true;
+        var terms = (item.terms || '').toLowerCase();
+        return terms.split(/\s+/).some(function(t) { return t.indexOf(nq) !== -1 || nq.indexOf(t) !== -1; });
+      }
+      function render(list) {
+        if (!list.length) {
+          resultsEl.innerHTML = '<span style="display:block;padding:1rem;color:var(--text-muted);font-size:0.9rem;">Nenhum resultado.</span>';
+          resultsEl.removeAttribute('hidden');
+          return;
+        }
+        resultsEl.innerHTML = list.slice(0, 12).map(function(item) {
+          return '<a href="' + item.url + '">' + item.label + '</a>';
+        }).join('');
+        resultsEl.removeAttribute('hidden');
+      }
+      function onInput() {
+        var q = (input.value || '').trim();
+        if (q.length < 2) {
+          resultsEl.setAttribute('hidden', '');
+          return;
+        }
+        var list = index.filter(function(item) { return match(q, item); });
+        render(list);
+      }
+      input.addEventListener('input', onInput);
+      input.addEventListener('focus', function() { if (input.value.trim().length >= 2) onInput(); });
+      input.addEventListener('blur', function() { setTimeout(function() { resultsEl.setAttribute('hidden', ''); }, 180); });
+    })();
+  </script>
 </body>
 </html>

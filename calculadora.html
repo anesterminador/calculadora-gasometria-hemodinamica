@@ -121,6 +121,11 @@
       box-shadow: 0 0 0 3px var(--accent-soft);
     }
     input.user-edited { color: #fef9c3; }
+    input.abnormal {
+      border-color: var(--result-abnormal);
+      color: var(--result-abnormal);
+      box-shadow: 0 0 0 2px rgba(255, 123, 114, 0.35);
+    }
     .result-block {
       display: flex;
       align-items: center;
@@ -351,6 +356,18 @@
       if (state === 'normal' || state === 'abnormal') el.classList.add(state);
     }
 
+    function setInputRange(id, value, min, max, options) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.classList.remove('abnormal');
+      if (value !== value) return;
+      const onlyLow = options && options.onlyLow === true;
+      let abnormal = false;
+      if (onlyLow) abnormal = value < min;
+      else abnormal = value < min || value > max;
+      if (abnormal) el.classList.add('abnormal');
+    }
+
     function calc() {
       const Hb = get('Hb'), SaO2 = get('SaO2'), PaO2 = get('PaO2');
       const SvO2 = get('SvO2'), PvO2 = get('PvO2'), PaCO2 = get('PaCO2'), PvCO2 = get('PvCO2');
@@ -415,6 +432,11 @@
       setResultStyle('DO2i', DO2i > 500 ? 'normal' : 'abnormal');
       setResultStyle('VO2', null);
       setResultStyle('VO2i', !isNaN(VO2i) ? (VO2i >= 110 && VO2i <= 160 ? 'normal' : 'abnormal') : null);
+
+      // Valores fora da faixa de referência em vermelho (inclusive nos inputs)
+      // PaCO2: 40 ± 5 (35–45). PaO2: vermelho apenas se < 60 mmHg.
+      setInputRange('PaCO2', PaCO2, 35, 45);
+      setInputRange('PaO2', PaO2, 60, Infinity, { onlyLow: true });
     }
 
     ids.forEach(id => {

@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gasometria – Avaliação Ácido-Básica</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f1419;
+      --bg-card: #1a2129;
+      --bg-input: #252d36;
+      --border: #2d3843;
+      --text: #e6edf3;
+      --text-muted: #8b9cad;
+      --accent: #58a6ff;
+      --accent-soft: rgba(88, 166, 255, 0.15);
+      --result-abnormal: #ff7b72;
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      min-height: 100vh;
+      background: var(--bg);
+      background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(88, 166, 255, 0.08), transparent),
+                       radial-gradient(ellipse 60% 40% at 100% 100%, rgba(63, 185, 80, 0.05), transparent);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 0.0rem 1rem 3rem;
+    }
+    .wrap {
+      max-width: 520px;
+      margin: 0 auto;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 0.75rem;
+    }
+    .logo-link {
+      display: block;
+      text-decoration: none;
+    }
+    .logo {
+      max-width: 600px;
+      height: auto;
+      margin-bottom: -2.5rem;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      background: transparent;
+      transform: translateX(-3.2rem);
+      clip-path: inset(0 0 25 0);
+    }
+    @media (max-width: 768px) {
+      .logo {
+        min-width: 240px;
+        max-width: min(600px, calc(100vw - 0rem));
+        transform: translateX(-6%);
+      }
+    }
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.35rem;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.35rem 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    section h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #ffd139;
+      margin-bottom: 0.4rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+    }
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: -0.4rem;
+    }
+    .row:last-child { margin-bottom: 0; }
+    label {
+      flex: 1;
+      font-size: 0.9rem;
+      color: var(--text);
+      font-weight: 500;
+    }
+    input, select {
+      width: 88px;
+      padding: 0.5rem 0.65rem;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      color: var(--text);
+      text-align: right;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    select {
+      width: 100%;
+      text-align: left;
+    }
+    .inputs-section .row input[type="checkbox"] {
+      width: auto;
+      padding: 0;
+      transform: translateY(0);
+    }
+    input::placeholder { color: var(--text-muted); }
+    input:hover, select:hover { border-color: #3d4a56; }
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+    input.abnormal {
+      border-color: var(--result-abnormal);
+      color: var(--result-abnormal);
+      box-shadow: 0 0 0 2px rgba(255, 123, 114, 0.35);
+    }
+    .result-block {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      padding: 0.35rem 0 0.7rem 0;
+      border-bottom: 1px solid var(--border);
+      min-height: 3.75rem;
+    }
+    .result-block:first-of-type { padding-top: 1.35rem; }
+    .result-block:last-of-type { border-bottom: none; margin-bottom: 0; }
+    .result-block-content {
+      flex: 1;
+      min-width: 0;
+      align-self: stretch;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .result-row {
+      font-size: 0.9rem;
+      margin-bottom: 0.05rem;
+    }
+    .result-row .name { color: var(--text); font-weight: 700; }
+    .formula {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.15rem;
+      margin-bottom: 0;
+      opacity: 0.9;
+    }
+    .result-box {
+      flex-shrink: 0;
+      min-width: 100px;
+      padding: 0.5rem 0.65rem;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      font-weight: 700;
+      color: var(--accent);
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+      transform: translateY(-0.1rem);
+    }
+    .result-box.normal { color: var(--accent); }
+    .result-box.abnormal { color: var(--result-abnormal); }
+    .interpretacao {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.35rem;
+      text-align: justify;
+    }
+    .delta-aviso {
+      color: var(--result-abnormal);
+      margin-top: 0.5rem;
+      text-align: justify;
+    }
+    .delta-intervalo-label {
+      display: block;
+      margin-top: 0.5rem;
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .delta-intervalo {
+      font-weight: 600;
+      color: var(--text);
+    }
+    .input-hint {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      padding-top: -0.1rem;
+      padding-bottom: 0.3rem;
+      margin-top: 0;
+      margin-bottom: 0.0rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .primary-label {
+      margin-top: 0.75rem;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #ffd139;
+    }
+    #DistPrimarioBox {
+      display: block;
+      width: 100%;
+      margin-top: 0.5rem;
+      min-width: 0;
+      transform: translateY(0);
+      color: var(--text);
+    }
+    /* Aproxima o espaçamento vertical dos inputs ao dos parâmetros calculados da calculadora principal */
+    .inputs-section {
+      padding-top: 1.35rem;
+    }
+    footer {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0rem;
+      opacity: 0.8;
+    }
+    .footer-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+    }
+    .footer-link {
+      display: inline-block;
+      padding: 0.5rem 1.25rem;
+      background: var(--accent);
+      color: #0f1419;
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: filter 0.2s, transform 0.15s;
+    }
+    .footer-link:hover {
+      filter: brightness(1.15);
+      transform: scale(1.03);
+    }
+    /* Centraliza verticalmente os inputs entre as linhas horizontais das legendas */
+    .inputs-section .row input {
+      transform: translateY(0.35rem);
+    }
+    .cond-linha {
+      margin-bottom: 0.55rem;
+      text-align: justify;
+    }
+    .cond-titulo {
+      display: block;
+      color: #ffd139;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+    }
+    .cond-label {
+      display: block;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 0.1rem;
+    }
+    .cond-laudo {
+      display: block;
+      color: var(--text);
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="logo-link">
+        <img src="Logo Hemodinâmica_regular.png" alt="Hemodinâmica" class="logo">
+      </a>
+      <h1>Avaliação Ácido-Básica</h1>
+      <p class="subtitle">Abordagem descritiva CO₂–HCO₃⁻ · Compensações esperadas</p>
+    </header>
+
+    <section class="inputs-section">
+      <h2>Dados de entrada</h2>
+      <div class="row"><label>pH</label><input type="text" id="pH" inputmode="decimal" maxlength="5" value="7,40"></div>
+      <p class="input-hint">Normal: 7,35 – 7,45</p>
+      <div class="row"><label>PaCO₂ (mmHg)</label><input type="number" id="PaCO2" step="0.1" min="0" value="40"></div>
+      <p class="input-hint">Normal: 35 – 45 mmHg</p>
+      <div class="row">
+        <label style="margin-top:0.8rem;margin-bottom:1rem;">Paciente é retentor crônico de CO₂?</label>
+        <div style="display:flex; gap:0.75rem; justify-content:flex-end;">
+          <label style="display:flex; align-items:center; gap:0.25rem; font-size:0.8rem; color:var(--text-muted);">
+            <input type="checkbox" id="RetentorCO2Sim" style="width:auto; padding:0; margin:0;"> Sim
+          </label>
+          <label style="display:flex; align-items:center; gap:0.25rem; font-size:0.8rem; color:var(--text-muted);">
+            <input type="checkbox" id="RetentorCO2Nao" style="width:auto; padding:0; margin:0;"> Não
+          </label>
+        </div>
+      </div>
+      <p class="input-hint"></p>
+      <div class="row"><label>HCO₃⁻ (mEq/L)</label><input type="number" id="HCO3" step="0.1" min="0" value="24"></div>
+      <p class="input-hint">Normal: 22 – 26 mEq/L</p>
+      <div class="row"><label>Na⁺ (mEq/L)</label><input type="number" id="Na" step="0.1" min="0" value="140"></div>
+      <p class="input-hint">Normal: 135 – 145 mEq/L</p>
+      <div class="row"><label>K⁺ (mEq/L)</label><input type="number" id="K" step="0.1" min="0" value="4"></div>
+      <p class="input-hint">Normal: 3,5 – 5,0 mEq/L</p>
+      <div class="row"><label>Cl⁻ (mEq/L)</label><input type="number" id="Cl" step="0.1" min="0" value="100"></div>
+      <p class="input-hint">Normal: 98 – 107 mEq/L</p>
+      <div class="row"><label>Lactato (mmol/L)</label><input type="number" id="Lactato" step="0.1" min="0" value="1"></div>
+      <p class="input-hint">Normal: &lt; 2,0 mmol/L</p>
+      <div class="row"><label>Albumina (g/dL)</label><input type="number" id="Albumina" step="0.1" min="0" value="4"></div>
+      <p class="input-hint">Normal: 3,5 – 5,0 g/dL</p>
+      <p class="primary-label">Distúrbio provável</p>
+      <span class="result-box" id="DistPrimarioBox">—</span>
+    </section>
+
+    <section>
+      <h2>Compensação esperada</h2>
+      <div class="result-block">
+        <div class="result-block-content">
+          <div class="result-row"><span class="name">Acidose respiratória aguda</span></div>
+          <p class="formula">HCO₃⁻ esperado (mEq/L) = 24 + (PaCO₂ − 40) / 10</p>
+        </div>
+        <span class="result-box" id="HCO3_RespAcid_Aguda">HCO₃⁻ esperado — mEq/L</span>
+      </div>
+      <div class="result-block">
+        <div class="result-block-content">
+          <div class="result-row"><span class="name">Acidose respiratória crônica</span></div>
+          <p class="formula">HCO₃⁻ esperado (mEq/L) = 24 + 4 × (PaCO₂ − 40) / 10</p>
+        </div>
+        <span class="result-box" id="HCO3_RespAcid_Cronica">HCO₃⁻ esperado — mEq/L</span>
+      </div>
+      <div class="result-block">
+        <div class="result-block-content">
+          <div class="result-row"><span class="name">Alcalose respiratória aguda</span></div>
+          <p class="formula">HCO₃⁻ esperado (mEq/L) = 24 − 2 × (40 − PaCO₂) / 10</p>
+        </div>
+        <span class="result-box" id="HCO3_RespAlk_Aguda">HCO₃⁻ esperado — mEq/L</span>
+      </div>
+      <div class="result-block">
+        <div class="result-block-content">
+          <div class="result-row"><span class="name">Alcalose respiratória crônica</span></div>
+          <p class="formula">HCO₃⁻ esperado (mEq/L) = 24 − 5 × (40 − PaCO₂) / 10</p>
+        </div>
+        <span class="result-box" id="HCO3_RespAlk_Cronica">HCO₃⁻ esperado — mEq/L</span>
+      </div>
+      <div class="result-block">
+        <div class="result-block-content">
+          <div class="result-row"><span class="name">Acidose metabólica</span></div>
+          <p class="formula">PaCO₂ esperado (mmHg) = 1,5 × HCO₃⁻ + 8 (± 2)</p>
+        </div>
+        <span class="result-box" id="PaCO2_MetAcid">PaCO₂ esperado — mmHg</span>
+      </div>
+      <div class="result-block">
+        <div class="result-block-content">
+          <div class="result-row"><span class="name">Alcalose metabólica</span></div>
+          <p class="formula">PaCO₂ esperado (mmHg) = 0,7 × HCO₃⁻ + 20 (± 5)</p>
+        </div>
+        <span class="result-box" id="PaCO2_MetAlk">PaCO₂ esperado — mmHg</span>
+      </div>
+    </section>
+
+    <section>
+      <h2>Ânion Gap e Delta Ratio</h2>
+      <div class="result-block">
+        <div class="result-block-content">
+          <div class="result-row"><span class="name">Ânion gap</span></div>
+          <p class="formula">Ânion gap = Na⁺ − (Cl⁻ + HCO₃⁻) &nbsp;&nbsp;·&nbsp;&nbsp; valor de referência ≈ 12 mEq/L</p>
+        </div>
+        <span class="result-box" id="AnionGap">—</span>
+      </div>
+      <div class="result-block">
+        <div class="result-block-content">
+          <div class="result-row"><span class="name">Delta ratio (ΔAG / ΔHCO₃⁻)</span></div>
+          <p class="formula">Delta ratio = (Ânion gap − 12) / (24 − HCO₃⁻)</p>
+        </div>
+        <span class="result-box" id="DeltaRatio">—</span>
+      </div>
+      <p class="interpretacao delta-aviso">
+        <strong>Atenção:</strong> O delta ratio só deve ser utilizado quando há <strong>acidose metabólica com ânion gap aumentado</strong> (AG &gt; 12 mEq/L). Fora desse contexto, a interpretação é sujeita a erros.
+      </p>
+      <p class="interpretacao" style="margin-top:0.5rem;">
+        <span class="delta-intervalo-label">Interpretação por intervalo:</span>
+        <span class="delta-intervalo">&lt; 0,4:</span> Acidose metabólica de AG elevado associada a componente <strong>hiperclorêmico</strong> importante (ou acidose metabólica predominantemente de AG normal).<br>
+        <span class="delta-intervalo">0,4 – 1:</span> Acidose metabólica de AG elevado associada a acidose metabólica de ânion gap normal (duas acidoses metabólicas).<br>
+        <span class="delta-intervalo">1 – 2:</span> Acidose metabólica de AG elevado “pura” (ex.: lactato ≈ 1,6; cetoacidose costuma se aproximar de 1).<br>
+        <span class="delta-intervalo">&gt; 2:</span> Acidose de AG elevado associada a <strong>alcalose metabólica</strong> ou a acidose respiratória crônica compensada (bicarbonato “sobrando” em relação à queda esperada).
+      </p>
+    </section>
+
+    <footer class="footer-buttons">
+      <a href="index.html" class="footer-link">Todas as Calculadoras</a>
+      <a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="footer-link">Contato</a>
+    </footer>
+  </div>
+
+  <script>
+    const inputIds = ['pH','PaCO2','HCO3','Na','K','Cl','Lactato','Albumina'];
+
+    function getNumber(id) {
+      const el = document.getElementById(id);
+      if (!el) return NaN;
+      const raw = (el.value || '').replace(',', '.');
+      const v = parseFloat(raw);
+      return isNaN(v) ? NaN : v;
+    }
+
+    function setBox(id, value) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (value === undefined || value !== value) {
+        el.textContent = '—';
+      } else if (typeof value === 'number') {
+        el.textContent = value.toFixed(2);
+      } else {
+        el.textContent = value;
+      }
+    }
+
+    function setBoxRange(id, value, min, max) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.classList.remove('normal', 'abnormal');
+      if (value === undefined || value !== value || min === undefined || max === undefined) return;
+      if (value >= min && value <= max) el.classList.add('normal');
+      else el.classList.add('abnormal');
+    }
+
+    function setInputRange(id, value, min, max) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.classList.remove('abnormal');
+      if (value !== value || min === undefined || max === undefined) return;
+      if (value < min || value > max) el.classList.add('abnormal');
+    }
+
+    function isRetentorCO2() {
+      const sim = document.getElementById('RetentorCO2Sim');
+      const nao = document.getElementById('RetentorCO2Nao');
+      if (sim && sim.checked) return true;
+      if (nao && nao.checked) return false;
+      return false;
+    }
+
+    function compensacaoAdequada(tipo, PaCO2, HCO3, retentor) {
+      if (isNaN(PaCO2) || isNaN(HCO3) || !tipo) return false;
+
+      if (tipo === 'met_acidose') {
+        const esperado = 1.5 * HCO3 + 8;
+        const min = esperado - 2;
+        const max = esperado + 2;
+        return PaCO2 >= min && PaCO2 <= max;
+      }
+
+      if (tipo === 'met_alcalose') {
+        // Mesma equação exibida em "Compensação esperada"
+        const esperado = 0.7 * HCO3 + 20;
+        const min = esperado - 5;
+        const max = esperado + 5;
+        return PaCO2 >= min && PaCO2 <= max;
+      }
+
+      if (tipo === 'resp_acidose' || tipo === 'resp_alcalose') {
+        let esperadoAgudo, esperadoCronico, esperado;
+        if (tipo === 'resp_acidose') {
+          esperadoAgudo = 24 + (PaCO2 - 40) / 10;
+          esperadoCronico = 24 + 4 * (PaCO2 - 40) / 10;
+          esperado = retentor ? esperadoCronico : esperadoAgudo;
+        } else {
+          esperadoAgudo = 24 - 2 * (40 - PaCO2) / 10;
+          esperadoCronico = 24 - 5 * (40 - PaCO2) / 10;
+          esperado = esperadoAgudo;
+        }
+        const minH = esperado - 2;
+        const maxH = esperado + 2;
+        return HCO3 >= minH && HCO3 <= maxH;
+      }
+
+      return false;
+    }
+
+    function atualizarDisturbioPrimarioBox(pH, PaCO2, HCO3, anionGap, deltaRatio, retentor) {
+      const box = document.getElementById('DistPrimarioBox');
+      if (!box) return;
+
+      let { tipo, secundario, misto } = inferirDisturbioPrimario(pH, PaCO2, HCO3);
+      if (!tipo && !secundario) {
+        const phQuaseNormal = !isNaN(pH) && pH >= 7.37 && pH <= 7.43;
+        const paNormal = !isNaN(PaCO2) && PaCO2 >= 36 && PaCO2 <= 44;
+        const hco3Normal = !isNaN(HCO3) && HCO3 >= 22 && HCO3 <= 26;
+        // Se AG está elevado, não podemos chamar de normal – é exatamente o "distúrbio misto oculto"
+        if (!isNaN(anionGap) && anionGap > 12 && phQuaseNormal && paNormal && hco3Normal) {
+          const agStr = anionGap.toFixed(1);
+          const textoOculto = `Acidose metabólica com ânion gap aumentado (AG: ${agStr}) associada a alcalose metabólica, mantendo pH e PaCO₂ próximos do normal.`;
+          box.innerHTML =
+            `<div class="cond-titulo">Distúrbio misto oculto:</div>` +
+            `<div class="cond-linha"><span class="cond-laudo">${textoOculto}</span></div>`;
+        } else if (phQuaseNormal && paNormal && hco3Normal) {
+          box.textContent = 'Gasometria normal ou praticamente normal.';
+        } else {
+          box.textContent = 'Padrão ácido-básico atípico para as regras desta calculadora.';
+        }
+        return;
+      }
+
+      function labelTipo(t, PaCO2Val, HCO3Val, isRetentor) {
+        if (!t) return '';
+        if (t === 'met_acidose') return 'Acidose metabólica';
+        if (t === 'met_alcalose') return 'Alcalose metabólica';
+        if (t === 'resp_acidose' || t === 'resp_alcalose') {
+          let fase = '';
+          if (!isNaN(PaCO2Val) && !isNaN(HCO3Val)) {
+            let esperadoAgudo, esperadoCronico;
+            if (t === 'resp_acidose') {
+              esperadoAgudo = 24 + (PaCO2Val - 40) / 10;
+              esperadoCronico = 24 + 4 * (PaCO2Val - 40) / 10;
+            } else {
+              esperadoAgudo = 24 - 2 * (40 - PaCO2Val) / 10;
+              esperadoCronico = 24 - 5 * (40 - PaCO2Val) / 10;
+            }
+            if (isRetentor && t === 'resp_acidose') {
+              fase = 'crônica';
+            } else {
+              // Se não for retentor crônico, assumir padrão agudo
+              fase = 'aguda';
+            }
+          }
+          if (t === 'resp_acidose') return `Acidose respiratória${fase ? ' ' + fase : ''}`;
+          if (t === 'resp_alcalose') return `Alcalose respiratória${fase ? ' ' + fase : ''}`;
+        }
+        return '';
+      }
+
+      // Ajuste específico: se o paciente é retentor crônico e o padrão é compatível
+      // com acidose respiratória crônica dentro da faixa de compensação esperada,
+      // forçamos a leitura como "acidose respiratória crônica simples".
+      if (retentor && !isNaN(PaCO2) && PaCO2 > 45 && !isNaN(HCO3)) {
+        const esperadoCronico = 24 + 4 * (PaCO2 - 40) / 10;
+        const minCron = esperadoCronico - 2;
+        const maxCron = esperadoCronico + 2;
+        if (HCO3 >= minCron - 0.05 && HCO3 <= maxCron + 0.05) {
+          tipo = 'resp_acidose';
+          secundario = null;
+          misto = false;
+        }
+      }
+
+      const primarioLabel = labelTipo(tipo, PaCO2, HCO3, retentor);
+      const secundarioLabel = labelTipo(secundario, PaCO2, HCO3, retentor);
+
+      const acidemia = !isNaN(pH) && pH < 7.35;
+      const alcalemia = !isNaN(pH) && pH > 7.45;
+      const isMetAcid = !isNaN(HCO3) && HCO3 < 22;
+      const isMetAlk = !isNaN(HCO3) && HCO3 > 26;
+      const isRespAcid = !isNaN(PaCO2) && PaCO2 > 45;
+      const isRespAlk = !isNaN(PaCO2) && PaCO2 < 35;
+
+      let texto = '';
+      let html = '';
+
+      // Distúrbios simples e mistos principais
+      if (acidemia) {
+        if (isMetAcid && isRespAcid) {
+          texto = 'Acidose mista (metabólica + respiratória)';
+        } else if (isMetAcid) {
+          texto = primarioLabel || 'Acidose metabólica';
+        } else if (isRespAcid) {
+          texto = primarioLabel || 'Acidose respiratória';
+        }
+      } else if (alcalemia) {
+        if (isMetAlk && isRespAlk) {
+          texto = 'Alcalose mista (metabólica + respiratória)';
+        } else if (isMetAlk) {
+          texto = primarioLabel || 'Alcalose metabólica';
+        } else if (isRespAlk) {
+          texto = primarioLabel || 'Alcalose respiratória';
+        }
+      }
+
+      // Ajuste fino: distúrbio respiratório primário com HCO3- fora do range de compensação esperada
+      if ((tipo === 'resp_acidose' || tipo === 'resp_alcalose') && !isNaN(PaCO2) && !isNaN(HCO3)) {
+        let esperadoAgudo, esperadoCronico, esperado, fase = '';
+        if (tipo === 'resp_acidose') {
+          esperadoAgudo = 24 + (PaCO2 - 40) / 10;
+          esperadoCronico = 24 + 4 * (PaCO2 - 40) / 10;
+        } else {
+          esperadoAgudo = 24 - 2 * (40 - PaCO2) / 10;
+          esperadoCronico = 24 - 5 * (40 - PaCO2) / 10;
+        }
+        if (retentor && tipo === 'resp_acidose') {
+          esperado = esperadoCronico;
+          fase = 'crônica';
+        } else {
+          // se não é retentor, considerar sempre padrão agudo
+          esperado = esperadoAgudo;
+          fase = 'aguda';
+        }
+        const minH = esperado - 2;
+        const maxH = esperado + 2;
+        // pequena folga numérica para evitar erro de arredondamento
+        if (HCO3 < minH - 0.05) {
+          // bicarbonato abaixo da compensação: acidose metabólica associada
+          if (tipo === 'resp_acidose') texto = `Acidose respiratória ${fase} + acidose metabólica`;
+          else texto = `Alcalose respiratória ${fase} + acidose metabólica`;
+        } else if (HCO3 > maxH + 0.05) {
+          // bicarbonato acima da compensação: alcalose metabólica associada
+          if (tipo === 'resp_acidose') texto = `Acidose respiratória ${fase} + alcalose metabólica`;
+          else texto = `Alcalose respiratória ${fase} + alcalose metabólica`;
+        }
+      }
+
+      // Ajuste dinâmico para distúrbios metabólicos com base na compensação esperada
+      if ((tipo === 'met_acidose' || tipo === 'met_alcalose') && !isNaN(HCO3) && !isNaN(PaCO2)) {
+        if (tipo === 'met_acidose') {
+          const esperado = 1.5 * HCO3 + 8;
+          const min = esperado - 2;
+          const max = esperado + 2;
+          if (PaCO2 < min - 0.05) {
+            // PaCO2 abaixo da Winter: alcalose respiratória associada
+            texto = 'Acidose metabólica + alcalose respiratória';
+          } else if (PaCO2 > max + 0.05) {
+            // PaCO2 acima da Winter: acidose respiratória associada
+            texto = 'Acidose metabólica + acidose respiratória';
+          } else {
+            // Dentro do range: acidose metabólica compensada
+            texto = 'Acidose metabólica compensada';
+          }
+        } else if (tipo === 'met_alcalose') {
+          // Usar exatamente a mesma equação do bloco de compensação esperada
+          const esperado = 0.7 * HCO3 + 20;
+          const min = esperado - 5;
+          const max = esperado + 5;
+          if (PaCO2 > max + 0.05) {
+            // PaCO2 muito alta: acidose respiratória associada
+            texto = 'Alcalose metabólica + acidose respiratória';
+          } else if (PaCO2 < min - 0.05) {
+            // PaCO2 muito baixa: alcalose respiratória associada
+            texto = 'Alcalose metabólica + alcalose respiratória';
+          } else {
+            texto = 'Alcalose metabólica compensada';
+          }
+        }
+      }
+
+      // Combinações metabólicas complexas baseadas no delta ratio
+      // Regra: só usar ΔΔ quando há acidose metabólica com Ânion Gap elevado
+      if (!isNaN(deltaRatio) && isMetAcid && !isNaN(anionGap) && anionGap > 12) {
+        if (deltaRatio > 2) {
+          // alto ânion gap com "bicarbonato sobrando" – acidose metabólica + alcalose metabólica
+          // ordem guiada pelo pH: em acidemia começa com acidose, em alcalemia começa com alcalose
+          if (acidemia) {
+            texto = 'Acidose metabólica + alcalose metabólica';
+          } else if (alcalemia) {
+            texto = 'Alcalose metabólica + acidose metabólica';
+          } else {
+            // pH quase normal: mantém acidose primeiro (padrão didático clássico)
+            texto = 'Acidose metabólica + alcalose metabólica';
+          }
+        } else if (deltaRatio < 0.4) {
+          // acidose metabólica com componente hiperclorêmico importante
+          texto = 'Acidose metabólica com componente hiperclorêmico';
+        }
+      }
+
+      // Combinações metabólico + respiratório específicas
+      // Só aplicamos quando o distúrbio primário é claramente metabólico
+      if (!isNaN(HCO3) && !isNaN(PaCO2)) {
+        // Acidose metabólica + alcalose respiratória: PaCO2 bem abaixo da Winter
+        if (tipo === 'met_acidose' && isMetAcid) {
+          const winter = 1.5 * HCO3 + 8;
+          if (PaCO2 < winter - 2) {
+            // ordem guiada pelo pH
+            texto = alcalemia
+              ? 'Alcalose respiratória + acidose metabólica'
+              : 'Acidose metabólica + alcalose respiratória';
+          }
+        }
+        // Alcalose metabólica + acidose respiratória: PaCO2 acima do esperado para alcalose metabólica
+        if (tipo === 'met_alcalose' && isMetAlk) {
+          const esperadoAlk = 0.7 * HCO3 + 20;
+          if (PaCO2 > esperadoAlk + 5) {
+            texto = acidemia
+              ? 'Acidose respiratória + alcalose metabólica'
+              : 'Alcalose metabólica + acidose respiratória';
+          }
+        }
+      }
+
+      // Caso especial didático: alcalose respiratória
+      // Mostrar explicitamente os cenários agudo e crônico com base nas faixas de HCO3-
+      if (tipo === 'resp_alcalose' && !isNaN(PaCO2) && !isNaN(HCO3)) {
+        const hco3Agudo = 24 - 2 * (40 - PaCO2) / 10;
+        const hco3Cron  = 24 - 5 * (40 - PaCO2) / 10;
+        const agudoMin = hco3Agudo - 2;
+        const agudoMax = hco3Agudo + 2;
+        const cronMin  = hco3Cron - 2;
+        const cronMax  = hco3Cron + 2;
+
+        const dentroAgudo = HCO3 >= agudoMin - 0.05 && HCO3 <= agudoMax + 0.05;
+        const dentroCron  = HCO3 >= cronMin - 0.05 && HCO3 <= cronMax + 0.05;
+
+        let laudoAgudo = '';
+        if (dentroAgudo) {
+          laudoAgudo = 'Bicarbonato dentro da faixa de compensação esperada (quadro compatível com forma aguda isolada).';
+        } else if (HCO3 > agudoMax + 0.05) {
+          laudoAgudo = 'Bicarbonato acima da faixa de compensação esperada. Sugere alcalose metabólica associada.';
+        } else if (HCO3 < agudoMin - 0.05) {
+          laudoAgudo = 'Bicarbonato abaixo da faixa de compensação esperada. Sugere acidose metabólica associada.';
+        } else {
+          laudoAgudo = 'Bicarbonato muito próximo do limite da faixa de compensação aguda.';
+        }
+
+        let laudoCron = '';
+        if (dentroCron) {
+          laudoCron = 'Bicarbonato dentro da faixa de compensação esperada (quadro compatível com forma crônica isolada).';
+        } else if (HCO3 > cronMax + 0.05) {
+          laudoCron = 'Bicarbonato acima da faixa de compensação esperada. Sugere alcalose metabólica associada.';
+        } else if (HCO3 < cronMin - 0.05) {
+          laudoCron = 'Bicarbonato abaixo da faixa de compensação esperada. Sugere acidose metabólica associada.';
+        } else {
+          laudoCron = 'Bicarbonato muito próximo do limite da faixa de compensação crônica.';
+        }
+
+        html =
+          `<div class="cond-titulo">Alcalose respiratória.</div>` +
+          `<div class="cond-linha"><span class="cond-label">Se alcalose respiratória aguda:</span>` +
+          `<span class="cond-laudo">${laudoAgudo}</span></div>` +
+          `<div class="cond-linha"><span class="cond-label">Se alcalose respiratória crônica:</span> ` +
+          `<span class="cond-laudo">${laudoCron}</span></div>`;
+      }
+
+      // Regra geral de ordenação: em quadros com acidose + alcalose, listar primeiro
+      // o distúrbio compatível com a direção do pH.
+      if (!html && texto && texto.includes(' + ')) {
+        const sufixoTriplo = texto.match(/\s*\(.*\)$/);
+        const sufixo = sufixoTriplo ? sufixoTriplo[0] : '';
+        const base = sufixoTriplo ? texto.replace(sufixoTriplo[0], '') : texto;
+        const partes = base.split(' + ');
+        if (partes.length === 2) {
+          const [p1, p2] = partes;
+          const p1Acid = /acidose/i.test(p1);
+          const p1Alk  = /alcalose/i.test(p1);
+          const p2Acid = /acidose/i.test(p2);
+          const p2Alk  = /alcalose/i.test(p2);
+
+          if (acidemia && p1Alk && p2Acid) {
+            texto = `${p2} + ${p1}${sufixo}`;
+          } else if (alcalemia && p1Acid && p2Alk) {
+            texto = `${p2} + ${p1}${sufixo}`;
+          }
+        }
+      }
+
+      // Caso ainda não tenha texto, usar rótulos básicos combinados
+      if (!html && !texto) {
+        texto = primarioLabel;
+        if (secundarioLabel) texto = primarioLabel ? `${primarioLabel} + ${secundarioLabel}` : secundarioLabel;
+      }
+
+      // Se distúrbio simples com compensação adequada, explicitar como "compensada"
+      const compOk = compensacaoAdequada(tipo, PaCO2, HCO3, retentor);
+      if (!html && !misto && texto && compOk && !/compensada/i.test(texto)) {
+        texto += ' compensada';
+      }
+
+      // Para qualquer quadro com acidose, acrescentar sempre o valor do ânion gap
+      if (!html && texto && !isNaN(anionGap)) {
+        const temAcidose = /acidose/i.test(texto);
+        const jaTemAG = /AG[:=]/i.test(texto);
+        if (temAcidose && !jaTemAG) {
+          const agStr = anionGap.toFixed(1);
+          texto += ` (AG: ${agStr})`;
+        }
+      }
+
+      // Marcações de mistura/triplo
+      if (!html && misto && texto) {
+        // Vamos transformar em bloco estruturado: título "Distúrbio misto" em amarelo
+        html =
+          `<div class="cond-titulo">Distúrbio misto:</div>` +
+          `<div class="cond-linha"><span class="cond-laudo">${texto}</span></div>`;
+      }
+
+      // Bloco descritivo adicional para casos com acidose metabólica de AG aumentado e delta–delta calculado
+      if (!html && texto && isMetAcid && !isNaN(anionGap) && anionGap > 12 && !isNaN(deltaRatio)) {
+        let labelDelta = '';
+        let laudoDelta = '';
+
+        const agStr = anionGap.toFixed(1);
+
+        if (deltaRatio < 0.4) {
+          labelDelta = `AG: ${agStr}. Delta ratio < 0,4:`;
+          laudoDelta = 'Sugere acidose metabólica hiperclorêmica adicional sobre a acidose de ânion gap aumentado.';
+        } else if (deltaRatio < 1) {
+          labelDelta = `AG: ${agStr}. Delta ratio < 1:`;
+          laudoDelta = 'Sugere acidose metabólica com ânion gap aumentado associada a acidose metabólica hiperclorêmica adicional.';
+        } else if (deltaRatio >= 1 && deltaRatio <= 2) {
+          labelDelta = `AG: ${agStr}. Delta ratio entre 1 e 2:`;
+          laudoDelta = 'Sugere acidose metabólica com ânion gap aumentado, sem evidência de acidose metabólica hiperclorêmica adicional.';
+        } else if (deltaRatio > 2) {
+          labelDelta = `AG: ${agStr}. Delta ratio > 2:`;
+          laudoDelta = 'Sugere acidose metabólica com ânion gap aumentado associada a alcalose metabólica ou acidose respiratória crônica compensada.';
+        }
+
+        if (labelDelta && laudoDelta) {
+          html =
+            `<div class="cond-titulo">${texto}</div>` +
+            `<div class="cond-linha"><span class="cond-label">${labelDelta}</span>` +
+            `<span class="cond-laudo">${laudoDelta}</span></div>`;
+        }
+      }
+
+      if (html) {
+        box.innerHTML = html;
+      } else {
+        box.textContent = texto || '—';
+      }
+    }
+
+    function inferirDisturbioPrimario(pH, PaCO2, HCO3) {
+      if (isNaN(pH) || (isNaN(PaCO2) && isNaN(HCO3))) return { tipo: null, secundario: null, misto: false };
+
+      const acidemia = pH < 7.35;
+      const alcalemia = pH > 7.45;
+      const deltaPaCO2 = isNaN(PaCO2) ? 0 : (PaCO2 - 40);
+      const deltaHCO3 = isNaN(HCO3) ? 0 : (HCO3 - 24);
+
+      const isRespAcid = !isNaN(PaCO2) && deltaPaCO2 > 0;
+      const isRespAlk  = !isNaN(PaCO2) && deltaPaCO2 < 0;
+      const isMetAcid  = !isNaN(HCO3) && deltaHCO3 < 0;
+      const isMetAlk   = !isNaN(HCO3) && deltaHCO3 > 0;
+
+      // Janela de "quase normalidade": não forçar distúrbio se tudo está muito próximo do normal
+      // pH muito perto de 7,40 e PaCO2/HCO3 dentro de faixas de referência estreitas
+      const phQuaseNormal = pH >= 7.37 && pH <= 7.43;
+      const paNormal = !isNaN(PaCO2) && PaCO2 >= 36 && PaCO2 <= 44;
+      const hco3Normal = !isNaN(HCO3) && HCO3 >= 22 && HCO3 <= 26;
+      if (phQuaseNormal && paNormal && hco3Normal) {
+        return { tipo: null, secundario: null, misto: false };
+      }
+
+      let tipo = null;
+      let secundario = null;
+      let misto = false;
+
+      // Usa "intensidade" relativa para escolher primário quando dois componentes atuam
+      const zResp = isNaN(PaCO2) ? 0 : Math.abs(deltaPaCO2 / 5); // 5 mmHg ≈ 1 desvio
+      const zMet  = isNaN(HCO3) ? 0 : Math.abs(deltaHCO3 / 2);   // 2 mEq/L ≈ 1 desvio
+
+      if (acidemia) {
+        if (isRespAcid && isMetAcid) {
+          misto = true;
+          // ambos contribuem para acidemia
+          if (zResp >= zMet) {
+            tipo = 'resp_acidose';
+            secundario = 'met_acidose';
+          } else {
+            tipo = 'met_acidose';
+            secundario = 'resp_acidose';
+          }
+        } else if (isRespAcid) {
+          tipo = 'resp_acidose';
+        } else if (isMetAcid) {
+          tipo = 'met_acidose';
+        } else if (!isRespAcid && !isMetAcid) {
+          // pH em acidemia com PaCO2 baixo e HCO3 não reduzido:
+          // se AG estiver elevado, assumir acidose metabólica de ânion gap + alcalose respiratória
+          // (não temos anionGap aqui, então apenas marcar como padrão atípico; a mensagem final cobre isso)
+        }
+      } else if (alcalemia) {
+        // Em alcalemia, apenas componentes que puxam para alcalose podem ser primários
+        if (isRespAlk && isMetAlk) {
+          misto = true;
+          tipo = 'resp_alcalose';
+          secundario = 'met_alcalose';
+        } else if (isRespAlk && isMetAcid) {
+          // pH alto com PaCO2 baixa e HCO3 baixo: alcalose respiratória + acidose metabólica (misto)
+          misto = true;
+          tipo = 'resp_alcalose';
+          secundario = 'met_acidose';
+        } else if (isRespAlk) {
+          tipo = 'resp_alcalose';
+        } else if (isMetAlk) {
+          tipo = 'met_alcalose';
+        }
+      } else {
+        // pH quase normal: escolher dominante pela maior alteração relativa
+        if (zResp === 0 && zMet === 0) return { tipo: null, secundario: null, misto: false };
+        if (zResp >= zMet) {
+          tipo = deltaPaCO2 > 0 ? 'resp_acidose' : 'resp_alcalose';
+        } else {
+          tipo = deltaHCO3 < 0 ? 'met_acidose' : 'met_alcalose';
+        }
+        if (!isNaN(PaCO2) && !isNaN(HCO3) && Math.sign(deltaPaCO2) !== Math.sign(deltaHCO3)) {
+          misto = true;
+          if (tipo === 'resp_acidose' || tipo === 'resp_alcalose') {
+            secundario = deltaHCO3 < 0 ? 'met_acidose' : 'met_alcalose';
+          } else {
+            secundario = deltaPaCO2 > 0 ? 'resp_acidose' : 'resp_alcalose';
+          }
+        }
+      }
+
+      return { tipo, secundario, misto };
+    }
+
+    function avaliarCompensacao() {
+      const PaCO2 = getNumber('PaCO2');
+      const HCO3 = getNumber('HCO3');
+      const pH = getNumber('pH');
+      const retentor = isRetentorCO2();
+
+      const { tipo, secundario, misto } = inferirDisturbioPrimario(pH, PaCO2, HCO3);
+      if (!tipo) {
+        return;
+      }
+
+      let mensagem = '';
+      let dentroFaixa = false;
+
+      if (tipo === 'met_acidose' && !isNaN(HCO3) && !isNaN(PaCO2)) {
+        const esperado = 1.5 * HCO3 + 8;
+        const min = esperado - 2;
+        const max = esperado + 2;
+        dentroFaixa = PaCO2 >= min && PaCO2 <= max;
+        mensagem = dentroFaixa
+          ? 'Distúrbio primário: acidose metabólica com compensação respiratória adequada (fórmula de Winter).'
+          : 'Distúrbio primário: acidose metabólica, com PaCO₂ fora do intervalo esperado – sugere distúrbio respiratório associado.';
+      } else if (tipo === 'met_alcalose' && !isNaN(HCO3) && !isNaN(PaCO2)) {
+        const esperado = HCO3 + 15;
+        const min = esperado - 2;
+        const max = esperado + 2;
+        dentroFaixa = PaCO2 >= min && PaCO2 <= max;
+        mensagem = dentroFaixa
+          ? 'Distúrbio primário: alcalose metabólica com compensação respiratória adequada.'
+          : 'Distúrbio primário: alcalose metabólica, com PaCO₂ fora do intervalo esperado – sugere distúrbio respiratório associado.';
+      } else if ((tipo === 'resp_acidose' || tipo === 'resp_alcalose') && !isNaN(PaCO2) && !isNaN(HCO3)) {
+        let esperado = NaN;
+        let esperadoAgudo = NaN;
+        let esperadoCronico = NaN;
+        let nomeBase = '';
+        let fase = '';
+
+        if (tipo === 'resp_acidose') {
+          esperadoAgudo = 24 + (PaCO2 - 40) / 10;
+          esperadoCronico = 24 + 4 * (PaCO2 - 40) / 10;
+          if (retentor) {
+            esperado = esperadoCronico;
+            fase = 'crônica';
+          } else {
+            esperado = esperadoAgudo;
+            fase = 'aguda';
+          }
+          nomeBase = 'acidose respiratória';
+        } else if (tipo === 'resp_alcalose') {
+          esperadoAgudo = 24 - 2 * (40 - PaCO2) / 10;
+          esperadoCronico = 24 - 5 * (40 - PaCO2) / 10;
+          esperado = esperadoAgudo;
+          fase = 'aguda';
+          nomeBase = 'alcalose respiratória';
+        }
+
+        if (!isNaN(esperado)) {
+          dentroFaixa = Math.abs(HCO3 - esperado) <= 2;
+          mensagem = dentroFaixa
+            ? `Distúrbio primário: ${nomeBase} ${fase} com compensação metabólica adequada.`
+            : `Distúrbio primário: ${nomeBase} ${fase}, com HCO₃⁻ fora do intervalo esperado – sugere distúrbio metabólico associado.`;
+        }
+      }
+
+      if (misto) {
+        let descSec = '';
+        if (secundario === 'met_acidose') descSec = 'acidose metabólica associada';
+        else if (secundario === 'met_alcalose') descSec = 'alcalose metabólica associada';
+        else if (secundario === 'resp_acidose') descSec = 'acidose respiratória associada';
+        else if (secundario === 'resp_alcalose') descSec = 'alcalose respiratória associada';
+
+        mensagem += descSec
+          ? ` Padrão compatível com distúrbio misto (${descSec}).`
+          : ' Há suspeita de distúrbio misto pela direção divergente entre PaCO₂ e HCO₃⁻.';
+      }
+
+      // A mensagem detalhada de compensação não é mais exibida em tela;
+      // a lógica acima é usada apenas para apoiar a detecção de distúrbios mistos.
+    }
+
+    function avaliarDelta(anionGap, deltaRatio) {
+      const el = document.getElementById('InterpretacaoDelta');
+      if (!el) return;
+
+      if (anionGap !== anionGap || deltaRatio !== deltaRatio) {
+        el.textContent = 'Preencha Na⁺, Cl⁻ e HCO₃⁻ para avaliar o ânion gap e a relação delta.';
+        el.style.color = 'var(--text-muted)';
+        return;
+      }
+
+      let msg = '';
+      let cor = 'var(--result-abnormal)';
+
+      if (deltaRatio < 0.4) {
+        msg = 'Delta ratio < 0,4: acidose metabólica hiperclorêmica com ânion gap normal (ou baixo).';
+      } else if (deltaRatio < 1) {
+        msg = 'Delta ratio < 1: acidose metabólica de alto ânion gap associada a componente de acidose metabólica de ânion gap normal.';
+      } else if (deltaRatio >= 1 && deltaRatio <= 2) {
+        msg = 'Delta ratio entre 1 e 2: acidose metabólica de alto ânion gap “pura” (lactato ≈ 1,6; cetoacidose costuma se aproximar de 1).';
+        cor = 'var(--accent)';
+      } else if (deltaRatio > 2) {
+        msg = 'Delta ratio > 2: acidose de alto ânion gap associada a alcalose metabólica ou acidose respiratória crônica compensada.';
+      } else {
+        msg = 'Relação delta fora das faixas usuais de interpretação clínica.';
+      }
+
+      el.textContent = msg;
+      el.style.color = cor;
+    }
+
+    function calc() {
+      const PaCO2 = getNumber('PaCO2');
+      const HCO3 = getNumber('HCO3');
+      const Na = getNumber('Na');
+      const Cl = getNumber('Cl');
+      const K = getNumber('K');
+      const Lactato = getNumber('Lactato');
+      const Albumina = getNumber('Albumina');
+      const pH = getNumber('pH');
+
+      // Distúrbios respiratórios – dependem de PaCO2
+      if (isNaN(PaCO2)) {
+        setBox('HCO3_RespAcid_Aguda', 'HCO₃⁻ esperado — mEq/L');
+        setBox('HCO3_RespAcid_Cronica', 'HCO₃⁻ esperado — mEq/L');
+        setBox('HCO3_RespAlk_Aguda', 'HCO₃⁻ esperado — mEq/L');
+        setBox('HCO3_RespAlk_Cronica', 'HCO₃⁻ esperado — mEq/L');
+      } else {
+        const hco3AcidAguda = 24 + (PaCO2 - 40) / 10;
+        const hco3AcidCronica = 24 + 4 * (PaCO2 - 40) / 10;
+        const hco3AlkAguda = 24 - 2 * (40 - PaCO2) / 10;
+        const hco3AlkCronica = 24 - 5 * (40 - PaCO2) / 10;
+        const acidAgudaMin = (hco3AcidAguda - 2).toFixed(1);
+        const acidAgudaMax = (hco3AcidAguda + 2).toFixed(1);
+        const acidCronMin = (hco3AcidCronica - 2).toFixed(1);
+        const acidCronMax = (hco3AcidCronica + 2).toFixed(1);
+        const alkAgudaMin = (hco3AlkAguda - 2).toFixed(1);
+        const alkAgudaMax = (hco3AlkAguda + 2).toFixed(1);
+        const alkCronMin = (hco3AlkCronica - 2).toFixed(1);
+        const alkCronMax = (hco3AlkCronica + 2).toFixed(1);
+
+        setBox('HCO3_RespAcid_Aguda', `HCO₃⁻ esperado ${acidAgudaMin} – ${acidAgudaMax} mEq/L`);
+        setBox('HCO3_RespAcid_Cronica', `HCO₃⁻ esperado ${acidCronMin} – ${acidCronMax} mEq/L`);
+        setBox('HCO3_RespAlk_Aguda', `HCO₃⁻ esperado ${alkAgudaMin} – ${alkAgudaMax} mEq/L`);
+        setBox('HCO3_RespAlk_Cronica', `HCO₃⁻ esperado ${alkCronMin} – ${alkCronMax} mEq/L`);
+      }
+
+      // Distúrbios metabólicos – dependem de HCO3
+      if (isNaN(HCO3)) {
+        setBox('PaCO2_MetAcid', 'PaCO₂ esperada — mmHg');
+        setBox('PaCO2_MetAlk', 'PaCO₂ esperada — mmHg');
+      } else {
+        const PaCO2_metAcid = 1.5 * HCO3 + 8;
+        const PaCO2_metAlk = 0.7 * HCO3 + 20;
+        const metAcidMin = (PaCO2_metAcid - 2).toFixed(1);
+        const metAcidMax = (PaCO2_metAcid + 2).toFixed(1);
+        const metAlkMin = (PaCO2_metAlk - 5).toFixed(1);
+        const metAlkMax = (PaCO2_metAlk + 5).toFixed(1);
+
+        setBox('PaCO2_MetAcid', `PaCO₂ esperada ${metAcidMin} – ${metAcidMax} mmHg`);
+        setBox('PaCO2_MetAlk', `PaCO₂ esperada ${metAlkMin} – ${metAlkMax} mmHg`);
+      }
+
+      // Gap aniônico e delta ratio
+      let anionGap = NaN;
+      let deltaRatio = NaN;
+      if (!isNaN(Na) && !isNaN(Cl) && !isNaN(HCO3)) {
+        anionGap = Na - (Cl + HCO3);
+        const deltaAG = anionGap - 12;
+        const deltaHCO3 = 24 - HCO3;
+        if (Math.abs(deltaHCO3) > 1e-6) {
+          deltaRatio = deltaAG / deltaHCO3;
+        }
+      }
+
+      setBox('AnionGap', anionGap);
+      setBox('DeltaRatio', deltaRatio);
+      setBoxRange('AnionGap', anionGap, 8, 12);          // Ânion gap 10 ± 2
+      setBoxRange('DeltaRatio', deltaRatio, 1, 1.6);     // ΔAG/ΔHCO3 entre 1 e 1,6
+      avaliarDelta(anionGap, deltaRatio);
+
+      avaliarCompensacao();
+
+      // Destacar entradas fora da faixa de referência
+      setInputRange('pH', pH, 7.35, 7.45);               // 7,40 ± 0,05
+      setInputRange('PaCO2', PaCO2, 35, 45);             // 40 ± 5
+      setInputRange('HCO3', HCO3, 22, 26);               // 24 ± 2
+      setInputRange('Na', Na, 135, 145);                 // 135–145
+      setInputRange('K', K, 3.5, 5.0);                   // 3,5–5,0
+      setInputRange('Cl', Cl, 98, 107);                  // 98–107
+      setInputRange('Lactato', Lactato, 0, 2.0);         // < 2,0
+      setInputRange('Albumina', Albumina, 3.5, 5.0);     // 3,5–5,0
+
+      const retentor = isRetentorCO2();
+      atualizarDisturbioPrimarioBox(pH, PaCO2, HCO3, anionGap, deltaRatio, retentor);
+    }
+
+    inputIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('input', calc);
+    });
+    const retentorSim = document.getElementById('RetentorCO2Sim');
+    const retentorNao = document.getElementById('RetentorCO2Nao');
+    if (retentorSim) retentorSim.addEventListener('change', () => {
+      if (retentorSim.checked && retentorNao) retentorNao.checked = false;
+      calc();
+    });
+    if (retentorNao) retentorNao.addEventListener('change', () => {
+      if (retentorNao.checked && retentorSim) retentorSim.checked = false;
+      calc();
+    });
+
+    // Máscara do input de pH: insere vírgula automaticamente após o primeiro dígito
+    const phInput = document.getElementById('pH');
+    if (phInput) {
+      phInput.addEventListener('input', () => {
+        let v = phInput.value;
+        // remove tudo que não for dígito
+        v = v.replace(/\D/g, '');
+        if (v.length === 0) {
+          phInput.value = '';
+          calc();
+          return;
+        }
+        if (v.length === 1) {
+          phInput.value = v;
+        } else {
+          // 1 dígito antes da vírgula, até 2 depois
+          const inteiro = v[0];
+          const decimais = v.slice(1, 3);
+          phInput.value = inteiro + ',' + decimais;
+        }
+        calc();
+      });
+    }
+
+    calc();
+  </script>
+</body>
+</html>
+

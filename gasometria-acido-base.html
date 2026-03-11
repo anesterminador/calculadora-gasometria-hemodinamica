@@ -286,6 +286,212 @@
       color: var(--text);
       font-weight: 500;
     }
+    .history-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+    .history-button {
+      flex: 1;
+      padding: 0.45rem 0.75rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #222a33;
+      color: var(--text);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s, border-color 0.15s;
+    }
+    .history-button.primary {
+      background: var(--accent);
+      color: #0f1419;
+      border-color: var(--accent);
+    }
+    .history-button.danger {
+      background: #ff7b72;
+      color: #0f1419;
+      border-color: #ff7b72;
+    }
+    .history-button:hover {
+      transform: translateY(-1px);
+      border-color: var(--accent);
+    }
+    .history-button.primary:hover {
+      filter: brightness(1.05);
+    }
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+    .modal {
+      background: var(--bg-card);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 1rem 1.1rem 0.9rem;
+      max-width: 480px;
+      width: calc(100% - 2rem);
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.6);
+    }
+    .modal-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      text-align: center;
+    }
+    .modal-row {
+      margin-bottom: 0.6rem;
+    }
+    .modal-label {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 0.2rem;
+    }
+    .modal input[type="text"],
+    .modal input[type="datetime-local"],
+    .modal select {
+      width: 100%;
+      padding: 0.45rem 0.6rem;
+      background: var(--bg-input);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.9rem;
+      font-family: inherit;
+    }
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      margin-top: 0.6rem;
+    }
+    .modal-footer button {
+      padding: 0.4rem 0.9rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #222a33;
+      color: var(--text);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .modal-footer button.primary {
+      background: var(--accent);
+      color: #0f1419;
+      border-color: var(--accent);
+    }
+    .modal-footer button:hover {
+      border-color: var(--accent);
+    }
+    .history-list {
+      max-height: 260px;
+      overflow-y: auto;
+      margin-top: 0.4rem;
+      padding-right: 0.25rem;
+    }
+    .history-item {
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      padding: 0.45rem 0.6rem;
+      font-size: 0.8rem;
+      margin-bottom: 0.4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .history-item-main {
+      flex: 1;
+      min-width: 0;
+    }
+    .history-item-title {
+      font-weight: 600;
+      color: var(--text);
+    }
+    .history-item-meta {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+    }
+    .history-item-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      flex-shrink: 0;
+    }
+    .history-item-actions button {
+      padding: 0.2rem 0.5rem;
+      font-size: 0.72rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #222a33;
+      color: var(--text);
+      cursor: pointer;
+    }
+    .history-item-actions button.load {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .history-item-actions button.delete {
+      border-color: #ff7b72;
+      color: #ff7b72;
+    }
+    .evolucao-section {
+      margin-top: 1.25rem;
+    }
+    .evolucao-note {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+      text-align: justify;
+    }
+    .gaso-table-wrapper {
+      overflow-x: auto;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #151b23;
+      padding: 0.25rem;
+    }
+    .gaso-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 520px;
+      font-size: 0.8rem;
+    }
+    .gaso-table th,
+    .gaso-table td {
+      border-bottom: 1px solid #222a33;
+      padding: 0.25rem 0.4rem;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .gaso-table th:first-child,
+    .gaso-table td:first-child {
+      text-align: left;
+      background: #151b23;
+    }
+    .gaso-table th {
+      font-weight: 600;
+      color: var(--text);
+      background: #181f27;
+    }
+    .gaso-table thead th {
+      border-bottom: 1px solid var(--border);
+    }
+    .gaso-table-label {
+      font-weight: 600;
+      color: var(--text);
+    }
+    .gaso-table-sub {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
   </style>
 </head>
 <body>
@@ -300,9 +506,9 @@
 
     <section class="inputs-section">
       <h2>Dados de entrada</h2>
-      <div class="row"><label>pH</label><input type="text" id="pH" inputmode="decimal" maxlength="5" value="7,40"></div>
+      <div class="row"><label>pH</label><input type="text" id="pH" inputmode="decimal" maxlength="5"></div>
       <p class="input-hint">Normal: 7,35 – 7,45</p>
-      <div class="row"><label>PaCO₂ (mmHg)</label><input type="number" id="PaCO2" step="0.1" min="0" value="40"></div>
+      <div class="row"><label>PaCO₂ (mmHg)</label><input type="number" id="PaCO2" step="0.1" min="0"></div>
       <p class="input-hint">Normal: 35 – 45 mmHg</p>
       <div class="row">
         <label style="margin-top:0.8rem;margin-bottom:1rem;">Paciente é retentor crônico de CO₂?</label>
@@ -316,20 +522,24 @@
         </div>
       </div>
       <p class="input-hint"></p>
-      <div class="row"><label>HCO₃⁻ (mEq/L)</label><input type="number" id="HCO3" step="0.1" min="0" value="24"></div>
+      <div class="row"><label>HCO₃⁻ (mEq/L)</label><input type="number" id="HCO3" step="0.1" min="0"></div>
       <p class="input-hint">Normal: 22 – 26 mEq/L</p>
-      <div class="row"><label>Na⁺ (mEq/L)</label><input type="number" id="Na" step="0.1" min="0" value="140"></div>
+      <div class="row"><label>Na⁺ (mEq/L)</label><input type="number" id="Na" step="0.1" min="0"></div>
       <p class="input-hint">Normal: 135 – 145 mEq/L</p>
-      <div class="row"><label>K⁺ (mEq/L)</label><input type="number" id="K" step="0.1" min="0" value="4"></div>
+      <div class="row"><label>K⁺ (mEq/L)</label><input type="number" id="K" step="0.1" min="0"></div>
       <p class="input-hint">Normal: 3,5 – 5,0 mEq/L</p>
-      <div class="row"><label>Cl⁻ (mEq/L)</label><input type="number" id="Cl" step="0.1" min="0" value="100"></div>
+      <div class="row"><label>Cl⁻ (mEq/L)</label><input type="number" id="Cl" step="0.1" min="0"></div>
       <p class="input-hint">Normal: 98 – 107 mEq/L</p>
-      <div class="row"><label>Lactato (mmol/L)</label><input type="number" id="Lactato" step="0.1" min="0" value="1"></div>
+      <div class="row"><label>Lactato (mmol/L)</label><input type="number" id="Lactato" step="0.1" min="0"></div>
       <p class="input-hint">Normal: &lt; 2,0 mmol/L</p>
-      <div class="row"><label>Albumina (g/dL)</label><input type="number" id="Albumina" step="0.1" min="0" value="4"></div>
+      <div class="row"><label>Albumina (g/dL)</label><input type="number" id="Albumina" step="0.1" min="0"></div>
       <p class="input-hint">Normal: 3,5 – 5,0 g/dL</p>
       <p class="primary-label">Distúrbio provável</p>
       <span class="result-box" id="DistPrimarioBox">—</span>
+      <div class="history-actions">
+        <button type="button" class="history-button primary" id="btnSalvarGaso">Salvar gaso</button>
+        <button type="button" class="history-button" id="btnHistoricoGaso">Histórico</button>
+      </div>
     </section>
 
     <section>
@@ -412,8 +622,51 @@
     </footer>
   </div>
 
+  <div class="modal-backdrop" id="modalSalvarGaso">
+    <div class="modal">
+      <div class="modal-title">Salvar gasometria</div>
+      <div class="modal-row">
+        <label class="modal-label" for="gasoPaciente">Nome do paciente</label>
+        <input type="text" id="gasoPaciente" placeholder="Paciente">
+      </div>
+      <div class="modal-row">
+        <label class="modal-label" for="gasoDataHora">Data e hora</label>
+        <input type="datetime-local" id="gasoDataHora">
+      </div>
+      <div class="modal-row">
+        <label class="modal-label" for="gasoTipo">Tipo de gasometria</label>
+        <select id="gasoTipo">
+          <option value="arterial">Arterial</option>
+          <option value="venosa">Venosa</option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="cancelarSalvarGaso">Cancelar</button>
+        <button type="button" class="primary" id="confirmarSalvarGaso">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="modalHistoricoGaso">
+    <div class="modal">
+      <div class="modal-title">Histórico de gasometrias</div>
+      <div class="modal-row" style="margin-bottom:0.4rem;">
+        <span class="modal-label">Ordenar pacientes por:</span>
+        <div class="history-actions" style="margin-top:0.35rem;">
+          <button type="button" class="history-button" id="ordemPorNome">Nome</button>
+          <button type="button" class="history-button primary" id="ordemPorUltimo">Último salvamento</button>
+        </div>
+      </div>
+      <div class="history-list" id="listaHistoricoGaso"></div>
+      <div class="modal-footer">
+        <button type="button" id="fecharHistoricoGaso">Fechar</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const inputIds = ['pH','PaCO2','HCO3','Na','K','Cl','Lactato','Albumina'];
+    const STORAGE_KEY = 'gasosHistorico_v1';
 
     function getNumber(id) {
       const el = document.getElementById(id);
@@ -458,6 +711,14 @@
       if (sim && sim.checked) return true;
       if (nao && nao.checked) return false;
       return false;
+    }
+
+    function parseValorNumero(str) {
+      if (str == null) return NaN;
+      const raw = String(str).replace(',', '.').trim();
+      if (!raw) return NaN;
+      const v = parseFloat(raw);
+      return isNaN(v) ? NaN : v;
     }
 
     function compensacaoAdequada(tipo, PaCO2, HCO3, retentor) {
@@ -1032,6 +1293,472 @@
       el.style.color = cor;
     }
 
+    function obterValoresAtuais() {
+      const valores = {};
+      inputIds.forEach(id => {
+        const el = document.getElementById(id);
+        valores[id] = el ? el.value : '';
+      });
+      valores.retentorSim = !!(document.getElementById('RetentorCO2Sim')?.checked);
+      valores.retentorNao = !!(document.getElementById('RetentorCO2Nao')?.checked);
+      return valores;
+    }
+
+    function aplicarValores(valores) {
+      if (!valores) return;
+      inputIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el && Object.prototype.hasOwnProperty.call(valores, id)) {
+          el.value = valores[id] ?? '';
+        }
+      });
+      const sim = document.getElementById('RetentorCO2Sim');
+      const nao = document.getElementById('RetentorCO2Nao');
+      if (sim) sim.checked = !!valores.retentorSim;
+      if (nao) nao.checked = !!valores.retentorNao;
+      calc();
+    }
+
+    function lerHistorico() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return [];
+        const parsed = JSON.parse(raw);
+        if (!Array.isArray(parsed)) return [];
+        return parsed;
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function gravarHistorico(lista) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(lista));
+      } catch (e) {
+        // ignore
+      }
+    }
+
+    const ORDER_KEY = 'gasosHistoricoOrder_v1';
+
+    function getOrderPreferencia() {
+      try {
+        const v = localStorage.getItem(ORDER_KEY);
+        return v === 'nome' ? 'nome' : 'ultimo';
+      } catch (e) {
+        return 'ultimo';
+      }
+    }
+
+    function setOrderPreferencia(v) {
+      try {
+        localStorage.setItem(ORDER_KEY, v);
+      } catch (e) {
+        // ignore
+      }
+    }
+
+    function calcularDerivadosRegistro(valores) {
+      const Na = parseValorNumero(valores?.Na);
+      const Cl = parseValorNumero(valores?.Cl);
+      const HCO3 = parseValorNumero(valores?.HCO3);
+      let anionGap = NaN;
+      let deltaRatio = NaN;
+      if (!isNaN(Na) && !isNaN(Cl) && !isNaN(HCO3)) {
+        anionGap = Na - (Cl + HCO3);
+        const deltaAG = anionGap - 12;
+        const deltaHCO3 = 24 - HCO3;
+        if (Math.abs(deltaHCO3) > 1e-6) {
+          deltaRatio = deltaAG / deltaHCO3;
+        }
+      }
+      return { anionGap, deltaRatio };
+    }
+
+    function renderTabelaEvolucaoPaciente(pacienteNome, registros, container) {
+      if (!container || !registros || !registros.length) {
+        container.innerHTML = '<div class="history-item-meta">Nenhuma gasometria para este paciente.</div>';
+        return;
+      }
+      const maxCols = 6;
+      const usados = registros.slice(-maxCols);
+
+      const headers = usados.map((item, idx) => {
+        const dataLeg = formatarDataLegivel(item.dataHora || item.dataHoraISO);
+        const tipoLabel = item.tipo === 'venosa' ? 'Venosa' : 'Arterial';
+        const labelColuna = dataLeg || `Gaso ${idx + 1}`;
+        return `<th><span class="gaso-table-label">${labelColuna}</span><span class="gaso-table-sub">${tipoLabel}${dataLeg ? '' : ''}</span></th>`;
+      }).join('');
+
+      const linhas = [];
+      function linha(label, key, isResultado, tipoEspecial) {
+        const cells = usados.map(item => {
+          if (tipoEspecial === 'dist') {
+            const txt = (item.distPrimario || '').trim();
+            return `<td style="white-space:normal; text-align:left;">${txt || '—'}</td>`;
+          }
+          if (isResultado && key === 'AnionGap') {
+            const { anionGap } = calcularDerivadosRegistro(item.valores);
+            return `<td>${isNaN(anionGap) ? '—' : anionGap.toFixed(1)}</td>`;
+          }
+          if (isResultado && key === 'DeltaRatio') {
+            const { deltaRatio } = calcularDerivadosRegistro(item.valores);
+            return `<td>${isNaN(deltaRatio) ? '—' : deltaRatio.toFixed(2)}</td>`;
+          }
+          const v = item.valores?.[key];
+          return `<td>${v && String(v).trim() ? v : '—'}</td>`;
+        }).join('');
+        linhas.push(`<tr><td>${label}</td>${cells}</tr>`);
+      }
+
+      linha('pH', 'pH');
+      linha('PaCO₂ (mmHg)', 'PaCO2');
+      linha('HCO₃⁻ (mEq/L)', 'HCO3');
+      linha('Na⁺ (mEq/L)', 'Na');
+      linha('K⁺ (mEq/L)', 'K');
+      linha('Cl⁻ (mEq/L)', 'Cl');
+      linha('Lactato (mmol/L)', 'Lactato');
+      linha('Albumina (g/dL)', 'Albumina');
+      linha('Ânion gap (mEq/L)', 'AnionGap', true);
+      linha('Delta ratio (ΔAG/ΔHCO₃⁻)', 'DeltaRatio', true);
+      linha('Distúrbio provável', 'DistPrimario', false, 'dist');
+
+      const tabelaHTML = `
+        <div class="gaso-table-wrapper">
+          <table class="gaso-table">
+            <thead>
+              <tr>
+                <th>Parâmetro</th>
+                ${headers}
+              </tr>
+            </thead>
+            <tbody>
+              ${linhas.join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+
+      container.innerHTML = tabelaHTML;
+    }
+
+    function abrirEvolucaoEmNovaAba(pacienteNome, registros) {
+      if (!registros || !registros.length) return;
+      const win = window.open('', '_blank');
+      if (!win) return;
+
+      const containerId = 'tabela-evolucao';
+      const htmlBase = `
+        <!DOCTYPE html>
+        <html lang="pt-BR">
+        <head>
+          <meta charset="UTF-8">
+          <title>Evolução – ${pacienteNome}</title>
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <style>
+            body {
+              font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+              background: #0f1419;
+              color: #e6edf3;
+              margin: 0;
+              padding: 1rem;
+            }
+            h1 {
+              font-size: 1.1rem;
+              margin-bottom: 0.75rem;
+            }
+            .gaso-table-wrapper {
+              overflow-x: auto;
+              border-radius: 8px;
+              border: 1px solid #2d3843;
+              background: #151b23;
+              padding: 0.25rem;
+            }
+            .gaso-table {
+              width: 100%;
+              border-collapse: collapse;
+              min-width: 520px;
+              font-size: 0.8rem;
+            }
+            .gaso-table th,
+            .gaso-table td {
+              border-bottom: 1px solid #222a33;
+              padding: 0.25rem 0.4rem;
+              text-align: center;
+              white-space: nowrap;
+            }
+            .gaso-table th:first-child,
+            .gaso-table td:first-child {
+              text-align: left;
+              background: #151b23;
+            }
+            .gaso-table th {
+              font-weight: 600;
+              color: #e6edf3;
+              background: #181f27;
+            }
+            .gaso-table thead th {
+              border-bottom: 1px solid #2d3843;
+            }
+            .gaso-table-label {
+              font-weight: 600;
+              color: #e6edf3;
+            }
+            .gaso-table-sub {
+              display: block;
+              font-size: 0.72rem;
+              color: #8b9cad;
+            }
+          </style>
+        </head>
+        <body>
+          <h1>Evolução – ${pacienteNome}</h1>
+          <div id="${containerId}"></div>
+        </body>
+        </html>
+      `;
+
+      win.document.open();
+      win.document.write(htmlBase);
+      win.document.close();
+
+      const targetContainer = win.document.getElementById(containerId);
+      if (targetContainer) {
+        // Reaproveita a função de renderização para montar apenas a tabela
+        renderTabelaEvolucaoPaciente(pacienteNome, registros, targetContainer);
+      }
+    }
+
+    function formatarDataParaInput(dt) {
+      const pad = n => String(n).padStart(2, '0');
+      const ano = dt.getFullYear();
+      const mes = pad(dt.getMonth() + 1);
+      const dia = pad(dt.getDate());
+      const hora = pad(dt.getHours());
+      const min = pad(dt.getMinutes());
+      return `${ano}-${mes}-${dia}T${hora}:${min}`;
+    }
+
+    function formatarDataLegivel(iso) {
+      if (!iso) return '';
+      const dt = new Date(iso);
+      if (isNaN(dt.getTime())) return iso;
+      const pad = n => String(n).padStart(2, '0');
+      const dia = pad(dt.getDate());
+      const mes = pad(dt.getMonth() + 1);
+      const ano = dt.getFullYear();
+      const hora = pad(dt.getHours());
+      const min = pad(dt.getMinutes());
+      return `${dia}/${mes}/${ano} ${hora}:${min}`;
+    }
+
+    function abrirModalSalvar() {
+      const backdrop = document.getElementById('modalSalvarGaso');
+      if (!backdrop) return;
+      const historico = lerHistorico();
+      const ultimo = historico[historico.length - 1];
+      const pacienteInput = document.getElementById('gasoPaciente');
+      const dataInput = document.getElementById('gasoDataHora');
+      const tipoSelect = document.getElementById('gasoTipo');
+
+      if (pacienteInput) {
+        pacienteInput.value = ultimo?.paciente || '';
+        pacienteInput.focus();
+        pacienteInput.select();
+      }
+      const agora = new Date();
+      if (dataInput) {
+        dataInput.value = formatarDataParaInput(agora);
+      }
+      if (tipoSelect) {
+        tipoSelect.value = ultimo?.tipo || 'arterial';
+      }
+
+      backdrop.style.display = 'flex';
+    }
+
+    function fecharModalSalvar() {
+      const backdrop = document.getElementById('modalSalvarGaso');
+      if (backdrop) backdrop.style.display = 'none';
+    }
+
+    function abrirModalHistorico() {
+      const backdrop = document.getElementById('modalHistoricoGaso');
+      const listaEl = document.getElementById('listaHistoricoGaso');
+      if (!backdrop || !listaEl) return;
+
+      const historico = lerHistorico();
+      listaEl.innerHTML = '';
+
+      if (historico.length === 0) {
+        const vazio = document.createElement('div');
+        vazio.className = 'history-item-meta';
+        vazio.textContent = 'Nenhuma gasometria salva ainda.';
+        listaEl.appendChild(vazio);
+      } else {
+        const porPaciente = new Map();
+        historico.forEach((item, index) => {
+          const nome = (item.paciente || 'Paciente sem nome').trim() || 'Paciente sem nome';
+          if (!porPaciente.has(nome)) porPaciente.set(nome, []);
+          porPaciente.get(nome).push({ ...item, _index: index });
+        });
+
+        const ordem = getOrderPreferencia();
+        const pacientes = Array.from(porPaciente.keys());
+        if (ordem === 'nome') {
+          pacientes.sort((a, b) => a.localeCompare(b, 'pt-BR', { sensitivity: 'base' }));
+        } else {
+          pacientes.sort((a, b) => {
+            const listaA = porPaciente.get(a);
+            const listaB = porPaciente.get(b);
+            const ultimoA = listaA[listaA.length - 1];
+            const ultimoB = listaB[listaB.length - 1];
+            const tA = new Date(ultimoA.dataHora || ultimoA.dataHoraISO || 0).getTime();
+            const tB = new Date(ultimoB.dataHora || ultimoB.dataHoraISO || 0).getTime();
+            return tB - tA;
+          });
+        }
+
+        pacientes.forEach(nome => {
+          const registros = porPaciente.get(nome);
+
+          const bloco = document.createElement('div');
+          bloco.className = 'history-item';
+          bloco.style.flexDirection = 'column';
+          bloco.style.alignItems = 'stretch';
+
+          const header = document.createElement('div');
+          header.style.display = 'flex';
+          header.style.justifyContent = 'space-between';
+          header.style.alignItems = 'center';
+          header.style.gap = '0.5rem';
+
+          const btnPaciente = document.createElement('button');
+          btnPaciente.className = 'history-button';
+          btnPaciente.style.flex = '1';
+          btnPaciente.textContent = nome;
+
+          const headerButtons = document.createElement('div');
+          headerButtons.style.display = 'flex';
+          headerButtons.style.gap = '0.35rem';
+
+          const btnEvolucao = document.createElement('button');
+          btnEvolucao.className = 'history-button primary';
+          btnEvolucao.style.flex = '0 0 auto';
+          btnEvolucao.textContent = 'Evolução';
+          btnEvolucao.addEventListener('click', () => {
+            abrirEvolucaoEmNovaAba(nome, registros);
+          });
+
+          const btnExcluirPaciente = document.createElement('button');
+          btnExcluirPaciente.className = 'history-button danger';
+          btnExcluirPaciente.style.flex = '0 0 auto';
+          btnExcluirPaciente.textContent = 'Excluir';
+          btnExcluirPaciente.addEventListener('click', () => {
+            const primeira = window.confirm(`Remover TODAS as gasometrias do paciente "${nome}"?`);
+            if (!primeira) return;
+            const segunda = window.confirm('Tem certeza absoluta? Esta ação não pode ser desfeita.');
+            if (!segunda) return;
+            const atual = lerHistorico();
+            const filtrado = atual.filter(item => {
+              const n = (item.paciente || 'Paciente sem nome').trim() || 'Paciente sem nome';
+              return n !== nome;
+            });
+            gravarHistorico(filtrado);
+            abrirModalHistorico();
+          });
+
+          headerButtons.appendChild(btnEvolucao);
+          headerButtons.appendChild(btnExcluirPaciente);
+
+          header.appendChild(btnPaciente);
+          header.appendChild(headerButtons);
+
+          const listaPaciente = document.createElement('div');
+          listaPaciente.style.marginTop = '0.35rem';
+          listaPaciente.style.display = 'none';
+
+          btnPaciente.addEventListener('click', () => {
+            listaPaciente.style.display = listaPaciente.style.display === 'none' ? 'block' : 'none';
+          });
+
+          registros.forEach(reg => {
+            const linha = document.createElement('div');
+            linha.style.display = 'flex';
+            linha.style.justifyContent = 'space-between';
+            linha.style.alignItems = 'center';
+            linha.style.gap = '0.5rem';
+            linha.style.marginBottom = '0.25rem';
+
+            const texto = document.createElement('div');
+            texto.className = 'history-item-meta';
+            const dataLeg = formatarDataLegivel(reg.dataHora || reg.dataHoraISO);
+            const tipoLabel = reg.tipo === 'venosa' ? 'Gaso venosa' : 'Gaso arterial';
+            texto.textContent = `${dataLeg || 'Sem data'} - ${tipoLabel}`;
+            texto.style.cursor = 'pointer';
+            texto.addEventListener('click', () => {
+              aplicarValores(reg.valores);
+              fecharModalHistorico();
+            });
+
+            const bExcluir = document.createElement('button');
+            bExcluir.className = 'delete';
+            bExcluir.textContent = 'Excluir';
+            bExcluir.style.fontSize = '0.72rem';
+            bExcluir.addEventListener('click', () => {
+              const novaLista = lerHistorico().filter((item, idx) => idx !== reg._index);
+              gravarHistorico(novaLista);
+              abrirModalHistorico();
+            });
+
+            linha.appendChild(texto);
+            linha.appendChild(bExcluir);
+            listaPaciente.appendChild(linha);
+          });
+
+          bloco.appendChild(header);
+          bloco.appendChild(listaPaciente);
+          listaEl.appendChild(bloco);
+        });
+      }
+
+      backdrop.style.display = 'flex';
+    }
+
+    function fecharModalHistorico() {
+      const backdrop = document.getElementById('modalHistoricoGaso');
+      if (backdrop) backdrop.style.display = 'none';
+    }
+
+    function salvarGasometria() {
+      const pacienteInput = document.getElementById('gasoPaciente');
+      const dataInput = document.getElementById('gasoDataHora');
+      const tipoSelect = document.getElementById('gasoTipo');
+      if (!pacienteInput || !dataInput || !tipoSelect) return;
+
+      const paciente = pacienteInput.value?.trim() || '';
+      const dataHora = dataInput.value || '';
+      const tipo = tipoSelect.value || 'arterial';
+
+      const distBox = document.getElementById('DistPrimarioBox');
+      let distPrimario = '';
+      if (distBox) {
+        distPrimario = (distBox.textContent || distBox.innerText || '').trim();
+      }
+
+      const valores = obterValoresAtuais();
+      const historico = lerHistorico();
+      historico.push({
+        paciente,
+        dataHora,
+        tipo,
+        valores,
+        distPrimario
+      });
+      gravarHistorico(historico);
+      fecharModalSalvar();
+    }
+
     function calc() {
       const PaCO2 = getNumber('PaCO2');
       const HCO3 = getNumber('HCO3');
@@ -1104,16 +1831,6 @@
 
       avaliarCompensacao();
 
-      // Destacar entradas fora da faixa de referência
-      setInputRange('pH', pH, 7.35, 7.45);               // 7,40 ± 0,05
-      setInputRange('PaCO2', PaCO2, 35, 45);             // 40 ± 5
-      setInputRange('HCO3', HCO3, 22, 26);               // 24 ± 2
-      setInputRange('Na', Na, 135, 145);                 // 135–145
-      setInputRange('K', K, 3.5, 5.0);                   // 3,5–5,0
-      setInputRange('Cl', Cl, 98, 107);                  // 98–107
-      setInputRange('Lactato', Lactato, 0, 2.0);         // < 2,0
-      setInputRange('Albumina', Albumina, 3.5, 5.0);     // 3,5–5,0
-
       const retentor = isRetentorCO2();
       atualizarDisturbioPrimarioBox(pH, PaCO2, HCO3, anionGap, deltaRatio, retentor);
     }
@@ -1133,6 +1850,52 @@
       if (retentorNao.checked && retentorSim) retentorSim.checked = false;
       calc();
     });
+
+    const btnSalvar = document.getElementById('btnSalvarGaso');
+    const btnHistorico = document.getElementById('btnHistoricoGaso');
+    const cancelarSalvar = document.getElementById('cancelarSalvarGaso');
+    const confirmarSalvar = document.getElementById('confirmarSalvarGaso');
+    const fecharHistorico = document.getElementById('fecharHistoricoGaso');
+    const ordemPorNome = document.getElementById('ordemPorNome');
+    const ordemPorUltimo = document.getElementById('ordemPorUltimo');
+
+    if (btnSalvar) {
+      btnSalvar.addEventListener('click', abrirModalSalvar);
+    }
+    if (btnHistorico) {
+      btnHistorico.addEventListener('click', abrirModalHistorico);
+    }
+    if (cancelarSalvar) {
+      cancelarSalvar.addEventListener('click', fecharModalSalvar);
+    }
+    if (confirmarSalvar) {
+      confirmarSalvar.addEventListener('click', salvarGasometria);
+    }
+    if (fecharHistorico) {
+      fecharHistorico.addEventListener('click', fecharModalHistorico);
+    }
+    if (ordemPorNome && ordemPorUltimo) {
+      const atual = getOrderPreferencia();
+      if (atual === 'nome') {
+        ordemPorNome.classList.add('primary');
+        ordemPorUltimo.classList.remove('primary');
+      } else {
+        ordemPorUltimo.classList.add('primary');
+        ordemPorNome.classList.remove('primary');
+      }
+      ordemPorNome.addEventListener('click', () => {
+        setOrderPreferencia('nome');
+        ordemPorNome.classList.add('primary');
+        ordemPorUltimo.classList.remove('primary');
+        abrirModalHistorico();
+      });
+      ordemPorUltimo.addEventListener('click', () => {
+        setOrderPreferencia('ultimo');
+        ordemPorUltimo.classList.add('primary');
+        ordemPorNome.classList.remove('primary');
+        abrirModalHistorico();
+      });
+    }
 
     // Máscara do input de pH: insere vírgula automaticamente após o primeiro dígito
     const phInput = document.getElementById('pH');

@@ -210,6 +210,139 @@
       transform: scale(1.03);
     }
 
+    .history-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+    .history-button {
+      flex: 1;
+      padding: 0.45rem 0.75rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #222a33;
+      color: var(--text);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s, border-color 0.15s;
+    }
+    .history-button.primary {
+      background: var(--accent);
+      color: #0f1419;
+      border-color: var(--accent);
+    }
+    .history-button.danger {
+      background: #ff7b72;
+      color: #0f1419;
+      border-color: #ff7b72;
+    }
+    .history-button:hover {
+      transform: translateY(-1px);
+      border-color: var(--accent);
+    }
+    .history-button.primary:hover {
+      filter: brightness(1.05);
+    }
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+    .modal {
+      background: var(--bg-card);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 1rem 1.1rem 0.9rem;
+      max-width: 480px;
+      width: calc(100% - 2rem);
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.6);
+    }
+    .modal-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      text-align: center;
+    }
+    .modal-row {
+      margin-bottom: 0.6rem;
+    }
+    .modal-label {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 0.2rem;
+    }
+    .modal input[type="text"],
+    .modal input[type="datetime-local"],
+    .modal select {
+      width: 100%;
+      padding: 0.45rem 0.6rem;
+      background: var(--bg-input);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.9rem;
+      font-family: inherit;
+    }
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      margin-top: 0.6rem;
+    }
+    .modal-footer button {
+      padding: 0.4rem 0.9rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #222a33;
+      color: var(--text);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .modal-footer button.primary {
+      background: var(--accent);
+      color: #0f1419;
+      border-color: var(--accent);
+    }
+    .modal-footer button:hover {
+      border-color: var(--accent);
+    }
+    .history-list {
+      max-height: 260px;
+      overflow-y: auto;
+      margin-top: 0.4rem;
+      padding-right: 0.25rem;
+    }
+    .history-item {
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      padding: 0.45rem 0.6rem;
+      font-size: 0.8rem;
+      margin-bottom: 0.4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .history-item-main {
+      flex: 1;
+      min-width: 0;
+    }
+    .history-item-title {
+      font-weight: 600;
+      color: var(--text);
+    }
+    .history-item-meta {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+    }
+
     /* Ajustes só para telas de celular/tablet (largura até 768px) */
     @media (max-width: 768px) {
       .logo {
@@ -245,6 +378,10 @@
       <div class="row"><label>Débito cardíaco – DC (L/min)</label><input type="number" id="CO" value="5" step="0.1" min="0"></div>
       <div class="row"><label>Altura (cm)</label><input type="number" id="Altura" value="170" step="0.1" min="0"></div>
       <div class="row"><label>Peso (kg)</label><input type="number" id="Peso" value="70" step="0.1" min="0"></div>
+      <div class="history-actions">
+        <button type="button" class="history-button primary" id="btnSalvarGasoHemo">Salvar</button>
+        <button type="button" class="history-button" id="btnHistoricoGasoHemo">Histórico</button>
+      </div>
     </section>
 
     <section>
@@ -327,9 +464,53 @@
     </footer>
   </div>
 
+  <div class="modal-backdrop" id="modalSalvarGasoHemo">
+    <div class="modal">
+      <div class="modal-title">Salvar gasometria</div>
+      <div class="modal-row">
+        <label class="modal-label" for="gasoHemoPaciente">Nome do paciente</label>
+        <input type="text" id="gasoHemoPaciente" placeholder="Paciente">
+      </div>
+      <div class="modal-row">
+        <label class="modal-label" for="gasoHemoDataHora">Data e hora</label>
+        <input type="datetime-local" id="gasoHemoDataHora">
+      </div>
+      <div class="modal-row">
+        <label class="modal-label" for="gasoHemoTipo">Tipo de gasometria</label>
+        <select id="gasoHemoTipo">
+          <option value="arterial">Arterial</option>
+          <option value="venosa">Venosa</option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="cancelarSalvarGasoHemo">Cancelar</button>
+        <button type="button" class="primary" id="confirmarSalvarGasoHemo">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="modalHistoricoGasoHemo">
+    <div class="modal">
+      <div class="modal-title">Histórico de gasometrias</div>
+      <div class="modal-row" style="margin-bottom:0.4rem;">
+        <span class="modal-label">Ordenar pacientes por:</span>
+        <div class="history-actions" style="margin-top:0.35rem;">
+          <button type="button" class="history-button" id="ordemHemoPorNome">Nome</button>
+          <button type="button" class="history-button primary" id="ordemHemoPorUltimo">Último salvamento</button>
+        </div>
+      </div>
+      <div class="history-list" id="listaHistoricoGasoHemo"></div>
+      <div class="modal-footer">
+        <button type="button" id="fecharHistoricoGasoHemo">Fechar</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const ids = ['Hb','SaO2','PaO2','SvO2','PvO2','PaCO2','PvCO2','CO','Altura','Peso'];
     const outIds = ['BSA','CaO2','CvO2','DO2','DO2i','VO2','VO2i','TaxaExt','GapCO2','QR'];
+    const STORAGE_KEY_HEMO = 'gasosHemoHistorico_v1';
+    const ORDER_KEY_HEMO = 'gasosHemoHistoricoOrder_v1';
 
     function get(id) {
       const v = parseFloat(document.getElementById(id).value);
@@ -366,6 +547,94 @@
       if (onlyLow) abnormal = value < min;
       else abnormal = value < min || value > max;
       if (abnormal) el.classList.add('abnormal');
+    }
+
+    function hemoObterEntradasAtuais() {
+      const valores = {};
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        valores[id] = el ? el.value : '';
+      });
+      return valores;
+    }
+
+    function hemoObterResultadosAtuais() {
+      const valores = {};
+      outIds.forEach(id => {
+        const el = document.getElementById(id);
+        valores[id] = el ? el.textContent : '—';
+      });
+      return valores;
+    }
+
+    function hemoAplicarEntradas(valores) {
+      if (!valores) return;
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (el && Object.prototype.hasOwnProperty.call(valores, id)) {
+          el.value = valores[id] ?? '';
+        }
+      });
+      calc();
+    }
+
+    function hemoLerHistorico() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY_HEMO);
+        if (!raw) return [];
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function hemoGravarHistorico(lista) {
+      try {
+        localStorage.setItem(STORAGE_KEY_HEMO, JSON.stringify(lista));
+      } catch {
+        // ignore
+      }
+    }
+
+    function hemoGetOrderPreferencia() {
+      try {
+        const v = localStorage.getItem(ORDER_KEY_HEMO);
+        return v === 'nome' ? 'nome' : 'ultimo';
+      } catch {
+        return 'ultimo';
+      }
+    }
+
+    function hemoSetOrderPreferencia(v) {
+      try {
+        localStorage.setItem(ORDER_KEY_HEMO, v);
+      } catch {
+        // ignore
+      }
+    }
+
+    function hemoFormatarDataParaInput(dt) {
+      const pad = n => String(n).padStart(2, '0');
+      const ano = dt.getFullYear();
+      const mes = pad(dt.getMonth() + 1);
+      const dia = pad(dt.getDate());
+      const hora = pad(dt.getHours());
+      const min = pad(dt.getMinutes());
+      return `${ano}-${mes}-${dia}T${hora}:${min}`;
+    }
+
+    function hemoFormatarDataLegivel(iso) {
+      if (!iso) return '';
+      const dt = new Date(iso);
+      if (isNaN(dt.getTime())) return iso;
+      const pad = n => String(n).padStart(2, '0');
+      const dia = pad(dt.getDate());
+      const mes = pad(dt.getMonth() + 1);
+      const ano = dt.getFullYear();
+      const hora = pad(dt.getHours());
+      const min = pad(dt.getMinutes());
+      return `${dia}/${mes}/${ano} ${hora}:${min}`;
     }
 
     function calc() {
@@ -447,6 +716,358 @@
         calc();
       });
     });
+
+    function hemoAbrirModalSalvar() {
+      const backdrop = document.getElementById('modalSalvarGasoHemo');
+      if (!backdrop) return;
+      const historico = hemoLerHistorico();
+      const ultimo = historico[historico.length - 1];
+      const pacienteInput = document.getElementById('gasoHemoPaciente');
+      const dataInput = document.getElementById('gasoHemoDataHora');
+      const tipoSelect = document.getElementById('gasoHemoTipo');
+
+      if (pacienteInput) {
+        pacienteInput.value = ultimo?.paciente || '';
+        pacienteInput.focus();
+        pacienteInput.select();
+      }
+      const agora = new Date();
+      if (dataInput) {
+        dataInput.value = hemoFormatarDataParaInput(agora);
+      }
+      if (tipoSelect) {
+        tipoSelect.value = ultimo?.tipo || 'arterial';
+      }
+
+      backdrop.style.display = 'flex';
+    }
+
+    function hemoFecharModalSalvar() {
+      const backdrop = document.getElementById('modalSalvarGasoHemo');
+      if (backdrop) backdrop.style.display = 'none';
+    }
+
+    function hemoRenderTabelaEvolucaoPaciente(pacienteNome, registros, container) {
+      if (!container || !registros || !registros.length) {
+        container.innerHTML = '<div class="history-item-meta">Nenhuma gasometria para este paciente.</div>';
+        return;
+      }
+
+      const maxCols = 6;
+      const usados = registros.slice(-maxCols);
+
+      const headers = usados.map((item, idx) => {
+        const dataLeg = hemoFormatarDataLegivel(item.dataHora || item.dataHoraISO);
+        const tipoLabel = item.tipo === 'venosa' ? 'Venosa' : 'Arterial';
+        const labelColuna = dataLeg || `Gaso ${idx + 1}`;
+        return `<th><span class="history-item-title">${labelColuna}</span><span class="history-item-meta">${tipoLabel}</span></th>`;
+      }).join('');
+
+      const linhas = [];
+      function linha(label, getValor) {
+        const cells = usados.map(item => {
+          const v = getValor(item);
+          return `<td>${v !== undefined && v !== null && String(v).trim() ? v : '—'}</td>`;
+        }).join('');
+        linhas.push(`<tr><td>${label}</td>${cells}</tr>`);
+      }
+
+      // Entradas
+      linha('Hb (g/dL)', it => it.entradas?.Hb);
+      linha('SaO₂ (%)', it => it.entradas?.SaO2);
+      linha('PaO₂ (mmHg)', it => it.entradas?.PaO2);
+      linha('SvO₂ (%)', it => it.entradas?.SvO2);
+      linha('PvO₂ (mmHg)', it => it.entradas?.PvO2);
+      linha('PaCO₂ (mmHg)', it => it.entradas?.PaCO2);
+      linha('PvCO₂ (mmHg)', it => it.entradas?.PvCO2);
+      linha('DC (L/min)', it => it.entradas?.CO);
+      linha('Altura (cm)', it => it.entradas?.Altura);
+      linha('Peso (kg)', it => it.entradas?.Peso);
+
+      // Resultados
+      linha('BSA (m²)', it => it.resultados?.BSA);
+      linha('CaO₂ (mL/dL)', it => it.resultados?.CaO2);
+      linha('CvO₂ (mL/dL)', it => it.resultados?.CvO2);
+      linha('DO₂ (mL/min)', it => it.resultados?.DO2);
+      linha('DO₂i (mL/min/m²)', it => it.resultados?.DO2i);
+      linha('VO₂ (mL/min)', it => it.resultados?.VO2);
+      linha('VO₂i (mL/min/m²)', it => it.resultados?.VO2i);
+      linha('Taxa de extração', it => it.resultados?.TaxaExt);
+      linha('Gap CO₂ (mmHg)', it => it.resultados?.GapCO2);
+      linha('QR modificado', it => it.resultados?.QR);
+
+      const tabelaHTML = `
+        <div style="overflow-x:auto; border-radius:8px; border:1px solid #2d3843; background:#151b23; padding:0.25rem;">
+          <table style="width:100%; border-collapse:collapse; min-width:520px; font-size:0.8rem;">
+            <thead>
+              <tr>
+                <th style="text-align:left; background:#181f27;">Parâmetro</th>
+                ${headers}
+              </tr>
+            </thead>
+            <tbody>
+              ${linhas.join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+
+      container.innerHTML = tabelaHTML;
+    }
+
+    function hemoAbrirEvolucaoEmNovaAba(pacienteNome, registros) {
+      if (!registros || !registros.length) return;
+      const win = window.open('', '_blank');
+      if (!win) return;
+
+      const containerId = 'tabela-evolucao-hemo';
+      const htmlBase = `
+        <!DOCTYPE html>
+        <html lang="pt-BR">
+        <head>
+          <meta charset="UTF-8">
+          <title>Evolução – ${pacienteNome}</title>
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <style>
+            body {
+              font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+              background: #0f1419;
+              color: #e6edf3;
+              margin: 0;
+              padding: 1rem;
+            }
+            h1 {
+              font-size: 1.1rem;
+              margin-bottom: 0.75rem;
+            }
+          </style>
+        </head>
+        <body>
+          <h1>Evolução – ${pacienteNome}</h1>
+          <div id="${containerId}"></div>
+        </body>
+        </html>
+      `;
+
+      win.document.open();
+      win.document.write(htmlBase);
+      win.document.close();
+
+      const targetContainer = win.document.getElementById(containerId);
+      if (targetContainer) {
+        hemoRenderTabelaEvolucaoPaciente(pacienteNome, registros, targetContainer);
+      }
+    }
+
+    function hemoAbrirModalHistorico() {
+      const backdrop = document.getElementById('modalHistoricoGasoHemo');
+      const listaEl = document.getElementById('listaHistoricoGasoHemo');
+      if (!backdrop || !listaEl) return;
+
+      const historico = hemoLerHistorico();
+      listaEl.innerHTML = '';
+
+      if (historico.length === 0) {
+        const vazio = document.createElement('div');
+        vazio.className = 'history-item-meta';
+        vazio.textContent = 'Nenhuma gasometria salva ainda.';
+        listaEl.appendChild(vazio);
+      } else {
+        const porPaciente = new Map();
+        historico.forEach((item, index) => {
+          const nome = (item.paciente || 'Paciente sem nome').trim() || 'Paciente sem nome';
+          if (!porPaciente.has(nome)) porPaciente.set(nome, []);
+          porPaciente.get(nome).push({ ...item, _index: index });
+        });
+
+        const ordem = hemoGetOrderPreferencia();
+        const pacientes = Array.from(porPaciente.keys());
+        if (ordem === 'nome') {
+          pacientes.sort((a, b) => a.localeCompare(b, 'pt-BR', { sensitivity: 'base' }));
+        } else {
+          pacientes.sort((a, b) => {
+            const listaA = porPaciente.get(a);
+            const listaB = porPaciente.get(b);
+            const ultimoA = listaA[listaA.length - 1];
+            const ultimoB = listaB[listaB.length - 1];
+            const tA = new Date(ultimoA.dataHora || ultimoA.dataHoraISO || 0).getTime();
+            const tB = new Date(ultimoB.dataHora || ultimoB.dataHoraISO || 0).getTime();
+            return tB - tA;
+          });
+        }
+
+        pacientes.forEach(nome => {
+          const registros = porPaciente.get(nome);
+
+          const bloco = document.createElement('div');
+          bloco.className = 'history-item';
+          bloco.style.flexDirection = 'column';
+          bloco.style.alignItems = 'stretch';
+
+          const header = document.createElement('div');
+          header.style.display = 'flex';
+          header.style.justifyContent = 'space-between';
+          header.style.alignItems = 'center';
+          header.style.gap = '0.5rem';
+
+          const btnPaciente = document.createElement('button');
+          btnPaciente.className = 'history-button';
+          btnPaciente.style.flex = '1';
+          btnPaciente.textContent = nome;
+
+          const headerButtons = document.createElement('div');
+          headerButtons.style.display = 'flex';
+          headerButtons.style.gap = '0.35rem';
+
+          const btnEvolucao = document.createElement('button');
+          btnEvolucao.className = 'history-button primary';
+          btnEvolucao.style.flex = '0 0 auto';
+          btnEvolucao.textContent = 'Evolução';
+          btnEvolucao.addEventListener('click', () => {
+            hemoAbrirEvolucaoEmNovaAba(nome, registros);
+          });
+
+          const btnExcluirPaciente = document.createElement('button');
+          btnExcluirPaciente.className = 'history-button danger';
+          btnExcluirPaciente.style.flex = '0 0 auto';
+          btnExcluirPaciente.textContent = 'Excluir';
+          btnExcluirPaciente.addEventListener('click', () => {
+            const primeira = window.confirm(`Remover TODAS as gasometrias do paciente "${nome}"?`);
+            if (!primeira) return;
+            const segunda = window.confirm('Tem certeza absoluta? Esta ação não pode ser desfeita.');
+            if (!segunda) return;
+            const atual = hemoLerHistorico();
+            const filtrado = atual.filter(item => {
+              const n = (item.paciente || 'Paciente sem nome').trim() || 'Paciente sem nome';
+              return n !== nome;
+            });
+            hemoGravarHistorico(filtrado);
+            hemoAbrirModalHistorico();
+          });
+
+          headerButtons.appendChild(btnEvolucao);
+          headerButtons.appendChild(btnExcluirPaciente);
+
+          header.appendChild(btnPaciente);
+          header.appendChild(headerButtons);
+
+          const listaPaciente = document.createElement('div');
+          listaPaciente.style.marginTop = '0.35rem';
+          listaPaciente.style.display = 'none';
+
+          btnPaciente.addEventListener('click', () => {
+            listaPaciente.style.display = listaPaciente.style.display === 'none' ? 'block' : 'none';
+          });
+
+          registros.forEach(reg => {
+            const linha = document.createElement('div');
+            linha.style.display = 'flex';
+            linha.style.justifyContent = 'space-between';
+            linha.style.alignItems = 'center';
+            linha.style.gap = '0.5rem';
+            linha.style.marginBottom = '0.25rem';
+
+            const texto = document.createElement('div');
+            texto.className = 'history-item-meta';
+            const dataLeg = hemoFormatarDataLegivel(reg.dataHora || reg.dataHoraISO);
+            const tipoLabel = reg.tipo === 'venosa' ? 'Gaso venosa' : 'Gaso arterial';
+            texto.textContent = `${dataLeg || 'Sem data'} - ${tipoLabel}`;
+            texto.style.cursor = 'pointer';
+            texto.addEventListener('click', () => {
+              hemoAplicarEntradas(reg.entradas);
+              hemoFecharModalHistorico();
+            });
+
+            const bExcluir = document.createElement('button');
+            bExcluir.className = 'delete';
+            bExcluir.textContent = 'Excluir';
+            bExcluir.style.fontSize = '0.72rem';
+            bExcluir.addEventListener('click', () => {
+              const novaLista = hemoLerHistorico().filter((item, idx) => idx !== reg._index);
+              hemoGravarHistorico(novaLista);
+              hemoAbrirModalHistorico();
+            });
+
+            linha.appendChild(texto);
+            linha.appendChild(bExcluir);
+            listaPaciente.appendChild(linha);
+          });
+
+          bloco.appendChild(header);
+          bloco.appendChild(listaPaciente);
+          listaEl.appendChild(bloco);
+        });
+      }
+
+      backdrop.style.display = 'flex';
+    }
+
+    function hemoFecharModalHistorico() {
+      const backdrop = document.getElementById('modalHistoricoGasoHemo');
+      if (backdrop) backdrop.style.display = 'none';
+    }
+
+    function hemoSalvarGasometria() {
+      const pacienteInput = document.getElementById('gasoHemoPaciente');
+      const dataInput = document.getElementById('gasoHemoDataHora');
+      const tipoSelect = document.getElementById('gasoHemoTipo');
+      if (!pacienteInput || !dataInput || !tipoSelect) return;
+
+      const paciente = pacienteInput.value?.trim() || '';
+      const dataHora = dataInput.value || '';
+      const tipo = tipoSelect.value || 'arterial';
+
+      const entradas = hemoObterEntradasAtuais();
+      const resultados = hemoObterResultadosAtuais();
+      const historico = hemoLerHistorico();
+      historico.push({
+        paciente,
+        dataHora,
+        tipo,
+        entradas,
+        resultados
+      });
+      hemoGravarHistorico(historico);
+      hemoFecharModalSalvar();
+    }
+
+    const btnSalvarHemo = document.getElementById('btnSalvarGasoHemo');
+    const btnHistoricoHemo = document.getElementById('btnHistoricoGasoHemo');
+    const cancelarSalvarHemo = document.getElementById('cancelarSalvarGasoHemo');
+    const confirmarSalvarHemo = document.getElementById('confirmarSalvarGasoHemo');
+    const fecharHistoricoHemo = document.getElementById('fecharHistoricoGasoHemo');
+    const ordemHemoPorNome = document.getElementById('ordemHemoPorNome');
+    const ordemHemoPorUltimo = document.getElementById('ordemHemoPorUltimo');
+
+    if (btnSalvarHemo) btnSalvarHemo.addEventListener('click', hemoAbrirModalSalvar);
+    if (btnHistoricoHemo) btnHistoricoHemo.addEventListener('click', hemoAbrirModalHistorico);
+    if (cancelarSalvarHemo) cancelarSalvarHemo.addEventListener('click', hemoFecharModalSalvar);
+    if (confirmarSalvarHemo) confirmarSalvarHemo.addEventListener('click', hemoSalvarGasometria);
+    if (fecharHistoricoHemo) fecharHistoricoHemo.addEventListener('click', hemoFecharModalHistorico);
+
+    if (ordemHemoPorNome && ordemHemoPorUltimo) {
+      const atual = hemoGetOrderPreferencia();
+      if (atual === 'nome') {
+        ordemHemoPorNome.classList.add('primary');
+        ordemHemoPorUltimo.classList.remove('primary');
+      } else {
+        ordemHemoPorUltimo.classList.add('primary');
+        ordemHemoPorNome.classList.remove('primary');
+      }
+      ordemHemoPorNome.addEventListener('click', () => {
+        hemoSetOrderPreferencia('nome');
+        ordemHemoPorNome.classList.add('primary');
+        ordemHemoPorUltimo.classList.remove('primary');
+        hemoAbrirModalHistorico();
+      });
+      ordemHemoPorUltimo.addEventListener('click', () => {
+        hemoSetOrderPreferencia('ultimo');
+        ordemHemoPorUltimo.classList.add('primary');
+        ordemHemoPorNome.classList.remove('primary');
+        hemoAbrirModalHistorico();
+      });
+    }
+
     calc();
   </script>
 </body>

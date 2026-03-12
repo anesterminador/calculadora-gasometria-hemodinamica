@@ -10,7 +10,7 @@
  * duração das sessões, dispositivo e país dos visitantes.
  */
 (function() {
-  var MEASUREMENT_ID = 'G-XXXXXXXXXX'; // <-- Substitua pelo seu ID do GA4
+  var MEASUREMENT_ID = 'G-KBE43K2PT0';
 
   if (!MEASUREMENT_ID || MEASUREMENT_ID === 'G-XXXXXXXXXX') {
     return; // Não envia dados se não estiver configurado

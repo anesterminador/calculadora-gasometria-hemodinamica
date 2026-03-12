@@ -214,9 +214,57 @@
     .criteria-block strong { color: var(--text); font-size: 0.85rem; }
     .criteria-block ul { margin: 0.25rem 0 0 1rem; padding: 0; }
     .criteria-block li { margin-bottom: 0.2rem; }
+    .install-banner {
+      display: none;
+      margin: 0 auto 1.25rem;
+      padding: 0.6rem 0.9rem;
+      max-width: 520px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+    .install-banner.visible {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+    .install-text {
+      text-align: left;
+    }
+    .install-title {
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.1rem;
+    }
+    .install-btn {
+      border: none;
+      border-radius: 999px;
+      padding: 0.45rem 0.9rem;
+      background: var(--accent);
+      color: #0f1419;
+      font-weight: 700;
+      font-size: 0.8rem;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    @media (min-width: 769px) {
+      .install-banner {
+        display: none !important;
+      }
+    }
   </style>
 </head>
 <body>
+  <div class="install-banner" id="install-banner">
+    <div class="install-text">
+      <div class="install-title">Salvar como app</div>
+      <div>Adicione as calculadoras Hemodinâmica à tela inicial.</div>
+    </div>
+    <button class="install-btn" id="install-button">Instalar</button>
+  </div>
   <div class="wrap">
     <header>
       <a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="logo-link">
@@ -375,6 +423,39 @@
       input.addEventListener('input', onInput);
       input.addEventListener('focus', function() { if (input.value.trim().length >= 2) onInput(); });
       input.addEventListener('blur', function() { setTimeout(function() { resultsEl.setAttribute('hidden', ''); }, 180); });
+    })();
+  </script>
+  <script>
+    (function () {
+      if (!('serviceWorker' in navigator)) return;
+
+      var deferredPrompt = null;
+      var banner = document.getElementById('install-banner');
+      var button = document.getElementById('install-button');
+
+      if (!banner || !button) return;
+
+      var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+      var isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || '');
+
+      if (isStandalone || !isMobile) {
+        return;
+      }
+
+      window.addEventListener('beforeinstallprompt', function (e) {
+        e.preventDefault();
+        deferredPrompt = e;
+        banner.classList.add('visible');
+      });
+
+      button.addEventListener('click', function () {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.finally(function () {
+          banner.classList.remove('visible');
+          deferredPrompt = null;
+        });
+      });
     })();
   </script>
   <script>

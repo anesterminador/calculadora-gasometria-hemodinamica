@@ -435,27 +435,37 @@
 
       if (!banner || !button) return;
 
+      var ua = navigator.userAgent || '';
       var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-      var isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || '');
+      var isAndroid = /Android/i.test(ua);
+      var isIOS = /iPhone|iPad|iPod/i.test(ua);
 
-      if (isStandalone || !isMobile) {
+      if (isStandalone || (!isAndroid && !isIOS)) {
         return;
       }
 
-      window.addEventListener('beforeinstallprompt', function (e) {
-        e.preventDefault();
-        deferredPrompt = e;
-        banner.classList.add('visible');
-      });
-
-      button.addEventListener('click', function () {
-        if (!deferredPrompt) return;
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.finally(function () {
-          banner.classList.remove('visible');
-          deferredPrompt = null;
+      if (isAndroid) {
+        window.addEventListener('beforeinstallprompt', function (e) {
+          e.preventDefault();
+          deferredPrompt = e;
+          banner.classList.add('visible');
         });
-      });
+
+        button.addEventListener('click', function () {
+          if (!deferredPrompt) return;
+          deferredPrompt.prompt();
+          deferredPrompt.userChoice.finally(function () {
+            banner.classList.remove('visible');
+            deferredPrompt = null;
+          });
+        });
+      } else if (isIOS) {
+        // iOS nao suporta beforeinstallprompt: mostra apenas instrucoes
+        banner.classList.add('visible');
+        button.addEventListener('click', function () {
+          alert('No iPhone, para adicionar o app:\\n\\n1) Abra no Safari.\\n2) Toque no botao Compartilhar (quadrado com seta).\\n3) Escolha \"Adicionar à Tela de Início\".\\n\\nDepois de aberto pelo atalho, as calculadoras principais podem funcionar offline.');
+        });
+      }
     })();
   </script>
   <script>

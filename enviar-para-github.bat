@@ -1,6 +1,12 @@
 @echo off
 cd /d "%~dp0"
 
+rem Atualiza automaticamente a versao do cache do PWA (sw.js)
+if exist "sw.js" (
+  powershell -Command ^
+    "(Get-Content 'sw.js') -replace \"hemodinamica-v(\d+)\", { 'hemodinamica-v' + ([int]$args[0].Groups[1].Value + 1) } | Set-Content 'sw.js'"
+)
+
 echo.
 echo Enviar Site para GitHub
 echo ========================

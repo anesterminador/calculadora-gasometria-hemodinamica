@@ -1,0 +1,18 @@
+{
+  "name": "Hemodinâmica – Calculadoras",
+  "short_name": "Hemodinâmica",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0f1419",
+  "theme_color": "#0f1419",
+  "icons": [
+    {
+      "src": "Logo Hemodinâmica_regular.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
+

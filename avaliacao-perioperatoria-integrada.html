@@ -1617,7 +1617,8 @@
 
     function aplicarValores(valores) {
       if (!valores) return;
-      inputIds.forEach(id => {
+      // Restaura todos os campos salvos do exame
+      allInputIds.forEach(id => {
         const el = document.getElementById(id);
         if (el && Object.prototype.hasOwnProperty.call(valores, id)) {
           el.value = valores[id] ?? '';
@@ -2915,17 +2916,20 @@
 
     function abrirModalSalvarExame() {
       if (!modalSalvarExame) return;
+      const historico = lerHistorico();
+      const ultimo = historico[historico.length - 1];
       const pacienteInput = document.getElementById('examePaciente');
       const dataInput = document.getElementById('exameData');
       const horaInput = document.getElementById('exameHora');
 
       if (pacienteInput) {
-        pacienteInput.value = '';
+        pacienteInput.value = ultimo?.paciente || '';
         pacienteInput.focus();
         pacienteInput.select();
       }
-      if (dataInput) dataInput.value = '';
-      if (horaInput) horaInput.value = '';
+      const agora = formatarDataParaInput(new Date());
+      if (dataInput) dataInput.value = agora.data;
+      if (horaInput) horaInput.value = agora.hora;
 
       modalSalvarExame.style.display = 'flex';
     }

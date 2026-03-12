@@ -437,6 +437,10 @@
       border-radius: 8px;
       transition: filter 0.2s, transform 0.15s;
     }
+    .footer-link-share {
+      background: #2ea043;
+      color: #0f1419;
+    }
     .footer-link:hover {
       filter: brightness(1.15);
       transform: scale(1.03);
@@ -970,8 +974,32 @@
     <footer class="footer-buttons">
       <a href="index.html" class="footer-link">Todas as Calculadoras</a>
       <a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="footer-link">Contato</a>
+      <a href="#" class="footer-link footer-link-share">Compartilhar</a>
     </footer>
   </div>
+
+  <script>
+    (function() {
+      var shareLink = document.querySelector('.footer-link-share');
+      if (!shareLink) return;
+      shareLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        var shareUrl = window.location.href;
+        var shareTitle = document.title || 'Calculadora Anest Review';
+        if (navigator.share) {
+          navigator.share({ title: shareTitle, url: shareUrl }).catch(function() {});
+        } else if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(shareUrl).then(function() {
+            alert('Link copiado para a área de transferência.');
+          }, function() {
+            alert('Copie este link:\n' + shareUrl);
+          });
+        } else {
+          alert('Copie este link:\n' + shareUrl);
+        }
+      });
+    })();
+  </script>
 
   <!-- Script de avaliação ácido-básica (reaproveitado da página original) -->
   <script>

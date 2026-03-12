@@ -463,7 +463,13 @@
         // iOS nao suporta beforeinstallprompt: mostra apenas instrucoes
         banner.classList.add('visible');
         button.addEventListener('click', function () {
-          alert('No iPhone, para adicionar o app:\\n\\n1) Abra no Safari.\\n2) Toque no botao Compartilhar (quadrado com seta).\\n3) Escolha \"Adicionar à Tela de Início\".\\n\\nDepois de aberto pelo atalho, as calculadoras principais podem funcionar offline.');
+          alert(
+            'Como salvar no iPhone:\n\n' +
+            '1) Abra este site no Safari.\n' +
+            '2) Toque no botão Compartilhar (quadrado com seta para cima).\n' +
+            '3) Escolha a opção "Adicionar à Tela de Início".\n\n' +
+            'Depois de abrir pelo ícone da tela inicial, as principais calculadoras poderão funcionar mesmo sem internet.'
+          );
         });
       }
     })();

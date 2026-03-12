@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Acoplamento · Método de Chen (Single Beat) – Fluidos, choque e hemorragia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f1419; --bg-card: #1a2129; --bg-input: #252d36; --border: #2d3843;
+      --text: #e6edf3; --text-muted: #8b9cad; --accent: #58a6ff; --accent-soft: rgba(88, 166, 255, 0.15);
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      min-height: 100vh;
+      background: var(--bg);
+      background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(88, 166, 255, 0.08), transparent);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 0rem 1rem 3rem;
+    }
+    .wrap { max-width: 520px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 0.75rem; }
+    .logo-link { display: block; text-decoration: none; }
+    .logo {
+      max-width: 600px;
+      height: auto;
+      margin-bottom: -2.5rem;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      background: transparent;
+      transform: translateX(-3.2rem);
+      clip-path: inset(0 0 25 0);
+    }
+    h1 { font-size: 1.5rem; font-weight: 700; color: var(--text); margin-bottom: 0.35rem; }
+    .subtitle { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+    section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.35rem 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    section h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #ffd139;
+      margin-bottom: 0.4rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+    }
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+    }
+    .row:last-of-type { margin-bottom: 0; }
+    label {
+      flex: 1;
+      font-size: 0.9rem;
+      color: var(--text);
+      font-weight: 500;
+      min-width: 0;
+    }
+    input[type="number"] {
+      padding: 0.5rem 0.65rem;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      color: var(--text);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      width: 100px;
+      text-align: right;
+    }
+    input[type="number"]:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+    .result-block {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1.1rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border);
+      min-height: 3rem;
+    }
+    .result-block-content {
+      flex: 1;
+      min-width: 0;
+    }
+    .result-row .name {
+      color: var(--text);
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+    .info-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1rem;
+      height: 1rem;
+      margin-left: 0.35rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-input);
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      font-weight: 700;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .info-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .ees-info-pop {
+      position: absolute;
+      z-index: 20;
+      max-width: 480px;
+      margin-top: 0.6rem;
+      right: 0;
+      background: #05070a;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 0.75rem 0.9rem;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.5);
+      font-size: 0.78rem;
+      line-height: 1.6;
+    }
+    .ees-info-pop h3 {
+      font-size: 0.85rem;
+      margin-bottom: 0.4rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-align: left;
+    }
+    .ees-info-pop p {
+      margin-bottom: 0.35rem;
+      color: var(--text);
+    }
+    .ees-info-pop p:last-child {
+      margin-bottom: 0;
+    }
+    .ees-info-pop .step-label {
+      font-weight: 700;
+      color: #fef9c3; /* amarelo clarinho */
+    }
+    .ees-info-pop code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.75rem;
+      background: rgba(15,20,25,0.9);
+      padding: 0.15rem 0.25rem;
+      border-radius: 4px;
+      color: var(--text);
+      font-weight: 400;
+    }
+    .ees-info-pop .ees-legend {
+      margin-top: 0.45rem;
+      padding: 0.55rem 0.6rem;
+      border-radius: 8px;
+      background: #111827;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+    }
+    .result-box {
+      flex-shrink: 0;
+      width: 110px;
+      padding: 0.5rem 0.65rem;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+    .formula {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+    .formula-eq {
+      color: #fef9c3;
+    }
+    .hint {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+      text-align: justify;
+    }
+    footer {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0;
+      opacity: 0.8;
+    }
+    .footer-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+    }
+    .footer-link {
+      display: inline-block;
+      padding: 0.5rem 1.25rem;
+      background: var(--accent);
+      color: #0f1419;
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: filter 0.2s, transform 0.15s;
+    }
+    .footer-link:hover { filter: brightness(1.15); transform: scale(1.03); }
+    @media (max-width: 768px) {
+      .logo {
+        min-width: 240px;
+        max-width: min(600px, calc(100vw - 2rem));
+        transform: translateX(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="logo-link">
+        <img src="Logo Hemodinâmica_regular.png" alt="Hemodinâmica" class="logo">
+      </a>
+      <h1>Acoplamento</h1>
+      <p class="subtitle">Fluidos, choque e hemorragia · Método de Chen (Single Beat)</p>
+    </header>
+
+    <section>
+      <h2>Entradas</h2>
+      <div class="row">
+        <label for="pas">Pressão arterial sistólica (mmHg)</label>
+        <input type="number" id="pas" min="10" max="300" step="1" placeholder="mmHg">
+      </div>
+      <div class="row">
+        <label for="pad">Pressão arterial diastólica (mmHg)</label>
+        <input type="number" id="pad" min="10" max="300" step="1" placeholder="mmHg">
+      </div>
+      <div class="row">
+        <label for="vs">Volume sistólico (mL)</label>
+        <input type="number" id="vs" min="1" max="300" step="1" placeholder="mL">
+      </div>
+      <div class="row">
+        <label for="feve">Fração de ejeção do ventrículo esquerdo (%)</label>
+        <input type="number" id="feve" min="5" max="90" step="1" placeholder="%">
+      </div>
+      <div class="row">
+        <label for="ppe">Período de pré-ejeção (ms)</label>
+        <input type="number" id="ppe" min="10" max="400" step="1" placeholder="ms">
+      </div>
+      <div class="row">
+        <label for="pst">Período sistólico total (ms)</label>
+        <input type="number" id="pst" min="100" max="800" step="1" placeholder="ms">
+      </div>
+      <p class="hint">Preencha os valores medidos (pressões arteriais, parâmetros ecocardiográficos e tempos em milissegundos). Em seguida, a calculadora estimará os índices de acoplamento ventriculo-arterial pelo método de Chen (Single Beat).</p>
+    </section>
+
+    <section>
+      <h2>Resultado</h2>
+      <div class="result-block" style="position: relative;">
+        <div class="result-block-content">
+          <div class="result-row">
+            <span class="name">Elastância ventricular ao final da sístole</span>
+            <button type="button" class="info-btn" id="ees-info-btn">?</button>
+          </div>
+          <div class="formula formula-eq">
+            Ees(sb) = [Pd − ENd(est) × Pes] / (SV × ENd(est)), com Pes ≈ 0,9 × PAS.
+          </div>
+          <div class="formula">
+            ENd(est) é obtido a partir de EF, da razão Pd/Pes e da razão entre o período de pré‑ejeção e o período sistólico total, conforme Chen et al. (JACC, 2001).
+          </div>
+        </div>
+        <div class="result-box" id="result-ees">—</div>
+      </div>
+
+      <div style="border-top: 1px solid var(--border); margin: 0.9rem 0 0.75rem;"></div>
+
+      <div class="result-block" style="margin-top: 0; padding-top: 0; border-top: none;">
+        <div class="result-block-content">
+          <div class="result-row">
+            <span class="name">Elastância arterial efetiva (Ea)</span>
+          </div>
+          <div class="formula formula-eq">
+            Ea = Pes / SV, com Pes ≈ 0,9 × PAS.
+          </div>
+          <div class="formula">
+            Representa a carga arterial “vista” pelo ventrículo esquerdo em um único batimento.
+          </div>
+        </div>
+        <div class="result-box" id="result-ea">—</div>
+      </div>
+
+      <div style="border-top: 1px solid var(--border); margin: 0.7rem 0 0.6rem;"></div>
+
+      <div class="result-block" style="margin-top: 0; padding-top: 0; border-top: none;">
+        <div class="result-block-content">
+          <div class="result-row">
+            <span class="name">Acoplamento ventrículo-arterial</span>
+          </div>
+          <div class="formula formula-eq">
+            VAC = Ea/Ees
+          </div>
+          <div class="formula">
+            Relação adimensional entre a elastância arterial e a elastância ventricular ao final da sístole.
+          </div>
+        </div>
+        <div class="result-box" id="result-coupling">—</div>
+      </div>
+    </section>
+
+    <footer class="footer-buttons">
+      <a href="index.html" class="footer-link">Todas as Calculadoras</a>
+      <a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="footer-link">Contato</a>
+    </footer>
+  </div>
+  <script>
+    (function () {
+      var pas = document.getElementById('pas');
+      var pad = document.getElementById('pad');
+      var vs = document.getElementById('vs');
+      var feve = document.getElementById('feve');
+      var ppe = document.getElementById('ppe');
+      var pst = document.getElementById('pst');
+      var resultEes = document.getElementById('result-ees');
+      var resultEa = document.getElementById('result-ea');
+      var resultCoupling = document.getElementById('result-coupling');
+      var infoBtn = document.getElementById('ees-info-btn');
+      var infoPop = null;
+
+      function toNumber(input) {
+        var v = parseFloat(input.value);
+        return isNaN(v) ? NaN : v;
+      }
+
+      function computeENdAvg(tNd) {
+        // Coeficientes do polinômio ENd(avg) do artigo de Chen (2001)
+        var a = [0.35695, -7.2266, 74.249, -307.39, 684.54, -856.92, 571.95, -159.1];
+        var tPow = 1;
+        var sum = a[0];
+        for (var i = 1; i < a.length; i++) {
+          tPow *= tNd;
+          sum += a[i] * tPow;
+        }
+        return sum;
+      }
+
+      function update() {
+        var Ps = toNumber(pas);
+        var Pd = toNumber(pad);
+        var SV = toNumber(vs);
+        var EFpct = toNumber(feve);
+        var PEP = toNumber(ppe);
+        var Ts = toNumber(pst);
+
+        if (!isFinite(Ps) || !isFinite(Pd) || !isFinite(SV) || !isFinite(EFpct) ||
+            !isFinite(PEP) || !isFinite(Ts) ||
+            Ps <= 0 || Pd <= 0 || SV <= 0 || EFpct <= 0 || PEP <= 0 || Ts <= 0 ||
+            PEP >= Ts) {
+          resultEes.textContent = '—';
+          resultEa.textContent = '—';
+          resultCoupling.textContent = '—';
+          return;
+        }
+
+        var EF = EFpct / 100;
+        var Pes = 0.9 * Ps;
+        if (Pes <= 0) {
+          resultEes.textContent = '—';
+          resultEa.textContent = '—';
+          resultCoupling.textContent = '—';
+          return;
+        }
+
+        var PdOverPes = Pd / Pes;
+        var tNd = PEP / Ts;
+        // limitar tNd a um intervalo razoável [0, 1]
+        tNd = Math.max(0, Math.min(1, tNd));
+
+        var ENdAvg = computeENdAvg(tNd);
+        var ENdEst = 0.0275 - 0.165 * EF + 0.3656 * PdOverPes + 0.515 * ENdAvg;
+
+        if (!isFinite(ENdEst) || ENdEst <= 0) {
+          resultEes.textContent = '—';
+          resultEa.textContent = '—';
+          resultCoupling.textContent = '—';
+          return;
+        }
+
+        var numerator = Pd - ENdEst * Pes;
+        var denominator = SV * ENdEst;
+        if (denominator <= 0) {
+          resultEes.textContent = '—';
+          resultEa.textContent = '—';
+          resultCoupling.textContent = '—';
+          return;
+        }
+
+        var Ees = numerator / denominator; // mmHg/mL
+        if (!isFinite(Ees) || Ees <= 0) {
+          resultEes.textContent = '—';
+          resultEa.textContent = '—';
+          resultCoupling.textContent = '—';
+          return;
+        }
+
+        resultEes.textContent = Ees.toFixed(2) + ' mmHg/mL';
+
+        // Elastância arterial efetiva (Ea = Pes / SV)
+        var Ea = Pes / SV;
+        if (!isFinite(Ea) || Ea <= 0) {
+          resultEa.textContent = '—';
+          resultCoupling.textContent = '—';
+          return;
+        }
+        resultEa.textContent = Ea.toFixed(2) + ' mmHg/mL';
+
+        // Acoplamento ventrículo-arterial (Ea/Ees)
+        var ratio = Ea / Ees;
+        if (!isFinite(ratio) || ratio <= 0) {
+          resultCoupling.textContent = '—';
+          return;
+        }
+        resultCoupling.textContent = ratio.toFixed(2);
+      }
+
+      pas.addEventListener('input', update);
+      pad.addEventListener('input', update);
+      vs.addEventListener('input', update);
+      feve.addEventListener('input', update);
+      ppe.addEventListener('input', update);
+      pst.addEventListener('input', update);
+
+      function buildInfoPop() {
+        if (infoPop) return infoPop;
+        infoPop = document.createElement('div');
+        infoPop.className = 'ees-info-pop';
+        infoPop.innerHTML =
+          '<h3>Passo a passo da Ees (Chen, single beat)</h3>' +
+          '<p><span class="step-label">1) Tempo normalizado no início da ejeção</span><br>' +
+          '<code>tNd = PEP / T_sistólico_total</code></p>' +
+          '<p><span class="step-label">2) Elastância normalizada média no início da ejeção</span><br>' +
+          '<code>ENd_avg = 0,35695 - 7,2266·tNd + 74,249·tNd² - 307,39·tNd³ + 684,54·tNd⁴ - 856,92·tNd⁵ + 571,95·tNd⁶ - 159,1·tNd⁷</code></p>' +
+          '<p><span class="step-label">3) Pressão ao final da sístole estimada</span><br>' +
+          '<code>Pes ≈ 0,9 · Ps</code></p>' +
+          '<p><span class="step-label">4) Elastância normalizada individual no início da ejeção</span><br>' +
+          '<code>ENd_est = 0,0275 - 0,165·EF + 0,3656·(Pd/Pes) + 0,515·ENd_avg</code><br>' +
+          'EF em fração (ex.: 60% → 0,60).</p>' +
+          '<p><span class="step-label">5) Elastância ventricular ao final da sístole</span><br>' +
+          '<code>Ees(sb) = [Pd − ENd_est·Pes] / (SV·ENd_est)</code><br>' +
+          'Ees em mmHg/mL.</p>' +
+          '<div class="ees-legend"><span class="step-label">Siglas:</span><br>' +
+          '<code>Ps</code> = pressão arterial sistólica; <code>Pd</code> = pressão arterial diastólica; ' +
+          '<code>Pes</code> = pressão ao final da sístole estimada (0,9·Ps);<br>' +
+          '<code>SV</code> = volume sistólico; <code>EF</code> = fração de ejeção (fração, não %); ' +
+          '<code>PEP</code> = período de pré-ejeção; <code>T_sistólico_total</code> = período sistólico total.</div>';
+        return infoPop;
+      }
+
+      if (infoBtn) {
+        infoBtn.addEventListener('click', function (event) {
+          event.stopPropagation();
+          var pop = buildInfoPop();
+          var isVisible = pop.parentElement != null;
+          if (isVisible) {
+            pop.parentElement.removeChild(pop);
+          } else {
+            infoBtn.closest('.result-block').appendChild(pop);
+          }
+        });
+
+        document.addEventListener('click', function (e) {
+          if (!infoPop) return;
+          if (!infoPop.contains(e.target) && e.target !== infoBtn && infoPop.parentElement) {
+            infoPop.parentElement.removeChild(infoPop);
+          }
+        });
+      }
+    })();
+  </script>
+  <script src="analytics.js"></script>
+</body>
+</html>
+

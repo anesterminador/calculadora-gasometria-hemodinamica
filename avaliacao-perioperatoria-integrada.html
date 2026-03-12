@@ -731,7 +731,7 @@
       </details>
 
       <details class="input-group">
-        <summary class="group-subtitle">Eletrólitos</summary>
+        <summary class="group-subtitle">Eletrólitos e albumina</summary>
         <div class="row"><label>Na⁺ (mEq/L)</label><input type="number" id="Na" step="0.1" min="0"></div>
         <p class="input-hint">Normal: 135 – 145 mEq/L</p>
         <div class="row"><label>K⁺ (mEq/L)</label><input type="number" id="K" step="0.1" min="0"></div>
@@ -742,6 +742,8 @@
         <p class="input-hint">Normal: 1,7 – 2,4 mg/dL</p>
         <div class="row"><label>Cl⁻ (mEq/L)</label><input type="number" id="Cl" step="0.1" min="0"></div>
         <p class="input-hint">Normal: 98 – 107 mEq/L</p>
+        <div class="row"><label>Albumina (g/dL)</label><input type="number" id="Albumina" step="0.1" min="0"></div>
+        <p class="input-hint">Normal: 3,5 – 5,0 g/dL</p>
       </details>
 
       <details class="input-group">
@@ -864,8 +866,6 @@
         <p class="input-hint">Normal: 0,8 – 1,2</p>
         <div class="row"><label>TTPa (s)</label><input type="number" id="TTPa" step="0.1" min="0"></div>
         <p class="input-hint">Normal: 25 – 40 s (depende do reagente)</p>
-        <div class="row"><label>Albumina (g/dL)</label><input type="number" id="Albumina" step="0.1" min="0"></div>
-        <p class="input-hint">Normal: 3,5 – 5,0 g/dL</p>
       </details>
 
       <details class="input-group">
@@ -1668,16 +1668,23 @@
       return `${dia}/${mes}/${ano} ${hora}:${min}`;
     }
 
-    // Cálculo simples de AG e Delta ratio a partir dos valores salvos
+    // Cálculo de ânion gap (corrigido pela albumina) e Delta ratio
     function calcularDerivadosRegistro(valores) {
       const Na = parseValorNumero(valores?.Na);
       const Cl = parseValorNumero(valores?.Cl);
       const HCO3 = parseValorNumero(valores?.HCO3);
+      const Albumina = parseValorNumero(valores?.Albumina);
       let anionGap = NaN;
       let deltaRatio = NaN;
       if (!isNaN(Na) && !isNaN(Cl) && !isNaN(HCO3)) {
-        anionGap = Na - (Cl + HCO3);
-        const deltaAG = anionGap - 12;
+        // AG não corrigido
+        const agBruto = Na - (Cl + HCO3);
+        // Albumina "normal" assumida se campo não preenchido
+        const albUsada = !isNaN(Albumina) && Albumina > 0 ? Albumina : 4.0;
+        const agCorrigido = agBruto + 2.5 * (4.0 - albUsada);
+        anionGap = agCorrigido;
+
+        const deltaAG = agCorrigido - 12;
         const deltaHCO3 = 24 - HCO3;
         if (Math.abs(deltaHCO3) > 1e-6) {
           deltaRatio = deltaAG / deltaHCO3;
@@ -1785,14 +1792,15 @@
         linha(label, reg => (reg.valores?.[id] ?? '').toString());
       });
 
-      grupo('Eletrólitos');
-      ['Na','K','Ca','Mg','Cl'].forEach(id => {
+      grupo('Eletrólitos e albumina');
+      ['Na','K','Ca','Mg','Cl','Albumina'].forEach(id => {
         const label = {
           Na: 'Na⁺ (mEq/L)',
           K: 'K⁺ (mEq/L)',
           Ca: 'Ca²⁺ (mg/dL)',
           Mg: 'Mg²⁺ (mg/dL)',
-          Cl: 'Cl⁻ (mEq/L)'
+          Cl: 'Cl⁻ (mEq/L)',
+          Albumina: 'Albumina (g/dL)'
         }[id];
         linha(label, reg => (reg.valores?.[id] ?? '').toString());
       });
@@ -2303,11 +2311,12 @@
                 { id: 'Hematocrito', label: 'Hematócrito',       unidade: '%',         minFis: 15,  maxFis: 60,  grupo: 'Hemograma' },
                 { id: 'Plaquetas',   label: 'Plaquetas',         unidade: '×10³/µL',   minFis: 50,  maxFis: 800, grupo: 'Hemograma' },
 
-                { id: 'Na',   label: 'Na⁺',  unidade: 'mEq/L',   minFis: 120, maxFis: 160, grupo: 'Eletrólitos' },
-                { id: 'K',    label: 'K⁺',   unidade: 'mEq/L',   minFis: 2,   maxFis: 7,   grupo: 'Eletrólitos' },
-                { id: 'Ca',   label: 'Ca²⁺', unidade: 'mg/dL',   minFis: 6,   maxFis: 14,  grupo: 'Eletrólitos' },
-                { id: 'Mg',   label: 'Mg²⁺', unidade: 'mg/dL',   minFis: 0.5, maxFis: 4,   grupo: 'Eletrólitos' },
-                { id: 'Cl',   label: 'Cl⁻',  unidade: 'mEq/L',   minFis: 80,  maxFis: 120, grupo: 'Eletrólitos' },
+                { id: 'Na',   label: 'Na⁺',  unidade: 'mEq/L',   minFis: 120, maxFis: 160, grupo: 'Eletrólitos e albumina' },
+                { id: 'K',    label: 'K⁺',   unidade: 'mEq/L',   minFis: 2,   maxFis: 7,   grupo: 'Eletrólitos e albumina' },
+                { id: 'Ca',   label: 'Ca²⁺', unidade: 'mg/dL',   minFis: 6,   maxFis: 14,  grupo: 'Eletrólitos e albumina' },
+                { id: 'Mg',   label: 'Mg²⁺', unidade: 'mg/dL',   minFis: 0.5, maxFis: 4,   grupo: 'Eletrólitos e albumina' },
+                { id: 'Cl',   label: 'Cl⁻',  unidade: 'mEq/L',   minFis: 80,  maxFis: 120, grupo: 'Eletrólitos e albumina' },
+                { id: 'Albumina', label: 'Albumina', unidade: 'g/dL', minFis: 2, maxFis: 6, grupo: 'Eletrólitos e albumina' },
 
                 { id: 'pH',   label: 'pH',   unidade: '',        minFis: 7.0, maxFis: 7.7, grupo: 'Gasometria arterial' },
                 { id: 'PaO2', label: 'PaO₂', unidade: 'mmHg',    minFis: 40,  maxFis: 120, grupo: 'Gasometria arterial' },
@@ -2646,9 +2655,10 @@
                   var vMin = vDataMin - spanDados * 0.10;
                   var vMax = vDataMax + spanDados * 0.05;
 
-                  // Espaços laterais e verticais dinâmicos em função do tamanho do SVG
-                  var svgWidth = svg.clientWidth || 800;
-                  var svgHeight = svg.clientHeight || 320;
+                  // Espaços laterais e verticais dinâmicos em função do tamanho efetivo do SVG
+                  var rect = svg.getBoundingClientRect();
+                  var svgWidth = rect.width || svg.clientWidth || 800;
+                  var svgHeight = rect.height || svg.clientHeight || 320;
                   var padX = Math.max(40, svgWidth * 0.06);       // margem esquerda
                   var padRight = Math.max(24, svgWidth * 0.03);   // margem direita
                   var padY = Math.max(24, svgHeight * 0.06);      // margem superior
@@ -3166,20 +3176,29 @@
       const SvO2 = hemoGet('SvO2'), PvO2 = hemoGet('PvO2'), PaCO2 = hemoGet('PaCO2'), PvCO2 = hemoGet('PvCO2');
       const CO = hemoGet('CO'), Altura = hemoGet('Altura'), Peso = hemoGet('Peso');
 
-      if ([Hb,SaO2,PaO2,SvO2,PvO2,PaCO2,PvCO2,Altura,Peso].some(isNaN)) {
+      // Superfície corporal (Du Bois) depende apenas de Altura e Peso
+      if (!isNaN(Altura) && !isNaN(Peso) && Altura > 0 && Peso > 0) {
+        const BSA = 0.007184 * Math.pow(Peso, 0.425) * Math.pow(Altura, 0.725);
+        hemoSet('BSAResumo', BSA);
+      } else {
+        hemoSet('BSAResumo', undefined);
+      }
+
+      // Para parâmetros derivados (CaO2, CvO2, etc.), exigimos todos os valores necessários
+      if ([Hb,SaO2,PaO2,SvO2,PvO2,PaCO2,PvCO2].some(isNaN)) {
         hemoOutIds.forEach(id => { hemoSet(id, undefined); hemoSetResultStyle(id, null); });
         return;
       }
 
-      const BSA = 0.007184 * Math.pow(Peso, 0.425) * Math.pow(Altura, 0.725);
+      const BSA = (!isNaN(Altura) && !isNaN(Peso) && Altura > 0 && Peso > 0)
+        ? 0.007184 * Math.pow(Peso, 0.425) * Math.pow(Altura, 0.725)
+        : NaN;
       const CaO2 = (Hb * 1.34 * SaO2 / 100) + (0.0031 * PaO2);
       const CvO2 = (Hb * 1.34 * SvO2 / 100) + (0.0031 * PvO2);
       const GapCO2 = PvCO2 - PaCO2;
       const Ca_vO2 = CaO2 - CvO2;
       const QR = Ca_vO2 > 0 ? (PvCO2 - PaCO2) / Ca_vO2 : NaN;
       const TaxaExt = CaO2 > 0 ? Ca_vO2 / CaO2 : NaN;
-
-      hemoSet('BSAResumo', BSA);
       hemoSet('CaO2', CaO2);
       hemoSet('CvO2', CvO2);
       hemoSet('GapCO2', GapCO2);

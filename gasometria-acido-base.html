@@ -762,6 +762,19 @@
       const box = document.getElementById('DistPrimarioBox');
       if (!box) return;
 
+      // Se absolutamente todos os campos principais estiverem em branco, não exibe laudo
+      const todosVazios =
+        (pH === null || pH === undefined || isNaN(pH)) &&
+        (PaCO2 === null || PaCO2 === undefined || isNaN(PaCO2)) &&
+        (HCO3 === null || HCO3 === undefined || isNaN(HCO3)) &&
+        (anionGap === null || anionGap === undefined || isNaN(anionGap)) &&
+        (deltaRatio === null || deltaRatio === undefined || isNaN(deltaRatio));
+      if (todosVazios) {
+        box.textContent = '';
+        box.innerHTML = '';
+        return;
+      }
+
       let { tipo, secundario, misto } = inferirDisturbioPrimario(pH, PaCO2, HCO3);
       if (!tipo && !secundario) {
         const phQuaseNormal = !isNaN(pH) && pH >= 7.37 && pH <= 7.43;

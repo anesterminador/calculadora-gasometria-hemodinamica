@@ -199,6 +199,19 @@
       filter: brightness(1.15);
       transform: scale(1.03);
     }
+    .criteria-block {
+      margin-top: 0.75rem;
+      padding: 0.9rem 1rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .criteria-block strong { color: var(--text); font-size: 0.85rem; }
+    .criteria-block ul { margin: 0.25rem 0 0 1rem; padding: 0; }
+    .criteria-block li { margin-bottom: 0.2rem; }
   </style>
 </head>
 <body>
@@ -280,6 +293,13 @@
           <a href="ventilacao-mp-pcv.html" class="card-link sub">Mechanical Power (PCV)</a>
         </div>
       </details>
+      <details class="pocus-menu">
+        <summary class="card-link">Alta da RPA</summary>
+        <div class="pocus-sub">
+          <a href="alta-rpa-aldrete.html" class="card-link sub">Aldrete e Kroulik</a>
+          <a href="alta-rpa-padss.html" class="card-link sub">Postanesthetic Discharge Scoring System<span class="card-subtitle">Escore de Chung</span></a>
+        </div>
+      </details>
     </nav>
 
     <footer class="footer-buttons">
@@ -316,7 +336,9 @@
         { label: 'Via Aérea · Mórbido', url: 'via-aerea-morbido.html', terms: 'mórbido mnemônico ventilação' },
         { label: 'Ventilação Mecânica · Peso Predito', url: 'ventilacao-peso-predito.html', terms: 'peso predito IBW ideal' },
         { label: 'Ventilação Mecânica · Mechanical Power (VCV)', url: 'ventilacao-mp-vcv.html', terms: 'mechanical power VCV volume' },
-        { label: 'Ventilação Mecânica · Mechanical Power (PCV)', url: 'ventilacao-mp-pcv.html', terms: 'mechanical power PCV pressão' }
+        { label: 'Ventilação Mecânica · Mechanical Power (PCV)', url: 'ventilacao-mp-pcv.html', terms: 'mechanical power PCV pressão' },
+        { label: 'Alta da RPA · Aldrete e Kroulik', url: 'alta-rpa-aldrete.html', terms: 'alta RPA SRPA PACU Aldrete Kroulik recuperação pós-anestésica alta' },
+        { label: 'Alta da RPA · PADSS (Chung)', url: 'alta-rpa-padss.html', terms: 'PADSS Chung alta pós-anestésica SRPA PACU postanesthetic discharge scoring system' }
       ];
       var input = document.getElementById('home-search');
       var resultsEl = document.getElementById('search-results');

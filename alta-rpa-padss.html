@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PADSS (Chung) – Alta da RPA / SRPA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f1419; --bg-card: #1a2129; --bg-input: #252d36; --border: #2d3843;
+      --text: #e6edf3; --text-muted: #8b9cad; --accent: #58a6ff; --accent-soft: rgba(88, 166, 255, 0.15);
+      --green: #3fb950; --green-soft: rgba(63, 185, 80, 0.12); --amber: #d29922; --red: #ff7b72;
+    }
+    body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; min-height: 100vh; background: var(--bg);
+      background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(88, 166, 255, 0.08), transparent);
+      color: var(--text); line-height: 1.5; padding: 0rem 1rem 3rem; }
+    .wrap { max-width: 520px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 0.75rem; }
+    .logo-link { display: block; text-decoration: none; }
+    .logo { max-width: 600px; height: auto; margin-bottom: -2.5rem; display: block; margin-left: auto; margin-right: auto; background: transparent; transform: translateX(-3.2rem); clip-path: inset(0 0 25 0); }
+    h1 { font-size: 1.5rem; font-weight: 700; color: var(--text); margin-bottom: 0.35rem; }
+    .subtitle { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+    section { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.35rem 1.5rem; margin-bottom: 1.25rem; }
+    section h2 { font-size: 1.2rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #ffd139; margin-bottom: 0.4rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--border); text-align: center; }
+    .var-label { font-size: 0.95rem; font-weight: 600; color: var(--accent); margin-top: 1rem; margin-bottom: 0.4rem; }
+    .var-label:first-of-type { margin-top: 0.5rem; }
+    .radio-item { display: flex; align-items: flex-start; gap: 0.6rem; margin-bottom: 0.5rem; }
+    .radio-item input { margin-top: 0.35rem; flex-shrink: 0; width: 1.1rem; height: 1.1rem; accent-color: var(--accent); cursor: pointer; }
+    .radio-item label { font-size: 0.9rem; color: var(--text); line-height: 1.4; cursor: pointer; }
+    .radio-item .score { font-weight: 700; color: var(--text-muted); min-width: 1.5rem; }
+    .padss-result { text-align: center; padding: 1.25rem; background: var(--bg-input); border-radius: 8px; margin-top: 0.5rem; }
+    .padss-total { font-size: 1.75rem; font-weight: 700; color: var(--accent); transition: color 0.15s ease; }
+    .padss-total.low { color: var(--red); }
+    .padss-legend { font-size: 0.85rem; color: var(--text-muted); margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); text-align: justify; line-height: 1.5; }
+    footer { text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 0; opacity: 0.8; }
+    .footer-buttons { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; }
+    .footer-link { display: inline-block; padding: 0.5rem 1.25rem; background: var(--accent); color: #0f1419; font-weight: 700; font-size: 0.9rem; text-decoration: none; border-radius: 8px; transition: filter 0.2s, transform 0.15s; }
+    .footer-link:hover { filter: brightness(1.15); transform: scale(1.03); }
+    @media (max-width: 768px) { .logo { min-width: 240px; max-width: min(600px, calc(100vw - 2rem)); transform: translateX(0); } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="logo-link"><img src="Logo Hemodinâmica_regular.png" alt="Hemodinâmica" class="logo"></a>
+      <h1>PADSS – Escore de Chung</h1>
+      <p class="subtitle">Postanesthetic Discharge Scoring System · Alta pós-anestésica em regime ambulatorial</p>
+    </header>
+
+    <section>
+      <h2>Critérios do PADSS</h2>
+      <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.75rem;">Selecione uma opção em cada variável. Pontuação máxima: 10. A interpretação do escore deve seguir os protocolos da sua instituição.</p>
+
+      <p class="var-label">Náuseas e vômitos</p>
+      <div class="radio-item">
+        <input type="radio" name="nv" id="nv2" value="2" checked>
+        <label for="nv2"><span class="score">2</span> Mínimos: tratados com medicação via oral</label>
+      </div>
+      <div class="radio-item">
+        <input type="radio" name="nv" id="nv1" value="1">
+        <label for="nv1"><span class="score">1</span> Moderados: tratados com medicação endovenosa</label>
+      </div>
+      <div class="radio-item">
+        <input type="radio" name="nv" id="nv0" value="0">
+        <label for="nv0"><span class="score">0</span> Intensos: persistem apesar da medicação</label>
+      </div>
+
+      <p class="var-label">Atividade</p>
+      <div class="radio-item">
+        <input type="radio" name="atividade" id="atv2" value="2" checked>
+        <label for="atv2"><span class="score">2</span> Marcha firme, sem tontura; nível funcional basal</label>
+      </div>
+      <div class="radio-item">
+        <input type="radio" name="atividade" id="atv1" value="1">
+        <label for="atv1"><span class="score">1</span> Deambula, porém necessita de assistência</label>
+      </div>
+      <div class="radio-item">
+        <input type="radio" name="atividade" id="atv0" value="0">
+        <label for="atv0"><span class="score">0</span> Incapaz de deambular</label>
+      </div>
+
+      <p class="var-label">Dor (controlada com analgesia VO e aceitável para o paciente?)</p>
+      <div class="radio-item">
+        <input type="radio" name="dor" id="dor2" value="2" checked>
+        <label for="dor2"><span class="score">2</span> Sim: dor mínima, controlada com analgesia via oral e tolerável</label>
+      </div>
+      <div class="radio-item">
+        <input type="radio" name="dor" id="dor1" value="1">
+        <label for="dor1"><span class="score">1</span> Não totalmente: dor moderada, requer ajuste de analgesia</label>
+      </div>
+      <div class="radio-item">
+        <input type="radio" name="dor" id="dor0" value="0">
+        <label for="dor0"><span class="score">0</span> Dor intensa, não controlada ou inaceitável para o paciente</label>
+      </div>
+
+      <p class="var-label">Sangramento</p>
+      <div class="radio-item">
+        <input type="radio" name="sangramento" id="sang2" value="2" checked>
+        <label for="sang2"><span class="score">2</span> Mínimo: não requer troca de curativo</label>
+      </div>
+      <div class="radio-item">
+        <input type="radio" name="sangramento" id="sang1" value="1">
+        <label for="sang1"><span class="score">1</span> Moderado: até 2 trocas de curativo</label>
+      </div>
+      <div class="radio-item">
+        <input type="radio" name="sangramento" id="sang0" value="0">
+        <label for="sang0"><span class="score">0</span> Intenso: exige mais de 3 trocas de curativo</label>
+      </div>
+
+      <p class="var-label">Sinais vitais (PA e FC)</p>
+      <div class="radio-item">
+        <input type="radio" name="sinais" id="sv2" value="2" checked>
+        <label for="sv2"><span class="score">2</span> Até 20% de variação em relação ao pré-operatório</label>
+      </div>
+      <div class="radio-item">
+        <input type="radio" name="sinais" id="sv1" value="1">
+        <label for="sv1"><span class="score">1</span> Variação entre 20% e 40% do pré-operatório</label>
+      </div>
+      <div class="radio-item">
+        <input type="radio" name="sinais" id="sv0" value="0">
+        <label for="sv0"><span class="score">0</span> Variação &gt; 40% do pré-operatório</label>
+      </div>
+    </section>
+
+    <section>
+      <h2>Escore total</h2>
+      <div class="padss-result">
+        <p class="padss-total" id="padss-total">Escore: 10</p>
+      </div>
+      <p class="padss-legend">PADSS = Postanesthetic Discharge Scoring System, proposto por Chung e cols. Muitos serviços utilizam escores mínimos distintos (por exemplo, ≥ 9) como parte dos critérios de alta em cirurgias ambulatoriais. O escore não substitui o julgamento clínico nem os critérios específicos de cada instituição.</p>
+    </section>
+
+    <script>
+      var groups = ['nv', 'atividade', 'dor', 'sangramento', 'sinais'];
+      var totalEl = document.getElementById('padss-total');
+
+      function getTotal() {
+        var sum = 0;
+        groups.forEach(function(name) {
+          var r = document.querySelector('input[name=\"' + name + '\"]:checked');
+          if (r) sum += parseInt(r.value, 10);
+        });
+        return sum;
+      }
+
+      function update() {
+        var total = getTotal();
+        totalEl.textContent = 'Escore: ' + total;
+        totalEl.classList.remove('low');
+        if (total <= 8) {
+          totalEl.classList.add('low');
+        }
+      }
+
+      document.querySelectorAll('input[type=\"radio\"]').forEach(function(radio) {
+        radio.addEventListener('change', update);
+      });
+    </script>
+
+    <footer class="footer-buttons">
+      <a href="index.html" class="footer-link">Todas as Calculadoras</a>
+      <a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="footer-link">Contato</a>
+    </footer>
+  </div>
+  <script src="analytics.js"></script>
+</body>
+</html>
+

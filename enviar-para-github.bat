@@ -12,7 +12,7 @@ cd /d "%~dp0"
 
 rem Atualiza automaticamente a versao do cache do PWA (sw.js)
 if exist "sw.js" (
-  powershell -Command "$p = Get-Content 'sw.js' -Raw; if ($p -match 'hemodinamica-v(\d+)') { $n = [int]$Matches[1] + 1; ($p -replace 'hemodinamica-v\d+', 'hemodinamica-v' + $n) | Set-Content 'sw.js' }"
+  powershell -ExecutionPolicy Bypass -File "%~dp0bump-sw-version.ps1"
 )
 
 echo.

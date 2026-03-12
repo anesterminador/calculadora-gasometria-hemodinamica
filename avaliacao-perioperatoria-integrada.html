@@ -1,0 +1,3159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gasometria Combinada – Ácido-Base e Hemodinâmica</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f1419;
+      --bg-card: #1a2129;
+      --bg-input: #252d36;
+      --border: #2d3843;
+      --text: #e6edf3;
+      --text-muted: #8b9cad;
+      --accent: #58a6ff;
+      --accent-soft: rgba(88, 166, 255, 0.15);
+      --result-abnormal: #ff7b72;
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      min-height: 100vh;
+      background: var(--bg);
+      background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(88, 166, 255, 0.08), transparent),
+                       radial-gradient(ellipse 60% 40% at 100% 100%, rgba(63, 185, 80, 0.05), transparent);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 0 1rem 6.5rem; /* mais espaço para rolar sem esconder o rodapé atrás da barra fixa */
+    }
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 0.75rem;
+    }
+    .logo-link {
+      display: block;
+      text-decoration: none;
+    }
+    .logo {
+      max-width: 600px;
+      height: auto;
+      margin-bottom: -2.5rem;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      background: transparent;
+      transform: translateX(-3.2rem);
+      clip-path: inset(0 0 25 0);
+    }
+    @media (max-width: 768px) {
+      .logo {
+        min-width: 240px;
+        max-width: min(600px, calc(100vw - 0rem));
+        transform: translateX(-6%);
+      }
+    }
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.35rem;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.35rem 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    section h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #ffd139;
+      margin-bottom: 0.4rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+    }
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: -0.6rem;
+    }
+    .row:last-child { margin-bottom: 0; }
+    label {
+      flex: 1;
+      font-size: 0.9rem;
+      color: var(--text);
+      font-weight: 500;
+      padding-left: 0.35rem;
+    }
+    input {
+      width: 88px;
+      padding: 0.5rem 0.65rem;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      color: var(--text);
+      text-align: right;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input::placeholder { color: var(--text-muted); }
+    input:hover { border-color: #3d4a56; }
+    input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+    input.abnormal {
+      border-color: var(--result-abnormal);
+      color: var(--result-abnormal);
+      box-shadow: 0 0 0 2px rgba(255, 123, 114, 0.35);
+    }
+    input.user-edited { color: #fef9c3; }
+    .inputs-section {
+      padding-top: 1.35rem;
+      padding-bottom: 4.5rem; /* espaço para a barra fixa inferior */
+    }
+    .inputs-section .row input {
+      transform: translateY(0.15rem);
+    }
+    .input-hint {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      padding-top: -5rem;
+      padding-bottom: 0.15rem;
+      padding-left: 0.35rem;
+      margin-top: -5remm;
+      margin-bottom: 0.15rem;
+    }
+    .primary-label {
+      margin-top: 0.75rem;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #ffd139;
+    }
+    .disturbio-box {
+      margin-top: 0.5rem;
+      padding: 0.8rem 0.95rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #151b23;
+      font-size: 0.9rem;
+      color: var(--text);
+      min-height: 3rem;
+    }
+    .disturbios-row {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .disturbios-row .disturbio-box {
+      flex: 1 1 0;
+      margin-top: 0;
+    }
+    .disturbio-box > div.normal { color: var(--accent); }
+    .disturbio-box > div.abnormal { color: var(--result-abnormal); }
+    .disturbios-row .disturbio-box:first-of-type {
+      margin-top: 0;
+    }
+    .disturbio-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.35rem;
+    }
+    .disturbio-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #ffeb99;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .btn-compensacao {
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid var(--accent);
+      background: rgba(88, 166, 255, 0.15);
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s, transform 0.1s, border-color 0.15s;
+    }
+    .btn-compensacao:hover {
+      background: rgba(88, 166, 255, 0.25);
+      transform: translateY(-1px);
+      border-color: var(--accent);
+    }
+    /* Garante que os modais abram como pop-up centralizado */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8); /* fundo mais opaco */
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 80;
+    }
+    /* Caixa do pop-up: fundo sólido, contorno fino, bordas arredondadas, padding generoso */
+    .modal-backdrop .modal {
+      background: var(--bg-card);
+      border: 1px solid #3d4a56;
+      border-radius: 16px;
+      padding: 1.75rem 2rem;
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04);
+      max-height: 90vh;
+      overflow-y: auto;
+      width: min(640px, 80vw); /* em telas pequenas, ocupa pelo menos ~80% da largura */
+    }
+    /* Título genérico de modal: versalete, amarelo dandelion */
+    .modal-backdrop .modal-title {
+      margin-bottom: 1rem;
+      font-size: 1.15rem;
+      font-variant: small-caps;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: #f0c14b;
+      text-align: center;
+    }
+    /* Títulos dos itens dentro de modais: amarelo claro quando aplicável */
+    .modal-backdrop .result-row .name {
+      color: #ffeb99;
+      font-weight: 700;
+    }
+    /* Legenda/fórmula dentro de modais: branco */
+    .modal-backdrop .formula {
+      color: var(--text);
+      opacity: 1;
+    }
+    .modal-backdrop .modal-content {
+      padding: 0.5rem 0;
+    }
+    .modal-backdrop .modal-footer {
+      margin-top: 1.25rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      justify-content: center;
+    }
+    /* Botões de rodapé de modal estilizados */
+    .modal-backdrop .modal-footer button {
+      padding: 0.5rem 1.5rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
+    }
+    .modal-backdrop .modal-footer button:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    /* Cores específicas para os botões do modal "Salvar exame" */
+    #modalSalvarExame #cancelarSalvarExame {
+      background: #ff7b72;
+      border-color: #ff7b72;
+      color: #0f1419;
+    }
+    #modalSalvarExame #confirmarSalvarExame {
+      background: #2ea043;
+      border-color: #2ea043;
+      color: #0f1419;
+    }
+    #modalSalvarExame #cancelarSalvarExame:hover,
+    #modalSalvarExame #confirmarSalvarExame:hover {
+      filter: brightness(1.05);
+      border-color: inherit;
+      color: #0f1419;
+    }
+    .result-block {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      padding: 0.35rem 0 0.7rem 0;
+      border-bottom: 1px solid var(--border);
+      min-height: 3.75rem;
+    }
+    .result-block:first-of-type { padding-top: 1.35rem; }
+    .result-block:last-of-type { border-bottom: none; margin-bottom: 0; }
+    .result-block-content {
+      flex: 1;
+      min-width: 0;
+      align-self: stretch;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .result-row {
+      font-size: 0.9rem;
+      margin-bottom: 0.05rem;
+    }
+    .result-row .name { color: var(--text); font-weight: 700; }
+    .formula {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.15rem;
+      margin-bottom: 0;
+      opacity: 0.9;
+    }
+    .result-box {
+      flex-shrink: 0;
+      min-width: 100px;
+      padding: 0.5rem 0.65rem;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      font-weight: 700;
+      color: var(--accent);
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+      transform: translateY(-0.1rem);
+    }
+    .result-box.normal { color: var(--accent); }
+    .result-box.abnormal { color: var(--result-abnormal); }
+    .result-box.needs-co {
+      color: var(--result-abnormal);
+      font-size: 0.8rem;
+    }
+    .interpretacao {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.35rem;
+      text-align: justify;
+    }
+    .delta-aviso {
+      color: var(--result-abnormal);
+      margin-top: 0.5rem;
+      text-align: justify;
+    }
+    .delta-intervalo-label {
+      display: block;
+      margin-top: 0.5rem;
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .delta-intervalo {
+      font-weight: 600;
+      color: var(--text);
+    }
+    .modal-row-inline {
+      display: flex;
+      gap: 0.85rem;
+      align-items: stretch;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.35rem;
+      margin-bottom: 0.25rem;
+    }
+    .modal-row-inline .result-block {
+      flex: 1 1 0;
+      margin-bottom: 0;
+      border-bottom: none;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    /* Inputs dentro de modais ocupam bem o espaço, sem cobrir o título */
+    .modal-backdrop .result-block input[type="text"],
+    .modal-backdrop .result-block input[type="date"],
+    .modal-backdrop .result-block input[type="time"] {
+      width: 100%;
+      max-width: 100%;
+      text-align: left;
+    }
+    /* No modal de salvar exame, alinhar título em cima e input embaixo também para o nome */
+    #modalSalvarExame .result-block {
+      flex-direction: column;
+      align-items: stretch;
+      border-bottom: none;
+    }
+    /* Ícones de calendário/relógio em branco (substitui o ícone padrão do navegador) */
+    .modal-backdrop input[type="date"]::-webkit-calendar-picker-indicator {
+      background: center/1em 1em no-repeat
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'/%3E%3Cline x1='3' y1='10' x2='21' y2='10'/%3E%3Cline x1='8' y1='2' x2='8' y2='6'/%3E%3Cline x1='16' y1='2' x2='16' y2='6'/%3E%3C/svg%3E");
+      color: transparent;
+      opacity: 1;
+      cursor: pointer;
+    }
+    .modal-backdrop input[type="time"]::-webkit-calendar-picker-indicator {
+      background: center/1em 1em no-repeat
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpolyline points='12 7 12 12 15 14'/%3E%3C/svg%3E");
+      color: transparent;
+      opacity: 1;
+      cursor: pointer;
+    }
+    .modal-backdrop input[type="date"],
+    .modal-backdrop input[type="time"] {
+      color-scheme: dark;
+    }
+    footer {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0rem;
+      opacity: 0.8;
+    }
+    .footer-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+    }
+    .footer-link {
+      display: inline-block;
+      padding: 0.5rem 1.25rem;
+      background: var(--accent);
+      color: #0f1419;
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: filter 0.2s, transform 0.15s;
+    }
+    .footer-link:hover {
+      filter: brightness(1.15);
+      transform: scale(1.03);
+    }
+    .history-actions {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 0;
+      width: 100%;
+      max-width: 1100px;
+      padding: 0.55rem 1.2rem 0.75rem;
+      display: flex;
+      gap: 0.5rem;
+      background: linear-gradient(to top, rgba(15, 20, 25, 0.98), rgba(15, 20, 25, 0.92));
+      border-top: 1px solid var(--border);
+      box-shadow: 0 -8px 16px rgba(0, 0, 0, 0.6);
+      z-index: 90;
+    }
+    .history-button {
+      flex: 1;
+      padding: 0.45rem 0.75rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #222a33;
+      color: var(--text);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s, border-color 0.15s;
+    }
+    .history-button.primary {
+      background: #2ea043; /* verde GitHub-like */
+      color: #0f1419;
+      border-color: #2ea043;
+    }
+    .history-button.secondary {
+      background: #f1c40f; /* amarelo denso */
+      color: #1a1a1a;
+      border-color: #f1c40f;
+    }
+    .history-button:hover {
+      transform: translateY(-1px);
+      border-color: var(--accent);
+    }
+    .history-button.primary:hover {
+      filter: brightness(1.05);
+    }
+    /* Lista e tabela do histórico de exames (estrutura similar à gasometria ácido-base) */
+    .history-list {
+      max-height: 320px;
+      overflow-y: auto;
+      margin-top: 0.4rem;
+      padding-right: 0.25rem;
+    }
+    .history-patient {
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      padding: 0.5rem 0.7rem 0.45rem;
+      font-size: 0.8rem;
+      margin-bottom: 0.5rem;
+      background: #151b23;
+    }
+    .history-patient[open] {
+      background: #171f28;
+    }
+    .history-patient-header {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 0.5rem;
+      cursor: pointer;
+      text-align: left;
+      color: var(--accent); /* seta e nome em azul */
+    }
+    .history-patient-header::-webkit-details-marker {
+      display: none;
+    }
+    .history-patient-header::before {
+      content: '▸';
+      font-size: 1.1rem;
+      color: inherit;
+      margin-right: 0.4rem;
+      transition: transform 0.15s ease;
+    }
+    .history-patient[open] .history-patient-header::before {
+      transform: rotate(90deg);
+    }
+    .history-patient-name {
+      font-weight: 600;
+      color: var(--accent);
+      margin-right: auto; /* empurra o botão Excluir paciente para a direita */
+    }
+    .history-item-meta {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+    .history-exams {
+      margin-top: 0.4rem;
+      padding-top: 0.25rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .history-actions-patient {
+      display: flex;
+      gap: 0.4rem;
+      align-items: center;
+      margin-left: auto;
+    }
+    .history-exam-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .history-exam-row .history-item-meta {
+      cursor: pointer;
+      color: var(--text);
+    }
+    .history-actions-exam {
+      display: flex;
+      gap: 0.3rem;
+      align-items: center;
+    }
+    .history-load-exam {
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid #f1c40f;
+      background: #4a3b08;
+      color: #f1c40f;
+      font-size: 0.72rem;
+      cursor: pointer;
+    }
+    .history-load-exam:hover {
+      filter: brightness(1.1);
+      border-color: #f1c40f;
+    }
+    .history-evolution {
+      padding: 0.25rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid #2ea043;
+      background: #122816;
+      color: #3fb950;
+      font-size: 0.75rem;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .history-evolution:hover {
+      filter: brightness(1.08);
+      border-color: #3fb950;
+    }
+    .history-delete,
+    .history-delete-exam {
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid #ff7b72;
+      background: #2a1414;
+      color: #ff7b72;
+      font-size: 0.72rem;
+      cursor: pointer;
+    }
+    .history-delete:hover,
+    .history-delete-exam:hover {
+      filter: brightness(1.1);
+    }
+    details.input-group {
+      margin-top: 0.75rem;
+      padding-top: 0.6rem;
+      border-top: 1.5px solid #3d4a56;
+    }
+    details.input-group[open] {
+      padding-bottom: 0.25rem;
+    }
+    details.input-group summary {
+      list-style: none;
+      cursor: pointer;
+    }
+    details.input-group summary::-webkit-details-marker {
+      display: none;
+    }
+    .group-subtitle {
+      margin: 0 0 0.35rem 0;
+      font-size: 1rem;
+      font-variant: small-caps;
+      font-weight: 700;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 0.5rem;
+    }
+    .group-subtitle::before {
+      content: '▸';
+      font-size: 1.05rem;
+      color: var(--accent);
+      transform-origin: center;
+      transition: transform 0.15s ease;
+    }
+    details.input-group[open] .group-subtitle::before {
+      transform: rotate(90deg);
+    }
+    .group-subtitle-static::before { content: none; }
+    .hemo-calc-block {
+      margin-top: 0.75rem;
+      padding-top: 0.6rem;
+      border-top: 1.5px solid #3d4a56;
+    }
+    .obs-textarea {
+      width: 100%;
+      min-height: 4.5rem;
+      padding: 0.55rem 0.7rem;
+      background: var(--bg-input);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.9rem;
+      font-family: inherit;
+      resize: vertical;
+    }
+    .obs-textarea::placeholder {
+      color: var(--text-muted);
+    }
+    @media (max-width: 768px) {
+      section {
+        padding: 1.1rem 1.0rem;
+      }
+    }
+    @media (min-width: 769px) {
+      .modal-backdrop .modal {
+        width: min(800px, 50vw); /* em telas maiores, pelo menos 50% da largura, até ~800px */
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="logo-link">
+        <img src="Logo Hemodinâmica_regular.png" alt="Hemodinâmica" class="logo">
+      </a>
+      <h1>Avaliação Perioperatória Integrada</h1>
+      <p class="subtitle">Todos os dados em um só quadro · Análise ácido-básica e parâmetros hemodinâmicos</p>
+    </header>
+
+    <section class="inputs-section">
+      <h2>Dados de entrada</h2>
+
+      <details class="input-group" open>
+        <summary class="group-subtitle">Dados do paciente</summary>
+        <div class="row"><label>Altura (cm)</label><input type="number" id="Altura" value="170" step="0.1" min="0"></div>
+        <p class="input-hint">Informe a altura do paciente</p>
+        <div class="row"><label>Peso (kg)</label><input type="number" id="Peso" value="70" step="0.1" min="0"></div>
+        <p class="input-hint">Informe o peso atual</p>
+        <div class="disturbio-box">
+          <div class="disturbio-title">Superfície corporal (m²)</div>
+          <div id="BSAResumo">—</div>
+        </div>
+      </details>
+
+      <details class="input-group" open>
+        <summary class="group-subtitle">Hemograma</summary>
+        <div class="row"><label>Hemoglobina (g/dL)</label><input type="number" id="Hb" value="14" step="0.1" min="0"></div>
+        <p class="input-hint">Normal: 12 – 16 g/dL (adulto)</p>
+        <div class="row"><label>Hematócrito (%)</label><input type="number" id="Hematocrito" value="42" step="0.1" min="0"></div>
+        <p class="input-hint">Normal: 36 – 48%</p>
+        <div class="row"><label>Plaquetas (×10³/µL)</label><input type="number" id="Plaquetas" value="250" step="1" min="0"></div>
+        <p class="input-hint">Normal: 150 – 400 ×10³/µL</p>
+      </details>
+
+      <details class="input-group" open>
+        <summary class="group-subtitle">Eletrólitos</summary>
+        <div class="row"><label>Na⁺ (mEq/L)</label><input type="number" id="Na" value="140" step="0.1" min="0"></div>
+        <p class="input-hint">Normal: 135 – 145 mEq/L</p>
+        <div class="row"><label>K⁺ (mEq/L)</label><input type="number" id="K" value="4.0" step="0.1" min="0"></div>
+        <p class="input-hint">Normal: 3,5 – 5,0 mEq/L</p>
+        <div class="row"><label>Ca²⁺ (mg/dL)</label><input type="number" id="Ca" value="9.2" step="0.1" min="0"></div>
+        <p class="input-hint">Normal: 8,5 – 10,5 mg/dL (total)</p>
+        <div class="row"><label>Mg²⁺ (mg/dL)</label><input type="number" id="Mg" value="2.0" step="0.1" min="0"></div>
+        <p class="input-hint">Normal: 1,7 – 2,4 mg/dL</p>
+        <div class="row"><label>Cl⁻ (mEq/L)</label><input type="number" id="Cl" value="104" step="0.1" min="0"></div>
+        <p class="input-hint">Normal: 98 – 107 mEq/L</p>
+      </details>
+
+      <details class="input-group" open>
+        <summary class="group-subtitle">Gasometria arterial</summary>
+        <div class="row"><label>pH</label><input type="text" id="pH" inputmode="decimal" maxlength="5" value="7,40"></div>
+        <p class="input-hint">Normal: 7,35 – 7,45</p>
+        <div class="row"><label>PaO₂ (mmHg)</label><input type="number" id="PaO2" value="95" step="0.1" min="0"></div>
+        <p class="input-hint">Normal: 80 – 100 mmHg</p>
+        <div class="row"><label>PaCO₂ (mmHg)</label><input type="number" id="PaCO2" value="40" step="0.1" min="0"></div>
+        <p class="input-hint">Normal: 35 – 45 mmHg</p>
+        <div class="row"><label>SaO₂ (%)</label><input type="number" id="SaO2" value="98" step="0.1" min="0" max="100"></div>
+        <p class="input-hint">Normal: ≥ 95%</p>
+        <div class="row"><label>FiO₂ (%)</label><input type="number" id="FiO2" value="21" step="1" min="21" max="100"></div>
+        <p class="input-hint">Ar ambiente: 21%</p>
+        <div class="row"><label>HCO₃⁻ arterial (mEq/L)</label><input type="number" id="HCO3" value="24" step="0.1" min="0"></div>
+        <p class="input-hint">Normal: 22 – 26 mEq/L</p>
+        <div class="row"><label>Base excess (mEq/L)</label><input type="number" id="BaseExcess" value="0" step="0.1"></div>
+        <p class="input-hint">Normal: −2 a +2 mEq/L</p>
+        <div class="row">
+          <label style="margin-top:0.8rem;margin-bottom:1rem;">Paciente é retentor crônico de CO₂?</label>
+          <div style="display:flex; gap:0.75rem; justify-content:flex-end;">
+            <label style="display:flex; align-items:center; gap:0.25rem; font-size:0.8rem; color:var(--text-muted);">
+              <input type="checkbox" id="RetentorCO2Sim" style="width:auto; padding:0; margin:0;"> Sim
+            </label>
+            <label style="display:flex; align-items:center; gap:0.25rem; font-size:0.8rem; color:var(--text-muted);">
+              <input type="checkbox" id="RetentorCO2Nao" style="width:auto; padding:0; margin:0;" checked> Não
+            </label>
+          </div>
+        </div>
+        <div class="disturbios-row">
+          <div class="disturbio-box">
+            <div class="disturbio-title">Ânion gap</div>
+            <div id="AnionGapResumo">—</div>
+          </div>
+          <div class="disturbio-box">
+            <div class="disturbio-title">Delta ratio</div>
+            <div id="DeltaResumo">—</div>
+          </div>
+        </div>
+        <div class="disturbio-box">
+          <div class="disturbio-header">
+            <div class="disturbio-title">Distúrbio provável</div>
+            <button type="button" class="btn-compensacao" id="btnCompensacao">Ver compensação esperada</button>
+          </div>
+          <div id="DistPrimarioBox">—</div>
+        </div>
+      </details>
+
+      <details class="input-group" open>
+        <summary class="group-subtitle">Gasometria venosa</summary>
+        <div class="row"><label>PvO₂ (mmHg)</label><input type="number" id="PvO2" value="40" step="0.1" min="0"></div>
+        <p class="input-hint">Típico venoso central: 35 – 45 mmHg</p>
+        <div class="row"><label>PvCO₂ (mmHg)</label><input type="number" id="PvCO2" value="46" step="0.1" min="0"></div>
+        <p class="input-hint">Típico venoso central: 40 – 50 mmHg</p>
+        <div class="row"><label>SvO₂ / SvcO₂ (%)</label><input type="number" id="SvO2" value="75" step="0.1" min="0" max="100"></div>
+        <p class="input-hint">Normal: SvO₂ ≈ 60 – 80%</p>
+        <div class="row"><label>HCO₃⁻ venoso (mEq/L)</label><input type="number" id="HCO3v" value="24" step="0.1" min="0"></div>
+        <p class="input-hint">Normal: semelhante ao arterial (22 – 26)</p>
+      </details>
+
+      <div class="hemo-calc-block">
+      <p class="group-subtitle group-subtitle-static">Parâmetros gasométricos derivados</p>
+      <div class="disturbios-row">
+        <div class="disturbio-box">
+          <div class="disturbio-title">CaO₂ (mL/dL)</div>
+          <div id="CaO2">—</div>
+        </div>
+        <div class="disturbio-box">
+          <div class="disturbio-title">CvO₂ (mL/dL)</div>
+          <div id="CvO2">—</div>
+        </div>
+      </div>
+      <div class="disturbios-row">
+        <div class="disturbio-box">
+          <div class="disturbio-title">DO₂ (mL/min)</div>
+          <div id="DO2">—</div>
+        </div>
+        <div class="disturbio-box">
+          <div class="disturbio-title">DO₂i (mL/min/m²)</div>
+          <div id="DO2i">—</div>
+        </div>
+      </div>
+      <div class="disturbios-row">
+        <div class="disturbio-box">
+          <div class="disturbio-title">VO₂ (mL/min)</div>
+          <div id="VO2">—</div>
+        </div>
+        <div class="disturbio-box">
+          <div class="disturbio-title">VO₂i (mL/min/m²)</div>
+          <div id="VO2i">—</div>
+        </div>
+      </div>
+      <div class="disturbios-row">
+        <div class="disturbio-box">
+          <div class="disturbio-title">Taxa de extração</div>
+          <div id="TaxaExt">—</div>
+        </div>
+        <div class="disturbio-box">
+          <div class="disturbio-title">Gap CO₂ (mmHg)</div>
+          <div id="GapCO2">—</div>
+        </div>
+      </div>
+      <div class="disturbios-row">
+        <div class="disturbio-box">
+          <div class="disturbio-title">QR modificado</div>
+          <div id="QR">—</div>
+        </div>
+      </div>
+      </div>
+
+      <details class="input-group" open>
+        <summary class="group-subtitle">Outros</summary>
+        <div class="row"><label>Lactato (mmol/L)</label><input type="number" id="Lactato" value="1.2" step="0.1" min="0"></div>
+        <p class="input-hint">Normal: &lt; 2,0 mmol/L</p>
+        <div class="row"><label>Glicemia (mg/dL)</label><input type="number" id="Glicemia" value="90" step="1" min="0"></div>
+        <p class="input-hint">Jejum: 70 – 99 mg/dL</p>
+        <div class="row"><label>RNI</label><input type="number" id="RNI" value="1.0" step="0.01" min="0"></div>
+        <p class="input-hint">Normal: 0,8 – 1,2</p>
+        <div class="row"><label>TTPa (s)</label><input type="number" id="TTPa" value="32" step="0.1" min="0"></div>
+        <p class="input-hint">Normal: 25 – 40 s (depende do reagente)</p>
+        <div class="row"><label>Albumina (g/dL)</label><input type="number" id="Albumina" value="4.0" step="0.1" min="0"></div>
+        <p class="input-hint">Normal: 3,5 – 5,0 g/dL</p>
+      </details>
+
+      <details class="input-group" open>
+        <summary class="group-subtitle">Parâmetros hemodinâmicos</summary>
+        <div class="row"><label>Débito cardíaco – DC (L/min)</label><input type="number" id="CO" value="5" step="0.1" min="0"></div>
+        <p class="input-hint">Normal aproximado: 4 – 8 L/min</p>
+        <div class="row"><label>FC (bpm)</label><input type="number" id="FC" value="75" step="1" min="0"></div>
+        <p class="input-hint">Normal em repouso: 60 – 100 bpm</p>
+        <div class="row"><label>PAM radial (mmHg)</label><input type="number" id="PAMRadial" value="80" step="1" min="0"></div>
+        <p class="input-hint">Meta frequente em UTI/bloco: 65 – 75 mmHg</p>
+        <div class="row"><label>PAP média – Swan-Ganz (mmHg)</label><input type="number" id="PAPMedia" value="20" step="1" min="0"></div>
+        <p class="input-hint">Normal: ≈ 10 – 20 mmHg</p>
+        <div class="row"><label>POAP (mmHg)</label><input type="number" id="POAP" value="10" step="1" min="0"></div>
+        <p class="input-hint">Normal: 6 – 12 mmHg</p>
+        <div class="row"><label>PVC (mmHg)</label><input type="number" id="PVC" value="8" step="1" min="0"></div>
+        <p class="input-hint">Meta habitual: 8 – 12 mmHg (varia com o contexto)</p>
+      </details>
+
+      <details class="input-group" open>
+        <summary class="group-subtitle">Observações</summary>
+        <textarea id="Observacoes" class="obs-textarea" placeholder="Anote aqui observações adicionais do exame, contexto clínico, intervenções realizadas, resposta ao tratamento, etc."></textarea>
+      </details>
+
+      <div class="history-actions">
+        <button type="button" class="history-button primary" id="btnSalvarGaso">Salvar exame</button>
+        <button type="button" class="history-button secondary" id="btnHistoricoGaso">Histórico</button>
+      </div>
+    </section>
+
+    <div class="modal-backdrop" id="modalCompensacao">
+      <div class="modal">
+        <div class="modal-title">Compensação esperada</div>
+        <div class="modal-content">
+          <div class="result-block">
+            <div class="result-block-content">
+              <div class="result-row"><span class="name">Acidose respiratória aguda</span></div>
+              <p class="formula">HCO₃⁻ esperado (mEq/L) = 24 + (PaCO₂ − 40) / 10</p>
+            </div>
+            <span class="result-box" id="HCO3_RespAcid_Aguda">HCO₃⁻ esperado — mEq/L</span>
+          </div>
+          <div class="result-block">
+            <div class="result-block-content">
+              <div class="result-row"><span class="name">Acidose respiratória crônica</span></div>
+              <p class="formula">HCO₃⁻ esperado (mEq/L) = 24 + 4 × (PaCO₂ − 40) / 10</p>
+            </div>
+            <span class="result-box" id="HCO3_RespAcid_Cronica">HCO₃⁻ esperado — mEq/L</span>
+          </div>
+          <div class="result-block">
+            <div class="result-block-content">
+              <div class="result-row"><span class="name">Alcalose respiratória aguda</span></div>
+              <p class="formula">HCO₃⁻ esperado (mEq/L) = 24 − 2 × (40 − PaCO₂) / 10</p>
+            </div>
+            <span class="result-box" id="HCO3_RespAlk_Aguda">HCO₃⁻ esperado — mEq/L</span>
+          </div>
+          <div class="result-block">
+            <div class="result-block-content">
+              <div class="result-row"><span class="name">Alcalose respiratória crônica</span></div>
+              <p class="formula">HCO₃⁻ esperado (mEq/L) = 24 − 5 × (40 − PaCO₂) / 10</p>
+            </div>
+            <span class="result-box" id="HCO3_RespAlk_Cronica">HCO₃⁻ esperado — mEq/L</span>
+          </div>
+          <div class="result-block">
+            <div class="result-block-content">
+              <div class="result-row"><span class="name">Acidose metabólica</span></div>
+              <p class="formula">PaCO₂ esperado (mmHg) = 1,5 × HCO₃⁻ + 8 (± 2)</p>
+            </div>
+            <span class="result-box" id="PaCO2_MetAcid">PaCO₂ esperado — mmHg</span>
+          </div>
+          <div class="result-block">
+            <div class="result-block-content">
+              <div class="result-row"><span class="name">Alcalose metabólica</span></div>
+              <p class="formula">PaCO₂ esperado (mmHg) = 0,7 × HCO₃⁻ + 20 (± 5)</p>
+            </div>
+            <span class="result-box" id="PaCO2_MetAlk">PaCO₂ esperado — mmHg</span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="fecharCompensacao">Fechar</button>
+       </div>
+      </div>
+    </div>
+
+    <div class="modal-backdrop" id="modalSalvarExame">
+      <div class="modal">
+        <div class="modal-title">Salvar exame</div>
+        <div class="modal-content">
+          <div class="result-block">
+            <div class="result-block-content">
+              <div class="result-row"><span class="name">Nome do paciente</span></div>
+            </div>
+            <input type="text" id="examePaciente" placeholder="Paciente">
+          </div>
+          <div class="modal-row-inline">
+            <div class="result-block">
+              <div class="result-block-content">
+                <div class="result-row"><span class="name">Data</span></div>
+              </div>
+              <input type="date" id="exameData">
+            </div>
+            <div class="result-block">
+              <div class="result-block-content">
+                <div class="result-row"><span class="name">Hora</span></div>
+              </div>
+              <input type="time" id="exameHora">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" style="display:flex; gap:0.75rem;">
+          <button type="button" id="cancelarSalvarExame">Cancelar</button>
+          <button type="button" id="confirmarSalvarExame">Salvar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-backdrop" id="modalHistoricoGaso">
+      <div class="modal">
+        <div class="modal-title">Histórico de exames</div>
+        <div class="history-list" id="listaHistoricoGaso"></div>
+        <div class="modal-footer">
+          <button type="button" id="fecharHistoricoGaso">Fechar</button>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer-buttons">
+      <a href="index.html" class="footer-link">Todas as Calculadoras</a>
+      <a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="footer-link">Contato</a>
+    </footer>
+  </div>
+
+  <!-- Script de avaliação ácido-básica (reaproveitado da página original) -->
+  <script>
+    const inputIds = ['pH','PaCO2','HCO3','Na','K','Cl','Lactato','Albumina'];
+    const STORAGE_KEY = 'gasosHistorico_v1';
+
+    function getNumber(id) {
+      const el = document.getElementById(id);
+      if (!el) return NaN;
+      const raw = (el.value || '').replace(',', '.');
+      const v = parseFloat(raw);
+      return isNaN(v) ? NaN : v;
+    }
+
+    function setBox(id, value) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (value === undefined || value !== value) {
+        el.textContent = '—';
+      } else if (typeof value === 'number') {
+        el.textContent = value.toFixed(2);
+      } else {
+        el.textContent = value;
+      }
+    }
+
+    function setBoxRange(id, value, min, max) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.classList.remove('normal', 'abnormal');
+      if (value === undefined || value !== value || min === undefined || max === undefined) return;
+      if (value >= min && value <= max) el.classList.add('normal');
+      else el.classList.add('abnormal');
+    }
+
+    function setInputRange(id, value, min, max) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.classList.remove('abnormal');
+      if (value !== value || min === undefined || max === undefined) return;
+      if (value < min || value > max) el.classList.add('abnormal');
+    }
+
+    function isRetentorCO2() {
+      const sim = document.getElementById('RetentorCO2Sim');
+      const nao = document.getElementById('RetentorCO2Nao');
+      if (sim && sim.checked) return true;
+      if (nao && nao.checked) return false;
+      return false;
+    }
+
+    function parseValorNumero(str) {
+      if (str == null) return NaN;
+      const raw = String(str).replace(',', '.').trim();
+      if (!raw) return NaN;
+      const v = parseFloat(raw);
+      return isNaN(v) ? NaN : v;
+    }
+
+    function compensacaoAdequada(tipo, PaCO2, HCO3, retentor) {
+      if (isNaN(PaCO2) || isNaN(HCO3) || !tipo) return false;
+
+      if (tipo === 'met_acidose') {
+        const esperado = 1.5 * HCO3 + 8;
+        const min = esperado - 2;
+        const max = esperado + 2;
+        return PaCO2 >= min && PaCO2 <= max;
+      }
+
+      if (tipo === 'met_alcalose') {
+        const esperado = 0.7 * HCO3 + 20;
+        const min = esperado - 5;
+        const max = esperado + 5;
+        return PaCO2 >= min && PaCO2 <= max;
+      }
+
+      if (tipo === 'resp_acidose' || tipo === 'resp_alcalose') {
+        let esperadoAgudo, esperadoCronico, esperado;
+        if (tipo === 'resp_acidose') {
+          esperadoAgudo = 24 + (PaCO2 - 40) / 10;
+          esperadoCronico = 24 + 4 * (PaCO2 - 40) / 10;
+        } else {
+          esperadoAgudo = 24 - 2 * (40 - PaCO2) / 10;
+          esperadoCronico = 24 - 5 * (40 - PaCO2) / 10;
+        }
+        if (retentor && tipo === 'resp_acidose') {
+          esperado = esperadoCronico;
+          fase = 'crônica';
+        } else {
+          // se não é retentor, considerar sempre padrão agudo
+          esperado = esperadoAgudo;
+          fase = 'aguda';
+        }
+        const minH = esperado - 2;
+        const maxH = esperado + 2;
+        return HCO3 >= minH && HCO3 <= maxH;
+      }
+
+      return false;
+    }
+
+    /* As funções inferirDisturbioPrimario, atualizarDisturbioPrimarioBox, avaliarDelta,
+       salvar/histórico etc. são idênticas às da página de avaliação ácido-básica original.
+       Copiamos a mesma lógica para preservar o comportamento clínico. */
+
+    function inferirDisturbioPrimario(pH, PaCO2, HCO3) {
+      if (isNaN(pH) || (isNaN(PaCO2) && isNaN(HCO3))) return { tipo: null, secundario: null, misto: false };
+
+      const acidemia = pH < 7.35;
+      const alcalemia = pH > 7.45;
+      const deltaPaCO2 = isNaN(PaCO2) ? 0 : (PaCO2 - 40);
+      const deltaHCO3 = isNaN(HCO3) ? 0 : (HCO3 - 24);
+
+      const isRespAcid = !isNaN(PaCO2) && deltaPaCO2 > 0;
+      const isRespAlk  = !isNaN(PaCO2) && deltaPaCO2 < 0;
+      const isMetAcid  = !isNaN(HCO3) && deltaHCO3 < 0;
+      const isMetAlk   = !isNaN(HCO3) && deltaHCO3 > 0;
+
+      const phQuaseNormal = pH >= 7.37 && pH <= 7.43;
+      const paNormal = !isNaN(PaCO2) && PaCO2 >= 36 && PaCO2 <= 44;
+      const hco3Normal = !isNaN(HCO3) && HCO3 >= 22 && HCO3 <= 26;
+      if (phQuaseNormal && paNormal && hco3Normal) {
+        return { tipo: null, secundario: null, misto: false };
+      }
+
+      let tipo = null;
+      let secundario = null;
+      let misto = false;
+
+      const zResp = isNaN(PaCO2) ? 0 : Math.abs(deltaPaCO2 / 5);
+      const zMet  = isNaN(HCO3) ? 0 : Math.abs(deltaHCO3 / 2);
+
+      if (acidemia) {
+        if (isRespAcid && isMetAcid) {
+          misto = true;
+          if (zResp >= zMet) {
+            tipo = 'resp_acidose';
+            secundario = 'met_acidose';
+          } else {
+            tipo = 'met_acidose';
+            secundario = 'resp_acidose';
+          }
+        } else if (isRespAcid) {
+          tipo = 'resp_acidose';
+        } else if (isMetAcid) {
+          tipo = 'met_acidose';
+        }
+      } else if (alcalemia) {
+        if (isRespAlk && isMetAlk) {
+          misto = true;
+          tipo = 'resp_alcalose';
+          secundario = 'met_alcalose';
+        } else if (isRespAlk && isMetAcid) {
+          misto = true;
+          tipo = 'resp_alcalose';
+          secundario = 'met_acidose';
+        } else if (isRespAlk) {
+          tipo = 'resp_alcalose';
+        } else if (isMetAlk) {
+          tipo = 'met_alcalose';
+        }
+      } else {
+        if (zResp === 0 && zMet === 0) return { tipo: null, secundario: null, misto: false };
+        if (zResp >= zMet) {
+          tipo = deltaPaCO2 > 0 ? 'resp_acidose' : 'resp_alcalose';
+        } else {
+          tipo = deltaHCO3 < 0 ? 'met_acidose' : 'met_alcalose';
+        }
+        if (!isNaN(PaCO2) && !isNaN(HCO3) && Math.sign(deltaPaCO2) !== Math.sign(deltaHCO3)) {
+          misto = true;
+          if (tipo === 'resp_acidose' || tipo === 'resp_alcalose') {
+            secundario = deltaHCO3 < 0 ? 'met_acidose' : 'met_alcalose';
+          } else {
+            secundario = deltaPaCO2 > 0 ? 'resp_acidose' : 'resp_alcalose';
+          }
+        }
+      }
+
+      return { tipo, secundario, misto };
+    }
+
+    function atualizarDisturbioPrimarioBox(pH, PaCO2, HCO3, anionGap, deltaRatio, retentor) {
+      const box = document.getElementById('DistPrimarioBox');
+      if (!box) return;
+
+      // Se absolutamente todos os campos principais estiverem em branco, não exibe laudo
+      const todosVazios =
+        (pH === null || pH === undefined || isNaN(pH)) &&
+        (PaCO2 === null || PaCO2 === undefined || isNaN(PaCO2)) &&
+        (HCO3 === null || HCO3 === undefined || isNaN(HCO3)) &&
+        (anionGap === null || anionGap === undefined || isNaN(anionGap)) &&
+        (deltaRatio === null || deltaRatio === undefined || isNaN(deltaRatio));
+      if (todosVazios) {
+        box.textContent = '';
+        box.innerHTML = '';
+        return;
+      }
+
+      let { tipo, secundario, misto } = inferirDisturbioPrimario(pH, PaCO2, HCO3);
+      if (!tipo && !secundario) {
+        const phQuaseNormal = !isNaN(pH) && pH >= 7.37 && pH <= 7.43;
+        const paNormal = !isNaN(PaCO2) && PaCO2 >= 36 && PaCO2 <= 44;
+        const hco3Normal = !isNaN(HCO3) && HCO3 >= 22 && HCO3 <= 26;
+        // Se AG está elevado, não podemos chamar de normal – é exatamente o "distúrbio misto oculto"
+        if (!isNaN(anionGap) && anionGap > 12 && phQuaseNormal && paNormal && hco3Normal) {
+          const agStr = anionGap.toFixed(1);
+          const textoOculto = `Acidose metabólica com ânion gap aumentado (AG: ${agStr}) associada a alcalose metabólica, mantendo pH e PaCO₂ próximos do normal.`;
+          box.innerHTML =
+            `<div class="cond-titulo">Distúrbio misto oculto:</div>` +
+            `<div class="cond-linha"><span class="cond-laudo">${textoOculto}</span></div>`;
+        } else if (phQuaseNormal && paNormal && hco3Normal) {
+          box.textContent = 'Gasometria normal ou praticamente normal.';
+        } else {
+          box.textContent = 'Padrão ácido-básico atípico para as regras desta calculadora.';
+        }
+        return;
+      }
+
+      function labelTipo(t, PaCO2Val, HCO3Val, isRetentor) {
+        if (!t) return '';
+        if (t === 'met_acidose') return 'Acidose metabólica';
+        if (t === 'met_alcalose') return 'Alcalose metabólica';
+        if (t === 'resp_acidose' || t === 'resp_alcalose') {
+          let fase = '';
+          if (!isNaN(PaCO2Val) && !isNaN(HCO3Val)) {
+            let esperadoAgudo, esperadoCronico;
+            if (t === 'resp_acidose') {
+              esperadoAgudo = 24 + (PaCO2Val - 40) / 10;
+              esperadoCronico = 24 + 4 * (PaCO2Val - 40) / 10;
+            } else {
+              esperadoAgudo = 24 - 2 * (40 - PaCO2Val) / 10;
+              esperadoCronico = 24 - 5 * (40 - PaCO2Val) / 10;
+            }
+            if (isRetentor && t === 'resp_acidose') {
+              fase = 'crônica';
+            } else {
+              // Se não for retentor crônico, assumir padrão agudo
+              fase = 'aguda';
+            }
+          }
+          if (t === 'resp_acidose') return `Acidose respiratória${fase ? ' ' + fase : ''}`;
+          if (t === 'resp_alcalose') return `Alcalose respiratória${fase ? ' ' + fase : ''}`;
+        }
+        return '';
+      }
+
+      // Ajuste específico: se o paciente é retentor crônico e o padrão é compatível
+      // com acidose respiratória crônica dentro da faixa de compensação esperada,
+      // forçamos a leitura como "acidose respiratória crônica simples".
+      if (retentor && !isNaN(PaCO2) && PaCO2 > 45 && !isNaN(HCO3)) {
+        const esperadoCronico = 24 + 4 * (PaCO2 - 40) / 10;
+        const minCron = esperadoCronico - 2;
+        const maxCron = esperadoCronico + 2;
+        if (HCO3 >= minCron - 0.05 && HCO3 <= maxCron + 0.05) {
+          tipo = 'resp_acidose';
+          secundario = null;
+          misto = false;
+        }
+      }
+
+      const primarioLabel = labelTipo(tipo, PaCO2, HCO3, retentor);
+      const secundarioLabel = labelTipo(secundario, PaCO2, HCO3, retentor);
+
+      const acidemia = !isNaN(pH) && pH < 7.35;
+      const alcalemia = !isNaN(pH) && pH > 7.45;
+      const isMetAcid = !isNaN(HCO3) && HCO3 < 22;
+      const isMetAlk = !isNaN(HCO3) && HCO3 > 26;
+      const isRespAcid = !isNaN(PaCO2) && PaCO2 > 45;
+      const isRespAlk = !isNaN(PaCO2) && PaCO2 < 35;
+
+      let texto = '';
+      let html = '';
+
+      // Distúrbios simples e mistos principais
+      if (acidemia) {
+        if (isMetAcid && isRespAcid) {
+          texto = 'Acidose mista (metabólica + respiratória)';
+        } else if (isMetAcid) {
+          texto = primarioLabel || 'Acidose metabólica';
+        } else if (isRespAcid) {
+          texto = primarioLabel || 'Acidose respiratória';
+        }
+      } else if (alcalemia) {
+        if (isMetAlk && isRespAlk) {
+          texto = 'Alcalose mista (metabólica + respiratória)';
+        } else if (isMetAlk) {
+          texto = primarioLabel || 'Alcalose metabólica';
+        } else if (isRespAlk) {
+          texto = primarioLabel || 'Alcalose respiratória';
+        }
+      }
+
+      // Ajuste fino: distúrbio respiratório primário com HCO3- fora do range de compensação esperada
+      if ((tipo === 'resp_acidose' || tipo === 'resp_alcalose') && !isNaN(PaCO2) && !isNaN(HCO3)) {
+        let esperadoAgudo, esperadoCronico, esperado, fase = '';
+        if (tipo === 'resp_acidose') {
+          esperadoAgudo = 24 + (PaCO2 - 40) / 10;
+          esperadoCronico = 24 + 4 * (PaCO2 - 40) / 10;
+        } else {
+          esperadoAgudo = 24 - 2 * (40 - PaCO2) / 10;
+          esperadoCronico = 24 - 5 * (40 - PaCO2) / 10;
+        }
+        if (retentor && tipo === 'resp_acidose') {
+          esperado = esperadoCronico;
+          fase = 'crônica';
+        } else {
+          // se não é retentor, considerar sempre padrão agudo
+          esperado = esperadoAgudo;
+          fase = 'aguda';
+        }
+        const minH = esperado - 2;
+        const maxH = esperado + 2;
+        // pequena folga numérica para evitar erro de arredondamento
+        if (HCO3 < minH - 0.05) {
+          // bicarbonato abaixo da compensação: acidose metabólica associada
+          if (tipo === 'resp_acidose') texto = `Acidose respiratória ${fase} + acidose metabólica`;
+          else texto = `Alcalose respiratória ${fase} + acidose metabólica`;
+        } else if (HCO3 > maxH + 0.05) {
+          // bicarbonato acima da compensação: alcalose metabólica associada
+          if (tipo === 'resp_acidose') texto = `Acidose respiratória ${fase} + alcalose metabólica`;
+          else texto = `Alcalose respiratória ${fase} + alcalose metabólica`;
+        }
+      }
+
+      // Ajuste dinâmico para distúrbios metabólicos com base na compensação esperada
+      if ((tipo === 'met_acidose' || tipo === 'met_alcalose') && !isNaN(HCO3) && !isNaN(PaCO2)) {
+        if (tipo === 'met_acidose') {
+          const esperado = 1.5 * HCO3 + 8;
+          const min = esperado - 2;
+          const max = esperado + 2;
+          if (PaCO2 < min - 0.05) {
+            // PaCO2 abaixo da Winter: alcalose respiratória associada
+            texto = 'Acidose metabólica + alcalose respiratória';
+          } else if (PaCO2 > max + 0.05) {
+            // PaCO2 acima da Winter: acidose respiratória associada
+            texto = 'Acidose metabólica + acidose respiratória';
+          } else {
+            // Dentro do range: acidose metabólica compensada
+            texto = 'Acidose metabólica compensada';
+          }
+        } else if (tipo === 'met_alcalose') {
+          // Usar exatamente a mesma equação do bloco de compensação esperada
+          const esperado = 0.7 * HCO3 + 20;
+          const min = esperado - 5;
+          const max = esperado + 5;
+          if (PaCO2 > max + 0.05) {
+            // PaCO2 muito alta: acidose respiratória associada
+            texto = 'Alcalose metabólica + acidose respiratória';
+          } else if (PaCO2 < min - 0.05) {
+            // PaCO2 muito baixa: alcalose respiratória associada
+            texto = 'Alcalose metabólica + alcalose respiratória';
+          } else {
+            texto = 'Alcalose metabólica compensada';
+          }
+        }
+      }
+
+      // Combinações metabólicas complexas baseadas no delta ratio
+      // Regra: só usar ΔΔ quando há acidose metabólica com Ânion Gap elevado
+      if (!isNaN(deltaRatio) && isMetAcid && !isNaN(anionGap) && anionGap > 12) {
+        if (deltaRatio > 2) {
+          // alto ânion gap com "bicarbonato sobrando" – acidose metabólica + alcalose metabólica
+          // ordem guiada pelo pH: em acidemia começa com acidose, em alcalemia começa com alcalose
+          if (acidemia) {
+            texto = 'Acidose metabólica + alcalose metabólica';
+          } else if (alcalemia) {
+            texto = 'Alcalose metabólica + acidose metabólica';
+          } else {
+            // pH quase normal: mantém acidose primeiro (padrão didático clássico)
+            texto = 'Acidose metabólica + alcalose metabólica';
+          }
+        } else if (deltaRatio < 0.4) {
+          // acidose metabólica com componente hiperclorêmico importante
+          texto = 'Acidose metabólica com componente hiperclorêmico';
+        }
+      }
+
+      // Combinações metabólico + respiratório específicas
+      // Só aplicamos quando o distúrbio primário é claramente metabólico
+      if (!isNaN(HCO3) && !isNaN(PaCO2)) {
+        // Acidose metabólica + alcalose respiratória: PaCO2 bem abaixo da Winter
+        if (tipo === 'met_acidose' && isMetAcid) {
+          const winter = 1.5 * HCO3 + 8;
+          if (PaCO2 < winter - 2) {
+            // ordem guiada pelo pH
+            texto = alcalemia
+              ? 'Alcalose respiratória + acidose metabólica'
+              : 'Acidose metabólica + alcalose respiratória';
+          }
+        }
+        // Alcalose metabólica + acidose respiratória: PaCO2 acima do esperado para alcalose metabólica
+        if (tipo === 'met_alcalose' && isMetAlk) {
+          const esperadoAlk = 0.7 * HCO3 + 20;
+          if (PaCO2 > esperadoAlk + 5) {
+            texto = acidemia
+              ? 'Acidose respiratória + alcalose metabólica'
+              : 'Alcalose metabólica + acidose respiratória';
+          }
+        }
+      }
+
+      // Caso especial didático: alcalose respiratória
+      // Mostrar explicitamente os cenários agudo e crônico com base nas faixas de HCO3-
+      if (tipo === 'resp_alcalose' && !isNaN(PaCO2) && !isNaN(HCO3)) {
+        const hco3Agudo = 24 - 2 * (40 - PaCO2) / 10;
+        const hco3Cron  = 24 - 5 * (40 - PaCO2) / 10;
+        const agudoMin = hco3Agudo - 2;
+        const agudoMax = hco3Agudo + 2;
+        const cronMin  = hco3Cron - 2;
+        const cronMax  = hco3Cron + 2;
+
+        const dentroAgudo = HCO3 >= agudoMin - 0.05 && HCO3 <= agudoMax + 0.05;
+        const dentroCron  = HCO3 >= cronMin - 0.05 && HCO3 <= cronMax + 0.05;
+
+        let laudoAgudo = '';
+        if (dentroAgudo) {
+          laudoAgudo = 'Bicarbonato dentro da faixa de compensação esperada (quadro compatível com forma aguda isolada).';
+        } else if (HCO3 > agudoMax + 0.05) {
+          laudoAgudo = 'Bicarbonato acima da faixa de compensação esperada. Sugere alcalose metabólica associada.';
+        } else if (HCO3 < agudoMin - 0.05) {
+          laudoAgudo = 'Bicarbonato abaixo da faixa de compensação esperada. Sugere acidose metabólica associada.';
+        } else {
+          laudoAgudo = 'Bicarbonato muito próximo do limite da faixa de compensação aguda.';
+        }
+
+        let laudoCron = '';
+        if (dentroCron) {
+          laudoCron = 'Bicarbonato dentro da faixa de compensação esperada (quadro compatível com forma crônica isolada).';
+        } else if (HCO3 > cronMax + 0.05) {
+          laudoCron = 'Bicarbonato acima da faixa de compensação esperada. Sugere alcalose metabólica associada.';
+        } else if (HCO3 < cronMin - 0.05) {
+          laudoCron = 'Bicarbonato abaixo da faixa de compensação esperada. Sugere acidose metabólica associada.';
+        } else {
+          laudoCron = 'Bicarbonato muito próximo do limite da faixa de compensação crônica.';
+        }
+
+        html =
+          `<div class="cond-titulo">Alcalose respiratória.</div>` +
+          `<div class="cond-linha"><span class="cond-label">Se alcalose respiratória aguda:</span>` +
+          `<span class="cond-laudo">${laudoAgudo}</span></div>` +
+          `<div class="cond-linha"><span class="cond-label">Se alcalose respiratória crônica:</span> ` +
+          `<span class="cond-laudo">${laudoCron}</span></div>`;
+      }
+
+      // Regra geral de ordenação: em quadros com acidose + alcalose, listar primeiro
+      // o distúrbio compatível com a direção do pH.
+      if (!html && texto && texto.includes(' + ')) {
+        const sufixoTriplo = texto.match(/\s*\(.*\)$/);
+        const sufixo = sufixoTriplo ? sufixoTriplo[0] : '';
+        const base = sufixoTriplo ? texto.replace(sufixoTriplo[0], '') : texto;
+        const partes = base.split(' + ');
+        if (partes.length === 2) {
+          const [p1, p2] = partes;
+          const p1Acid = /acidose/i.test(p1);
+          const p1Alk  = /alcalose/i.test(p1);
+          const p2Acid = /acidose/i.test(p2);
+          const p2Alk  = /alcalose/i.test(p2);
+
+          if (acidemia && p1Alk && p2Acid) {
+            texto = `${p2} + ${p1}${sufixo}`;
+          } else if (alcalemia && p1Acid && p2Alk) {
+            texto = `${p2} + ${p1}${sufixo}`;
+          }
+        }
+      }
+
+      // Caso ainda não tenha texto, usar rótulos básicos combinados
+      if (!html && !texto) {
+        texto = primarioLabel;
+        if (secundarioLabel) texto = primarioLabel ? `${primarioLabel} + ${secundarioLabel}` : secundarioLabel;
+      }
+
+      // Se distúrbio simples com compensação adequada, explicitar como "compensada"
+      const compOk = compensacaoAdequada(tipo, PaCO2, HCO3, retentor);
+      if (!html && !misto && texto && compOk && !/compensada/i.test(texto)) {
+        texto += ' compensada';
+      }
+
+      // Para qualquer quadro com acidose, acrescentar sempre o valor do ânion gap
+      if (!html && texto && !isNaN(anionGap)) {
+        const temAcidose = /acidose/i.test(texto);
+        const jaTemAG = /AG[:=]/i.test(texto);
+        if (temAcidose && !jaTemAG) {
+          const agStr = anionGap.toFixed(1);
+          texto += ` (AG: ${agStr})`;
+        }
+      }
+
+      // Marcações de mistura/triplo
+      if (!html && misto && texto) {
+        // Vamos transformar em bloco estruturado: título "Distúrbio misto" em amarelo
+        html =
+          `<div class="cond-titulo">Distúrbio misto:</div>` +
+          `<div class="cond-linha"><span class="cond-laudo">${texto}</span></div>`;
+      }
+
+      // Bloco descritivo adicional para casos com acidose metabólica de AG aumentado e delta–delta calculado
+      if (!html && texto && isMetAcid && !isNaN(anionGap) && anionGap > 12 && !isNaN(deltaRatio)) {
+        let labelDelta = '';
+        let laudoDelta = '';
+
+        const agStr = anionGap.toFixed(1);
+
+        if (deltaRatio < 0.4) {
+          labelDelta = `AG: ${agStr}. Delta ratio < 0,4:`;
+          laudoDelta = 'Sugere acidose metabólica hiperclorêmica adicional sobre a acidose de ânion gap aumentado.';
+        } else if (deltaRatio < 1) {
+          labelDelta = `AG: ${agStr}. Delta ratio < 1:`;
+          laudoDelta = 'Sugere acidose metabólica com ânion gap aumentado associada a acidose metabólica hiperclorêmica adicional.';
+        } else if (deltaRatio >= 1 && deltaRatio <= 2) {
+          labelDelta = `AG: ${agStr}. Delta ratio entre 1 e 2:`;
+          laudoDelta = 'Sugere acidose metabólica com ânion gap aumentado, sem evidência de acidose metabólica hiperclorêmica adicional.';
+        } else if (deltaRatio > 2) {
+          labelDelta = `AG: ${agStr}. Delta ratio > 2:`;
+          laudoDelta = 'Sugere acidose metabólica com ânion gap aumentado associada a alcalose metabólica ou acidose respiratória crônica compensada.';
+        }
+
+        if (labelDelta && laudoDelta) {
+          html =
+            `<div class="cond-titulo">${texto}</div>` +
+            `<div class="cond-linha"><span class="cond-label">${labelDelta}</span>` +
+            `<span class="cond-laudo">${laudoDelta}</span></div>`;
+        }
+      }
+
+      if (html) {
+        box.innerHTML = html;
+      } else {
+        box.textContent = texto || '—';
+      }
+    }
+
+    function avaliarDelta(anionGap, deltaRatio) {
+      const el = document.getElementById('InterpretacaoDelta');
+      if (!el) return;
+
+      if (anionGap !== anionGap || deltaRatio !== deltaRatio) {
+        el.textContent = 'Preencha Na⁺, Cl⁻ e HCO₃⁻ para avaliar o ânion gap e a relação delta.';
+        el.style.color = 'var(--text-muted)';
+        return;
+      }
+
+      let msg = '';
+      let cor = 'var(--result-abnormal)';
+
+      if (deltaRatio < 0.4) {
+        msg = 'Delta ratio < 0,4: acidose metabólica hiperclorêmica com ânion gap normal (ou baixo).';
+      } else if (deltaRatio < 1) {
+        msg = 'Delta ratio < 1: acidose metabólica de alto ânion gap associada a componente de acidose metabólica de ânion gap normal.';
+      } else if (deltaRatio >= 1 && deltaRatio <= 2) {
+        msg = 'Delta ratio entre 1 e 2: acidose metabólica de alto ânion gap “pura”.';
+        cor = 'var(--accent)';
+      } else if (deltaRatio > 2) {
+        msg = 'Delta ratio > 2: acidose de alto ânion gap associada a alcalose metabólica ou acidose respiratória crônica compensada.';
+      } else {
+        msg = 'Relação delta fora das faixas usuais de interpretação clínica.';
+      }
+
+      el.textContent = msg;
+      el.style.color = cor;
+    }
+
+    function obterValoresAtuais() {
+      const valores = {};
+      inputIds.forEach(id => {
+        const el = document.getElementById(id);
+        valores[id] = el ? el.value : '';
+      });
+      valores.retentorSim = !!(document.getElementById('RetentorCO2Sim')?.checked);
+      valores.retentorNao = !!(document.getElementById('RetentorCO2Nao')?.checked);
+      return valores;
+    }
+
+    // Versão estendida para salvar absolutamente todos os dados de entrada na ordem
+    const allInputIds = [
+      'Altura','Peso',
+      'Hb','Hematocrito','Plaquetas',
+      'Na','K','Ca','Mg','Cl',
+      'pH','PaO2','PaCO2','SaO2','FiO2','HCO3','BaseExcess',
+      'PvO2','PvCO2','SvO2','HCO3v',
+      'Lactato','Glicemia','RNI','TTPa','Albumina',
+      'CO','FC','PAMRadial','PAPMedia','POAP','PVC',
+      'Observacoes'
+    ];
+
+    function obterValoresCompletos() {
+      const valores = {};
+      allInputIds.forEach(id => {
+        const el = document.getElementById(id);
+        valores[id] = el ? el.value : '';
+      });
+      valores.retentorSim = !!(document.getElementById('RetentorCO2Sim')?.checked);
+      valores.retentorNao = !!(document.getElementById('RetentorCO2Nao')?.checked);
+      return valores;
+    }
+
+    function aplicarValores(valores) {
+      if (!valores) return;
+      inputIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el && Object.prototype.hasOwnProperty.call(valores, id)) {
+          el.value = valores[id] ?? '';
+        }
+      });
+      const sim = document.getElementById('RetentorCO2Sim');
+      const nao = document.getElementById('RetentorCO2Nao');
+      if (sim) sim.checked = !!valores.retentorSim;
+      if (nao) nao.checked = !!valores.retentorNao;
+      const obs = document.getElementById('Observacoes');
+      if (obs && Object.prototype.hasOwnProperty.call(valores, 'Observacoes')) {
+        obs.value = valores.Observacoes ?? '';
+      }
+      calcAcidoBase();
+      calcHemo();
+    }
+
+    function lerHistorico() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return [];
+        const parsed = JSON.parse(raw);
+        if (!Array.isArray(parsed)) return [];
+        return parsed;
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function gravarHistorico(lista) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(lista));
+      } catch (e) {
+        // ignore
+      }
+    }
+
+    function formatarDataLegivel(iso) {
+      if (!iso) return '';
+      const dt = new Date(iso);
+      if (isNaN(dt.getTime())) return iso;
+      const pad = n => String(n).padStart(2, '0');
+      const dia = pad(dt.getDate());
+      const mes = pad(dt.getMonth() + 1);
+      const ano = dt.getFullYear();
+      const hora = pad(dt.getHours());
+      const min = pad(dt.getMinutes());
+      return `${dia}/${mes}/${ano} ${hora}:${min}`;
+    }
+
+    // Cálculo simples de AG e Delta ratio a partir dos valores salvos
+    function calcularDerivadosRegistro(valores) {
+      const Na = parseValorNumero(valores?.Na);
+      const Cl = parseValorNumero(valores?.Cl);
+      const HCO3 = parseValorNumero(valores?.HCO3);
+      let anionGap = NaN;
+      let deltaRatio = NaN;
+      if (!isNaN(Na) && !isNaN(Cl) && !isNaN(HCO3)) {
+        anionGap = Na - (Cl + HCO3);
+        const deltaAG = anionGap - 12;
+        const deltaHCO3 = 24 - HCO3;
+        if (Math.abs(deltaHCO3) > 1e-6) {
+          deltaRatio = deltaAG / deltaHCO3;
+        }
+      }
+      return { anionGap, deltaRatio };
+    }
+
+    function formatarDataParaInput(d) {
+      const pad = n => String(n).padStart(2, '0');
+      const ano = d.getFullYear();
+      const mes = pad(d.getMonth() + 1);
+      const dia = pad(d.getDate());
+      const hora = pad(d.getHours());
+      const min = pad(d.getMinutes());
+      return {
+        data: `${ano}-${mes}-${dia}`,
+        hora: `${hora}:${min}`
+      };
+    }
+
+    function salvarGasometria() {
+      const pacienteInput = document.getElementById('examePaciente');
+      const dataInput = document.getElementById('exameData');
+      const horaInput = document.getElementById('exameHora');
+      const paciente = pacienteInput ? (pacienteInput.value || '').trim() : '';
+      const dataStr = dataInput ? (dataInput.value || '') : '';
+      const horaStr = horaInput ? (horaInput.value || '') : '';
+
+      let dataHoraISO = '';
+      if (dataStr && horaStr) {
+        const d = new Date(`${dataStr}T${horaStr}`);
+        if (!isNaN(d.getTime())) {
+          dataHoraISO = d.toISOString();
+        }
+      }
+      const distBox = document.getElementById('DistPrimarioBox');
+      let distPrimario = '';
+      if (distBox) {
+        distPrimario = (distBox.textContent || distBox.innerText || '').trim();
+      }
+      const valores = obterValoresCompletos();
+      const historico = lerHistorico();
+      historico.push({
+        paciente,
+        dataHoraISO: dataHoraISO || new Date().toISOString(),
+        tipo: 'arterial',
+        valores,
+        distPrimario
+      });
+      gravarHistorico(historico);
+      fecharModalSalvarExame();
+    }
+
+    function abrirEvolucaoPaciente(pacienteNome, registros) {
+      if (!registros || !registros.length) return;
+
+      const ordenados = [...registros].sort((a, b) => {
+        const tA = new Date(a.dataHoraISO || a.dataHora || 0).getTime();
+        const tB = new Date(b.dataHoraISO || b.dataHora || 0).getTime();
+        return tA - tB; // crescente da esquerda para a direita
+      });
+
+      const headers = ordenados.map((reg, idx) => {
+        const dataLeg = formatarDataLegivel(reg.dataHora || reg.dataHoraISO);
+        const labelColuna = dataLeg || `Exame ${idx + 1}`;
+        return `<th>${labelColuna}</th>`;
+      }).join('');
+
+      const linhas = [];
+
+      function linha(label, getter, tipo) {
+        const cells = ordenados.map(reg => {
+          const v = getter(reg) ?? '';
+          return `<td>${v !== '' ? v : '—'}</td>`;
+        }).join('');
+        const rowClass = tipo === 'long' ? ' class="long-text-row"' : '';
+        linhas.push(`<tr${rowClass}><td>${label}</td>${cells}</tr>`);
+      }
+
+      // Linha de título de grupo
+      function grupo(titulo) {
+        const colspan = 1 + ordenados.length;
+        linhas.push(`<tr class="group-row"><td colspan="${colspan}">${titulo}</td></tr>`);
+      }
+
+      // Entradas principais (todos os inputs salvos), organizadas por grupo como na calculadora
+      grupo('Dados do paciente');
+      const labelPorId = {
+        Altura: 'Altura (cm)',
+        Peso: 'Peso (kg)'
+      };
+
+      Object.keys(labelPorId).forEach(id => {
+        linha(labelPorId[id], reg => (reg.valores?.[id] ?? '').toString());
+      });
+
+      grupo('Hemograma');
+      ['Hb','Hematocrito','Plaquetas'].forEach(id => {
+        const label = {
+          Hb: 'Hemoglobina (g/dL)',
+          Hematocrito: 'Hematócrito (%)',
+          Plaquetas: 'Plaquetas (×10³/µL)'
+        }[id];
+        linha(label, reg => (reg.valores?.[id] ?? '').toString());
+      });
+
+      grupo('Eletrólitos');
+      ['Na','K','Ca','Mg','Cl'].forEach(id => {
+        const label = {
+          Na: 'Na⁺ (mEq/L)',
+          K: 'K⁺ (mEq/L)',
+          Ca: 'Ca²⁺ (mg/dL)',
+          Mg: 'Mg²⁺ (mg/dL)',
+          Cl: 'Cl⁻ (mEq/L)'
+        }[id];
+        linha(label, reg => (reg.valores?.[id] ?? '').toString());
+      });
+
+      grupo('Gasometria arterial');
+      ['pH','PaO2','PaCO2','SaO2','FiO2','HCO3','BaseExcess'].forEach(id => {
+        const label = {
+          pH: 'pH',
+          PaO2: 'PaO₂ (mmHg)',
+          PaCO2: 'PaCO₂ (mmHg)',
+          SaO2: 'SaO₂ (%)',
+          FiO2: 'FiO₂ (%)',
+          HCO3: 'HCO₃⁻ art. (mEq/L)',
+          BaseExcess: 'Base excess (mEq/L)'
+        }[id];
+        linha(label, reg => (reg.valores?.[id] ?? '').toString());
+      });
+
+      grupo('Gasometria venosa');
+      ['PvO2','PvCO2','SvO2','HCO3v'].forEach(id => {
+        const label = {
+          PvO2: 'PvO₂ (mmHg)',
+          PvCO2: 'PvCO₂ (mmHg)',
+          SvO2: 'SvO₂ / SvcO₂ (%)',
+          HCO3v: 'HCO₃⁻ venoso (mEq/L)'
+        }[id];
+        linha(label, reg => (reg.valores?.[id] ?? '').toString());
+      });
+
+      grupo('Outros');
+      ['Lactato','Glicemia','RNI','TTPa','Albumina'].forEach(id => {
+        const label = {
+          Lactato: 'Lactato (mmol/L)',
+          Glicemia: 'Glicemia (mg/dL)',
+          RNI: 'RNI',
+          TTPa: 'TTPa (s)',
+          Albumina: 'Albumina (g/dL)'
+        }[id];
+        linha(label, reg => (reg.valores?.[id] ?? '').toString());
+      });
+
+      grupo('Parâmetros hemodinâmicos');
+      ['CO','FC','PAMRadial','PAPMedia','POAP','PVC'].forEach(id => {
+        const label = {
+          CO: 'DC (L/min)',
+          FC: 'FC (bpm)',
+          PAMRadial: 'PAM radial (mmHg)',
+          PAPMedia: 'PAP média (mmHg)',
+          POAP: 'POAP (mmHg)',
+          PVC: 'PVC (mmHg)'
+        }[id];
+        linha(label, reg => (reg.valores?.[id] ?? '').toString());
+      });
+
+      grupo('Derivados ácido-básicos');
+      // Derivados: Ânion gap e Delta ratio a partir dos valores salvos
+      linha('Ânion gap (mEq/L)', reg => {
+        const { anionGap } = calcularDerivadosRegistro(reg.valores || {});
+        return isNaN(anionGap) ? '' : anionGap.toFixed(1);
+      });
+      linha('Delta ratio (ΔAG/ΔHCO₃⁻)', reg => {
+        const { deltaRatio } = calcularDerivadosRegistro(reg.valores || {});
+        return isNaN(deltaRatio) ? '' : deltaRatio.toFixed(2);
+      });
+
+      grupo('Parâmetros gasométricos derivados');
+      // Hemodinâmicos derivados
+      linha('CaO₂ (mL/dL)', reg => {
+        const v = reg.valores || {};
+        const Hb = parseValorNumero(v.Hb);
+        const SaO2 = parseValorNumero(v.SaO2);
+        const PaO2 = parseValorNumero(v.PaO2);
+        if ([Hb, SaO2, PaO2].some(isNaN)) return '';
+        const CaO2 = (Hb * 1.34 * SaO2 / 100) + (0.0031 * PaO2);
+        return CaO2.toFixed(2);
+      });
+      linha('CvO₂ (mL/dL)', reg => {
+        const v = reg.valores || {};
+        const Hb = parseValorNumero(v.Hb);
+        const SvO2 = parseValorNumero(v.SvO2);
+        const PvO2 = parseValorNumero(v.PvO2);
+        if ([Hb, SvO2, PvO2].some(isNaN)) return '';
+        const CvO2 = (Hb * 1.34 * SvO2 / 100) + (0.0031 * PvO2);
+        return CvO2.toFixed(2);
+      });
+      linha('Gap CO₂ (mmHg)', reg => {
+        const v = reg.valores || {};
+        const PaCO2 = parseValorNumero(v.PaCO2);
+        const PvCO2 = parseValorNumero(v.PvCO2);
+        if ([PaCO2, PvCO2].some(isNaN)) return '';
+        const gap = PvCO2 - PaCO2;
+        return gap.toFixed(1);
+      });
+
+      linha('DO₂ (mL/min)', reg => {
+        const v = reg.valores || {};
+        const Hb = parseValorNumero(v.Hb);
+        const SaO2 = parseValorNumero(v.SaO2);
+        const PaO2 = parseValorNumero(v.PaO2);
+        const CO = parseValorNumero(v.CO);
+        if ([Hb, SaO2, PaO2, CO].some(isNaN)) return '';
+        const CaO2 = (Hb * 1.34 * SaO2 / 100) + (0.0031 * PaO2);
+        const DO2 = CaO2 * CO * 10;
+        return DO2.toFixed(1);
+      });
+
+      linha('VO₂ (mL/min)', reg => {
+        const v = reg.valores || {};
+        const Hb = parseValorNumero(v.Hb);
+        const SaO2 = parseValorNumero(v.SaO2);
+        const PaO2 = parseValorNumero(v.PaO2);
+        const SvO2 = parseValorNumero(v.SvO2);
+        const PvO2 = parseValorNumero(v.PvO2);
+        const CO = parseValorNumero(v.CO);
+        if ([Hb, SaO2, PaO2, SvO2, PvO2, CO].some(isNaN)) return '';
+        const CaO2 = (Hb * 1.34 * SaO2 / 100) + (0.0031 * PaO2);
+        const CvO2 = (Hb * 1.34 * SvO2 / 100) + (0.0031 * PvO2);
+        const VO2 = (CaO2 - CvO2) * CO * 10;
+        return VO2.toFixed(1);
+      });
+
+      linha('Taxa de extração (VO₂/DO₂)', reg => {
+        const v = reg.valores || {};
+        const Hb = parseValorNumero(v.Hb);
+        const SaO2 = parseValorNumero(v.SaO2);
+        const PaO2 = parseValorNumero(v.PaO2);
+        const SvO2 = parseValorNumero(v.SvO2);
+        const PvO2 = parseValorNumero(v.PvO2);
+        if ([Hb, SaO2, PaO2, SvO2, PvO2].some(isNaN)) return '';
+        const CaO2 = (Hb * 1.34 * SaO2 / 100) + (0.0031 * PaO2);
+        const CvO2 = (Hb * 1.34 * SvO2 / 100) + (0.0031 * PvO2);
+        if (CaO2 <= 0) return '';
+        const taxa = (CaO2 - CvO2) / CaO2;
+        return taxa.toFixed(2);
+      });
+
+      grupo('Integração ácido-base');
+      // Distúrbio provável salvo
+      linha('Distúrbio provável', reg => (reg.distPrimario || '').trim(), 'long');
+      grupo('Observações');
+      linha('Observações adicionais', reg => (reg.valores?.Observacoes || '').toString(), 'long');
+
+      const tabelaHTML = `
+        <div class="gaso-table-wrapper">
+          <table class="gaso-table">
+            <thead>
+              <tr>
+                <th>Parâmetro</th>
+                ${headers}
+              </tr>
+            </thead>
+            <tbody>
+              ${linhas.join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+
+      const win = window.open('', '_blank');
+      if (!win) return;
+
+      const safeNome = pacienteNome || 'Paciente';
+      win.document.write(`
+        <!DOCTYPE html>
+        <html lang="pt-BR">
+        <head>
+          <meta charset="UTF-8">
+          <title>Evolução – ${safeNome}</title>
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <style>
+            body {
+              font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+              background: #0f1419;
+              color: #e6edf3;
+              margin: 0;
+              padding: 1rem 1rem 4rem;
+            }
+            h1 {
+              font-size: 1.1rem;
+              margin-bottom: 0.75rem;
+              font-weight: 600;
+            }
+            .tabs {
+              display: inline-flex;
+              border-radius: 999px;
+              border: 1px solid #2d3843;
+              overflow: hidden;
+              margin-bottom: 0.75rem;
+            }
+            .tab-button {
+              padding: 0.4rem 0.9rem;
+              font-size: 0.8rem;
+              border: none;
+              background: transparent;
+              color: #8b9cad;
+              cursor: pointer;
+            }
+            .tab-button.active {
+              background: #1a2129;
+              color: #ffd139;
+            }
+            .tab-content {
+              display: none;
+            }
+            .tab-content.active {
+              display: block;
+            }
+            .gaso-table-wrapper {
+              overflow-x: auto;
+              border-radius: 8px;
+              border: 1px solid #2d3843;
+              background: #151b23;
+              padding: 0.25rem;
+            }
+            .gaso-table {
+              width: 100%;
+              border-collapse: collapse;
+              min-width: 520px;
+              font-size: 0.8rem;
+            }
+            .gaso-table th,
+            .gaso-table td {
+              border-bottom: 1px solid #222a33;
+              border-right: 1px solid #222a33;
+              padding: 0.25rem 0.4rem;
+              text-align: center;
+              white-space: nowrap;
+            }
+            .gaso-table th:first-child,
+            .gaso-table td:first-child {
+              text-align: left;
+              background: #151b23;
+            }
+            .gaso-table tr.group-row td {
+              background: #10161d;
+              font-weight: 700;
+              text-align: left;
+              white-space: normal;
+              color: #58a6ff;
+            }
+            .gaso-table tr.long-text-row td {
+              white-space: normal;
+              text-align: left;
+              max-width: min(320px, 90vw);
+              word-wrap: break-word;
+            }
+            .gaso-table th {
+              font-weight: 700;
+              color: #ffd139;
+              background: #181f27;
+            }
+            .gaso-table thead th {
+              border-bottom: 1px solid #2d3843;
+            }
+            .placeholder-grafico {
+              font-size: 0.85rem;
+              color: #8b9cad;
+              padding: 0.75rem 0.5rem 0.5rem;
+              position: relative; /* para o dropdown ancorar no botão */
+            }
+            /* Botão principal "Selecionar parâmetros" */
+            #btn-parametros-grafico {
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+              gap: 0.4rem;
+              margin-bottom: 0.4rem;
+              border-radius: 999px;
+              border: 1px solid #ffd139;
+              background: rgba(255, 209, 57, 0.06);
+              color: #ffd139;
+              padding: 0.45rem 0.95rem;
+              font-size: 0.8rem;
+              font-weight: 600;
+              cursor: pointer;
+              box-shadow: 0 0 0 1px rgba(0,0,0,0.4);
+              transition: background 0.15s, transform 0.1s, box-shadow 0.15s, border-color 0.15s;
+            }
+            #btn-parametros-grafico::after {
+              content: '▾';
+              font-size: 0.8rem;
+            }
+            #btn-parametros-grafico:hover {
+              background: rgba(255, 209, 57, 0.14);
+              transform: translateY(-1px);
+              box-shadow: 0 6px 14px rgba(0,0,0,0.45);
+            }
+            /* Moldura visual para o gráfico */
+            .chart-frame {
+              margin-top: 0.8rem;
+              padding: 0.6rem 0.75rem 0.4rem;
+              border-radius: 12px;
+              border: 1px solid #2d3843;
+              background: radial-gradient(circle at top left, rgba(88,166,255,0.08), transparent 55%),
+                          #050810;
+              box-shadow: 0 18px 32px rgba(0,0,0,0.65);
+              position: relative;
+            }
+            .chart-export-button {
+              position: absolute;
+              top: 8px;
+              right: 10px;
+              padding: 0.25rem 0.7rem;
+              border-radius: 999px;
+              border: 1px solid #2d3843;
+              background: rgba(15, 20, 25, 0.9);
+              color: #e6edf3;
+              font-size: 0.75rem;
+              font-weight: 600;
+              cursor: pointer;
+              box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+              display: inline-flex;
+              align-items: center;
+              gap: 0.3rem;
+            }
+            .chart-export-button::before {
+              content: '⤓';
+              font-size: 0.8rem;
+            }
+            .chart-export-button:hover {
+              background: rgba(36, 41, 47, 0.95);
+              border-color: #58a6ff;
+            }
+            /* Garante que o gráfico ocupe toda a largura dentro da moldura */
+            #grafico-evolucao {
+              display: block;
+              margin-top: 0;
+            }
+            /* Dropdown principal com a lista de grupos */
+            .param-menu {
+              position: absolute;
+              top: 2.3rem;
+              left: 0;
+              z-index: 40;
+              min-width: 260px;
+              max-width: 360px;
+              padding: 0.35rem 0.3rem;
+              border-radius: 10px;
+              border: 1px solid #2d3843;
+              background: #0c1117;
+              box-shadow: 0 16px 32px rgba(0,0,0,0.6);
+            }
+            .param-group {
+              border-radius: 8px;
+              overflow: hidden;
+              margin: 0.1rem 0;
+              background: transparent;
+              border: 1px solid transparent;
+            }
+            .param-group-header {
+              width: 100%;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              padding: 0.35rem 0.55rem;
+              background: transparent;
+              border: none;
+              color: #c9d1d9;
+              font-size: 0.8rem;
+              font-weight: 600;
+              text-align: left;
+              cursor: pointer;
+            }
+            .param-group-header span {
+              pointer-events: none;
+            }
+            .param-group-header::after {
+              content: '▸';
+              font-size: 0.8rem;
+              opacity: 0.8;
+            }
+            .param-group-header.open {
+              background: rgba(88, 166, 255, 0.18);
+              border-bottom: 1px solid #2d3843;
+            }
+            .param-group-header.open::after {
+              content: '▾';
+            }
+            .param-group-list {
+              padding: 0.25rem 0.5rem 0.45rem;
+              display: none;
+            }
+            /* Linha com checkbox + rótulo dentro do grupo */
+            .param-option {
+              display: flex;
+              align-items: center;
+              gap: 0.35rem;
+              padding: 0.15rem 0;
+              font-size: 0.78rem;
+              color: #c9d1d9;
+              cursor: pointer;
+            }
+            .param-option input[type="checkbox"] {
+              width: 0.85rem;
+              height: 0.85rem;
+              accent-color: #58a6ff;
+            }
+            .param-option span {
+              flex: 1;
+            }
+            .param-option input[type="checkbox"]:checked + span {
+              color: #ffd139;
+            }
+            /* Barra inferior fixa para ações (Voltar / Exportar) */
+            .bottom-bar-evolucao {
+              position: fixed;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              padding: 0.55rem 1rem;
+              background: rgba(10, 14, 18, 0.96);
+              border-top: 1px solid #2d3843;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              gap: 0.75rem;
+              box-shadow: 0 -6px 18px rgba(0,0,0,0.7);
+              backdrop-filter: blur(10px);
+            }
+            .bottom-bar-evolucao button {
+              border-radius: 999px;
+              padding: 0.4rem 1.1rem;
+              font-size: 0.8rem;
+              font-weight: 600;
+              border: 1px solid #2d3843;
+              background: #151b23;
+              color: #e6edf3;
+              cursor: pointer;
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+              gap: 0.3rem;
+            }
+            #btn-evo-voltar {
+              background: transparent;
+            }
+            #btn-evo-exportar-tabela {
+              background: #2ea043;
+              border-color: #2ea043;
+              color: #0f1419;
+            }
+            .bottom-bar-evolucao button:hover {
+              filter: brightness(1.05);
+            }
+          </style>
+        </head>
+        <body>
+          <h1>Evolução – ${safeNome}</h1>
+          <div class="tabs">
+            <button class="tab-button active" data-tab="tabela">Tabela</button>
+            <button class="tab-button" data-tab="grafico">Evolução gráfica</button>
+          </div>
+          <div id="tab-tabela" class="tab-content active">
+            ${tabelaHTML}
+          </div>
+          <div id="tab-grafico" class="tab-content">
+            <div class="placeholder-grafico">
+              <button id="btn-parametros-grafico" class="tab-button active" type="button">
+                Selecionar parâmetros para evolução
+              </button>
+              <div id="menu-parametros-grafico" class="param-menu" hidden></div>
+              <div class="chart-frame">
+                <button id="btn-exportar-grafico" class="chart-export-button" type="button">
+                  Exportar PNG
+                </button>
+                <svg id="grafico-evolucao" width="100%" height="320" viewBox="0 0 800 320"></svg>
+              </div>
+            </div>
+          </div>
+          <div class="bottom-bar-evolucao">
+            <button type="button" id="btn-evo-voltar">Voltar</button>
+            <button type="button" id="btn-evo-exportar-tabela">Exportar tabela</button>
+          </div>
+          <script>
+            (function() {
+              // Limita os botões de aba apenas aos que estão dentro do cabeçalho de tabs,
+              // evitando que o botão "Selecionar parâmetros para evolução" quebre a navegação.
+              var buttons = document.querySelectorAll('.tabs .tab-button');
+              buttons.forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                  var target = btn.getAttribute('data-tab');
+                  buttons.forEach(function(b) { b.classList.remove('active'); });
+                  document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
+                  btn.classList.add('active');
+                  var content = document.getElementById('tab-' + target);
+                  if (content) content.classList.add('active');
+                });
+              });
+
+              var series = ${JSON.stringify(ordenados.map(reg => ({
+                t: reg.dataHoraISO || reg.dataHora || null,
+                valores: reg.valores || {}
+              })))};
+
+              // Parâmetros disponíveis para gráfico, com grupo e unidade
+              var parametros = [
+                { id: 'Hb',    label: 'Hemoglobina',             unidade: 'g/dL',      minFis: 6,   maxFis: 20,  grupo: 'Hemograma' },
+                { id: 'Hematocrito', label: 'Hematócrito',       unidade: '%',         minFis: 15,  maxFis: 60,  grupo: 'Hemograma' },
+                { id: 'Plaquetas',   label: 'Plaquetas',         unidade: '×10³/µL',   minFis: 50,  maxFis: 800, grupo: 'Hemograma' },
+
+                { id: 'Na',   label: 'Na⁺',  unidade: 'mEq/L',   minFis: 120, maxFis: 160, grupo: 'Eletrólitos' },
+                { id: 'K',    label: 'K⁺',   unidade: 'mEq/L',   minFis: 2,   maxFis: 7,   grupo: 'Eletrólitos' },
+                { id: 'Ca',   label: 'Ca²⁺', unidade: 'mg/dL',   minFis: 6,   maxFis: 14,  grupo: 'Eletrólitos' },
+                { id: 'Mg',   label: 'Mg²⁺', unidade: 'mg/dL',   minFis: 0.5, maxFis: 4,   grupo: 'Eletrólitos' },
+                { id: 'Cl',   label: 'Cl⁻',  unidade: 'mEq/L',   minFis: 80,  maxFis: 120, grupo: 'Eletrólitos' },
+
+                { id: 'pH',   label: 'pH',   unidade: '',        minFis: 7.0, maxFis: 7.7, grupo: 'Gasometria arterial' },
+                { id: 'PaO2', label: 'PaO₂', unidade: 'mmHg',    minFis: 40,  maxFis: 120, grupo: 'Gasometria arterial' },
+                { id: 'PaCO2',label: 'PaCO₂',unidade: 'mmHg',    minFis: 20,  maxFis: 80,  grupo: 'Gasometria arterial' },
+                { id: 'SaO2', label: 'SaO₂', unidade: '%',       minFis: 70,  maxFis: 100, grupo: 'Gasometria arterial' },
+                { id: 'FiO2', label: 'FiO₂', unidade: '%',       minFis: 21,  maxFis: 100, grupo: 'Gasometria arterial' },
+                { id: 'HCO3', label: 'HCO₃⁻',unidade: 'mEq/L',   minFis: 10,  maxFis: 40,  grupo: 'Gasometria arterial' },
+
+                { id: 'PvO2', label: 'PvO₂', unidade: 'mmHg',    minFis: 20,  maxFis: 70,  grupo: 'Gasometria venosa' },
+                { id: 'PvCO2',label: 'PvCO₂',unidade: 'mmHg',    minFis: 30,  maxFis: 80,  grupo: 'Gasometria venosa' },
+                { id: 'SvO2', label: 'SvO₂', unidade: '%',       minFis: 40,  maxFis: 85,  grupo: 'Gasometria venosa' },
+                { id: 'HCO3v',label: 'HCO₃⁻ venoso', unidade: 'mEq/L', minFis: 10, maxFis: 40, grupo: 'Gasometria venosa' },
+
+                { id: 'CaO2', label: 'CaO₂', unidade: 'mL/dL',   minFis: 5,   maxFis: 30,  grupo: 'Parâmetros gasométricos derivados' },
+                { id: 'CvO2', label: 'CvO₂', unidade: 'mL/dL',   minFis: 0,   maxFis: 25,  grupo: 'Parâmetros gasométricos derivados' },
+                { id: 'GapCO2',label: 'Gap CO₂', unidade: 'mmHg',minFis: 0,   maxFis: 20,  grupo: 'Parâmetros gasométricos derivados' },
+
+                { id: 'CO',   label: 'DC',   unidade: 'L/min',   minFis: 2,   maxFis: 10,  grupo: 'Parâmetros hemodinâmicos' },
+                { id: 'FC',   label: 'FC',   unidade: 'bpm',     minFis: 40,  maxFis: 160, grupo: 'Parâmetros hemodinâmicos' },
+                { id: 'PAMRadial', label: 'PAM radial', unidade: 'mmHg', minFis: 40, maxFis: 120, grupo: 'Parâmetros hemodinâmicos' },
+
+                { id: 'Lactato', label: 'Lactato', unidade: 'mmol/L', minFis: 0, maxFis: 8, grupo: 'Outros' }
+              ];
+
+              var btnMenu = document.getElementById('btn-parametros-grafico');
+              var menu = document.getElementById('menu-parametros-grafico');
+              var svg = document.getElementById('grafico-evolucao');
+              var btnExport = document.getElementById('btn-exportar-grafico');
+              var chartFrame = document.querySelector('.chart-frame');
+              var btnVoltar = document.getElementById('btn-evo-voltar');
+              var btnExportTabela = document.getElementById('btn-evo-exportar-tabela');
+
+              if (btnMenu && menu && svg) {
+                // Monta menu hierárquico: primeiro escolhe o grupo, depois abre a lista de parâmetros daquele grupo
+                var grupos = {};
+                parametros.forEach(function(p) {
+                  if (!grupos[p.grupo]) grupos[p.grupo] = [];
+                  grupos[p.grupo].push(p);
+                });
+
+                // Organiza os grupos em ordem alfabética
+                var nomesGrupos = Object.keys(grupos).sort(function(a, b) {
+                  return a.localeCompare(b, 'pt-BR');
+                });
+
+                nomesGrupos.forEach(function(nomeGrupo) {
+                  var grupoWrap = document.createElement('div');
+                  grupoWrap.className = 'param-group';
+
+                  var header = document.createElement('button');
+                  header.type = 'button';
+                  header.className = 'param-group-header';
+                  var tituloSpan = document.createElement('span');
+                  tituloSpan.textContent = nomeGrupo;
+                  header.appendChild(tituloSpan);
+
+                  var lista = document.createElement('div');
+                  lista.className = 'param-group-list';
+
+                  grupos[nomeGrupo].forEach(function(p) {
+                    var row = document.createElement('label');
+                    row.className = 'param-option';
+                    var cb = document.createElement('input');
+                    cb.type = 'checkbox';
+                    cb.value = p.id;
+                    cb.checked = false;
+                    var span = document.createElement('span');
+                    span.textContent = p.label + (p.unidade ? ' (' + p.unidade + ')' : '');
+                    row.appendChild(cb);
+                    row.appendChild(span);
+                    lista.appendChild(row);
+                  });
+
+                  header.addEventListener('click', function () {
+                    var isOpen = header.classList.contains('open');
+                    // fecha todos os outros grupos
+                    menu.querySelectorAll('.param-group-header').forEach(function(h) {
+                      h.classList.remove('open');
+                    });
+                    menu.querySelectorAll('.param-group-list').forEach(function(l) {
+                      l.style.display = 'none';
+                    });
+                    if (!isOpen) {
+                      header.classList.add('open');
+                      lista.style.display = 'block';
+                    }
+                  });
+
+                  grupoWrap.appendChild(header);
+                  grupoWrap.appendChild(lista);
+                  menu.appendChild(grupoWrap);
+                });
+
+                // Abre/fecha o dropdown principal
+                btnMenu.addEventListener('click', function(ev) {
+                  ev.stopPropagation();
+                  menu.hidden = !menu.hidden;
+                });
+
+                // Fechar dropdown ao clicar fora
+                document.addEventListener('click', function (ev) {
+                  if (menu.hidden) return;
+                  if (!menu.contains(ev.target) && ev.target !== btnMenu) {
+                    menu.hidden = true;
+                  }
+                });
+
+                // Exportar o gráfico como PNG, capturando exatamente o container (.chart-frame)
+                function exportarGrafico() {
+                  if (!chartFrame) return;
+                  var width = chartFrame.offsetWidth;
+                  var height = chartFrame.offsetHeight;
+
+                  // Usa html2canvas se disponível (captura pixel a pixel exatamente o que o usuário vê)
+                  if (window.html2canvas) {
+                    // Esconde temporariamente o botão de exportação para não aparecer na imagem
+                    var antigoDisplay = btnExport ? btnExport.style.display : '';
+                    if (btnExport) btnExport.style.display = 'none';
+
+                    window.html2canvas(chartFrame, {
+                      backgroundColor: null,
+                      width: width,
+                      height: height,
+                      scale: window.devicePixelRatio || 2
+                    }).then(function(canvas) {
+                      if (btnExport) btnExport.style.display = antigoDisplay;
+                      canvas.toBlob(function (pngBlob) {
+                        if (!pngBlob) return;
+                        var a = document.createElement('a');
+                        a.href = URL.createObjectURL(pngBlob);
+                        a.download = 'evolucao-grafico.png';
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                      }, 'image/png');
+                    }).catch(function() {
+                      if (btnExport) btnExport.style.display = antigoDisplay;
+                    });
+                    return;
+                  }
+
+                  // Fallback simples: exporta apenas o SVG
+                  if (!svg) return;
+                  var serializer = new XMLSerializer();
+                  var svgString = serializer.serializeToString(svg);
+                  var blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+                  var url = URL.createObjectURL(blob);
+                  var img = new Image();
+                  var scale = window.devicePixelRatio || 2;
+                  var svgWidth = svg.clientWidth || 800;
+                  var svgHeight = svg.clientHeight || 320;
+
+                  img.onload = function () {
+                    var canvas = document.createElement('canvas');
+                    canvas.width = svgWidth * scale;
+                    canvas.height = svgHeight * scale;
+                    var ctx = canvas.getContext('2d');
+                    ctx.setTransform(scale, 0, 0, scale, 0, 0);
+                    ctx.fillStyle = '#050810';
+                    ctx.fillRect(0, 0, svgWidth, svgHeight);
+                    ctx.drawImage(img, 0, 0, svgWidth, svgHeight);
+                    URL.revokeObjectURL(url);
+                    canvas.toBlob(function (pngBlob) {
+                      if (!pngBlob) return;
+                      var a = document.createElement('a');
+                      a.href = URL.createObjectURL(pngBlob);
+                      a.download = 'evolucao-grafico.png';
+                      document.body.appendChild(a);
+                      a.click();
+                      document.body.removeChild(a);
+                    }, 'image/png');
+                  };
+                  img.src = url;
+                }
+
+                if (btnExport) {
+                  btnExport.addEventListener('click', function () {
+                    // Se html2canvas ainda não estiver carregado, injeta script e exporta após carregar
+                    if (!window.html2canvas) {
+                      var script = document.createElement('script');
+                      script.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+                      script.onload = exportarGrafico;
+                      document.head.appendChild(script);
+                    } else {
+                      exportarGrafico();
+                    }
+                  });
+                }
+
+                // Botão Voltar: fecha a janela de evolução
+                if (btnVoltar) {
+                  btnVoltar.addEventListener('click', function () {
+                    window.close();
+                  });
+                }
+
+                // Exportar tabela em Excel (.xlsx) usando SheetJS (XLSX)
+                function exportarTabelaXlsx() {
+                  var tabela = document.querySelector('#tab-tabela .gaso-table');
+                  if (!tabela || !window.XLSX) return;
+                  // Converte a tabela HTML em workbook
+                  var wb = window.XLSX.utils.table_to_book(tabela, { sheet: 'Evolucao' });
+                  // Ajusta largura automática básica
+                  var ws = wb.Sheets['Evolucao'];
+                  if (ws) {
+                    var range = window.XLSX.utils.decode_range(ws['!ref']);
+                    var cols = [];
+                    for (var C = range.s.c; C <= range.e.c; ++C) {
+                      var maxWidth = 10;
+                      for (var R = range.s.r; R <= range.e.r; ++R) {
+                        var cellAddress = window.XLSX.utils.encode_cell({ r: R, c: C });
+                        var cell = ws[cellAddress];
+                        if (cell && cell.v != null) {
+                          var len = String(cell.v).length;
+                          if (len > maxWidth) maxWidth = len;
+                        }
+                      }
+                      cols.push({ wch: maxWidth + 2 });
+                    }
+                    ws['!cols'] = cols;
+                  }
+                  // Gera e baixa o arquivo .xlsx
+                  var wbout = window.XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+                  var blob = new Blob([wbout], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                  var url = URL.createObjectURL(blob);
+                  var a = document.createElement('a');
+                  a.href = url;
+                  a.download = 'evolucao-tabela.xlsx';
+                  document.body.appendChild(a);
+                  a.click();
+                  document.body.removeChild(a);
+                }
+
+                if (btnExportTabela) {
+                  btnExportTabela.addEventListener('click', function () {
+                    // Carrega SheetJS on demand se ainda não estiver disponível
+                    if (!window.XLSX) {
+                      var scriptXLSX = document.createElement('script');
+                      scriptXLSX.src = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+                      scriptXLSX.onload = exportarTabelaXlsx;
+                      document.head.appendChild(scriptXLSX);
+                    } else {
+                      exportarTabelaXlsx();
+                    }
+                  });
+                }
+
+                function desenharGraficoMulti() {
+                  function parseNum(x) {
+                    return parseFloat((x || '').toString().replace(',', '.'));
+                  }
+                  var selecionados = [];
+                  var checks = menu.querySelectorAll('input[type="checkbox"]:checked');
+                  checks.forEach(function(cb) {
+                    var conf = parametros.find(function(p) { return p.id === cb.value; });
+                    if (conf) selecionados.push(conf);
+                  });
+                  svg.innerHTML = '';
+                  if (!selecionados.length) return;
+
+                  // Monta pontos por parâmetro
+                  var seriesPorParam = {};
+                  selecionados.forEach(function(p) { seriesPorParam[p.id] = []; });
+
+                  series.forEach(function(reg) {
+                    if (!reg.t) return;
+                    var t = new Date(reg.t).getTime();
+                    var vReg = reg.valores || {};
+                    selecionados.forEach(function(p) {
+                      var raw = vReg[p.id];
+
+                      // Se não houver valor salvo para derivados selecionados, calcula a partir dos dados base
+                      if ((raw === undefined || raw === '') && p.id === 'CaO2') {
+                        var Hb = parseNum(vReg.Hb);
+                        var SaO2 = parseNum(vReg.SaO2);
+                        var PaO2 = parseNum(vReg.PaO2);
+                        if (![Hb, SaO2, PaO2].some(isNaN)) {
+                          raw = (Hb * 1.34 * SaO2 / 100) + (0.0031 * PaO2);
+                        }
+                      } else if ((raw === undefined || raw === '') && p.id === 'CvO2') {
+                        var Hb2 = parseNum(vReg.Hb);
+                        var SvO2 = parseNum(vReg.SvO2);
+                        var PvO2 = parseNum(vReg.PvO2);
+                        if (![Hb2, SvO2, PvO2].some(isNaN)) {
+                          raw = (Hb2 * 1.34 * SvO2 / 100) + (0.0031 * PvO2);
+                        }
+                      } else if ((raw === undefined || raw === '') && p.id === 'GapCO2') {
+                        var PaCO2 = parseNum(vReg.PaCO2);
+                        var PvCO2 = parseNum(vReg.PvCO2);
+                        if (![PaCO2, PvCO2].some(isNaN)) {
+                          raw = PvCO2 - PaCO2;
+                        }
+                      }
+
+                      var v = parseNum(raw);
+                      if (!isNaN(v)) {
+                        seriesPorParam[p.id].push({ t: t, v: v });
+                      }
+                    });
+                  });
+
+                  // Remove parâmetros sem pontos
+                  selecionados = selecionados.filter(function(p) {
+                    return (seriesPorParam[p.id] || []).length;
+                  });
+                  if (!selecionados.length) return;
+
+                  // Ordena por tempo e calcula ranges globais
+                  var todosPontos = [];
+                  selecionados.forEach(function(p) {
+                    seriesPorParam[p.id].sort(function(a,b){ return a.t - b.t; });
+                    todosPontos = todosPontos.concat(seriesPorParam[p.id]);
+                  });
+                  todosPontos.sort(function(a,b){ return a.t - b.t; });
+
+                  var tMin = todosPontos[0].t;
+                  var tMax = todosPontos[todosPontos.length - 1].t;
+                  if (tMax === tMin) tMax = tMin + 1;
+
+                  // Calcula intervalo vertical a partir dos próprios dados,
+                  // ajustando para que o valor máximo ocupe ~90% da altura do eixo Y
+                  var vDataMin = Infinity, vDataMax = -Infinity;
+                  selecionados.forEach(function(p) {
+                    var pts = seriesPorParam[p.id];
+                    pts.forEach(function(pt) {
+                      vDataMin = Math.min(vDataMin, pt.v);
+                      vDataMax = Math.max(vDataMax, pt.v);
+                    });
+                  });
+                  if (!isFinite(vDataMin) || !isFinite(vDataMax)) return;
+                  if (vDataMax === vDataMin) {
+                    vDataMax = vDataMin + 1;
+                  }
+                  var spanDados = vDataMax - vDataMin;
+                  // Limite inferior ~10% abaixo do menor valor, topo com folga menor para aproveitar melhor a área
+                  var vMin = vDataMin - spanDados * 0.10;
+                  var vMax = vDataMax + spanDados * 0.05;
+
+                  // Espaços laterais e verticais dinâmicos em função do tamanho do SVG
+                  var svgWidth = svg.clientWidth || 800;
+                  var svgHeight = svg.clientHeight || 320;
+                  var padX = Math.max(40, svgWidth * 0.06);       // margem esquerda
+                  var padRight = Math.max(24, svgWidth * 0.03);   // margem direita
+                  var padY = Math.max(24, svgHeight * 0.06);      // margem superior
+                  var padBottom = Math.max(30, svgHeight * 0.14); // margem inferior
+                  var w = svgWidth - padX - padRight;
+                  var h = svgHeight - padY - padBottom;
+
+                  function xScale(t) {
+                    return padX + ((t - tMin) / (tMax - tMin)) * w;
+                  }
+                  function yScale(v) {
+                    return padY + h - ((v - vMin) / (vMax - vMin)) * h;
+                  }
+
+                  // Eixos
+                  var eixoX = document.createElementNS('http://www.w3.org/2000/svg','line');
+                  eixoX.setAttribute('x1', padX);
+                  eixoX.setAttribute('y1', padY + h);
+                  eixoX.setAttribute('x2', padX + w);
+                  eixoX.setAttribute('y2', padY + h);
+                  eixoX.setAttribute('stroke', '#ffffff');
+                  eixoX.setAttribute('stroke-width', '1.5');
+                  svg.appendChild(eixoX);
+
+                  var eixoY = document.createElementNS('http://www.w3.org/2000/svg','line');
+                  eixoY.setAttribute('x1', padX);
+                  eixoY.setAttribute('y1', padY);
+                  eixoY.setAttribute('x2', padX);
+                  eixoY.setAttribute('y2', padY + h);
+                  eixoY.setAttribute('stroke', '#ffffff');
+                  eixoY.setAttribute('stroke-width', '1.5');
+                  svg.appendChild(eixoY);
+
+                  // Ticks em X: uma marca por data/hora real, alinhada com as bolinhas (texto na vertical)
+                  var temposUnicos = [];
+                  todosPontos.forEach(function(pt) {
+                    if (temposUnicos.indexOf(pt.t) === -1) temposUnicos.push(pt.t);
+                  });
+                  temposUnicos.sort(function(a, b) { return a - b; });
+                  var maxTicks = 10;
+                  var step = Math.max(1, Math.ceil(temposUnicos.length / maxTicks));
+                  for (var i = 0; i < temposUnicos.length; i += step) {
+                    var tTick = temposUnicos[i];
+                    var xTick = xScale(tTick);
+                    var lbl = document.createElementNS('http://www.w3.org/2000/svg','text');
+                    lbl.setAttribute('x', xTick);
+                    // posiciona logo abaixo do eixo X e gira o texto,
+                    // mas mantendo tudo dentro da área visível do SVG
+                    var yTick = padY + h + 10;
+                    lbl.setAttribute('y', yTick);
+                    lbl.setAttribute('fill', '#ffffff');
+                    lbl.setAttribute('font-size', '9');
+                    lbl.setAttribute('text-anchor', 'end');
+                    lbl.setAttribute('transform', 'rotate(-90 ' + xTick + ' ' + yTick + ')');
+                    lbl.textContent = new Date(tTick).toLocaleString('pt-BR',{
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      day: '2-digit',
+                      month: '2-digit'
+                    });
+                    svg.appendChild(lbl);
+                  }
+
+                  // Ticks numéricos no eixo Y
+                  var nTicksY = 5;
+                  for (var j = 0; j < nTicksY; j++) {
+                    var fracY = (nTicksY === 1) ? 0 : j / (nTicksY - 1);
+                    var vTick = vMin + (vMax - vMin) * fracY;
+                    var yTickPos = yScale(vTick);
+
+                    // Pequena marca horizontal
+                    var tickLine = document.createElementNS('http://www.w3.org/2000/svg','line');
+                    tickLine.setAttribute('x1', padX - 4);
+                    tickLine.setAttribute('y1', yTickPos);
+                    tickLine.setAttribute('x2', padX);
+                    tickLine.setAttribute('y2', yTickPos);
+                    tickLine.setAttribute('stroke', '#ffffff');
+                    tickLine.setAttribute('stroke-width', '1');
+                    svg.appendChild(tickLine);
+
+                    // Valor numérico
+                    var vLbl = document.createElementNS('http://www.w3.org/2000/svg','text');
+                    vLbl.setAttribute('x', padX - 6);
+                    vLbl.setAttribute('y', yTickPos + 3);
+                    vLbl.setAttribute('fill', '#ffffff');
+                    vLbl.setAttribute('font-size', '9');
+                    vLbl.setAttribute('text-anchor', 'end');
+                    vLbl.textContent = vTick.toFixed(1);
+                    svg.appendChild(vLbl);
+                  }
+
+                  // Paleta de cores
+                  var cores = ['#58a6ff','#3fb950','#f1c40f','#ff7b72','#a371f7','#2f81f7','#c9d1d9'];
+                  // Linhas, pontos e rótulos que acompanham cada linha
+                  selecionados.forEach(function(p, idx) {
+                    var cor = cores[idx % cores.length];
+                    var pts = seriesPorParam[p.id];
+                    if (!pts.length) return;
+
+                    var path = document.createElementNS('http://www.w3.org/2000/svg','path');
+                    var d = '';
+                    pts.forEach(function(pt, i) {
+                      var x = xScale(pt.t);
+                      var y = yScale(pt.v);
+                      d += (i === 0 ? 'M ' : ' L ') + x + ' ' + y;
+                    });
+                    path.setAttribute('d', d);
+                    path.setAttribute('fill', 'none');
+                    path.setAttribute('stroke', cor);
+                    path.setAttribute('stroke-width', '2');
+                    svg.appendChild(path);
+
+                    // Desenha pontos
+                    pts.forEach(function(pt) {
+                      var cx = xScale(pt.t);
+                      var cy = yScale(pt.v);
+                      var circ = document.createElementNS('http://www.w3.org/2000/svg','circle');
+                      circ.setAttribute('cx', cx);
+                      circ.setAttribute('cy', cy);
+                      circ.setAttribute('r', 3);
+                      circ.setAttribute('fill', cor);
+                      svg.appendChild(circ);
+                    });
+
+                    // Rótulo no último ponto da série, acompanhando a linha
+                    var ultimo = pts[pts.length - 1];
+                    var lx = xScale(ultimo.t) + 6;
+                    var ly = yScale(ultimo.v) - 4;
+                    var lbl = document.createElementNS('http://www.w3.org/2000/svg','text');
+                    lbl.setAttribute('x', lx);
+                    lbl.setAttribute('y', ly);
+                    lbl.setAttribute('fill', cor);
+                    lbl.setAttribute('font-size', '10');
+                    lbl.setAttribute('text-anchor', 'start');
+                    lbl.setAttribute('alignment-baseline', 'middle');
+                    lbl.textContent = p.label + (p.unidade ? ' (' + p.unidade + ')' : '');
+                    svg.appendChild(lbl);
+                  });
+                }
+
+                // Recalcula sempre que mudar seleção
+                menu.addEventListener('change', desenharGraficoMulti);
+                // Começa sem nada selecionado
+                svg.innerHTML = '';
+              }
+            })();
+          <\/script>
+        </body>
+        </html>
+      `);
+      win.document.close();
+    }
+
+    function calcAcidoBase() {
+      const PaCO2 = getNumber('PaCO2');
+      const HCO3 = getNumber('HCO3');
+      const Na = getNumber('Na');
+      const Cl = getNumber('Cl');
+      const pH = getNumber('pH');
+
+      if (isNaN(PaCO2)) {
+        setBox('HCO3_RespAcid_Aguda', 'HCO₃⁻ esperado — mEq/L');
+        setBox('HCO3_RespAcid_Cronica', 'HCO₃⁻ esperado — mEq/L');
+        setBox('HCO3_RespAlk_Aguda', 'HCO₃⁻ esperado — mEq/L');
+        setBox('HCO3_RespAlk_Cronica', 'HCO₃⁻ esperado — mEq/L');
+      } else {
+        const hco3AcidAguda = 24 + (PaCO2 - 40) / 10;
+        const hco3AcidCronica = 24 + 4 * (PaCO2 - 40) / 10;
+        const hco3AlkAguda = 24 - 2 * (40 - PaCO2) / 10;
+        const hco3AlkCronica = 24 - 5 * (40 - PaCO2) / 10;
+        const acidAgudaMin = (hco3AcidAguda - 2).toFixed(1);
+        const acidAgudaMax = (hco3AcidAguda + 2).toFixed(1);
+        const acidCronMin = (hco3AcidCronica - 2).toFixed(1);
+        const acidCronMax = (hco3AcidCronica + 2).toFixed(1);
+        const alkAgudaMin = (hco3AlkAguda - 2).toFixed(1);
+        const alkAgudaMax = (hco3AlkAguda + 2).toFixed(1);
+        const alkCronMin = (hco3AlkCronica - 2).toFixed(1);
+        const alkCronMax = (hco3AlkCronica + 2).toFixed(1);
+
+        setBox('HCO3_RespAcid_Aguda', `HCO₃⁻ esperado ${acidAgudaMin} – ${acidAgudaMax} mEq/L`);
+        setBox('HCO3_RespAcid_Cronica', `HCO₃⁻ esperado ${acidCronMin} – ${acidCronMax} mEq/L`);
+        setBox('HCO3_RespAlk_Aguda', `HCO₃⁻ esperado ${alkAgudaMin} – ${alkAgudaMax} mEq/L`);
+        setBox('HCO3_RespAlk_Cronica', `HCO₃⁻ esperado ${alkCronMin} – ${alkCronMax} mEq/L`);
+      }
+
+      if (isNaN(HCO3)) {
+        setBox('PaCO2_MetAcid', 'PaCO₂ esperado — mmHg');
+        setBox('PaCO2_MetAlk', 'PaCO₂ esperado — mmHg');
+      } else {
+        const PaCO2_metAcid = 1.5 * HCO3 + 8;
+        const PaCO2_metAlk = 0.7 * HCO3 + 20;
+        const metAcidMin = (PaCO2_metAcid - 2).toFixed(1);
+        const metAcidMax = (PaCO2_metAcid + 2).toFixed(1);
+        const metAlkMin = (PaCO2_metAlk - 5).toFixed(1);
+        const metAlkMax = (PaCO2_metAlk + 5).toFixed(1);
+
+        setBox('PaCO2_MetAcid', `PaCO₂ esperada ${metAcidMin} – ${metAcidMax} mmHg`);
+        setBox('PaCO2_MetAlk', `PaCO₂ esperada ${metAlkMin} – ${metAlkMax} mmHg`);
+      }
+
+      let anionGap = NaN;
+      let deltaRatio = NaN;
+      if (!isNaN(Na) && !isNaN(Cl) && !isNaN(HCO3)) {
+        anionGap = Na - (Cl + HCO3);
+        const deltaAG = anionGap - 12;
+        const deltaHCO3 = 24 - HCO3;
+        // Só avaliamos delta ratio quando há acidose metabólica de ânion gap aumentado
+        if (anionGap > 12 && Math.abs(deltaHCO3) > 1e-6) {
+          deltaRatio = deltaAG / deltaHCO3;
+        }
+      }
+
+      setBox('AnionGap', anionGap);
+      setBox('AnionGapResumo', anionGap);
+      setBox('DeltaRatio', deltaRatio);
+      setBox('DeltaResumo', deltaRatio);
+      setBoxRange('AnionGap', anionGap, 8, 12);
+      setBoxRange('DeltaRatio', deltaRatio, 1, 1.6);
+      avaliarDelta(anionGap, deltaRatio);
+
+      const retentor = isRetentorCO2();
+      atualizarDisturbioPrimarioBox(pH, PaCO2, HCO3, anionGap, deltaRatio, retentor);
+    }
+
+    inputIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('input', function() {
+        calcAcidoBase();
+        calcHemo();
+      });
+    });
+    const retentorSim = document.getElementById('RetentorCO2Sim');
+    const retentorNao = document.getElementById('RetentorCO2Nao');
+    if (retentorSim) retentorSim.addEventListener('change', () => {
+      if (retentorSim.checked && retentorNao) retentorNao.checked = false;
+      calcAcidoBase();
+      calcHemo();
+    });
+    if (retentorNao) retentorNao.addEventListener('change', () => {
+      if (retentorNao.checked && retentorSim) retentorSim.checked = false;
+      calcAcidoBase();
+      calcHemo();
+    });
+
+    const btnSalvar = document.getElementById('btnSalvarGaso');
+    const btnHistorico = document.getElementById('btnHistoricoGaso');
+    const modalSalvarExame = document.getElementById('modalSalvarExame');
+    const confirmarSalvarExame = document.getElementById('confirmarSalvarExame');
+    const cancelarSalvarExame = document.getElementById('cancelarSalvarExame');
+    const modalHistorico = document.getElementById('modalHistoricoGaso');
+    const listaHistoricoEl = document.getElementById('listaHistoricoGaso');
+    const fecharHistoricoGaso = document.getElementById('fecharHistoricoGaso');
+
+    function abrirModalSalvarExame() {
+      if (!modalSalvarExame) return;
+      const historico = lerHistorico();
+      const ultimo = historico[historico.length - 1];
+      const pacienteInput = document.getElementById('examePaciente');
+      const dataInput = document.getElementById('exameData');
+      const horaInput = document.getElementById('exameHora');
+
+      if (pacienteInput) {
+        pacienteInput.value = ultimo?.paciente || '';
+        pacienteInput.focus();
+        pacienteInput.select();
+      }
+      const agora = formatarDataParaInput(new Date());
+      if (dataInput) dataInput.value = agora.data;
+      if (horaInput) horaInput.value = agora.hora;
+
+      modalSalvarExame.style.display = 'flex';
+    }
+
+    function fecharModalSalvarExame() {
+      if (modalSalvarExame) modalSalvarExame.style.display = 'none';
+    }
+
+    function abrirModalHistorico() {
+      if (!modalHistorico || !listaHistoricoEl) return;
+
+      const historico = lerHistorico();
+      listaHistoricoEl.innerHTML = '';
+
+      if (!historico.length) {
+        const vazio = document.createElement('div');
+        vazio.className = 'history-item-meta';
+        vazio.textContent = 'Nenhum exame salvo ainda.';
+        listaHistoricoEl.appendChild(vazio);
+      } else {
+        const porPaciente = new Map();
+        historico.forEach((item, index) => {
+          const nomeNormalizado = (item.paciente || 'Paciente sem nome').trim() || 'Paciente sem nome';
+          if (!porPaciente.has(nomeNormalizado)) porPaciente.set(nomeNormalizado, []);
+          porPaciente.get(nomeNormalizado).push({ ...item, _index: index, _nome: nomeNormalizado });
+        });
+
+        const pacientes = Array.from(porPaciente.keys()).sort((a, b) =>
+          a.localeCompare(b, 'pt-BR', { sensitivity: 'base' })
+        );
+
+        pacientes.forEach(nome => {
+          const registros = porPaciente.get(nome);
+
+          const bloco = document.createElement('details');
+          bloco.className = 'history-patient';
+
+          const summary = document.createElement('summary');
+          summary.className = 'history-patient-header';
+
+          const spanNome = document.createElement('span');
+          spanNome.className = 'history-patient-name';
+          spanNome.textContent = nome;
+
+          const headerActions = document.createElement('div');
+          headerActions.className = 'history-actions-patient';
+
+          const btnEvolucao = document.createElement('button');
+          btnEvolucao.type = 'button';
+          btnEvolucao.className = 'history-evolution';
+          btnEvolucao.textContent = 'Ver evolução';
+          btnEvolucao.addEventListener('click', (e) => {
+            e.stopPropagation();
+            abrirEvolucaoPaciente(nome, registros);
+          });
+
+          const btnExcluirPaciente = document.createElement('button');
+          btnExcluirPaciente.type = 'button';
+          btnExcluirPaciente.className = 'history-delete';
+          btnExcluirPaciente.textContent = 'Excluir paciente';
+          btnExcluirPaciente.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const novaLista = lerHistorico().filter(item => {
+              const n = (item.paciente || 'Paciente sem nome').trim() || 'Paciente sem nome';
+              return n !== nome;
+            });
+            gravarHistorico(novaLista);
+            abrirModalHistorico();
+          });
+
+          headerActions.appendChild(btnEvolucao);
+          headerActions.appendChild(btnExcluirPaciente);
+
+          summary.appendChild(spanNome);
+          summary.appendChild(headerActions);
+
+          const examesWrap = document.createElement('div');
+          examesWrap.className = 'history-exams';
+
+          registros.forEach(reg => {
+            const linha = document.createElement('div');
+            linha.className = 'history-exam-row';
+
+            const texto = document.createElement('div');
+            texto.className = 'history-item-meta';
+            const dataLeg = formatarDataLegivel(reg.dataHora || reg.dataHoraISO);
+            texto.textContent = dataLeg || 'Sem data';
+
+            const actions = document.createElement('div');
+            actions.className = 'history-actions-exam';
+
+            const btnCarregar = document.createElement('button');
+            btnCarregar.type = 'button';
+            btnCarregar.className = 'history-load-exam';
+            btnCarregar.textContent = 'Carregar';
+            btnCarregar.addEventListener('click', (e) => {
+              e.stopPropagation();
+              aplicarValores(reg.valores || {});
+              fecharModalHistorico();
+            });
+
+            const btnExcluirExame = document.createElement('button');
+            btnExcluirExame.type = 'button';
+            btnExcluirExame.className = 'history-delete-exam';
+            btnExcluirExame.textContent = 'Excluir exame';
+            btnExcluirExame.addEventListener('click', (e) => {
+              e.stopPropagation();
+              const novaLista = lerHistorico().filter((item, idx) => idx !== reg._index);
+              gravarHistorico(novaLista);
+              abrirModalHistorico();
+            });
+
+            actions.appendChild(btnCarregar);
+            actions.appendChild(btnExcluirExame);
+
+            linha.appendChild(texto);
+            linha.appendChild(actions);
+            examesWrap.appendChild(linha);
+          });
+
+          bloco.appendChild(summary);
+          bloco.appendChild(examesWrap);
+          listaHistoricoEl.appendChild(bloco);
+        });
+      }
+
+      modalHistorico.style.display = 'flex';
+    }
+
+    function fecharModalHistorico() {
+      if (modalHistorico) modalHistorico.style.display = 'none';
+    }
+
+    if (btnSalvar) btnSalvar.addEventListener('click', abrirModalSalvarExame);
+    if (btnHistorico) btnHistorico.addEventListener('click', abrirModalHistorico);
+    if (confirmarSalvarExame) confirmarSalvarExame.addEventListener('click', salvarGasometria);
+    if (cancelarSalvarExame) cancelarSalvarExame.addEventListener('click', fecharModalSalvarExame);
+    if (modalSalvarExame) {
+      modalSalvarExame.addEventListener('click', (e) => {
+        if (e.target === modalSalvarExame) fecharModalSalvarExame();
+      });
+    }
+    if (fecharHistoricoGaso) fecharHistoricoGaso.addEventListener('click', fecharModalHistorico);
+    if (modalHistorico) {
+      modalHistorico.addEventListener('click', (e) => {
+        if (e.target === modalHistorico) fecharModalHistorico();
+      });
+    }
+
+    // Modal de compensação esperada
+    const modalComp = document.getElementById('modalCompensacao');
+    const btnComp = document.getElementById('btnCompensacao');
+    const fecharComp = document.getElementById('fecharCompensacao');
+    if (btnComp && modalComp) {
+      btnComp.addEventListener('click', () => {
+        modalComp.style.display = 'flex';
+      });
+    }
+    if (fecharComp && modalComp) {
+      fecharComp.addEventListener('click', () => {
+        modalComp.style.display = 'none';
+      });
+    }
+    if (modalComp) {
+      modalComp.addEventListener('click', (e) => {
+        if (e.target === modalComp) modalComp.style.display = 'none';
+      });
+    }
+
+  </script>
+
+  <!-- Script dos parâmetros hemodinâmicos (versão simplificada da calculadora original) -->
+  <script>
+    const hemoIds = ['Hb','SaO2','PaO2','SvO2','PvO2','PaCO2','PvCO2','CO','Altura','Peso'];
+    const hemoOutIds = ['CaO2','CvO2','DO2','DO2i','VO2','VO2i','TaxaExt','GapCO2','QR'];
+
+    function hemoGet(id) {
+      const el = document.getElementById(id);
+      if (!el) return NaN;
+      const v = parseFloat(el.value);
+      return isNaN(v) ? NaN : v;
+    }
+
+    function hemoSet(id, value) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.classList.remove('needs-co');
+      if (value === undefined || value !== value) {
+        el.textContent = '—';
+      } else if (typeof value === 'string') {
+        el.textContent = value;
+        if (value === 'Necessário DC') el.classList.add('needs-co');
+      } else {
+        el.textContent = value.toFixed(2);
+      }
+    }
+
+    function hemoSetResultStyle(id, state) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.classList.remove('normal', 'abnormal');
+      if (state === 'normal' || state === 'abnormal') el.classList.add(state);
+    }
+
+    function hemoSetInputRange(id, value, min, max, options) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.classList.remove('abnormal');
+      if (value !== value) return;
+      const onlyLow = options && options.onlyLow === true;
+      let abnormal = false;
+      if (onlyLow) abnormal = value < min;
+      else abnormal = value < min || value > max;
+      if (abnormal) el.classList.add('abnormal');
+    }
+
+    function calcHemo() {
+      const Hb = hemoGet('Hb'), SaO2 = hemoGet('SaO2'), PaO2 = hemoGet('PaO2');
+      const SvO2 = hemoGet('SvO2'), PvO2 = hemoGet('PvO2'), PaCO2 = hemoGet('PaCO2'), PvCO2 = hemoGet('PvCO2');
+      const CO = hemoGet('CO'), Altura = hemoGet('Altura'), Peso = hemoGet('Peso');
+
+      if ([Hb,SaO2,PaO2,SvO2,PvO2,PaCO2,PvCO2,Altura,Peso].some(isNaN)) {
+        hemoOutIds.forEach(id => { hemoSet(id, undefined); hemoSetResultStyle(id, null); });
+        return;
+      }
+
+      const BSA = 0.007184 * Math.pow(Peso, 0.425) * Math.pow(Altura, 0.725);
+      const CaO2 = (Hb * 1.34 * SaO2 / 100) + (0.0031 * PaO2);
+      const CvO2 = (Hb * 1.34 * SvO2 / 100) + (0.0031 * PvO2);
+      const GapCO2 = PvCO2 - PaCO2;
+      const Ca_vO2 = CaO2 - CvO2;
+      const QR = Ca_vO2 > 0 ? (PvCO2 - PaCO2) / Ca_vO2 : NaN;
+      const TaxaExt = CaO2 > 0 ? Ca_vO2 / CaO2 : NaN;
+
+      hemoSet('BSAResumo', BSA);
+      hemoSet('CaO2', CaO2);
+      hemoSet('CvO2', CvO2);
+      hemoSet('GapCO2', GapCO2);
+      hemoSet('QR', QR);
+      hemoSet('TaxaExt', TaxaExt);
+
+      hemoSetResultStyle('CaO2', CaO2 >= 17 ? 'normal' : 'abnormal');
+      hemoSetResultStyle('CvO2', null);
+      hemoSetResultStyle('GapCO2', !isNaN(GapCO2) ? (GapCO2 <= 6 ? 'normal' : 'abnormal') : null);
+      hemoSetResultStyle('QR', !isNaN(QR) ? (QR < 1.4 ? 'normal' : 'abnormal') : null);
+      hemoSetResultStyle('TaxaExt', !isNaN(TaxaExt) ? (TaxaExt >= 0.20 && TaxaExt <= 0.30 ? 'normal' : 'abnormal') : null);
+
+      if (isNaN(CO)) {
+        hemoSet('DO2', 'Necessário DC');
+        hemoSet('DO2i', 'Necessário DC');
+        hemoSet('VO2', 'Necessário DC');
+        hemoSet('VO2i', 'Necessário DC');
+
+        hemoSetResultStyle('DO2', null);
+        hemoSetResultStyle('DO2i', null);
+        hemoSetResultStyle('VO2', null);
+        hemoSetResultStyle('VO2i', null);
+      } else {
+        const DO2 = CaO2 * CO * 10;
+        const DO2i = DO2 / BSA;
+        const VO2 = (CaO2 - CvO2) * CO * 10;
+        const VO2i = VO2 / BSA;
+
+        hemoSet('DO2', DO2);
+        hemoSet('DO2i', DO2i);
+        hemoSet('VO2', VO2);
+        hemoSet('VO2i', VO2i);
+
+        hemoSetResultStyle('DO2', null);
+        hemoSetResultStyle('DO2i', DO2i > 500 ? 'normal' : 'abnormal');
+        hemoSetResultStyle('VO2', null);
+        hemoSetResultStyle('VO2i', !isNaN(VO2i) ? (VO2i >= 110 && VO2i <= 160 ? 'normal' : 'abnormal') : null);
+      }
+
+      hemoSetInputRange('PaCO2', PaCO2, 35, 45);
+      hemoSetInputRange('PaO2', PaO2, 60, Infinity, { onlyLow: true });
+    }
+
+    hemoIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('input', () => {
+        el.dataset.userTouched = '1';
+        el.classList.add('user-edited');
+        calcAcidoBase();
+        calcHemo();
+      });
+    });
+
+    calcAcidoBase();
+    calcHemo();
+  </script>
+  <script src="analytics.js"></script>
+</body>
+</html>

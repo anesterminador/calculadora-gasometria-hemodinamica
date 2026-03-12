@@ -151,6 +151,20 @@
       border-color: var(--accent);
       box-shadow: 0 0 0 3px var(--accent-soft);
     }
+    /* Contorno azul nos botões-pai de dropdown (resumos dos <details>) e em botões principais isolados */
+    details.pocus-menu > summary.card-link,
+    .card-link.outline-blue {
+      border-color: var(--accent);
+    }
+    .card-link.highlight-green {
+      background: linear-gradient(135deg, #1c3b2b, #1a2a22);
+      border-color: #2ea043;
+      box-shadow: 0 0 0 1px rgba(46, 160, 67, 0.4);
+    }
+    .card-link.highlight-green:hover {
+      border-color: #3fb950;
+      box-shadow: 0 0 0 3px rgba(63, 185, 80, 0.35);
+    }
     /* Dropdown genérico (reuso do estilo POCUS para outras seções) */
     details.pocus-menu {
       margin: 0;
@@ -286,6 +300,8 @@
     </div>
 
     <nav class="card-list">
+      <a href="avaliacao-perioperatoria-integrada.html" class="card-link highlight-green">Avaliação Perioperatória Integrada</a>
+
       <!-- Gasometria -->
       <details class="pocus-menu">
         <summary class="card-link">Gasometria</summary>
@@ -319,7 +335,7 @@
           <a href="funcao-renal.html" class="card-link sub">Doença Renal Crônica</a>
         </div>
       </details>
-      <a href="obesidade.html" class="card-link">Obesidade</a>
+      <a href="obesidade.html" class="card-link outline-blue">Obesidade</a>
       <details class="pocus-menu">
         <summary class="card-link">Risco Pré-operatório</summary>
         <div class="pocus-sub">
@@ -368,6 +384,7 @@
   <script>
     (function() {
       var index = [
+        { label: 'Avaliação Perioperatória Integrada', url: 'avaliacao-perioperatoria-integrada.html', terms: 'gasometria combinada avaliação perioperatória integrada ácido básica hemodinâmica parâmetros' },
         { label: 'Gasometria · Parâmetros Hemodinâmicos', url: 'calculadora.html', terms: 'gasometria gases hemodinâmica parâmetros' },
         { label: 'Gasometria · Avaliação Ácido-Básica', url: 'gasometria-acido-base.html', terms: 'gasometria ácido básica acidose alcalose' },
         { label: 'Obesidade', url: 'obesidade.html', terms: 'obesidade IMC peso escalar' },

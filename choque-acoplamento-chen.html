@@ -96,6 +96,7 @@
       padding-top: 0.75rem;
       border-top: 1px solid var(--border);
       min-height: 3rem;
+      position: relative;
     }
     .result-block-content {
       flex: 1;
@@ -315,6 +316,7 @@
         <div class="result-block-content">
           <div class="result-row">
             <span class="name">Acoplamento ventrículo-arterial</span>
+            <button type="button" class="info-btn" id="vac-info-btn">?</button>
           </div>
           <div class="formula formula-eq">
             VAC = Ea/Ees
@@ -345,6 +347,8 @@
       var resultCoupling = document.getElementById('result-coupling');
       var infoBtn = document.getElementById('ees-info-btn');
       var infoPop = null;
+      var vacInfoBtn = document.getElementById('vac-info-btn');
+      var vacInfoPop = null;
 
       function toNumber(input) {
         var v = parseFloat(input.value);
@@ -475,6 +479,30 @@
         return infoPop;
       }
 
+      function buildVacInfoPop() {
+        if (vacInfoPop) return vacInfoPop;
+        vacInfoPop = document.createElement('div');
+        vacInfoPop.className = 'ees-info-pop';
+        vacInfoPop.innerHTML =
+          '<h3>Condutas com VAC, Ees e Ea</h3>' +
+          '<img src="vac-beat.png" alt="Ventriculo-arterial coupling e BEAT approach" style="width:100%;border-radius:8px;margin:0.25rem 0 0.55rem;">' +
+          '<p><span class="step-label">1) VAC (Ea/Ees)</span><br>' +
+          '• VAC perto de 1 (≈0,8–1,2): acoplamento adequado; ajuste de volume, vasopressores e inotrópicos guiado por eco, MAP, débito e lactato.<br>' +
+          '• VAC &gt; 1,4: desacoplamento (Ea &gt; Ees) – carga arterial “excessiva” para a contratilidade. Evite bolus de volume como principal intervenção; priorize correção de pós‑carga (vasodilatador/redução de vasopressor) e/ou suporte inotrópico conforme MAP.<br>' +
+          '• VAC &lt; 0,8: ventrículo relativamente “forte” para a carga arterial (Ees alto e/ou Ea baixo); se houver hipertensão ou alto débito, considere reduzir inotrópico ou pós‑carga.</p>' +
+          '<p><span class="step-label">2) Ees (elastância ventricular ao final da sístole)</span><br>' +
+          '• Ees &lt; 2 mmHg/mL: contratilidade deprimida → tendência a usar inotrópico (ex.: dobutamina), monitorando resposta eco‑hemodinâmica.<br>' +
+          '• Ees ≈ 2 mmHg/mL: contratilidade “alvo” do artigo; decisões focam mais em Ea e VAC.<br>' +
+          '• Ees &gt; 3–4 mmHg/mL: ventrículo mais rígido/hipercontrátil; cuidado com excesso de pós‑carga e de inotrópicos.</p>' +
+          '<p><span class="step-label">3) Ea (elastância arterial efetiva)</span><br>' +
+          '• Ea &gt; 2 mmHg/mL: pós‑carga elevada → em geral favorece vasodilatador ou redução de vasopressor (se MAP permitir).<br>' +
+          '• Ea &lt; 2 mmHg/mL: vasodilatação marcante → costuma requerer vasopressor para restaurar pressão de perfusão.<br>' +
+          '• Qualquer intervenção (volume, vasopressor, vasodilatador, inotrópico) deve ser seguida de nova medida de Ea, Ees e VAC.</p>' +
+          '<div class="ees-legend"><span class="step-label">Referência:</span><br>' +
+          'Adaptado do BEAT Approach (Guarracino et al., Minerva Anestesiol 2021); sempre integrar com exame clínico, eco, lactato e diurese.</div>';
+        return vacInfoPop;
+      }
+
       if (infoBtn) {
         infoBtn.addEventListener('click', function (event) {
           event.stopPropagation();
@@ -491,6 +519,27 @@
           if (!infoPop) return;
           if (!infoPop.contains(e.target) && e.target !== infoBtn && infoPop.parentElement) {
             infoPop.parentElement.removeChild(infoPop);
+          }
+        });
+      }
+
+      // botão de ajuda para VAC (Ea/Ees)
+      if (vacInfoBtn) {
+        vacInfoBtn.addEventListener('click', function (event) {
+          event.stopPropagation();
+          var pop = buildVacInfoPop();
+          var isVisible = pop.parentElement != null;
+          if (isVisible) {
+            pop.parentElement.removeChild(pop);
+          } else {
+            vacInfoBtn.closest('.result-block').appendChild(pop);
+          }
+        });
+
+        document.addEventListener('click', function (e) {
+          if (!vacInfoPop) return;
+          if (!vacInfoPop.contains(e.target) && e.target !== vacInfoBtn && vacInfoPop.parentElement) {
+            vacInfoPop.parentElement.removeChild(vacInfoPop);
           }
         });
       }

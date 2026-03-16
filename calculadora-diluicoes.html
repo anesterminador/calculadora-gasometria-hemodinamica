@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Calculadora de Diluições – Hemodinâmica</title>
+  <link rel="icon" href="icon-192.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f1419;
+      --bg-card: #1a2129;
+      --bg-input: #252d36;
+      --border: #2d3843;
+      --text: #e6edf3;
+      --text-muted: #8b9cad;
+      --accent: #58a6ff;
+      --accent-soft: rgba(88, 166, 255, 0.15);
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      min-height: 100vh;
+      background: var(--bg);
+      background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(88, 166, 255, 0.08), transparent);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 0 1rem 3rem;
+    }
+    .wrap { max-width: 520px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 1.25rem; }
+    .logo-link { display: block; text-decoration: none; transform: translateX(-3.3rem); }
+    .logo { max-width: 600px; height: auto; margin-bottom: 0.5rem; display: block; margin-left: auto; margin-right: auto; background: transparent; }
+    h1 { font-size: 1.5rem; font-weight: 700; color: var(--text); margin-bottom: 0.35rem; }
+    .subtitle { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+    section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1.4rem;
+      margin-bottom: 1rem;
+    }
+    section h2 { font-size: 1.05rem; font-weight: 700; color: var(--text); margin-bottom: 0.6rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border); }
+    section h2:not(:first-child) { margin-top: 1.25rem; }
+    section.entrada h2 { color: #E0B83A; border-bottom-color: rgba(224, 184, 58, 0.5); }
+    .row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
+    .row label { font-size: 0.9rem; color: var(--text); font-weight: 500; width: 12.5rem; flex-shrink: 0; }
+    .row .input-unit { display: inline-flex; align-items: center; gap: 0.35rem; flex-shrink: 0; min-width: 11rem; }
+    .row .input-unit input { width: 5.5rem; }
+    .row .input-unit select { min-width: 9rem; width: 9rem; }
+    .row input, .row select {
+      padding: 0.5rem 0.65rem;
+      background: var(--bg-input); border: 1px solid var(--border);
+      border-radius: 8px; font-size: 0.95rem; font-family: inherit;
+      color: var(--text);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .row input { text-align: right; }
+    .row select { cursor: pointer; }
+    .row input:focus, .row select:focus {
+      outline: none; border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--accent-soft);
+    }
+    .placeholder { color: var(--text-muted); font-size: 0.95rem; }
+    .recomendacao { font-size: 1rem; color: var(--text); line-height: 1.6; }
+    .recomendacao .rec-val { font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; }
+    .recomendacao.rec-msg { color: var(--text-muted); }
+    section.taxa-infusao h2 { color: #E0B83A; border-bottom-color: rgba(224, 184, 58, 0.5); }
+    .row-peso { display: none; }
+    .row-peso.visible { display: flex; }
+    footer { text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 1.5rem; opacity: 0.8; }
+    .footer-buttons { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; }
+    .footer-link {
+      display: inline-block; padding: 0.5rem 1.25rem;
+      background: var(--accent); color: #0f1419; font-weight: 700;
+      font-size: 0.9rem; text-decoration: none; border-radius: 8px;
+      transition: filter 0.2s, transform 0.15s;
+    }
+    .footer-link:hover { filter: brightness(1.15); transform: scale(1.03); }
+    .footer-link-share { background: #2ea043; color: #0f1419; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a href="index.html" class="logo-link">
+        <img src="Logo Hemodinâmica_regular.png" alt="Hemodinâmica" class="logo">
+      </a>
+      <h1>Calculadora de Infusão</h1>
+      <p class="subtitle">Concentração · Volume · Anest-Review</p>
+    </header>
+
+    <section class="entrada">
+      <h2>Dados de Entrada</h2>
+      <div class="row">
+        <label for="apresentacao-valor">Apresentação na ampola/frasco:</label>
+        <span class="input-unit">
+          <input type="number" id="apresentacao-valor" min="0" step="any" placeholder="ex: 10" inputmode="decimal">
+          <select id="apresentacao-unidade" aria-label="Unidade da apresentação">
+          <option value="mcg/ml">mcg/mL</option>
+          <option value="mg/ml" selected>mg/mL</option>
+          <option value="g/ml">g/mL</option>
+          <option value="mcg/l">mcg/L</option>          
+          <option value="mg/l">mg/L</option>
+          <option value="g/l">g/L</option>
+          <option value="percent">% (p/v)</option>
+          <option value="ui/ml">UI/mL</option>
+          </select>
+        </span>
+      </div>
+      <div class="row">
+        <label for="concentracao-valor">Concentração desejada:</label>
+        <span class="input-unit">
+          <input type="number" id="concentracao-valor" min="0" step="any" placeholder="ex: 1" inputmode="decimal">
+          <select id="concentracao-unidade" aria-label="Unidade da concentração desejada">
+            <option value="mcg/ml">mcg/mL</option>
+            <option value="mg/ml">mg/mL</option>
+            <option value="g/ml">g/mL</option>
+            <option value="g/l">g/L</option>
+            <option value="mg/l">mg/L</option>
+            <option value="mcg/l">mcg/L</option>
+            <option value="percent">% (p/v)</option>
+            <option value="ui/ml">UI/mL</option>
+          </select>
+        </span>
+      </div>
+      <div class="row">
+        <label for="volume-valor">Volume total desejado:</label>
+        <span class="input-unit">
+          <input type="number" id="volume-valor" min="0" step="any" placeholder="ex: 20" inputmode="decimal">
+          <select id="volume-unidade" aria-label="Unidade do volume">
+            <option value="ml">mL</option>
+            <option value="l">L</option>
+          </select>
+        </span>
+      </div>
+      <h2>Recomendação</h2>
+      <p class="recomendacao rec-line">Diluir <span class="rec-val" id="rec-vol-med">—</span> mL do medicamento em <span class="rec-val" id="rec-vol-diluente">—</span> mL de diluente.</p>
+      <p class="recomendacao rec-msg" id="rec-msg" role="status" aria-live="polite" style="display: none; margin-top: 0.5rem; font-size: 0.85rem;"></p>
+    </section>
+
+    <section class="taxa-infusao">
+      <h2>Taxa de infusão</h2>
+      <div class="row">
+        <label for="taxa-valor">Taxa:</label>
+        <span class="input-unit">
+          <input type="number" id="taxa-valor" min="0" step="any" placeholder="ex: 10" inputmode="decimal">
+          <select id="taxa-unidade" aria-label="Unidade da taxa">
+            <option value="mcg_min">mcg/min</option>
+            <option value="mg_min">mg/min</option>
+            <option value="g_min">g/min</option>
+            <option value="mcg_h">mcg/h</option>
+            <option value="mg_h">mg/h</option>
+            <option value="g_h">g/h</option>
+            <option value="mcg_kg_min">mcg/kg/min</option>
+            <option value="mg_kg_min">mg/kg/min</option>
+            <option value="mcg_kg_h">mcg/kg/h</option>
+            <option value="mg_kg_h">mg/kg/h</option>
+            <option value="g_kg_min">g/kg/min</option>
+            <option value="g_kg_h">g/kg/h</option>
+            <option value="ui_min">UI/min</option>
+            <option value="ui_h">UI/h</option>
+            <option value="ui_kg_min">UI/kg/min</option>
+            <option value="ui_kg_h">UI/kg/h</option>
+          </select>
+        </span>
+      </div>
+      <div class="row row-peso" id="row-peso">
+        <label for="taxa-peso">Peso do paciente (kg):</label>
+        <span class="input-unit">
+          <input type="number" id="taxa-peso" min="0" step="0.1" placeholder="ex: 70" inputmode="decimal" aria-label="Peso em kg">
+        </span>
+      </div>
+      <h2>Recomendação</h2>
+      <p class="recomendacao">Infundir a <span class="rec-val" id="rec-ml-min">—</span> mL/min (<span class="rec-val" id="rec-ml-h">—</span> mL/h).</p>
+    </section>
+
+    <footer class="footer-buttons">
+      <a href="index.html" class="footer-link">Página Inicial</a>
+      <a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="footer-link">Contato</a>
+      <a href="#" class="footer-link footer-link-share">Compartilhar</a>
+    </footer>
+  </div>
+  <script>
+    (function() {
+      var shareLink = document.querySelector('.footer-link-share');
+      if (shareLink) {
+        shareLink.addEventListener('click', function(e) {
+          e.preventDefault();
+          var shareUrl = window.location.href;
+          var shareTitle = document.title || 'Calculadora de Diluições – Anest Review';
+          if (navigator.share) {
+            navigator.share({ title: shareTitle, url: shareUrl }).catch(function() {});
+          } else if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(shareUrl).then(function() { alert('Link copiado para a área de transferência.'); }, function() { alert('Copie este link:\n' + shareUrl); });
+          } else { alert('Copie este link:\n' + shareUrl); }
+        });
+      }
+    })();
+  </script>
+  <script>
+    (function() {
+      function toMassPerMl(val, unit) {
+        if (val == null || isNaN(val)) return NaN;
+        switch (unit) {
+          case 'mcg/ml': return val / 1000;
+          case 'mg/ml': return val;
+          case 'g/ml': return val * 1000;
+          case 'g/l': return val;
+          case 'mg/l': return val / 1000;
+          case 'mcg/l': return val / 1e6;
+          case 'percent': return val * 10;
+          default: return NaN;
+        }
+      }
+
+      function getConcentrationPerMl(val, unit) {
+        if (val == null || isNaN(val)) return null;
+        if (unit === 'ui/ml') return { value: val, type: 'ui' };
+        var mass = toMassPerMl(val, unit);
+        if (isNaN(mass)) return null;
+        return { value: mass, type: 'mass' };
+      }
+
+      function run() {
+        var apVal = document.getElementById('apresentacao-valor');
+        var apUn = document.getElementById('apresentacao-unidade');
+        var concVal = document.getElementById('concentracao-valor');
+        var concUn = document.getElementById('concentracao-unidade');
+        var volVal = document.getElementById('volume-valor');
+        var volUn = document.getElementById('volume-unidade');
+        var recMed = document.getElementById('rec-vol-med');
+        var recDil = document.getElementById('rec-vol-diluente');
+        var recMsg = document.getElementById('rec-msg');
+        if (!recMed || !recDil) return;
+
+        var vAp = parseFloat(apVal.value);
+        var vConc = parseFloat(concVal.value);
+        var vVol = parseFloat(volVal.value);
+        if (!apVal.value.trim() || !volVal.value.trim() || isNaN(vAp) || isNaN(vVol) || vAp <= 0 || vVol <= 0) {
+          recMed.textContent = '—';
+          recDil.textContent = '—';
+          if (recMsg) { recMsg.style.display = 'none'; recMsg.textContent = ''; }
+          return;
+        }
+        if (!concVal.value.trim() || isNaN(vConc) || vConc < 0) {
+          recMed.textContent = '—';
+          recDil.textContent = '—';
+          if (recMsg) { recMsg.style.display = 'none'; recMsg.textContent = ''; }
+          return;
+        }
+
+        var r1 = getConcentrationPerMl(vAp, apUn.value);
+        var r2 = getConcentrationPerMl(vConc, concUn.value);
+        if (!r1 || !r2 || r1.type !== r2.type) {
+          recMed.textContent = '—';
+          recDil.textContent = '—';
+          if (recMsg) {
+            recMsg.style.display = 'block';
+            recMsg.textContent = r1 && r2 ? 'Use a mesma família de unidades: ambas em UI/mL ou ambas em mg/mL (ou mcg/mL, g/L, etc.). UI e massa não são convertíveis sem fator do medicamento.' : '';
+          }
+          return;
+        }
+        if (recMsg) { recMsg.style.display = 'none'; recMsg.textContent = ''; }
+        var c1 = r1.value, c2 = r2.value;
+        var v2mL = volUn.value === 'l' ? vVol * 1000 : vVol;
+        if (c2 > c1) {
+          recMed.textContent = '—';
+          recDil.textContent = '—';
+          if (recMsg) { recMsg.style.display = 'none'; recMsg.textContent = ''; }
+          return;
+        }
+        if (c1 === 0) {
+          recMed.textContent = '—';
+          recDil.textContent = '—';
+          if (recMsg) { recMsg.style.display = 'none'; recMsg.textContent = ''; }
+          return;
+        }
+        var v1 = (c2 * v2mL) / c1;
+        var vDiluente = Math.max(0, v2mL - v1);
+        recMed.textContent = v1.toFixed(2).replace('.', ',');
+        recDil.textContent = vDiluente.toFixed(2).replace('.', ',');
+      }
+
+      function attach() {
+        var ids = ['apresentacao-valor', 'apresentacao-unidade', 'concentracao-valor', 'concentracao-unidade', 'volume-valor', 'volume-unidade'];
+        ids.forEach(function(id) {
+          var el = document.getElementById(id);
+          if (el) {
+            el.addEventListener('input', run);
+            el.addEventListener('change', run);
+          }
+        });
+        run();
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', attach);
+      } else {
+        attach();
+      }
+    })();
+  </script>
+  <script>
+    (function() {
+      var taxaUn = document.getElementById('taxa-unidade');
+      var rowPeso = document.getElementById('row-peso');
+      function togglePeso() {
+        if (!taxaUn || !rowPeso) return;
+        var u = (taxaUn.value || '');
+        var precisaKg = u.indexOf('kg') !== -1;
+        if (precisaKg) rowPeso.classList.add('visible');
+        else rowPeso.classList.remove('visible');
+      }
+
+      function taxaParaMgMin(taxa, peso, unidade) {
+        var mgMin = 0;
+        switch (unidade) {
+          case 'mcg_min': mgMin = taxa / 1000; break;
+          case 'mg_min': mgMin = taxa; break;
+          case 'g_min': mgMin = taxa * 1000; break;
+          case 'mcg_h': mgMin = (taxa / 1000) / 60; break;
+          case 'mg_h': mgMin = taxa / 60; break;
+          case 'g_h': mgMin = (taxa * 1000) / 60; break;
+          case 'mcg_kg_min': mgMin = (taxa * peso) / 1000; break;
+          case 'mg_kg_min': mgMin = taxa * peso; break;
+          case 'mcg_kg_h': mgMin = (taxa * peso / 1000) / 60; break;
+          case 'mg_kg_h': mgMin = (taxa * peso) / 60; break;
+          case 'g_kg_min': mgMin = taxa * peso * 1000; break;
+          case 'g_kg_h': mgMin = (taxa * peso * 1000) / 60; break;
+          default: return NaN;
+        }
+        return mgMin;
+      }
+
+      function taxaParaUiMin(taxa, peso, unidade) {
+        switch (unidade) {
+          case 'ui_min': return taxa;
+          case 'ui_h': return taxa / 60;
+          case 'ui_kg_min': return taxa * peso;
+          case 'ui_kg_h': return (taxa * peso) / 60;
+          default: return NaN;
+        }
+      }
+
+      function toMassPerMlTaxa(val, unit) {
+        if (val == null || isNaN(val)) return NaN;
+        switch (unit) {
+          case 'mcg/ml': return val / 1000;
+          case 'mg/ml': return val;
+          case 'g/ml': return val * 1000;
+          case 'g/l': return val;
+          case 'mg/l': return val / 1000;
+          case 'mcg/l': return val / 1e6;
+          case 'percent': return val * 10;
+          default: return NaN;
+        }
+      }
+
+      function getConcentrationPerMlTaxa(val, unit) {
+        if (val == null || isNaN(val)) return null;
+        if (unit === 'ui/ml') return { value: val, type: 'ui' };
+        var mass = toMassPerMlTaxa(val, unit);
+        if (isNaN(mass)) return null;
+        return { value: mass, type: 'mass' };
+      }
+
+      function isTaxaUi(u) {
+        return u === 'ui_min' || u === 'ui_h' || u === 'ui_kg_min' || u === 'ui_kg_h';
+      }
+
+      function isTaxaMass(u) {
+        return ['mcg_min','mg_min','g_min','mcg_h','mg_h','g_h','mcg_kg_min','mg_kg_min','mcg_kg_h','mg_kg_h','g_kg_min','g_kg_h'].indexOf(u) !== -1;
+      }
+
+      if (taxaUn) taxaUn.addEventListener('change', togglePeso);
+      togglePeso();
+
+      function atualizarTaxa() {
+        var recMlMin = document.getElementById('rec-ml-min');
+        var recMlH = document.getElementById('rec-ml-h');
+        var concVal = document.getElementById('concentracao-valor');
+        var concUn = document.getElementById('concentracao-unidade');
+        var taxaVal = document.getElementById('taxa-valor');
+        var taxaUn = document.getElementById('taxa-unidade');
+        var pesoEl = document.getElementById('taxa-peso');
+        if (!recMlMin || !recMlH) return;
+
+        var conc = getConcentrationPerMlTaxa(parseFloat(concVal.value), concUn.value);
+        var taxa = parseFloat(taxaVal.value);
+        var peso = pesoEl ? parseFloat(pesoEl.value) : 0;
+        var u = (taxaUn.value || '');
+
+        if (!conc || conc.value <= 0 || !taxaVal.value.trim() || isNaN(taxa) || taxa < 0) {
+          recMlMin.textContent = '—';
+          recMlH.textContent = '—';
+          return;
+        }
+        if (u.indexOf('kg') !== -1 && (!pesoEl || !pesoEl.value.trim() || isNaN(peso) || peso <= 0)) {
+          recMlMin.textContent = '—';
+          recMlH.textContent = '—';
+          return;
+        }
+
+        var ratePerMin;
+        if (conc.type === 'ui') {
+          if (!isTaxaUi(u)) {
+            recMlMin.textContent = '—';
+            recMlH.textContent = '—';
+            return;
+          }
+          ratePerMin = taxaParaUiMin(taxa, peso, u);
+        } else {
+          if (!isTaxaMass(u)) {
+            recMlMin.textContent = '—';
+            recMlH.textContent = '—';
+            return;
+          }
+          ratePerMin = taxaParaMgMin(taxa, peso, u);
+        }
+        if (isNaN(ratePerMin)) {
+          recMlMin.textContent = '—';
+          recMlH.textContent = '—';
+          return;
+        }
+
+        var mlMin = ratePerMin / conc.value;
+        var mlH = mlMin * 60;
+        recMlMin.textContent = mlMin.toFixed(2).replace('.', ',');
+        recMlH.textContent = mlH.toFixed(2).replace('.', ',');
+      }
+
+      ['taxa-valor', 'taxa-unidade', 'taxa-peso', 'concentracao-valor', 'concentracao-unidade'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) {
+          el.addEventListener('input', atualizarTaxa);
+          el.addEventListener('change', atualizarTaxa);
+        }
+      });
+      atualizarTaxa();
+    })();
+  </script>
+</body>
+</html>

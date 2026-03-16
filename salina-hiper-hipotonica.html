@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Salina Hipertônica – Hemodinâmica</title>
+  <link rel="icon" href="icon-192.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f1419;
+      --bg-card: #1a2129;
+      --border: #2d3843;
+      --text: #e6edf3;
+      --text-muted: #8b9cad;
+      --accent: #58a6ff;
+      --accent-soft: rgba(88, 166, 255, 0.15);
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      min-height: 100vh;
+      background: var(--bg);
+      background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(88, 166, 255, 0.08), transparent);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 0 1rem 3rem;
+    }
+    .wrap { max-width: 520px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 1.5rem; }
+    .logo-link { display: block; text-decoration: none; transform: translateX(-3.5rem); }
+    .logo {
+      max-width: 600px; height: auto; margin-bottom: 0.5rem;
+      display: block; margin-left: auto; margin-right: auto;
+      background: transparent;
+    }
+    h1 { font-size: 1.5rem; font-weight: 700; color: var(--text); margin-bottom: 0.35rem; }
+    .subtitle { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+    section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.35rem 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    section h2 {
+      font-size: 1.1rem; font-weight: 700;
+      color: var(--text); margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem; border-bottom: 1px solid var(--border);
+    }
+    section.entrada h2 { color: #E0B83A; border-bottom-color: rgba(224, 184, 58, 0.5); }
+    .row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
+    .row label { font-size: 0.9rem; color: var(--text); font-weight: 500; width: 12.5rem; flex-shrink: 0; }
+    .row .input-unit { display: inline-flex; align-items: center; gap: 0.35rem; flex-shrink: 0; min-width: 11rem; }
+    .row .input-unit input { width: 5.5rem; }
+    .row .input-unit select { min-width: 9rem; width: 9rem; }
+    .row input, .row select {
+      padding: 0.5rem 0.65rem;
+      background: #252d36; border: 1px solid var(--border);
+      border-radius: 8px; font-size: 0.95rem; font-family: inherit;
+      color: var(--text);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .row input { text-align: right; }
+    .row select { cursor: pointer; }
+    .row input:focus, .row select:focus {
+      outline: none; border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.15);
+    }
+    .recomendacao { font-size: 1rem; color: var(--text); line-height: 1.6; }
+    .recomendacao .rec-val { font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; }
+    .rec-msg { color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem; display: none; }
+    .rec-msg.visible { display: block; }
+    .placeholder { color: var(--text-muted); font-size: 0.95rem; }
+    footer { text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 2rem; opacity: 0.8; }
+    .footer-buttons { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; }
+    .footer-link {
+      display: inline-block; padding: 0.5rem 1.25rem;
+      background: var(--accent); color: #0f1419; font-weight: 700;
+      font-size: 0.9rem; text-decoration: none; border-radius: 8px;
+      transition: filter 0.2s, transform 0.15s;
+    }
+    .footer-link:hover { filter: brightness(1.15); transform: scale(1.03); }
+    .footer-link-share { background: #2ea043; color: #0f1419; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a href="index.html" class="logo-link">
+        <img src="Logo Hemodinâmica_regular.png" alt="Hemodinâmica" class="logo">
+      </a>
+      <h1>Salina Hipertônica</h1>
+      <p class="subtitle">Diluições e soluções · Anest-Review</p>
+    </header>
+
+    <section class="entrada">
+      <h2>Dados de entrada</h2>
+      <div class="row">
+        <label for="ampola-valor">Concentração de NaCl na ampola:</label>
+        <span class="input-unit">
+          <input type="number" id="ampola-valor" min="0" step="0.1" placeholder="ex: 10 ou 20" inputmode="decimal">
+          <select id="ampola-unidade" aria-label="Unidade da concentração na ampola">
+            <option value="percent">%</option>
+            <option value="meq_ml">mEq/mL</option>
+          </select>
+        </span>
+      </div>
+      <div class="row">
+        <label for="desejada-valor">Concentração desejada (solução final):</label>
+        <span class="input-unit">
+          <input type="number" id="desejada-valor" min="0" step="0.1" placeholder="ex: 0,9 ou 0,154" inputmode="decimal">
+          <select id="desejada-unidade" aria-label="Unidade da concentração desejada">
+            <option value="percent">%</option>
+            <option value="meq_ml">mEq/mL</option>
+          </select>
+        </span>
+      </div>
+      <div class="row">
+        <label for="diluente">Diluente:</label>
+        <span class="input-unit">
+          <select id="diluente" aria-label="Diluente">
+            <option value="agua">Água bidestilada</option>
+            <option value="nacl09">NaCl 0,9%</option>
+          </select>
+        </span>
+      </div>
+      <div class="row">
+        <label for="volume-total">Volume total desejado:</label>
+        <span class="input-unit">
+          <input type="number" id="volume-total" min="0" step="0.1" placeholder="ex: 100" inputmode="decimal">
+          <span style="font-size: 0.95rem; color: var(--text-muted);">mL</span>
+        </span>
+      </div>
+      <h2>Recomendação</h2>
+      <p class="recomendacao">Misturar <span class="rec-val" id="vol-concentrado">—</span> mL da solução da ampola (<span id="ampola-label">—</span>) com <span class="rec-val" id="vol-diluente">—</span> mL de <span id="nome-diluente">diluente</span>.</p>
+      <p class="rec-msg" id="rec-msg" role="status" aria-live="polite"></p>
+    </section>
+
+    <footer class="footer-buttons">
+      <a href="index.html" class="footer-link">Página Inicial</a>
+      <a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="footer-link">Contato</a>
+      <a href="#" class="footer-link footer-link-share">Compartilhar</a>
+    </footer>
+  </div>
+  <script>
+    (function() {
+      var shareLink = document.querySelector('.footer-link-share');
+      if (shareLink) {
+        shareLink.addEventListener('click', function(e) {
+          e.preventDefault();
+          var shareUrl = window.location.href;
+          var shareTitle = document.title || 'Salina hipertônica e hipotônica – Anest Review';
+          if (navigator.share) {
+            navigator.share({ title: shareTitle, url: shareUrl }).catch(function() {});
+          } else if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(shareUrl).then(function() { alert('Link copiado para a área de transferência.'); }, function() { alert('Copie este link:\n' + shareUrl); });
+          } else { alert('Copie este link:\n' + shareUrl); }
+        });
+      }
+    })();
+  </script>
+  <script>
+    (function() {
+      var PERCENT_TO_MEQ_ML = 0.1711;
+      var CONC_09_MEQ_ML = 0.9 * PERCENT_TO_MEQ_ML;
+
+      function concToMeqMl(val, unit) {
+        if (val == null || isNaN(val) || val < 0) return NaN;
+        if (unit === 'percent') return val * PERCENT_TO_MEQ_ML;
+        if (unit === 'meq_ml') return val;
+        return NaN;
+      }
+
+      function formatAmpolaLabel(val, unit) {
+        if (unit === 'percent') return val.toFixed(1).replace('.', ',') + '%';
+        return val.toFixed(2).replace('.', ',') + ' mEq/mL';
+      }
+
+      function update() {
+        var ampolaVal = document.getElementById('ampola-valor');
+        var ampolaUn = document.getElementById('ampola-unidade');
+        var desejadaVal = document.getElementById('desejada-valor');
+        var desejadaUn = document.getElementById('desejada-unidade');
+        var diluente = document.getElementById('diluente');
+        var volTotal = document.getElementById('volume-total');
+        var volConc = document.getElementById('vol-concentrado');
+        var volDil = document.getElementById('vol-diluente');
+        var nomeDil = document.getElementById('nome-diluente');
+        var ampolaLabel = document.getElementById('ampola-label');
+        var msg = document.getElementById('rec-msg');
+        if (!volConc || !volDil) return;
+
+        var cAmpola = concToMeqMl(parseFloat(ampolaVal.value), ampolaUn.value);
+        var cTarget = concToMeqMl(parseFloat(desejadaVal.value), desejadaUn.value);
+        var vTotal = parseFloat(volTotal.value);
+        var isAgua = diluente.value === 'agua';
+        var cDil = isAgua ? 0 : CONC_09_MEQ_ML;
+
+        if (nomeDil) nomeDil.textContent = isAgua ? 'água bidestilada' : 'NaCl 0,9%';
+        if (ampolaVal.value.trim() && !isNaN(parseFloat(ampolaVal.value))) {
+          if (ampolaLabel) ampolaLabel.textContent = formatAmpolaLabel(parseFloat(ampolaVal.value), ampolaUn.value);
+        } else if (ampolaLabel) ampolaLabel.textContent = '—';
+
+        if (!ampolaVal.value.trim() || isNaN(cAmpola) || cAmpola <= 0 || !desejadaVal.value.trim() || isNaN(cTarget) || !volTotal.value.trim() || isNaN(vTotal) || vTotal <= 0) {
+          volConc.textContent = '—';
+          volDil.textContent = '—';
+          if (ampolaLabel && (!ampolaVal.value.trim() || isNaN(cAmpola))) ampolaLabel.textContent = '—';
+          msg.classList.remove('visible');
+          msg.textContent = '';
+          return;
+        }
+
+        if (cTarget > cAmpola) {
+          volConc.textContent = '—';
+          volDil.textContent = '—';
+          msg.classList.add('visible');
+          msg.textContent = 'Concentração desejada maior que a da ampola. Use uma ampola mais concentrada ou reduza a concentração desejada.';
+          return;
+        }
+
+        if (cTarget < cDil) {
+          volConc.textContent = '—';
+          volDil.textContent = '—';
+          msg.classList.add('visible');
+          msg.textContent = 'Concentração desejada menor que o diluente. Para solução mais hipotônica, use água bidestilada como diluente.';
+          return;
+        }
+
+        if (Math.abs(cAmpola - cDil) < 1e-9) {
+          volConc.textContent = '—';
+          volDil.textContent = '—';
+          msg.classList.add('visible');
+          msg.textContent = 'Combinação inválida.';
+          return;
+        }
+
+        var vConc = vTotal * (cTarget - cDil) / (cAmpola - cDil);
+        var vDiluente = Math.max(0, vTotal - vConc);
+
+        if (vConc < 0 || vConc > vTotal) {
+          volConc.textContent = '—';
+          volDil.textContent = '—';
+          msg.classList.add('visible');
+          msg.textContent = 'Não foi possível calcular os volumes. Verifique os valores.';
+          return;
+        }
+
+        msg.classList.remove('visible');
+        msg.textContent = '';
+        volConc.textContent = vConc.toFixed(2).replace('.', ',');
+        volDil.textContent = vDiluente.toFixed(2).replace('.', ',');
+      }
+
+      ['ampola-valor', 'ampola-unidade', 'desejada-valor', 'desejada-unidade', 'diluente', 'volume-total'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) {
+          el.addEventListener('input', update);
+          el.addEventListener('change', update);
+        }
+      });
+      update();
+    })();
+  </script>
+</body>
+</html>

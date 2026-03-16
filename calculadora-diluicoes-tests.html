@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Testes – Calculadora de Diluições</title>
+  <style>
+    body { font-family: system-ui, sans-serif; padding: 1rem 2rem; background: #1a1a1a; color: #e6edf3; }
+    h1 { font-size: 1.25rem; margin-bottom: 1rem; }
+    .suite { margin-bottom: 1.5rem; }
+    .suite h2 { font-size: 1rem; color: #E0B83A; margin-bottom: 0.5rem; }
+    .test { margin: 0.25rem 0; font-size: 0.9rem; }
+    .test.pass { color: #2ea043; }
+    .test.fail { color: #f85149; }
+    .test span { opacity: 0.9; }
+    #log { white-space: pre-wrap; font-size: 0.85rem; margin-top: 1rem; padding: 0.75rem; background: #0f1419; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <h1>Testes lógicos – Calculadora de Diluições</h1>
+  <div id="out"></div>
+  <div id="log"></div>
+  <script>
+    (function() {
+      var out = document.getElementById('out');
+      var logEl = document.getElementById('log');
+      var total = 0, passed = 0;
+
+      function toMassPerMl(val, unit) {
+        if (val == null || isNaN(val)) return NaN;
+        switch (unit) {
+          case 'mcg/ml': return val / 1000;
+          case 'mg/ml': return val;
+          case 'g/ml': return val * 1000;
+          case 'g/l': return val;
+          case 'mg/l': return val / 1000;
+          case 'mcg/l': return val / 1e6;
+          case 'percent': return val * 10;
+          default: return NaN;
+        }
+      }
+
+      function getConcentrationPerMl(val, unit) {
+        if (val == null || isNaN(val)) return null;
+        if (unit === 'ui/ml') return { value: val, type: 'ui' };
+        var mass = toMassPerMl(val, unit);
+        if (isNaN(mass)) return null;
+        return { value: mass, type: 'mass' };
+      }
+
+      function taxaParaMgMin(taxa, peso, unidade) {
+        var mgMin = 0;
+        switch (unidade) {
+          case 'mcg_min': mgMin = taxa / 1000; break;
+          case 'mg_min': mgMin = taxa; break;
+          case 'g_min': mgMin = taxa * 1000; break;
+          case 'mcg_h': mgMin = (taxa / 1000) / 60; break;
+          case 'mg_h': mgMin = taxa / 60; break;
+          case 'g_h': mgMin = (taxa * 1000) / 60; break;
+          case 'mcg_kg_min': mgMin = (taxa * peso) / 1000; break;
+          case 'mg_kg_min': mgMin = taxa * peso; break;
+          case 'mcg_kg_h': mgMin = (taxa * peso / 1000) / 60; break;
+          case 'mg_kg_h': mgMin = (taxa * peso) / 60; break;
+          case 'g_kg_min': mgMin = taxa * peso * 1000; break;
+          case 'g_kg_h': mgMin = (taxa * peso * 1000) / 60; break;
+          default: return NaN;
+        }
+        return mgMin;
+      }
+
+      function taxaParaUiMin(taxa, peso, unidade) {
+        switch (unidade) {
+          case 'ui_min': return taxa;
+          case 'ui_h': return taxa / 60;
+          case 'ui_kg_min': return taxa * peso;
+          case 'ui_kg_h': return (taxa * peso) / 60;
+          default: return NaN;
+        }
+      }
+
+      function isTaxaMass(u) {
+        return ['mcg_min','mg_min','g_min','mcg_h','mg_h','g_h','mcg_kg_min','mg_kg_min','mcg_kg_h','mg_kg_h','g_kg_min','g_kg_h'].indexOf(u) !== -1;
+      }
+
+      function isTaxaUi(u) {
+        return u === 'ui_min' || u === 'ui_h' || u === 'ui_kg_min' || u === 'ui_kg_h';
+      }
+
+      function assert(cond, msg) {
+        total++;
+        if (cond) { passed++; return true; }
+        return false;
+      }
+
+      function approx(a, b, tol) {
+        if (tol == null) tol = 1e-6;
+        return Math.abs(a - b) <= tol;
+      }
+
+      function runTest(name, fn) {
+        var ok = false;
+        try { ok = fn(); } catch (e) { logEl.textContent += 'ERRO: ' + name + ' — ' + e.message + '\n'; }
+        var div = document.createElement('div');
+        div.className = 'test ' + (ok ? 'pass' : 'fail');
+        div.innerHTML = (ok ? '✓' : '✗') + ' <span>' + name + '</span>';
+        out.appendChild(div);
+        return ok;
+      }
+
+      function section(title) {
+        var s = document.createElement('div');
+        s.className = 'suite';
+        s.innerHTML = '<h2>' + title + '</h2>';
+        out.appendChild(s);
+        return s;
+      }
+
+      function addToSection(sectionEl, name, fn) {
+        var wrap = document.createElement('div');
+        wrap.className = 'test-wrap';
+        sectionEl.appendChild(wrap);
+        var ok = false;
+        try { ok = fn(); } catch (e) { logEl.textContent += 'ERRO: ' + name + ' — ' + e.message + '\n'; }
+        total++;
+        if (ok) passed++;
+        var div = document.createElement('div');
+        div.className = 'test ' + (ok ? 'pass' : 'fail');
+        div.innerHTML = (ok ? '✓' : '✗') + ' <span>' + name + '</span>';
+        wrap.appendChild(div);
+      }
+
+      // —— Concentração → base (mg/mL ou UI/mL) ——
+      var s1 = section('Concentração: conversão para base (mg/mL ou UI/mL)');
+      addToSection(s1, '1000 mcg/mL → 1 mg/mL', function() {
+        return assert(approx(toMassPerMl(1000, 'mcg/ml'), 1));
+      });
+      addToSection(s1, '1 mg/mL → 1 mg/mL', function() {
+        return assert(approx(toMassPerMl(1, 'mg/ml'), 1));
+      });
+      addToSection(s1, '0.001 g/mL → 1 mg/mL', function() {
+        return assert(approx(toMassPerMl(0.001, 'g/ml'), 1));
+      });
+      addToSection(s1, '1 g/L → 1 mg/mL', function() {
+        return assert(approx(toMassPerMl(1, 'g/l'), 1));
+      });
+      addToSection(s1, '1000 mg/L → 1 mg/mL', function() {
+        return assert(approx(toMassPerMl(1000, 'mg/l'), 1));
+      });
+      addToSection(s1, '1e6 mcg/L → 1 mg/mL', function() {
+        return assert(approx(toMassPerMl(1e6, 'mcg/l'), 1));
+      });
+      addToSection(s1, '0.1% (p/v) → 1 mg/mL', function() {
+        return assert(approx(toMassPerMl(0.1, 'percent'), 1));
+      });
+      addToSection(s1, '5 UI/mL → type ui, value 5', function() {
+        var r = getConcentrationPerMl(5, 'ui/ml');
+        return r && r.type === 'ui' && r.value === 5;
+      });
+      addToSection(s1, '10% (p/v) → 100 mg/mL', function() {
+        return assert(approx(toMassPerMl(10, 'percent'), 100));
+      });
+
+      // —— Diluição: fórmula v1 = (c2 * v2) / c1 ——
+      var s2 = section('Diluição: volume de medicamento e diluente');
+      addToSection(s2, '10 mg/mL → 1 mg/mL em 100 mL: 10 mL med, 90 mL dil', function() {
+        var r1 = getConcentrationPerMl(10, 'mg/ml'), r2 = getConcentrationPerMl(1, 'mg/ml');
+        if (!r1 || !r2 || r1.type !== r2.type) return false;
+        var v1 = (r2.value * 100) / r1.value;
+        var vDil = 100 - v1;
+        return approx(v1, 10) && approx(vDil, 90);
+      });
+      addToSection(s2, '24 UI/mL → 0.1 UI/mL em 100 mL: ~0,42 mL med', function() {
+        var r1 = getConcentrationPerMl(24, 'ui/ml'), r2 = getConcentrationPerMl(0.1, 'ui/ml');
+        if (!r1 || !r2 || r1.type !== r2.type) return false;
+        var v1 = (r2.value * 100) / r1.value;
+        return approx(v1, 10/24, 0.01) && v1 > 0.4 && v1 < 0.43;
+      });
+      addToSection(s2, '24 UI/mL → 1 UI/mL em 100 mL: ~4,17 mL med', function() {
+        var r1 = getConcentrationPerMl(24, 'ui/ml'), r2 = getConcentrationPerMl(1, 'ui/ml');
+        if (!r1 || !r2 || r1.type !== r2.type) return false;
+        var v1 = (r2.value * 100) / r1.value;
+        return approx(v1, 100/24, 0.01) && v1 > 4.1 && v1 < 4.2;
+      });
+      addToSection(s2, '1 g/L → 0.5 mg/mL em 200 mL: 100 mL med, 100 mL dil', function() {
+        var r1 = getConcentrationPerMl(1, 'g/l'), r2 = getConcentrationPerMl(0.5, 'mg/ml');
+        if (!r1 || !r2 || r1.type !== r2.type) return false;
+        var v1 = (r2.value * 200) / r1.value;
+        var vDil = 200 - v1;
+        return approx(v1, 100) && approx(vDil, 100);
+      });
+      addToSection(s2, '2 mg/mL → 0.4 mg/mL em 50 mL: 10 mL med, 40 mL dil', function() {
+        var r1 = getConcentrationPerMl(2, 'mg/ml'), r2 = getConcentrationPerMl(0.4, 'mg/ml');
+        if (!r1 || !r2) return false;
+        var v1 = (r2.value * 50) / r1.value;
+        var vDil = 50 - v1;
+        return approx(v1, 10) && approx(vDil, 40);
+      });
+      addToSection(s2, 'Volume em L: 5 mg/mL → 1 mg/mL em 1 L: 200 mL med', function() {
+        var r1 = getConcentrationPerMl(5, 'mg/ml'), r2 = getConcentrationPerMl(1, 'mg/ml');
+        if (!r1 || !r2) return false;
+        var v2mL = 1000;
+        var v1 = (r2.value * v2mL) / r1.value;
+        return approx(v1, 200);
+      });
+      addToSection(s2, 'UI + massa: tipos diferentes → incompatível', function() {
+        var r1 = getConcentrationPerMl(20, 'ui/ml'), r2 = getConcentrationPerMl(0.1, 'mg/ml');
+        return r1 && r2 && r1.type !== r2.type;
+      });
+
+      // —— Taxa → mg/min ——
+      var s3 = section('Taxa de infusão: conversão para mg/min');
+      addToSection(s3, '1000 mcg/min → 1 mg/min', function() {
+        return assert(approx(taxaParaMgMin(1000, 70, 'mcg_min'), 1));
+      });
+      addToSection(s3, '2 mg/min → 2 mg/min', function() {
+        return assert(approx(taxaParaMgMin(2, 70, 'mg_min'), 2));
+      });
+      addToSection(s3, '0.001 g/min → 1 mg/min', function() {
+        return assert(approx(taxaParaMgMin(0.001, 70, 'g_min'), 1));
+      });
+      addToSection(s3, '60 mg/h → 1 mg/min', function() {
+        return assert(approx(taxaParaMgMin(60, 70, 'mg_h'), 1));
+      });
+      addToSection(s3, '60 g/h → 1000 mg/min', function() {
+        return assert(approx(taxaParaMgMin(60, 70, 'g_h'), 1000));
+      });
+      addToSection(s3, '1 mg/kg/min, 70 kg → 70 mg/min', function() {
+        return assert(approx(taxaParaMgMin(1, 70, 'mg_kg_min'), 70));
+      });
+      addToSection(s3, '1 mcg/kg/min, 70 kg → 0.07 mg/min', function() {
+        return assert(approx(taxaParaMgMin(1, 70, 'mcg_kg_min'), 0.07));
+      });
+      addToSection(s3, '120 mg/h → 2 mg/min', function() {
+        return assert(approx(taxaParaMgMin(120, 70, 'mg_h'), 2));
+      });
+
+      // —— Taxa → UI/min ——
+      var s4 = section('Taxa de infusão: conversão para UI/min');
+      addToSection(s4, '100 UI/min → 100 UI/min', function() {
+        return assert(approx(taxaParaUiMin(100, 70, 'ui_min'), 100));
+      });
+      addToSection(s4, '6000 UI/h → 100 UI/min', function() {
+        return assert(approx(taxaParaUiMin(6000, 70, 'ui_h'), 100));
+      });
+      addToSection(s4, '2 UI/kg/min, 50 kg → 100 UI/min', function() {
+        return assert(approx(taxaParaUiMin(2, 50, 'ui_kg_min'), 100));
+      });
+      addToSection(s4, '120 UI/kg/h, 50 kg → 100 UI/min', function() {
+        return assert(approx(taxaParaUiMin(120, 50, 'ui_kg_h'), 100));
+      });
+
+      // —— Recomendação mL/min e mL/h ——
+      var s5 = section('Recomendação: mL/min e mL/h a partir da concentração');
+      addToSection(s5, '10 mg/mL, 10 mg/min → 1 mL/min, 60 mL/h', function() {
+        var c = 10, rateMgMin = 10;
+        var mlMin = rateMgMin / c;
+        var mlH = mlMin * 60;
+        return approx(mlMin, 1) && approx(mlH, 60);
+      });
+      addToSection(s5, '5 UI/mL, 10 UI/min → 2 mL/min, 120 mL/h', function() {
+        var c = 5, rateUiMin = 10;
+        var mlMin = rateUiMin / c;
+        var mlH = mlMin * 60;
+        return approx(mlMin, 2) && approx(mlH, 120);
+      });
+      addToSection(s5, '1 mg/mL, 60 mg/h (=1 mg/min) → 1 mL/min, 60 mL/h', function() {
+        var c = 1, rateMgMin = 1;
+        var mlMin = rateMgMin / c;
+        return approx(mlMin, 1) && approx(mlMin * 60, 60);
+      });
+      addToSection(s5, '2 mg/mL, 1 g/h → 8,33 mL/min, 500 mL/h', function() {
+        var rateMgMin = (1000) / 60;
+        var mlMin = rateMgMin / 2;
+        var mlH = mlMin * 60;
+        return approx(mlMin, 1000/120, 0.01) && approx(mlH, 500);
+      });
+
+      // —— Classificação de unidade (mass vs UI) ——
+      var s6 = section('Classificação: isTaxaMass e isTaxaUi');
+      addToSection(s6, 'g_min e g_h são mass', function() {
+        return isTaxaMass('g_min') && isTaxaMass('g_h');
+      });
+      addToSection(s6, 'ui_min e ui_kg_h são UI', function() {
+        return isTaxaUi('ui_min') && isTaxaUi('ui_kg_h');
+      });
+      addToSection(s6, 'mg_min não é UI', function() {
+        return !isTaxaUi('mg_min');
+      });
+      addToSection(s6, 'ui_h não é mass', function() {
+        return !isTaxaMass('ui_h');
+      });
+
+      // —— Valores inválidos ——
+      var s7 = section('Valores inválidos');
+      addToSection(s7, 'toMassPerMl(NaN) → NaN', function() {
+        return isNaN(toMassPerMl(NaN, 'mg/ml'));
+      });
+      addToSection(s7, 'getConcentrationPerMl(0, "ui/ml") → { value: 0, type: "ui" }', function() {
+        var r = getConcentrationPerMl(0, 'ui/ml');
+        return r && r.type === 'ui' && r.value === 0;
+      });
+      addToSection(s7, 'Unidade desconhecida → null/NaN', function() {
+        var r = getConcentrationPerMl(1, 'xx');
+        var m = toMassPerMl(1, 'xx');
+        return r === null && isNaN(m);
+      });
+
+      // Resumo
+      var sum = document.createElement('div');
+      sum.className = 'suite';
+      sum.style.marginTop = '1.5rem';
+      sum.innerHTML = '<h2>Total: ' + passed + ' / ' + total + ' testes passaram</h2>';
+      out.appendChild(sum);
+      logEl.textContent = (passed === total ? 'Todos os testes passaram.' : (total - passed) + ' falha(s).') + '\n' + logEl.textContent;
+    })();
+  </script>
+</body>
+</html>

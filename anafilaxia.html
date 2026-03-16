@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Anafilaxia – Checklist de Conduta</title>
+  <link rel="icon" href="icon-192.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f1419;
+      --bg-card: #1a2129;
+      --border: #2d3843;
+      --text: #e6edf3;
+      --text-muted: #8b9cad;
+      --accent: #58a6ff;
+      --accent-soft: rgba(88, 166, 255, 0.15);
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      min-height: 100vh;
+      background: var(--bg);
+      background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(88, 166, 255, 0.08), transparent);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 0 1rem 3rem;
+      text-align: justify;
+    }
+    .wrap { max-width: 560px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 1.25rem; }
+    .logo-link { display: block; text-decoration: none; }
+    .logo {
+      max-width: 600px; height: auto; margin-bottom: 0.5rem;
+      display: block; margin-left: auto; margin-right: auto;
+      background: transparent;
+    }
+    h1 { font-size: 1.5rem; font-weight: 700; color: var(--text); margin-bottom: 0.35rem; }
+    .subtitle { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+    section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1.4rem;
+      margin-bottom: 1rem;
+    }
+    section h2 {
+      font-size: 1.05rem; font-weight: 700;
+      color: var(--text); margin-bottom: 0.6rem;
+      padding-bottom: 0.4rem; border-bottom: 1px solid var(--border);
+    }
+    .severity-table {
+      width: 100%; border-collapse: collapse; font-size: 0.9rem;
+    }
+    .severity-table th,
+    .severity-table td {
+      border: 1px solid var(--border);
+      padding: 0.6rem 0.75rem;
+      text-align: left;
+      vertical-align: top;
+    }
+    .severity-table th {
+      background: var(--bg);
+      color: var(--text);
+      font-weight: 600;
+    }
+    .severity-table td { color: var(--text-muted); text-align: justify; }
+    .severity-table .class-cell {
+      font-weight: 700;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+    .severity-table tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+    .ref { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.75rem; }
+    .tryptase-box { }
+    .tryptase-box .tryptase-title { font-size: 0.95rem; font-weight: 700; color: var(--text); background: var(--bg); padding: 0.5rem 0.75rem; margin: 0 -0.1rem 0.75rem -0.1rem; border-radius: 6px; }
+    .tryptase-box .tryptase-sub { font-size: 0.9rem; font-weight: 700; color: var(--accent); margin: 0.75rem 0 0.3rem; }
+    .tryptase-box .tryptase-sub:first-of-type { margin-top: 0; }
+    .tryptase-box p { font-size: 0.9rem; color: var(--text-muted); margin: 0 0 0.5rem; line-height: 1.55; text-align: justify; }
+    .tryptase-box .tryptase-def { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.75rem; font-style: italic; }
+    .conduct-box h3 {
+      font-size: 0.98rem; font-weight: 700; color: var(--accent);
+      margin: 1rem 0 0.5rem; padding-bottom: 0.3rem;
+    }
+    .conduct-box h3:first-child { margin-top: 0; }
+    .conduct-box ul { margin: 0.5rem 0 0; padding: 0; list-style: none; }
+    .conduct-box li {
+      margin-bottom: 0.85rem; padding: 0.65rem 0.85rem;
+      background: var(--bg); border-left: 3px solid #E0B83A;
+      border-radius: 0 6px 6px 0; font-size: 0.9rem;
+      line-height: 1.6; color: #fff;
+    }
+    .conduct-box li .conduct-line { display: block; margin-top: 0.4rem; }
+    .conduct-box li .conduct-line:first-child { margin-top: 0; }
+    .conduct-box li:last-child { margin-bottom: 0; }
+    .conduct-box li strong { color: #E0B83A; font-weight: 700; }
+    .conduct-box ul.manejo-agudo li { border-left-color: #2ea043; }
+    .conduct-box ul.manejo-agudo li strong { color: #2ea043; }
+    .conduct-box li.item-adrenalina span.conduct-line:first-child strong { color: #2ea043; }
+    .conduct-box li.item-adrenalina span.conduct-line:not(:first-child) strong { color: #b8e6bc; }
+    .conduct-box ul.refratarios li { border-left-color: #e8a8a8; }
+    .conduct-box ul.refratarios li strong { color: #f0a8a8; font-weight: 700; }
+    .conduct-box .sub-note { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem; }
+    .conduct-box .mini-calc { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.25rem; }
+    .conduct-box .mini-calc input {
+      width: 4rem; padding: 0.35rem 0.5rem;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 6px; font-size: 0.9rem; color: var(--text);
+    }
+    .conduct-box .mini-calc .result { font-weight: 700; color: var(--accent); }
+    .conduct-box .mini-calc { text-align: left; }
+    footer { text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 1.5rem; opacity: 0.8; }
+    .footer-buttons { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; }
+    .footer-link {
+      display: inline-block; padding: 0.5rem 1.25rem;
+      background: var(--accent); color: #0f1419; font-weight: 700;
+      font-size: 0.9rem; text-decoration: none; border-radius: 8px;
+      transition: filter 0.2s, transform 0.15s;
+    }
+    .footer-link:hover { filter: brightness(1.15); transform: scale(1.03); }
+    .footer-link-share { background: #2ea043; color: #0f1419; }
+    @media (max-width: 480px) {
+      .severity-table { font-size: 0.82rem; }
+      .severity-table th, .severity-table td { padding: 0.5rem 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a href="index.html" class="logo-link">
+        <img src="Logo Hemodinâmica_regular.png" alt="Hemodinâmica" class="logo">
+      </a>
+      <h1>Anafilaxia</h1>
+      <p class="subtitle">Checklist de conduta · Anest-Review</p>
+    </header>
+
+    <section>
+      <h2>Classificação de gravidade (reação de hipersensibilidade imediata)</h2>
+      <p style="font-size:0.9rem; color: var(--text-muted); margin-bottom:0.75rem;">Escala clínica de gravidade das reações de hipersensibilidade imediata (inclui anafilaxia).</p>
+      <table class="severity-table">
+        <thead>
+          <tr>
+            <th>Classe</th>
+            <th>Manifestações clínicas</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="class-cell">I</td>
+            <td>Sinais cutâneos generalizados: eritema, urticária com ou sem angioedema.</td>
+          </tr>
+          <tr>
+            <td class="class-cell">II</td>
+            <td>Envolvimento multiorgânico moderado: sinais cutâneos, hipotensão, taquicardia, hiperreatividade brônquica (tosse, comprometimento ventilatório).</td>
+          </tr>
+          <tr>
+            <td class="class-cell">III</td>
+            <td>Envolvimento multiorgânico grave, com risco de vida, exigindo tratamento específico: colapso, taquicardia ou bradicardia, arritmias cardíacas, broncoespasmo. Os sinais cutâneos podem estar ausentes ou aparecer apenas após recuperação da pressão arterial.</td>
+          </tr>
+          <tr>
+            <td class="class-cell">IV</td>
+            <td>Parada circulatória ou respiratória.</td>
+          </tr>
+          <tr>
+            <td class="class-cell">V</td>
+            <td>Óbito por ausência de resposta à reanimação cardiorrespiratória.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="ref">Kroigaard M, Garvey L, Gillberg L, et al. Scandinavian clinical practice guidelines on the diagnosis, management and follow-up of anaphylaxis during anaesthesia. Acta Anaesthesiol Scand. 2007 Jul;51(6):655-670.</p>
+    </section>
+
+    <section class="conduct-box">
+      <h2>Condutas</h2>
+
+      <h3>Manejo agudo</h3>
+      <ul class="manejo-agudo">
+        <li class="item-adrenalina">
+          <span class="conduct-line"><strong>Adrenalina:</strong> primeira e mais importante terapia; não há contraindicações absolutas — administrar imediatamente ao reconhecer a anafilaxia.</span>
+          <span class="conduct-line"><strong>Via:</strong> IM.</span>
+          <span class="conduct-line"><strong>Dose</strong> (ampola de 1 mg/mL): 0,01 mg/kg, máximo 0,5 mg por dose.</span>
+          <span class="conduct-line mini-calc">Peso (kg): <input type="number" id="adr-weight" min="1" max="300" step="0.1" placeholder="ex: 70"> → Volume: <span class="result" id="adr-volume">—</span> (solução 1 mg/mL)</span>
+          <span class="conduct-line"><strong>Repetir:</strong> se necessário, a cada 5 minutos, até 3 doses.</span>
+          <span class="conduct-line"><strong>Se persistir:</strong> Preparar adrenalina IV em infusão (ver “Sintomas refratários”).</span>
+        </li>
+        <li><strong>Via aérea:</strong> intubação precoce se houver evidência de obstrução iminente por angioedema.<br>
+          A intubação pode ser difícil — realizar pelo profissional mais experiente. Cricotomia pode ser necessária.</li>
+        <li><strong>Se hipotensão:</strong> posição de Trendelenburg (decúbito dorsal, pernas elevadas), se tolerado.</li>
+        <li><strong>Oxigênio:</strong> máscara com reservatório (não reinalante) a 15 L/min, ou máscaras de alto fluxo comerciais (≥70% a até 100% O₂), conforme necessário.</li>
+        <li><strong>Cristaloide</strong> (ex.: Ringer lactato ou salina) em bólus rápido: 2 acessos venosos de calibre largo.<br>
+          Má perfusão: infusão rápida de 20 mL/kg. Reavaliar e repetir bólus de 20 mL/kg conforme necessário.<br>
+          Monitorar diurese (grandes deslocamentos de volume podem ocorrer).</li>
+        <li><strong>Salbutamol (albuterol):</strong> para broncoespasmo refratário à adrenalina IM.<br>
+          2,5 mg inalado por nebulização. Diluir em salina se usar solução concentrada (≥0,5%). Repetir conforme necessário.</li>
+      </ul>
+
+      <h3>Terapias adjuvantes</h3>
+      <p class="sub-note">Para sintomas residuais após resposta adequada à adrenalina.</p>
+      <ul>
+        <li><strong>Antagonista H1:</strong> se prurido ou urticária residual.<br>
+          <strong>Cetirizina (preferida):</strong> <p></p>→ 6 meses–5 anos 2,5 mg IV; <p></p>→ 6–11 anos 5 ou 10 mg IV; administrar em 2 min.<br>
+          <strong>Difenidramina:</strong> <p></p>→ 1 mg/kg (máx. 50 mg) IV em 5 min.</li>
+        <li><strong>Antagonista H2:</strong>se prurido ou urticária residual.<p></p>→ Famotidina 0,25 mg/kg (máx. 20 mg) IV em ≥2 min.</li>
+        <li><strong>Glicocorticoide:</strong><p></p>se broncoespasmo residual ou quando forem necessárias mais de 2 doses de adrenalina IM/IV.<br>
+          <strong>Metilprednisolona:</strong><p></p>→ 1–2 mg/kg (máx. 125 mg) IV.<p></p><strong>Prednisolona:</strong><p></p>→ 1–2 mg/kg (máx. 60 mg) VO.</li>
+      </ul>
+
+      <h3>Tratamento de sintomas refratários</h3>
+      <ul class="refratarios">
+        <li><strong>Infusão de adrenalina:</strong><br>resposta inadequada à adrenalina IM e salina IV.<br>
+          Infusão contínua de adrenalina 0,1–1 µg/kg/min, titulando conforme efeito.</li>
+        <li><strong>Vasopressores:</strong><br>pode ser necessário grande volume de cristaloide para manter PAM.<br>
+          Alguns pacientes precisam de segundo vasopressor (além da adrenalina). Todos por bomba de infusão, doses tituladas conforme PA e função cardíaca. Monitorar SpO₂.</li>
+        <li><strong>Glucagon:</strong><br>pacientes em betabloqueadores que podem não responder à adrenalina.<br>
+          20–30 µg/kg (máx. 1 mg) IV em 5 min. Administração rápida pode causar vômito.</li>
+        <li><strong>Azul de metileno:</strong><br>bólus único 1–2 mg/kg em 20–60 min pode melhorar vasoplegia.</li>
+        <li><strong>ECMO:</strong><br>contato precoce com equipe de ECMO, se disponível. Para pacientes sem resposta às medidas de reanimação completas.</li>
+      </ul>
+      <p class="ref">Fonte (condutas): <a href="https://www.uptodate.com/contents/anaphylaxis-emergency-treatment?search=anafilaxia&amp;source=search_result&amp;selectedTitle=1~150&amp;usage_type=default&amp;display_rank=1" target="_blank" rel="noopener noreferrer" style="color:var(--accent);">UpToDate – Anaphylaxis: Emergency treatment</a>.</p>
+    </section>
+
+    <section class="tryptase-box">
+      <h2>Coleta  para dosagem de triptase (confirmar de anafilaxia)</h2>
+      <div class="tryptase-sub">Quando coletar a amostra:</div>
+      <p>Após um episódio de possível anafilaxia, sobretudo com sinais ou sintomas de hipotensão, a coleta deve ser feita entre <strong>30 minutos e 6 horas</strong> após o início dos sinais/sintomas, idealmente entre <strong>30 min e 2 h</strong>. <br>Para nível basal, pode-se usar sangue coletado antes do evento (ex.: soro ou plasma refrigerado ou congelado de outro exame) ou coletar amostra pelo menos <strong>24 h</strong> após resolução de todos os sinais e sintomas.</p>
+      <div class="tryptase-sub">Como coletar a amostra:</div>
+      <p>Coleta por técnica padrão. Usar tubo para soro (tampa vermelha) ou plasma (heparina, citrato ou EDTA). Mínimo de <strong>1 mL</strong> recomendado.</p>
+      <p>Em amostras post mortem, coletar da artéria ou veia femoral, não do coração.</p>
+      <div class="tryptase-sub">Como processar a amostra:</div>
+      <p>Soro ou plasma em gelo e congelar o mais rápido possível. Enviar congelado por transporte rápido se a dosagem não for feita no local. Se possível, amostra aguda e basal no mesmo ensaio para evitar variação entre ensaios; se amostras pareadas não estiverem disponíveis, pode-se usar amostra basal de outro momento.</p>
+      <p class="tryptase-def">EDTA: ácido etilenodiamino tetraacético.</p>
+    </section>
+
+    <footer class="footer-buttons">
+      <a href="index.html" class="footer-link">Página Inicial</a>
+      <a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="footer-link">Contato</a>
+      <a href="#" class="footer-link footer-link-share">Compartilhar</a>
+    </footer>
+  </div>
+  <script>
+    (function() {
+      var shareLink = document.querySelector('.footer-link-share');
+      if (shareLink) {
+        shareLink.addEventListener('click', function(e) {
+          e.preventDefault();
+          var shareUrl = window.location.href;
+          var shareTitle = document.title || 'Checklist Anafilaxia – Anest Review';
+          if (navigator.share) {
+            navigator.share({ title: shareTitle, url: shareUrl }).catch(function() {});
+          } else if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(shareUrl).then(function() {
+              alert('Link copiado para a área de transferência.');
+            }, function() {
+              alert('Copie este link:\n' + shareUrl);
+            });
+          } else {
+            alert('Copie este link:\n' + shareUrl);
+          }
+        });
+      }
+    })();
+  </script>
+  <script>
+    (function() {
+      var input = document.getElementById('adr-weight');
+      var result = document.getElementById('adr-volume');
+      if (!input || !result) return;
+      function update() {
+        var w = parseFloat(input.value);
+        if (!input.value.trim() || isNaN(w) || w <= 0) {
+          result.textContent = '—';
+          return;
+        }
+        var doseMg = Math.min(0.01 * w, 0.5);
+        var vol = Math.round(doseMg * 100) / 100;
+        result.textContent = vol + ' mL';
+      }
+      input.addEventListener('input', update);
+      input.addEventListener('change', update);
+    })();
+  </script>
+</body>
+</html>

@@ -165,6 +165,16 @@
       border-color: #3fb950;
       box-shadow: 0 0 0 3px rgba(63, 185, 80, 0.35);
     }
+    .card-link.outline-yellow,
+    details.pocus-menu > summary.card-link.outline-yellow {
+      border-color: #e6a700;
+      box-shadow: 0 0 0 1px rgba(230, 167, 0, 0.4);
+    }
+    .card-link.outline-yellow:hover,
+    details.pocus-menu > summary.card-link.outline-yellow:hover {
+      border-color: #f0b429;
+      box-shadow: 0 0 0 3px rgba(240, 180, 41, 0.35);
+    }
     /* Dropdown genérico (reuso do estilo POCUS para outras seções) */
     details.pocus-menu {
       margin: 0;
@@ -304,23 +314,34 @@
     </div>
 
     <nav class="card-list">
-      <a href="avaliacao-perioperatoria-integrada.html" class="card-link highlight-green">Avaliação Perioperatória Integrada</a>
-
-      <!-- Gasometria -->
       <details class="pocus-menu">
-        <summary class="card-link">Gasometria</summary>
+        <summary class="card-link">Alta da RPA</summary>
         <div class="pocus-sub">
-          <a href="gasometria-acido-base.html" class="card-link sub">Avaliação Ácido-Básica</a>
-          <a href="calculadora.html" class="card-link sub">Parâmetros Hemodinâmicos</a>
+          <a href="alta-rpa-aldrete.html" class="card-link sub">Aldrete e Kroulik</a>
+          <a href="alta-rpa-padss.html" class="card-link sub">Postanesthetic Discharge Scoring System<span class="card-subtitle">Escore de Chung</span></a>
         </div>
       </details>
-
+      <a href="avaliacao-perioperatoria-integrada.html" class="card-link highlight-green">Avaliação Perioperatória Integrada</a>
+      <details class="pocus-menu">
+        <summary class="card-link outline-blue">Calculadora de Diluições</summary>
+        <div class="pocus-sub">
+          <a href="calculadora-diluicoes.html" class="card-link sub">Calculadora de Infusão</a>
+          <a href="salina-hiper-hipotonica.html" class="card-link sub">Salina Hipertônica</a>
+        </div>
+      </details>
       <details class="pocus-menu">
         <summary class="card-link">Calculadoras POCUS</summary>
         <div class="pocus-sub">
           <a href="pocus-diafragma.html" class="card-link sub">Diafragma</a>
           <a href="pocus-gastrico.html" class="card-link sub">Volume Gástrico</a>
           <a href="pocus-vesical.html" class="card-link sub">Volume Vesical</a>
+        </div>
+      </details>
+      <details class="pocus-menu">
+        <summary class="card-link outline-yellow">Checklists de Conduta</summary>
+        <div class="pocus-sub">
+          <a href="anafilaxia.html" class="card-link sub">Anafilaxia</a>
+          <a href="intoxicacao-anestesico-local.html" class="card-link sub">Intoxicação por Anestésico Local</a>
         </div>
       </details>
       <details class="pocus-menu">
@@ -337,6 +358,13 @@
         <div class="pocus-sub">
           <a href="funcao-renal-aguda.html" class="card-link sub">Doença Renal Aguda</a>
           <a href="funcao-renal.html" class="card-link sub">Doença Renal Crônica</a>
+        </div>
+      </details>
+      <details class="pocus-menu">
+        <summary class="card-link">Gasometria</summary>
+        <div class="pocus-sub">
+          <a href="gasometria-acido-base.html" class="card-link sub">Avaliação Ácido-Básica</a>
+          <a href="calculadora.html" class="card-link sub">Parâmetros Hemodinâmicos</a>
         </div>
       </details>
       <a href="obesidade.html" class="card-link outline-blue">Obesidade</a>
@@ -369,13 +397,6 @@
           <a href="ventilacao-mp-pcv.html" class="card-link sub">Mechanical Power (PCV)</a>
           <a href="ventilacao-mp-vcv.html" class="card-link sub">Mechanical Power (VCV)</a>
           <a href="ventilacao-peso-predito.html" class="card-link sub">Peso Predito pela Altura</a>
-        </div>
-      </details>
-      <details class="pocus-menu">
-        <summary class="card-link">Alta da RPA</summary>
-        <div class="pocus-sub">
-          <a href="alta-rpa-aldrete.html" class="card-link sub">Aldrete e Kroulik</a>
-          <a href="alta-rpa-padss.html" class="card-link sub">Postanesthetic Discharge Scoring System<span class="card-subtitle">Escore de Chung</span></a>
         </div>
       </details>
     </nav>
@@ -411,6 +432,12 @@
 
       var index = [
         { label: 'Avaliação Perioperatória Integrada', url: 'avaliacao-perioperatoria-integrada.html', terms: 'gasometria combinada avaliação perioperatória integrada ácido básica hemodinâmica parâmetros' },
+        { label: 'Calculadora de Diluições', url: 'calculadora-diluicoes.html', terms: 'diluição diluições concentração volume solução' },
+        { label: 'Calculadora de Infusão', url: 'calculadora-diluicoes.html', terms: 'infusão taxa diluição concentração mL/min mL/h' },
+        { label: 'Salina hipertônica e hipotônica', url: 'salina-hiper-hipotonica.html', terms: 'salina hipertônica hipotônica soro concentração' },
+        { label: 'Checklists de Conduta', url: 'checklists-conduta.html', terms: 'checklist conduta protocolo guia' },
+        { label: 'Intoxicação por anestésico local', url: 'intoxicacao-anestesico-local.html', terms: 'intoxicação anestésico local LAST toxicidade lidocaína bupivacaína' },
+        { label: 'Anafilaxia', url: 'anafilaxia.html', terms: 'anafilaxia alergia hipersensibilidade reação imediata adrenalina' },
         { label: 'Gasometria · Parâmetros Hemodinâmicos', url: 'calculadora.html', terms: 'gasometria gases hemodinâmica parâmetros' },
         { label: 'Gasometria · Avaliação Ácido-Básica', url: 'gasometria-acido-base.html', terms: 'gasometria ácido básica acidose alcalose' },
         { label: 'Obesidade', url: 'obesidade.html', terms: 'obesidade IMC peso escalar' },

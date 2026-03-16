@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Calculadora POCUS – Veia Cava Inferior</title>
+  <link rel="icon" href="icon-192.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f1419;
+      --bg-card: #1a2129;
+      --border: #2d3843;
+      --text: #e6edf3;
+      --text-muted: #8b9cad;
+      --accent: #58a6ff;
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      min-height: 100vh;
+      background: var(--bg);
+      background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(88, 166, 255, 0.08), transparent);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 0 1rem 3rem;
+    }
+    .wrap { max-width: 520px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 1.5rem; }
+    .logo-link { display: block; text-decoration: none; }
+    .logo {
+      max-width: 600px; height: auto; margin-bottom: 0.5rem;
+      display: block; margin-left: auto; margin-right: auto;
+      background: transparent;
+    }
+    h1 { font-size: 1.5rem; font-weight: 700; color: var(--text); margin-bottom: 0.35rem; }
+    .subtitle { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+    section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.35rem 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    section h2 {
+      font-size: 1.1rem; font-weight: 700;
+      color: var(--text); margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem; border-bottom: 1px solid var(--border);
+    }
+    .vci-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1.4rem;
+      margin-bottom: 1.25rem;
+    }
+    .vci-box h3 {
+      font-size: 1rem; font-weight: 700;
+      color: #E0B83A;
+      margin-bottom: 0.85rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .vci-box .row {
+      display: flex; align-items: center; gap: 0.75rem;
+      margin-bottom: 0.65rem; flex-wrap: wrap;
+    }
+    .vci-box .row label { font-size: 0.9rem; color: var(--text); font-weight: 500; min-width: 6rem; }
+    .vci-box .row input {
+      width: 5rem; padding: 0.5rem 0.65rem;
+      background: #252d36; border: 1px solid var(--border);
+      border-radius: 8px; font-size: 0.95rem; font-family: inherit;
+      color: var(--text); text-align: right;
+    }
+    .vci-box .row input:focus {
+      outline: none; border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.15);
+    }
+    .vci-box .result-line {
+      margin-top: 0.85rem; padding-top: 0.75rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.95rem; color: var(--text);
+    }
+    .vci-box .result-line .val {
+      font-weight: 700; color: var(--accent);
+      font-variant-numeric: tabular-nums;
+    }
+    .pvc-help {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 1.1em; height: 1.1em; margin-left: 0.2rem;
+      border-radius: 50%; background: var(--border);
+      color: var(--text); font-size: 0.85rem; font-weight: 700;
+      text-decoration: none; cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .pvc-help:hover { background: var(--accent); color: #0f1419; }
+    .pvc-overlay {
+      display: none; position: fixed; inset: 0; z-index: 100;
+      background: rgba(0,0,0,0.6); align-items: center; justify-content: center;
+      padding: 1rem;
+    }
+    .pvc-overlay.open { display: flex; }
+    .pvc-modal {
+      background: #1a1a1a; border: 1px solid var(--border);
+      border-radius: 12px; max-width: 96%; max-height: 90vh;
+      overflow: auto; box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+    .pvc-modal h3 {
+      margin: 0; padding: 0.85rem 1rem;
+      background: #0f1419; color: #fff; font-size: 1rem;
+      text-align: center; border-radius: 12px 12px 0 0;
+    }
+    .pvc-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    .pvc-table th {
+      padding: 0.5rem 0.6rem; text-align: left;
+      background: #0f1419; color: #E0B83A; font-weight: 700;
+      border: 1px solid #333;
+    }
+    .pvc-table td { padding: 0.5rem 0.6rem; border: 1px solid #333; }
+    .pvc-table tr.pvc-row-normal td { background: #1e3a2a; color: #fff; }
+    .pvc-table tr.pvc-row-inter td { background: #3d3820; color: #fff; }
+    .pvc-table tr.pvc-row-alta td { background: #3d2520; color: #fff; }
+    .pvc-table .pvc-class-normal { color: #7dd3fc; }
+    .pvc-table .pvc-class-inter { color: #fde047; }
+    .pvc-table .pvc-class-alta { color: #fca5a5; }
+    .pvc-modal .pvc-close {
+      display: block; width: 100%; padding: 0.6rem;
+      margin-top: 0.5rem; background: var(--accent); color: #0f1419;
+      border: none; border-radius: 0 0 12px 12px;
+      font-weight: 700; cursor: pointer; font-size: 0.9rem;
+    }
+    .pvc-modal .pvc-close:hover { filter: brightness(1.1); }
+    .placeholder { color: var(--text-muted); font-size: 0.95rem; }
+    footer { text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 2rem; opacity: 0.8; }
+    .footer-buttons { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; }
+    .footer-link {
+      display: inline-block; padding: 0.5rem 1.25rem;
+      background: var(--accent); color: #0f1419; font-weight: 700;
+      font-size: 0.9rem; text-decoration: none; border-radius: 8px;
+      transition: filter 0.2s, transform 0.15s;
+    }
+    .footer-link:hover { filter: brightness(1.15); transform: scale(1.03); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a href="index.html" class="logo-link">
+        <img src="Logo Hemodinâmica_regular.png" alt="Hemodinâmica" class="logo">
+      </a>
+      <h1>Veia Cava Inferior</h1>
+      <p class="subtitle">Calculadora POCUS · Anest-Review</p>
+    </header>
+
+    <section>
+      <h2>Índices da VCI</h2>
+
+      <div class="vci-box">
+        <h3>Índice de Colapsibilidade (Ventilação Espontânea)</h3>
+        <p class="placeholder" style="margin-bottom: 0.85rem;">IC = (D<sub>max</sub> − D<sub>min</sub>) / D<sub>max</sub> × 100%.</p>
+        <div class="row">
+          <label for="colap-dmax">D<sub>max</sub> (mm):</label>
+          <input type="number" id="colap-dmax" min="0" step="0.1" placeholder="ex: 20" inputmode="decimal">
+        </div>
+        <div class="row">
+          <label for="colap-dmin">D<sub>min</sub> (mm):</label>
+          <input type="number" id="colap-dmin" min="0" step="0.1" placeholder="ex: 12" inputmode="decimal">
+        </div>
+        <div class="result-line">Índice de colapsibilidade: <span class="val" id="colap-result">—</span>%</div>
+        <div class="result-line">PVC estimada:<a href="#" class="pvc-help" id="pvc-help" aria-label="Ver tabela de estimativa da PVC">?</a> <span class="val" id="pvc-result">—</span></div>
+      </div>
+
+      <div class="vci-box">
+        <h3>Índice de Distensibilidade (Ventilação Mecânica)</h3>
+        <p class="placeholder" style="margin-bottom: 0.85rem;">dIVC = (D<sub>max</sub> − D<sub>min</sub>) / D<sub>min</sub> × 100%.</p>
+        <div class="row">
+          <label for="dist-dmax">D<sub>max</sub> (mm):</label>
+          <input type="number" id="dist-dmax" min="0" step="0.1" placeholder="ex: 18" inputmode="decimal">
+        </div>
+        <div class="row">
+          <label for="dist-dmin">D<sub>min</sub> (mm):</label>
+          <input type="number" id="dist-dmin" min="0" step="0.1" placeholder="ex: 14" inputmode="decimal">
+        </div>
+        <div class="result-line">Índice de distensibilidade: <span class="val" id="dist-result">—</span>%</div>
+      </div>
+    </section>
+
+    <footer class="footer-buttons">
+      <a href="index.html" class="footer-link">Página Inicial</a>
+      <a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="footer-link">Contato</a>
+    </footer>
+
+    <div class="pvc-overlay" id="pvc-overlay" aria-hidden="true">
+      <div class="pvc-modal">
+        <h3>ESTIMATIVA DA PVC</h3>
+        <table class="pvc-table">
+          <thead>
+            <tr>
+              <th>CLASSIFICAÇÃO</th>
+              <th>CRITÉRIOS</th>
+              <th>PRESSÃO ESTIMADA</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="pvc-row-normal">
+              <td class="pvc-class-normal">Normal</td>
+              <td>Diâmetro ≤ 2,1 cm e colapso &gt; 50% com o sniff</td>
+              <td>3 mmHg (faixa 0-5 mmHg)</td>
+            </tr>
+            <tr class="pvc-row-inter">
+              <td class="pvc-class-inter">Intermediária</td>
+              <td>Diâmetro &gt; 2,1 cm ou colapso &lt; 50% com o sniff</td>
+              <td>8 mmHg (5-10 mmHg)</td>
+            </tr>
+            <tr class="pvc-row-alta">
+              <td class="pvc-class-alta">Alta</td>
+              <td>Diâmetro &gt; 2,1 cm e colapso &lt; 50% com o sniff</td>
+              <td>15 mmHg (10-20 mmHg)</td>
+            </tr>
+          </tbody>
+        </table>
+        <button type="button" class="pvc-close" id="pvc-close">Fechar</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function() {
+      function updateColap() {
+        var dmax = parseFloat(document.getElementById('colap-dmax').value);
+        var dmin = parseFloat(document.getElementById('colap-dmin').value);
+        var el = document.getElementById('colap-result');
+        var pvcEl = document.getElementById('pvc-result');
+        if (!el) return;
+        if (isNaN(dmax) || isNaN(dmin) || dmax <= 0 || dmin < 0 || dmin > dmax) {
+          el.textContent = '—';
+          if (pvcEl) pvcEl.textContent = '—';
+          return;
+        }
+        var ic = ((dmax - dmin) / dmax) * 100;
+        el.textContent = ic.toFixed(1).replace('.', ',');
+        var diamCm = dmax / 10;
+        var pvcText;
+        if (diamCm > 2.1 && ic < 50) {
+          pvcText = '15 mmHg (faixa 10–20 mmHg) — Alta';
+        } else if (diamCm <= 2.1 && ic > 50) {
+          pvcText = '3 mmHg (faixa 0–5 mmHg) — Normal';
+        } else {
+          pvcText = '8 mmHg (faixa 5–10 mmHg) — Intermediária';
+        }
+        if (pvcEl) pvcEl.textContent = pvcText;
+      }
+      function updateDist() {
+        var dmax = parseFloat(document.getElementById('dist-dmax').value);
+        var dmin = parseFloat(document.getElementById('dist-dmin').value);
+        var el = document.getElementById('dist-result');
+        if (!el) return;
+        if (isNaN(dmax) || isNaN(dmin) || dmin <= 0 || dmax < dmin) {
+          el.textContent = '—';
+          return;
+        }
+        var divc = ((dmax - dmin) / dmin) * 100;
+        el.textContent = divc.toFixed(1).replace('.', ',');
+      }
+      ['colap-dmax', 'colap-dmin'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) { el.addEventListener('input', updateColap); el.addEventListener('change', updateColap); }
+      });
+      ['dist-dmax', 'dist-dmin'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) { el.addEventListener('input', updateDist); el.addEventListener('change', updateDist); }
+      });
+      updateColap();
+      updateDist();
+    })();
+  </script>
+  <script>
+    (function() {
+      var help = document.getElementById('pvc-help');
+      var overlay = document.getElementById('pvc-overlay');
+      var closeBtn = document.getElementById('pvc-close');
+      function openPopup(e) {
+        if (e) e.preventDefault();
+        if (overlay) { overlay.classList.add('open'); overlay.setAttribute('aria-hidden', 'false'); }
+      }
+      function closePopup() {
+        if (overlay) { overlay.classList.remove('open'); overlay.setAttribute('aria-hidden', 'true'); }
+      }
+      if (help) help.addEventListener('click', openPopup);
+      if (closeBtn) closeBtn.addEventListener('click', closePopup);
+      if (overlay) overlay.addEventListener('click', function(e) { if (e.target === overlay) closePopup(); });
+    })();
+  </script>
+</body>
+</html>

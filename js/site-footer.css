@@ -1,0 +1,48 @@
+.footer-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.footer-link {
+  display: inline-block;
+  padding: 0.5rem 1.25rem;
+  background: var(--accent, #58a6ff);
+  color: #0f1419;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: filter 0.2s, transform 0.15s;
+}
+
+.footer-link:hover {
+  filter: brightness(1.15);
+  transform: scale(1.03);
+}
+
+.footer-link-share {
+  background: #2ea043;
+  color: #0f1419;
+}
+
+.footer-link-instagram {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  line-height: 0;
+}
+
+.footer-link-instagram img {
+  display: block;
+  width: 42px;
+  height: 42px;
+  border-radius: 6px;
+  position: relative;
+  top: -0.03rem;
+}

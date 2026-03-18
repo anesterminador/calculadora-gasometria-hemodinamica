@@ -111,16 +111,8 @@
     ul.compact li { margin-bottom: 0.2rem; font-size: 0.9rem; color: var(--text-muted); }
     .ref { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.75rem; }
     footer { text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 1.5rem; opacity: 0.8; }
-    .footer-buttons { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; }
-    .footer-link {
-      display: inline-block; padding: 0.5rem 1.25rem;
-      background: var(--accent); color: #0f1419; font-weight: 700;
-      font-size: 0.9rem; text-decoration: none; border-radius: 8px;
-      transition: filter 0.2s, transform 0.15s;
-    }
-    .footer-link:hover { filter: brightness(1.15); transform: scale(1.03); }
-    .footer-link-share { background: #2ea043; color: #0f1419; }
-  </style>
+</style>
+  <link rel="stylesheet" href="js/site-footer.css">
 </head>
 <body>
   <div class="wrap">
@@ -231,35 +223,8 @@
 
     <p class="ref">Baseado em: Neal JM et al. American Society of Regional Anesthesia and Pain Medicine Local Anesthetic Systemic Toxicity checklist: 2020 version. Reg Anesth Pain Med 2021;46:81–82. ASRA Practice Advisory on LAST (2017). StatPearls – Local Anesthetic Toxicity. <a href="https://www.uptodate.com/contents/local-anesthetic-systemic-toxicity?search=last&amp;source=search_result&amp;selectedTitle=1~150&amp;usage_type=default&amp;display_rank=1" target="_blank" rel="noopener noreferrer" style="color:var(--accent);">UpToDate – Local anesthetic systemic toxicity</a>.</p>
 
-    <footer class="footer-buttons">
-      <a href="index.html" class="footer-link">Página Inicial</a>
-      <a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="footer-link">Contato</a>
-      <a href="#" class="footer-link footer-link-share">Compartilhar</a>
-    </footer>
+    <footer class="footer-buttons"></footer>
   </div>
-  <script>
-    (function() {
-      var shareLink = document.querySelector('.footer-link-share');
-      if (shareLink) {
-        shareLink.addEventListener('click', function(e) {
-          e.preventDefault();
-          var shareUrl = window.location.href;
-          var shareTitle = document.title || 'Checklist LAST – Anest Review';
-          if (navigator.share) {
-            navigator.share({ title: shareTitle, url: shareUrl }).catch(function() {});
-          } else if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(shareUrl).then(function() {
-              alert('Link copiado para a área de transferência.');
-            }, function() {
-              alert('Copie este link:\n' + shareUrl);
-            });
-          } else {
-            alert('Copie este link:\n' + shareUrl);
-          }
-        });
-      }
-    })();
-  </script>
   <script>
     (function() {
       var weightInput = document.getElementById('lipid-weight');
@@ -293,5 +258,6 @@
       weightInput.addEventListener('change', update);
     })();
   </script>
+  <script src="js/site-footer.js"></script>
 </body>
 </html>

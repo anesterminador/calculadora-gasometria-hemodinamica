@@ -37,11 +37,9 @@
     .dasi-interpretation.hidden { display: none; }
     .dasi-ref { font-size: 0.8rem; color: var(--text-muted); margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--border); text-align: justify; }
     footer { text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 0; opacity: 0.8; }
-    .footer-buttons { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; }
-    .footer-link { display: inline-block; padding: 0.5rem 1.25rem; background: var(--accent); color: #0f1419; font-weight: 700; font-size: 0.9rem; text-decoration: none; border-radius: 8px; transition: filter 0.2s, transform 0.15s; }
-    .footer-link:hover { filter: brightness(1.15); transform: scale(1.03); }
-    @media (max-width: 768px) { .logo { min-width: 240px; max-width: min(600px, calc(100vw - 2rem)); transform: translateX(0); } }
+@media (max-width: 768px) { .logo { min-width: 240px; max-width: min(600px, calc(100vw - 2rem)); transform: translateX(0); } }
   </style>
+  <link rel="stylesheet" href="js/site-footer.css">
 </head>
 <body>
   <div class="wrap">
@@ -151,11 +149,9 @@
       inputs.forEach(function(cb) { cb.addEventListener('change', update); });
       update();
     </script>
-    <footer class="footer-buttons">
-      <a href="index.html" class="footer-link">Todas as Calculadoras</a>
-      <a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="footer-link">Contato</a>
-    </footer>
+    <footer class="footer-buttons"></footer>
   </div>
   <script src="analytics.js"></script>
+  <script src="js/site-footer.js"></script>
 </body>
 </html>

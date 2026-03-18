@@ -211,32 +211,7 @@
       margin-top: 2rem;
       opacity: 0.8;
     }
-    .footer-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      justify-content: center;
-    }
-    .footer-link {
-      display: inline-block;
-      padding: 0.5rem 1.25rem;
-      background: var(--accent);
-      color: #0f1419;
-      font-weight: 700;
-      font-size: 0.9rem;
-      text-decoration: none;
-      border-radius: 8px;
-      transition: filter 0.2s, transform 0.15s;
-    }
-    .footer-link-share {
-      background: #2ea043;
-      color: #0f1419;
-    }
-    .footer-link:hover {
-      filter: brightness(1.15);
-      transform: scale(1.03);
-    }
-    .criteria-block {
+.criteria-block {
       margin-top: 0.75rem;
       padding: 0.9rem 1rem;
       background: var(--bg);
@@ -291,6 +266,7 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="js/site-footer.css">
 </head>
 <body>
   <div class="install-banner" id="install-banner">
@@ -402,110 +378,8 @@
       </details>
     </nav>
 
-    <footer class="footer-buttons">
-      <a href="index.html" class="footer-link">Página Inicial</a>
-      <a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="footer-link">Contato</a>
-      <a href="#" class="footer-link footer-link-share">Compartilhar</a>
-    </footer>
+    <footer class="footer-buttons"></footer>
   </div>
-  <script>
-    (function() {
-      // Compartilhar página atual
-      var shareLink = document.querySelector('.footer-link-share');
-      if (shareLink) {
-        shareLink.addEventListener('click', function(e) {
-          e.preventDefault();
-          var shareUrl = window.location.href;
-          var shareTitle = document.title || 'Calculadora Anest Review';
-          if (navigator.share) {
-            navigator.share({ title: shareTitle, url: shareUrl }).catch(function() {});
-          } else if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(shareUrl).then(function() {
-              alert('Link copiado para a área de transferência.');
-            }, function() {
-              alert('Copie este link:\n' + shareUrl);
-            });
-          } else {
-            alert('Copie este link:\n' + shareUrl);
-          }
-        });
-      }
-
-      var index = [
-        { label: 'Avaliação Perioperatória Integrada', url: 'avaliacao-perioperatoria-integrada.html', terms: 'gasometria combinada avaliação perioperatória integrada ácido básica hemodinâmica parâmetros' },
-        { label: 'Calculadora de Diluições', url: 'calculadora-diluicoes.html', terms: 'diluição diluições concentração volume solução' },
-        { label: 'Calculadora de Infusão', url: 'calculadora-diluicoes.html', terms: 'infusão taxa diluição concentração mL/min mL/h' },
-        { label: 'Salina hipertônica e hipotônica', url: 'salina-hiper-hipotonica.html', terms: 'salina hipertônica hipotônica soro concentração' },
-        { label: 'Checklists de Conduta', url: 'checklists-conduta.html', terms: 'checklist conduta protocolo guia' },
-        { label: 'Intoxicação por anestésico local', url: 'intoxicacao-anestesico-local.html', terms: 'intoxicação anestésico local LAST toxicidade lidocaína bupivacaína' },
-        { label: 'Anafilaxia', url: 'anafilaxia.html', terms: 'anafilaxia alergia hipersensibilidade reação imediata adrenalina' },
-        { label: 'Gasometria · Parâmetros Hemodinâmicos', url: 'calculadora.html', terms: 'gasometria gases hemodinâmica parâmetros' },
-        { label: 'Gasometria · Avaliação Ácido-Básica', url: 'gasometria-acido-base.html', terms: 'gasometria ácido básica acidose alcalose' },
-        { label: 'Obesidade', url: 'obesidade.html', terms: 'obesidade IMC peso escalar' },
-        { label: 'Apfel (internado)', url: 'apfel.html', terms: 'Apfel PONV náusea vômito pós-operatório' },
-        { label: 'Apfel (Risco de Náuseas Após a Alta)', url: 'apfel-alta.html', terms: 'Apfel PDNV náusea alta ambulatorial SRPA PACU' },
-        { label: 'Calculadoras POCUS · Diafragma', url: 'pocus-diafragma.html', terms: 'pocus diafragma' },
-        { label: 'Calculadoras POCUS · Volume Gástrico', url: 'pocus-gastrico.html', terms: 'pocus gástrico ASTAG' },
-        { label: 'Calculadoras POCUS · Veia Cava Inferior', url: 'pocus-veia-cava-inferior.html', terms: 'pocus VCI veia cava inferior ecografia' },
-        { label: 'Calculadoras POCUS · Volume Vesical', url: 'pocus-vesical.html', terms: 'pocus vesical bexiga' },
-        { label: 'Fluidos, choque e hemorragia · Acoplamento (Método de Chen, Single Beat)', url: 'choque-acoplamento-chen.html', terms: 'fluidos choque hemodinâmica acoplamento método Chen single beat' },
-        { label: 'Fluidos, choque e hemorragia · Maximal Allowable Blood Loss (Perda sanguínea máxima permitida)', url: 'choque-maximal-allowable-blood-loss.html', terms: 'fluidos choque hemorragia blood loss MABL perda sanguínea máxima permitida sangramento' },
-        { label: 'Fluidos, choque e hemorragia · Regra 4-2-1 de Holliday-Segar', url: 'fluidos-holliday-segar.html', terms: 'fluidos choque hemorragia Holliday Segar 4-2-1 manutenção hídrica pediátrico' },
-        { label: 'Fluidos, choque e hemorragia · Escore ABC', url: 'fluidos-abc-score.html', terms: 'fluidos choque hemorragia ABC score transfusão maciça trauma FAST PAS' },
-        { label: 'Função Renal · Doença Renal Aguda', url: 'funcao-renal-aguda.html', terms: 'renal aguda IRA KDIGO RIFLE AKIN' },
-        { label: 'Função Renal · Doença Renal Crônica', url: 'funcao-renal.html', terms: 'renal crônica CKD MDRD Cockcroft CKD-EPI TFG clearance' },
-        { label: 'Risco pré-operatório · ASA', url: 'risco-asa.html', terms: 'ASA risco' },
-        { label: 'Risco pré-operatório · RCRI / Índice de Lee', url: 'risco-rcri.html', terms: 'RCRI Lee índice de Lee cardíaco' },
-        { label: 'Risco pré-operatório · AUB-HAS2', url: 'risco-aub-has2.html', terms: 'AUB HAS2 cardiovascular' },
-        { label: 'Risco pré-operatório · ARISCAT', url: 'risco-ariscat.html', terms: 'ARISCAT respiratório pulmonar' },
-        { label: 'Risco pré-operatório · Fragilidade (Fried)', url: 'risco-fragilidade.html', terms: 'fragilidade Fried fenótipo' },
-        { label: 'Risco pré-operatório · DASI (Duke)', url: 'risco-dasi.html', terms: 'DASI Duke atividade' },
-        { label: 'Risco pré-operatório · Caprini (Tromboembolismo Venoso)', url: 'risco-caprini.html', terms: 'Caprini tromboembolismo venoso TEV DVT PE VTE risco' },
-        { label: 'Via Aérea · DIFFMASK', url: 'via-aerea-diffmask.html', terms: 'DIFFMASK máscara ventilação' },
-        { label: 'Via Aérea · El-Ganzouri', url: 'via-aerea-el-ganzouri.html', terms: 'El-Ganzouri intubação' },
-        { label: 'Via Aérea · LEMON', url: 'via-aerea-lemon.html', terms: 'LEMON intubação' },
-        { label: 'Via Aérea · Mórbido', url: 'via-aerea-morbido.html', terms: 'mórbido mnemônico ventilação' },
-        { label: 'Ventilação Mecânica · Peso Predito', url: 'ventilacao-peso-predito.html', terms: 'peso predito IBW ideal' },
-        { label: 'Ventilação Mecânica · Mechanical Power (VCV)', url: 'ventilacao-mp-vcv.html', terms: 'mechanical power VCV volume' },
-        { label: 'Ventilação Mecânica · Mechanical Power (PCV)', url: 'ventilacao-mp-pcv.html', terms: 'mechanical power PCV pressão' },
-        { label: 'Alta da RPA · Aldrete e Kroulik', url: 'alta-rpa-aldrete.html', terms: 'alta RPA SRPA PACU Aldrete Kroulik recuperação pós-anestésica alta' },
-        { label: 'Alta da RPA · PADSS (Chung)', url: 'alta-rpa-padss.html', terms: 'PADSS Chung alta pós-anestésica SRPA PACU postanesthetic discharge scoring system' }
-      ];
-      var input = document.getElementById('home-search');
-      var resultsEl = document.getElementById('search-results');
-      function normalize(s) { return (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
-      function match(q, item) {
-        var nq = normalize(q);
-        if (!nq) return false;
-        if (normalize(item.label).indexOf(nq) !== -1) return true;
-        var terms = (item.terms || '').toLowerCase();
-        return terms.split(/\s+/).some(function(t) { return t.indexOf(nq) !== -1 || nq.indexOf(t) !== -1; });
-      }
-      function render(list) {
-        if (!list.length) {
-          resultsEl.innerHTML = '<span style="display:block;padding:1rem;color:var(--text-muted);font-size:0.9rem;">Nenhum resultado.</span>';
-          resultsEl.removeAttribute('hidden');
-          return;
-        }
-        resultsEl.innerHTML = list.slice(0, 12).map(function(item) {
-          return '<a href="' + item.url + '">' + item.label + '</a>';
-        }).join('');
-        resultsEl.removeAttribute('hidden');
-      }
-      function onInput() {
-        var q = (input.value || '').trim();
-        if (q.length < 2) {
-          resultsEl.setAttribute('hidden', '');
-          return;
-        }
-        var list = index.filter(function(item) { return match(q, item); });
-        render(list);
-      }
-      input.addEventListener('input', onInput);
-      input.addEventListener('focus', function() { if (input.value.trim().length >= 2) onInput(); });
-      input.addEventListener('blur', function() { setTimeout(function() { resultsEl.setAttribute('hidden', ''); }, 180); });
-    })();
-  </script>
   <script>
     (function () {
       if (!('serviceWorker' in navigator)) return;
@@ -566,5 +440,6 @@
     }
   </script>
   <script src="analytics.js"></script>
+  <script src="js/site-footer.js"></script>
 </body>
 </html>

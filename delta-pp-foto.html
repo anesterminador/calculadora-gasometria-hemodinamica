@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ΔPP por Foto – Hemodinâmica</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f1419; --bg-card: #1a2129; --bg-input: #252d36; --border: #2d3843;
+      --text: #e6edf3; --text-muted: #8b9cad; --accent: #58a6ff; --accent-soft: rgba(88, 166, 255, 0.15);
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      min-height: 100vh;
+      background: var(--bg);
+      background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(88, 166, 255, 0.08), transparent);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 0rem 1rem 3rem;
+    }
+    .wrap { max-width: 520px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 0.75rem; }
+    .logo-link { display: block; text-decoration: none; }
+    .logo {
+      max-width: 600px; height: auto; margin-bottom: -2.5rem;
+      display: block; margin-left: auto; margin-right: auto;
+      background: transparent; transform: translateX(-3.2rem);
+      clip-path: inset(0 0 25 0);
+    }
+    h1 { font-size: 1.5rem; font-weight: 700; color: var(--text); margin-bottom: 0.35rem; }
+    .subtitle { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+    section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.35rem 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    section h2 {
+      font-size: 1.2rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      color: #ffd139;
+      margin-bottom: 0.4rem; padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+    }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 0.7rem 1rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg-input);
+      color: var(--text);
+      font-family: inherit; font-size: 0.95rem; font-weight: 600;
+      cursor: pointer;
+      transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+    }
+    .btn:hover, .btn:focus-visible {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--accent-soft);
+    }
+    .btn.primary {
+      background: var(--accent);
+      color: #0f1419;
+      border-color: var(--accent);
+    }
+    .btn.primary:hover { box-shadow: 0 0 0 3px var(--accent-soft); }
+    .btn[disabled] { opacity: 0.45; cursor: not-allowed; }
+    .upload-row {
+      display: flex; gap: 0.75rem;
+      margin: 0.75rem 0 0.5rem;
+      flex-wrap: wrap;
+    }
+    .upload-row .btn { flex: 1 1 130px; }
+    .canvas-wrap {
+      position: relative;
+      width: 100%;
+      margin: 0.75rem 0;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      background: #000;
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+      touch-action: none;
+      cursor: crosshair;
+    }
+    .step-controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .step-btn {
+      padding: 0.6rem 0.75rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg-input);
+      color: var(--text);
+      font-family: inherit; font-size: 0.85rem; font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+    }
+    .step-btn .step-num {
+      display: inline-block;
+      width: 1.25rem; height: 1.25rem; line-height: 1.25rem;
+      border-radius: 999px;
+      background: var(--bg);
+      color: var(--accent);
+      margin-right: 0.4rem;
+      font-size: 0.75rem;
+    }
+    .step-btn[data-done="true"] {
+      border-color: rgba(34, 197, 94, 0.5);
+      background: rgba(34, 197, 94, 0.08);
+    }
+    .step-btn[data-done="true"] .step-num {
+      background: rgba(34, 197, 94, 0.18);
+      color: #86efac;
+    }
+    .step-btn[data-active="true"] {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      box-shadow: 0 0 0 2px var(--accent-soft);
+    }
+    .step-btn.run { grid-column: 1 / -1; background: var(--accent); color: #0f1419; border-color: var(--accent); font-size: 0.95rem; padding: 0.75rem; }
+    .step-btn.run[disabled] { background: var(--bg-input); color: var(--text-muted); border-color: var(--border); cursor: not-allowed; box-shadow: none; }
+    .step-btn.reset { grid-column: 1 / -1; }
+    .hint { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem; text-align: justify; }
+    .hint strong { color: var(--text); }
+    details.optional {
+      margin-top: 0.75rem;
+      border: 1px dashed var(--border);
+      border-radius: 10px;
+      padding: 0.5rem 0.75rem;
+      background: var(--bg);
+    }
+    details.optional summary {
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    details.optional[open] summary { color: var(--accent); margin-bottom: 0.5rem; }
+    details.optional .opt-controls {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;
+    }
+    details.optional .opt-controls .step-btn {
+      padding: 0.5rem;
+      font-size: 0.8rem;
+    }
+    .result-block {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .result-block:last-of-type { border-bottom: none; }
+    .result-block .name { font-weight: 700; font-size: 0.95rem; }
+    .result-block .formula { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem; }
+    .result-block-content { flex: 1; min-width: 0; }
+    .result-box {
+      flex-shrink: 0; width: 110px;
+      padding: 0.5rem 0.65rem;
+      background: var(--bg-input); border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem; font-weight: 700; color: var(--accent);
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+    .result-box.responder { color: #fca5a5; border-color: rgba(239,68,68,0.5); background: rgba(239,68,68,0.12); }
+    .result-box.gray-zone { color: #fde68a; border-color: rgba(234,179,8,0.5); background: rgba(234,179,8,0.12); }
+    .result-box.non-responder { color: #86efac; border-color: rgba(34,197,94,0.5); background: rgba(34,197,94,0.12); }
+    .interpretation {
+      margin-top: 0.9rem;
+      padding: 0.85rem 1rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      font-size: 0.9rem;
+    }
+    .interpretation.responder { background: rgba(239,68,68,0.12); border-color: rgba(239,68,68,0.4); }
+    .interpretation.gray-zone { background: rgba(234,179,8,0.12); border-color: rgba(234,179,8,0.4); }
+    .interpretation.non-responder { background: rgba(34,197,94,0.10); border-color: rgba(34,197,94,0.35); }
+    .interpretation .label { font-weight: 700; margin-right: 0.35rem; }
+    .interpretation.responder .label { color: #fca5a5; }
+    .interpretation.gray-zone .label { color: #fde68a; }
+    .interpretation.non-responder .label { color: #86efac; }
+    .meta-line {
+      display: flex; justify-content: space-between; gap: 0.5rem;
+      font-size: 0.8rem; color: var(--text-muted);
+      margin-top: 0.5rem;
+    }
+    .warning {
+      margin-top: 0.6rem;
+      padding: 0.6rem 0.75rem;
+      background: rgba(234,179,8,0.10);
+      border: 1px solid rgba(234,179,8,0.4);
+      border-radius: 8px;
+      font-size: 0.85rem;
+      color: #fde68a;
+    }
+    .nav-link {
+      display: inline-block;
+      margin-top: 0.4rem;
+      font-size: 0.85rem;
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .nav-link:hover { text-decoration: underline; }
+    footer { text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 0; opacity: 0.8; }
+    @media (max-width: 768px) {
+      .logo {
+        min-width: 240px;
+        max-width: min(600px, calc(100vw - 2rem));
+        transform: translateX(0);
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="js/site-footer.css">
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="logo-link">
+        <img src="Logo Hemodinâmica_regular.png" alt="Hemodinâmica" class="logo">
+      </a>
+      <h1>ΔPP por Foto</h1>
+      <p class="subtitle">Variação da Pressão de Pulso a partir do traçado fotografado no monitor</p>
+      <a href="choque-delta-pp.html" class="nav-link">Versão com entrada manual de PAS/PAD →</a>
+    </header>
+
+    <section>
+      <h2>1. Foto do monitor</h2>
+      <p class="hint">Tire ou envie uma foto do traçado da <strong>pressão arterial invasiva</strong>. Inclua um trecho contínuo com vários ciclos cardíacos (5–10 segundos).</p>
+      <p class="hint" style="margin-top:0.45rem;"><strong>Por que não precisa calibrar a escala em mmHg?</strong> O ΔPP é uma razão entre amplitudes (ΔPP = 100 × [PP<sub>max</sub> − PP<sub>min</sub>] ÷ média), então o fator pixel→mmHg se cancela. Calibrar é <em>opcional</em>, apenas para também exibir PP<sub>max</sub>/PP<sub>min</sub> em mmHg.</p>
+      <div class="upload-row">
+        <button class="btn primary" id="btn-camera">Tirar foto</button>
+        <button class="btn" id="btn-gallery">Escolher imagem</button>
+      </div>
+      <input type="file" id="file-input-camera" accept="image/*" capture="environment" hidden>
+      <input type="file" id="file-input-gallery" accept="image/*" hidden>
+    </section>
+
+    <section id="step-process" hidden>
+      <h2>2. Marcar pontos</h2>
+      <div class="canvas-wrap">
+        <canvas id="canvas"></canvas>
+      </div>
+      <div class="step-controls">
+        <button class="step-btn" data-step="roi"><span class="step-num">1</span>Área do traçado</button>
+        <button class="step-btn" data-step="color"><span class="step-num">2</span>Cor da curva</button>
+        <button class="step-btn run" id="btn-run" disabled>Calcular ΔPP</button>
+        <button class="step-btn reset" id="btn-reset-marks">Recomeçar marcações</button>
+      </div>
+      <p class="hint" id="step-hint"><strong>Passo 1:</strong> toque o botão "Área do traçado" e marque dois cantos (sup. esq. e inf. dir.) da região com a curva da pressão arterial.</p>
+
+      <details class="optional">
+        <summary>Calibração opcional em mmHg (para também ver PP em mmHg)</summary>
+        <div style="margin-bottom: 0.45rem;">
+          <p class="hint" style="margin: 0 0 0.4rem;">Toque em dois pontos da escala vertical com valor conhecido. Não influencia o ΔPP, apenas converte PP<sub>max</sub>/PP<sub>min</sub> de pixels para mmHg.</p>
+        </div>
+        <div class="opt-controls">
+          <button class="step-btn" data-step="cal"><span class="step-num">+</span>Calibrar mmHg</button>
+          <button class="step-btn" id="btn-clear-cal">Limpar calibração</button>
+        </div>
+      </details>
+    </section>
+
+    <section id="step-result" hidden>
+      <h2>Resultado</h2>
+      <div class="result-block">
+        <div class="result-block-content">
+          <div class="name">ΔPP</div>
+          <div class="formula">100 × (PP<sub>max</sub> − PP<sub>min</sub>) / [(PP<sub>max</sub> + PP<sub>min</sub>) / 2]</div>
+        </div>
+        <div class="result-box" id="result-dpp">—</div>
+      </div>
+      <div class="result-block">
+        <div class="result-block-content">
+          <div class="name">Pressão de pulso máxima (PP<sub>max</sub>)</div>
+          <div class="formula" id="formula-pp-max">Maior amplitude PAS−PAD detectada na imagem.</div>
+        </div>
+        <div class="result-box" id="result-pp-max">—</div>
+      </div>
+      <div class="result-block">
+        <div class="result-block-content">
+          <div class="name">Pressão de pulso mínima (PP<sub>min</sub>)</div>
+          <div class="formula" id="formula-pp-min">Menor amplitude PAS−PAD detectada na imagem.</div>
+        </div>
+        <div class="result-box" id="result-pp-min">—</div>
+      </div>
+      <div class="interpretation" id="interpretation">
+        <span class="label">Interpretação:</span>
+        <span id="interpretation-text">—</span>
+      </div>
+      <div class="meta-line">
+        <span id="meta-cycles">Ciclos detectados: —</span>
+        <span id="meta-confidence">Confiança: —</span>
+      </div>
+      <div class="warning" id="result-warning" hidden></div>
+      <p class="hint" style="margin-top:0.9rem;">Os pontos detectados (sístoles em vermelho-claro, diástoles em verde-claro) e os ciclos com PP<sub>max</sub>/PP<sub>min</sub> ficam destacados sobre a foto. Revise visualmente. Se a detecção estiver errada, refine a área ou a cor amostrada — ou utilize a versão com entrada manual.</p>
+    </section>
+
+    <section>
+      <h2>Pré-requisitos clínicos</h2>
+      <p class="hint">Para que o ΔPP seja válido, o paciente deve estar em <strong>ventilação mecânica controlada</strong>, sem esforço espontâneo, com volume corrente ≥ 8 mL/kg, em ritmo sinusal e com tórax/abdome fechados. Em SDRA grave, hipertensão intra-abdominal ou disfunção ventricular direita, a confiabilidade é reduzida. Considere manobras complementares (tidal volume challenge, elevação passiva de membros, mini-bólus) em zona cinzenta.</p>
+    </section>
+
+    <footer class="footer-buttons"></footer>
+  </div>
+
+  <script>
+    (function () {
+      // --------- Estado ---------
+      var img = null;
+      var imgScale = 1;
+      var canvas = document.getElementById('canvas');
+      var ctx = canvas.getContext('2d', { willReadFrequently: true });
+      var hiddenCanvas = document.createElement('canvas');
+      var hiddenCtx = hiddenCanvas.getContext('2d', { willReadFrequently: true });
+
+      var state = {
+        roi: [],          // [{x, y}, {x, y}] em px da imagem
+        color: null,      // {r, g, b}
+        colorPoint: null, // {x, y}
+        cal: [],          // opcional: [{x, y, mmHg}, {x, y, mmHg}]
+        active: null,
+        result: null
+      };
+
+      var $ = function (id) { return document.getElementById(id); };
+      var stepHint = $('step-hint');
+      var stepProcess = $('step-process');
+      var stepResult = $('step-result');
+      var btnRun = $('btn-run');
+      var stepBtns = document.querySelectorAll('.step-btn[data-step]');
+
+      // --------- Upload ---------
+      $('btn-camera').addEventListener('click', function () { $('file-input-camera').click(); });
+      $('btn-gallery').addEventListener('click', function () { $('file-input-gallery').click(); });
+      $('file-input-camera').addEventListener('change', handleFile);
+      $('file-input-gallery').addEventListener('change', handleFile);
+
+      function handleFile(e) {
+        var file = e.target.files && e.target.files[0];
+        if (!file) return;
+        var reader = new FileReader();
+        reader.onload = function (ev) {
+          var im = new Image();
+          im.onload = function () {
+            img = im;
+            resetMarks();
+            stepProcess.hidden = false;
+            stepResult.hidden = true;
+            fitCanvasToImage();
+            redraw();
+            stepProcess.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          };
+          im.src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+
+      function fitCanvasToImage() {
+        var maxW = 1024;
+        var w = Math.min(img.naturalWidth, maxW);
+        var scale = w / img.naturalWidth;
+        var h = Math.round(img.naturalHeight * scale);
+        canvas.width = w;
+        canvas.height = h;
+        hiddenCanvas.width = img.naturalWidth;
+        hiddenCanvas.height = img.naturalHeight;
+        hiddenCtx.drawImage(img, 0, 0);
+        imgScale = scale;
+      }
+
+      function resetMarks() {
+        state.roi = [];
+        state.color = null;
+        state.colorPoint = null;
+        state.cal = [];
+        state.active = null;
+        state.result = null;
+        updateStepUi();
+        updateRunButton();
+        if (img) redraw();
+        stepResult.hidden = true;
+        updateHint();
+      }
+
+      $('btn-reset-marks').addEventListener('click', resetMarks);
+      $('btn-clear-cal').addEventListener('click', function () {
+        state.cal = [];
+        if (state.active === 'cal') state.active = null;
+        updateStepUi();
+        if (state.result) {
+          // recalcula apenas as exibições em mmHg
+          state.result = null;
+          stepResult.hidden = true;
+        }
+        redraw();
+        updateHint();
+      });
+
+      // --------- Steps ---------
+      stepBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          if (!img) return;
+          var step = btn.dataset.step;
+          if (step === 'roi') state.roi = [];
+          if (step === 'color') { state.color = null; state.colorPoint = null; }
+          if (step === 'cal') state.cal = [];
+          state.active = step;
+          updateStepUi();
+          updateRunButton();
+          redraw();
+          updateHint();
+        });
+      });
+
+      function updateStepUi() {
+        stepBtns.forEach(function (btn) {
+          var step = btn.dataset.step;
+          var done = (step === 'roi' && state.roi.length === 2)
+            || (step === 'color' && state.color)
+            || (step === 'cal' && state.cal.length === 2);
+          btn.dataset.done = done ? 'true' : 'false';
+          btn.dataset.active = (state.active === step) ? 'true' : 'false';
+        });
+      }
+
+      function updateRunButton() {
+        var ok = state.roi.length === 2 && state.color;
+        btnRun.disabled = !ok;
+      }
+
+      function updateHint() {
+        var msg = '';
+        switch (state.active) {
+          case 'roi':
+            if (state.roi.length === 0) msg = '<strong>Passo 1:</strong> toque no <strong>canto superior esquerdo</strong> da área que contém o traçado.';
+            else if (state.roi.length === 1) msg = '<strong>Passo 1:</strong> toque no <strong>canto inferior direito</strong> da área. Procure incluir vários ciclos cardíacos.';
+            else msg = '<strong>Área definida.</strong> Avance para o passo 2.';
+            break;
+          case 'color':
+            msg = '<strong>Passo 2:</strong> toque <strong>sobre a curva</strong>, de preferência num pico bem visível, para amostrar a cor.';
+            break;
+          case 'cal':
+            if (state.cal.length === 0) msg = '<strong>Calibração (opcional):</strong> toque no primeiro ponto da escala mmHg (ex.: linha do 100).';
+            else if (state.cal.length === 1) msg = '<strong>Calibração (opcional):</strong> toque no segundo ponto da escala mmHg (ex.: linha do 0).';
+            else msg = '<strong>Calibração concluída.</strong> Recalcule para ver PP em mmHg.';
+            break;
+          default:
+            if (state.roi.length === 2 && state.color) msg = 'Tudo pronto. Toque em <strong>Calcular ΔPP</strong>.';
+            else msg = 'Toque nos passos numerados acima e siga as instruções.';
+        }
+        stepHint.innerHTML = msg;
+      }
+
+      // --------- Canvas tap ---------
+      canvas.addEventListener('pointerdown', function (e) {
+        if (!img || !state.active) return;
+        e.preventDefault();
+        var rect = canvas.getBoundingClientRect();
+        var cx = (e.clientX - rect.left) * (canvas.width / rect.width);
+        var cy = (e.clientY - rect.top) * (canvas.height / rect.height);
+        var ix = cx / imgScale;
+        var iy = cy / imgScale;
+
+        if (state.active === 'roi') {
+          state.roi.push({ x: ix, y: iy });
+          if (state.roi.length === 2) {
+            var p1 = state.roi[0], p2 = state.roi[1];
+            state.roi = [
+              { x: Math.min(p1.x, p2.x), y: Math.min(p1.y, p2.y) },
+              { x: Math.max(p1.x, p2.x), y: Math.max(p1.y, p2.y) }
+            ];
+            state.active = null;
+          }
+        } else if (state.active === 'color') {
+          var px = Math.max(1, Math.min(hiddenCanvas.width - 2, Math.round(ix)));
+          var py = Math.max(1, Math.min(hiddenCanvas.height - 2, Math.round(iy)));
+          var data = hiddenCtx.getImageData(px - 1, py - 1, 3, 3).data;
+          var r = 0, g = 0, b = 0, n = 0;
+          for (var i = 0; i < data.length; i += 4) { r += data[i]; g += data[i+1]; b += data[i+2]; n++; }
+          state.color = { r: r/n, g: g/n, b: b/n };
+          state.colorPoint = { x: ix, y: iy };
+          state.active = null;
+        } else if (state.active === 'cal') {
+          var v = parseFloat(prompt('Valor em mmHg deste ponto da escala:', state.cal.length === 0 ? '100' : '0'));
+          if (!isFinite(v)) return;
+          state.cal.push({ x: ix, y: iy, mmHg: v });
+          if (state.cal.length === 2) {
+            if (state.cal[0].mmHg === state.cal[1].mmHg || state.cal[0].y === state.cal[1].y) {
+              alert('Os dois pontos de calibração precisam ter valores e posições verticais diferentes.');
+              state.cal = [];
+            } else {
+              state.active = null;
+            }
+          }
+        }
+
+        updateStepUi();
+        updateRunButton();
+        updateHint();
+        redraw();
+      });
+
+      // --------- Render ---------
+      function redraw() {
+        if (!img) return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+        if (state.roi.length === 2) {
+          var r0 = imgToCanvas(state.roi[0]);
+          var r1 = imgToCanvas(state.roi[1]);
+          ctx.save();
+          ctx.strokeStyle = 'rgba(88,166,255,0.9)';
+          ctx.lineWidth = 2;
+          ctx.setLineDash([6, 4]);
+          ctx.strokeRect(r0.x, r0.y, r1.x - r0.x, r1.y - r0.y);
+          ctx.restore();
+        } else if (state.roi.length === 1) {
+          drawDot(state.roi[0], 'rgba(88,166,255,0.9)', '');
+        }
+
+        state.cal.forEach(function (p) { drawDot(p, '#ffd139', String(p.mmHg) + ' mmHg'); });
+        if (state.cal.length === 2) {
+          var c0 = imgToCanvas(state.cal[0]);
+          var c1 = imgToCanvas(state.cal[1]);
+          ctx.save();
+          ctx.strokeStyle = 'rgba(255,209,57,0.5)';
+          ctx.setLineDash([3, 3]);
+          ctx.beginPath();
+          ctx.moveTo(c0.x, c0.y); ctx.lineTo(c1.x, c1.y); ctx.stroke();
+          ctx.restore();
+        }
+
+        if (state.colorPoint && state.color) {
+          drawDot(state.colorPoint,
+            'rgb(' + Math.round(state.color.r) + ',' + Math.round(state.color.g) + ',' + Math.round(state.color.b) + ')',
+            'cor');
+        }
+
+        if (state.result) {
+          var res = state.result;
+          ctx.save();
+          if (res.curve && res.curve.length > 1) {
+            ctx.strokeStyle = 'rgba(88,166,255,0.85)';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            for (var i = 0; i < res.curve.length; i++) {
+              var pt = imgToCanvas({ x: res.curve[i].xImg, y: res.curve[i].yImg });
+              if (i === 0) ctx.moveTo(pt.x, pt.y); else ctx.lineTo(pt.x, pt.y);
+            }
+            ctx.stroke();
+          }
+          ctx.restore();
+          (res.systolics || []).forEach(function (p) { drawDot({ x: p.xImg, y: p.yImg }, '#fca5a5', ''); });
+          (res.diastolics || []).forEach(function (p) { drawDot({ x: p.xImg, y: p.yImg }, '#86efac', ''); });
+          if (res.ppMaxCycle) drawCycle(res.ppMaxCycle, 'rgba(239,68,68,0.95)', 'PP máx');
+          if (res.ppMinCycle) drawCycle(res.ppMinCycle, 'rgba(34,197,94,0.95)', 'PP mín');
+        }
+      }
+
+      function drawDot(pImg, color, label) {
+        var p = imgToCanvas(pImg);
+        ctx.save();
+        ctx.fillStyle = color;
+        ctx.strokeStyle = '#0f1419';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        if (label) {
+          ctx.fillStyle = 'rgba(15,20,25,0.85)';
+          ctx.font = '11px Plus Jakarta Sans, sans-serif';
+          var tw = ctx.measureText(label).width + 6;
+          ctx.fillRect(p.x + 8, p.y - 14, tw, 14);
+          ctx.fillStyle = '#fff';
+          ctx.fillText(label, p.x + 11, p.y - 3);
+        }
+        ctx.restore();
+      }
+
+      function drawCycle(cycle, color, label) {
+        var s = imgToCanvas({ x: cycle.systolic.xImg, y: cycle.systolic.yImg });
+        var d = imgToCanvas({ x: cycle.diastolic.xImg, y: cycle.diastolic.yImg });
+        ctx.save();
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(s.x, s.y); ctx.lineTo(d.x, d.y);
+        ctx.stroke();
+        ctx.fillStyle = color;
+        ctx.font = 'bold 11px Plus Jakarta Sans, sans-serif';
+        ctx.fillText(label, Math.min(s.x, d.x) + 8, Math.min(s.y, d.y) - 4);
+        ctx.restore();
+      }
+
+      function imgToCanvas(p) { return { x: p.x * imgScale, y: p.y * imgScale }; }
+
+      // --------- Cálculo ---------
+      btnRun.addEventListener('click', function () {
+        if (btnRun.disabled) return;
+        var res = process();
+        state.result = res;
+        renderResult(res);
+        redraw();
+      });
+
+      function process() {
+        // ROI no espaço da imagem original
+        var x0 = Math.max(0, Math.floor(state.roi[0].x));
+        var x1 = Math.min(hiddenCanvas.width - 1, Math.floor(state.roi[1].x));
+        var y0 = Math.max(0, Math.floor(state.roi[0].y));
+        var y1 = Math.min(hiddenCanvas.height - 1, Math.floor(state.roi[1].y));
+        var roiW = x1 - x0;
+        var roiH = y1 - y0;
+        if (roiW < 20 || roiH < 20) return { error: 'Área do traçado muito pequena.' };
+
+        var data = hiddenCtx.getImageData(x0, y0, roiW, roiH).data;
+
+        // Extração da curva por similaridade de cor: para cada coluna,
+        // computa o centróide vertical (yImg) dos pixels que casam com a cor amostrada.
+        var target = state.color;
+        var threshold = 70;
+        var curve = [];
+        for (var x = 0; x < roiW; x++) {
+          var sumY = 0, nMatch = 0;
+          for (var y = 0; y < roiH; y++) {
+            var idx = (y * roiW + x) * 4;
+            var r = data[idx], g = data[idx + 1], b = data[idx + 2];
+            var dr = r - target.r, dg = g - target.g, db = b - target.b;
+            var dist = Math.sqrt(dr*dr + dg*dg + db*db);
+            if (dist < threshold) { sumY += y; nMatch++; }
+          }
+          if (nMatch > 0) curve.push({ xImg: x0 + x, yImg: y0 + sumY / nMatch });
+        }
+        if (curve.length < 30) return { error: 'Não foi possível detectar a curva. Refine a cor amostrada ou ajuste a área.' };
+
+        // Suavização (média móvel janela 7)
+        var ys = curve.map(function (p) { return p.yImg; });
+        var smoothed = [];
+        var w = 3;
+        for (var i = 0; i < ys.length; i++) {
+          var s = 0, n = 0;
+          for (var k = -w; k <= w; k++) {
+            var j = i + k;
+            if (j < 0 || j >= ys.length) continue;
+            s += ys[j]; n++;
+          }
+          smoothed.push(s / n);
+        }
+        for (var i = 0; i < curve.length; i++) curve[i].yImg = smoothed[i];
+
+        // Detecção de extremos locais
+        var minDist = Math.max(8, Math.round(roiW * 0.02));
+        var winCmp = Math.max(3, Math.round(minDist / 2));
+        var systolics = [], diastolics = [];
+        for (var i = winCmp; i < curve.length - winCmp; i++) {
+          var loc = curve[i].yImg;
+          var minLocal = loc, maxLocal = loc;
+          for (var k = -winCmp; k <= winCmp; k++) {
+            if (k === 0) continue;
+            var vv = curve[i + k].yImg;
+            if (vv < minLocal) minLocal = vv;
+            if (vv > maxLocal) maxLocal = vv;
+          }
+          // sistólico = yImg mínimo (mais alto na tela)
+          if (loc <= minLocal) {
+            if (!systolics.length || (curve[i].xImg - systolics[systolics.length - 1].xImg) >= minDist) {
+              systolics.push(curve[i]);
+            }
+          }
+          // diastólico = yImg máximo (mais baixo na tela)
+          if (loc >= maxLocal) {
+            if (!diastolics.length || (curve[i].xImg - diastolics[diastolics.length - 1].xImg) >= minDist) {
+              diastolics.push(curve[i]);
+            }
+          }
+        }
+
+        // Filtra por prominência mínima (15% do range)
+        var allY = curve.map(function (p) { return p.yImg; });
+        var minY = Math.min.apply(null, allY);
+        var maxY = Math.max.apply(null, allY);
+        var rangeY = maxY - minY;
+        var minProm = rangeY * 0.15;
+
+        // Combina e compacta em sequências alternadas (pega o mais extremo de cada sequência)
+        var allExt = [];
+        systolics.forEach(function (p) { allExt.push({ p: p, type: 's' }); });
+        diastolics.forEach(function (p) { allExt.push({ p: p, type: 'd' }); });
+        allExt.sort(function (a, b) { return a.p.xImg - b.p.xImg; });
+        var compact = [];
+        for (var i = 0; i < allExt.length; i++) {
+          var cur = allExt[i];
+          if (compact.length && compact[compact.length - 1].type === cur.type) {
+            var last = compact[compact.length - 1];
+            if (cur.type === 's' && cur.p.yImg < last.p.yImg) compact[compact.length - 1] = cur;
+            if (cur.type === 'd' && cur.p.yImg > last.p.yImg) compact[compact.length - 1] = cur;
+          } else {
+            compact.push(cur);
+          }
+        }
+
+        // Forma ciclos: diastólico → sistólico subsequente
+        var cycles = [];
+        for (var i = 0; i < compact.length - 1; i++) {
+          if (compact[i].type === 'd' && compact[i + 1].type === 's') {
+            var d = compact[i].p, s = compact[i + 1].p;
+            var ppPx = d.yImg - s.yImg; // amplitude em pixels (positivo)
+            if (ppPx >= minProm) {
+              cycles.push({
+                systolic: s,
+                diastolic: d,
+                ppPx: ppPx
+              });
+            }
+          }
+        }
+
+        if (cycles.length < 2) {
+          return { error: 'Foram detectados menos de 2 ciclos válidos. Verifique a área selecionada e a cor amostrada, ou tente uma foto com mais batimentos.' };
+        }
+
+        var ppMaxCycle = cycles[0], ppMinCycle = cycles[0];
+        for (var i = 1; i < cycles.length; i++) {
+          if (cycles[i].ppPx > ppMaxCycle.ppPx) ppMaxCycle = cycles[i];
+          if (cycles[i].ppPx < ppMinCycle.ppPx) ppMinCycle = cycles[i];
+        }
+
+        // ΔPP a partir das amplitudes em PIXELS (não precisa calibrar)
+        var ppMaxPx = ppMaxCycle.ppPx;
+        var ppMinPx = ppMinCycle.ppPx;
+        var ppMeanPx = (ppMaxPx + ppMinPx) / 2;
+        var dpp = ppMeanPx > 0 ? 100 * (ppMaxPx - ppMinPx) / ppMeanPx : NaN;
+
+        // Calibração opcional: converte para mmHg se o usuário forneceu
+        var ppMaxMmHg = null, ppMinMmHg = null;
+        if (state.cal.length === 2) {
+          var cal = state.cal.slice().sort(function (a, b) { return a.y - b.y; });
+          // mmHg/pixel (em valor absoluto)
+          var mmHgPerPx = Math.abs((cal[1].mmHg - cal[0].mmHg) / (cal[1].y - cal[0].y));
+          ppMaxMmHg = ppMaxPx * mmHgPerPx;
+          ppMinMmHg = ppMinPx * mmHgPerPx;
+        }
+
+        var confidence = 'baixa';
+        if (cycles.length >= 4) confidence = 'média';
+        if (cycles.length >= 6) confidence = 'alta';
+
+        return {
+          curve: curve,
+          systolics: cycles.map(function (c) { return c.systolic; }),
+          diastolics: cycles.map(function (c) { return c.diastolic; }),
+          cycles: cycles,
+          ppMaxPx: ppMaxPx,
+          ppMinPx: ppMinPx,
+          ppMaxMmHg: ppMaxMmHg,
+          ppMinMmHg: ppMinMmHg,
+          dpp: dpp,
+          ppMaxCycle: ppMaxCycle,
+          ppMinCycle: ppMinCycle,
+          confidence: confidence,
+          nCycles: cycles.length
+        };
+      }
+
+      function renderResult(res) {
+        stepResult.hidden = false;
+        var rMax = $('result-pp-max');
+        var rMin = $('result-pp-min');
+        var rDpp = $('result-dpp');
+        var fMax = $('formula-pp-max');
+        var fMin = $('formula-pp-min');
+        var interp = $('interpretation');
+        var interpText = $('interpretation-text');
+        var meta1 = $('meta-cycles');
+        var meta2 = $('meta-confidence');
+        var warn = $('result-warning');
+
+        rMax.className = 'result-box';
+        rMin.className = 'result-box';
+        rDpp.className = 'result-box';
+        interp.className = 'interpretation';
+        warn.hidden = true;
+        warn.textContent = '';
+
+        if (res.error) {
+          rMax.textContent = '—'; rMin.textContent = '—'; rDpp.textContent = '—';
+          interpText.textContent = res.error;
+          meta1.textContent = 'Ciclos detectados: 0';
+          meta2.textContent = 'Confiança: —';
+          stepResult.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          return;
+        }
+
+        rDpp.textContent = res.dpp.toFixed(1) + ' %';
+
+        if (res.ppMaxMmHg !== null) {
+          rMax.textContent = res.ppMaxMmHg.toFixed(0) + ' mmHg';
+          rMin.textContent = res.ppMinMmHg.toFixed(0) + ' mmHg';
+          fMax.textContent = 'Maior PAS−PAD detectado (calibrado pela escala da foto).';
+          fMin.textContent = 'Menor PAS−PAD detectado (calibrado pela escala da foto).';
+        } else {
+          rMax.textContent = res.ppMaxPx.toFixed(0) + ' px';
+          rMin.textContent = res.ppMinPx.toFixed(0) + ' px';
+          fMax.textContent = 'Amplitude em pixels (sem calibração). Para ver em mmHg, use a calibração opcional.';
+          fMin.textContent = 'Amplitude em pixels (sem calibração).';
+        }
+
+        meta1.textContent = 'Ciclos detectados: ' + res.nCycles;
+        meta2.textContent = 'Confiança: ' + res.confidence;
+
+        if (res.dpp >= 13) {
+          rDpp.classList.add('responder');
+          interp.classList.add('responder');
+          interpText.innerHTML = '<strong>Provável respondedor a fluidos.</strong> ΔPP ≥ 13% sugere aumento ≥ 15% do volume sistólico após expansão volêmica em pacientes com pré-requisitos clínicos atendidos.';
+        } else if (res.dpp <= 9) {
+          rDpp.classList.add('non-responder');
+          interp.classList.add('non-responder');
+          interpText.innerHTML = '<strong>Provável não-respondedor a fluidos.</strong> ΔPP ≤ 9% torna pouco provável o ganho hemodinâmico com expansão volêmica; considere outras causas de instabilidade e/ou suporte vasoativo/inotrópico.';
+        } else {
+          rDpp.classList.add('gray-zone');
+          interp.classList.add('gray-zone');
+          interpText.innerHTML = '<strong>Zona cinzenta (9–13%).</strong> Resposta a fluidos incerta. Considere teste complementar: <em>tidal volume challenge</em>, elevação passiva dos membros inferiores ou mini-bólus de 100 mL.';
+        }
+
+        if (res.confidence === 'baixa') {
+          warn.hidden = false;
+          warn.textContent = 'Confiança baixa: poucos ciclos identificados na imagem. Idealmente capture um trecho com pelo menos 4–6 ciclos cardíacos para avaliar a variação respiratória.';
+        }
+
+        stepResult.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      updateStepUi();
+      updateRunButton();
+      updateHint();
+    })();
+  </script>
+  <script src="analytics.js"></script>
+  <script src="js/site-footer.js"></script>
+</body>
+</html>

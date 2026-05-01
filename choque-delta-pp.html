@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Variação da Pressão de Pulso (ΔPP) – Fluidos, choque e hemorragia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f1419; --bg-card: #1a2129; --bg-input: #252d36; --border: #2d3843;
+      --text: #e6edf3; --text-muted: #8b9cad; --accent: #58a6ff; --accent-soft: rgba(88, 166, 255, 0.15);
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      min-height: 100vh;
+      background: var(--bg);
+      background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(88, 166, 255, 0.08), transparent);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 0rem 1rem 3rem;
+    }
+    .wrap { max-width: 520px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 0.75rem; }
+    .logo-link { display: block; text-decoration: none; }
+    .logo {
+      max-width: 600px;
+      height: auto;
+      margin-bottom: -2.5rem;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      background: transparent;
+      transform: translateX(-3.2rem);
+      clip-path: inset(0 0 25 0);
+    }
+    h1 { font-size: 1.5rem; font-weight: 700; color: var(--text); margin-bottom: 0.35rem; }
+    .subtitle { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+    section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.35rem 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    section h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #ffd139;
+      margin-bottom: 0.4rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+    }
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+    }
+    .row:last-of-type { margin-bottom: 0; }
+    label {
+      flex: 1;
+      font-size: 0.9rem;
+      color: var(--text);
+      font-weight: 500;
+      min-width: 0;
+    }
+    input[type="number"] {
+      padding: 0.5rem 0.65rem;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      color: var(--text);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      width: 100px;
+      text-align: right;
+    }
+    input[type="number"]:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+    .group-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--accent);
+      margin: 0.6rem 0 0.5rem;
+      padding-top: 0.6rem;
+      border-top: 1px dashed var(--border);
+    }
+    .group-title:first-child {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: none;
+    }
+    .result-block {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1.1rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border);
+      min-height: 3rem;
+      position: relative;
+    }
+    .result-block-content { flex: 1; min-width: 0; }
+    .result-row .name {
+      color: var(--text);
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+    .result-box {
+      flex-shrink: 0;
+      width: 110px;
+      padding: 0.5rem 0.65rem;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+    .result-box.responder {
+      color: #fca5a5;
+      border-color: rgba(239, 68, 68, 0.5);
+      background: rgba(239, 68, 68, 0.12);
+    }
+    .result-box.gray-zone {
+      color: #fde68a;
+      border-color: rgba(234, 179, 8, 0.5);
+      background: rgba(234, 179, 8, 0.12);
+    }
+    .result-box.non-responder {
+      color: #86efac;
+      border-color: rgba(34, 197, 94, 0.5);
+      background: rgba(34, 197, 94, 0.12);
+    }
+    .formula {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+    .formula-eq { color: #fef9c3; }
+    .hint {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.75rem;
+      text-align: justify;
+    }
+    .info-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1rem;
+      height: 1rem;
+      margin-left: 0.35rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-input);
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      font-weight: 700;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .info-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .ees-info-pop {
+      position: absolute;
+      z-index: 20;
+      max-width: 480px;
+      margin-top: 0.6rem;
+      right: 0;
+      background: #05070a;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 0.75rem 0.9rem;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.5);
+      font-size: 0.78rem;
+      line-height: 1.6;
+    }
+    .ees-info-pop h3 {
+      font-size: 0.85rem;
+      margin-bottom: 0.4rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-align: left;
+    }
+    .ees-info-pop p { margin-bottom: 0.35rem; color: var(--text); }
+    .ees-info-pop p:last-child { margin-bottom: 0; }
+    .ees-info-pop .step-label { font-weight: 700; color: #fef9c3; }
+    .ees-info-pop code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.75rem;
+      background: rgba(15,20,25,0.9);
+      padding: 0.15rem 0.25rem;
+      border-radius: 4px;
+      color: var(--text);
+      font-weight: 400;
+    }
+    .interpretation {
+      margin-top: 0.9rem;
+      padding: 0.85rem 1rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+    .interpretation.responder {
+      background: rgba(239, 68, 68, 0.12);
+      border-color: rgba(239, 68, 68, 0.4);
+    }
+    .interpretation.gray-zone {
+      background: rgba(234, 179, 8, 0.12);
+      border-color: rgba(234, 179, 8, 0.4);
+    }
+    .interpretation.non-responder {
+      background: rgba(34, 197, 94, 0.10);
+      border-color: rgba(34, 197, 94, 0.35);
+    }
+    .interpretation .label {
+      font-weight: 700;
+      margin-right: 0.35rem;
+    }
+    .interpretation.responder .label { color: #fca5a5; }
+    .interpretation.gray-zone .label { color: #fde68a; }
+    .interpretation.non-responder .label { color: #86efac; }
+    .guidelines-text { font-size: 0.9rem; color: var(--text); text-align: justify; }
+    .guidelines-text p { margin-bottom: 0.75rem; }
+    .guidelines-text p:last-child { margin-bottom: 0; }
+    .guidelines-text strong { color: var(--accent); }
+    .guidelines-text ul { margin: 0.25rem 0 0.75rem 1.25rem; padding: 0; }
+    .guidelines-text li { margin-bottom: 0.25rem; }
+    .ref { font-size: 0.8rem; color: var(--text-muted); margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--border); }
+    footer {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0;
+      opacity: 0.8;
+    }
+    @media (max-width: 768px) {
+      .logo {
+        min-width: 240px;
+        max-width: min(600px, calc(100vw - 2rem));
+        transform: translateX(0);
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="js/site-footer.css">
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="logo-link">
+        <img src="Logo Hemodinâmica_regular.png" alt="Hemodinâmica" class="logo">
+      </a>
+      <h1>Variação da Pressão de Pulso (ΔPP)</h1>
+      <p class="subtitle">Fluidos, choque e hemorragia · Preditor dinâmico de fluido-responsividade</p>
+    </header>
+
+    <section>
+      <h2>Entradas</h2>
+      <div class="group-title">Maior pressão de pulso no ciclo respiratório</div>
+      <div class="row">
+        <label for="pas-max">PAS máxima (mmHg)</label>
+        <input type="number" id="pas-max" min="10" max="300" step="1" placeholder="mmHg">
+      </div>
+      <div class="row">
+        <label for="pad-max">PAD correspondente (mmHg)</label>
+        <input type="number" id="pad-max" min="10" max="300" step="1" placeholder="mmHg">
+      </div>
+
+      <div class="group-title">Menor pressão de pulso no ciclo respiratório</div>
+      <div class="row">
+        <label for="pas-min">PAS mínima (mmHg)</label>
+        <input type="number" id="pas-min" min="10" max="300" step="1" placeholder="mmHg">
+      </div>
+      <div class="row">
+        <label for="pad-min">PAD correspondente (mmHg)</label>
+        <input type="number" id="pad-min" min="10" max="300" step="1" placeholder="mmHg">
+      </div>
+
+      <p class="hint">Identifique no traçado da pressão arterial invasiva o batimento com a <strong>maior pressão de pulso</strong> (PP = PAS − PAD) e o batimento com a <strong>menor pressão de pulso</strong> dentro de um mesmo ciclo respiratório. Insira os valores de PAS e PAD correspondentes a cada um desses batimentos.</p>
+    </section>
+
+    <section>
+      <h2>Resultado</h2>
+
+      <div class="result-block" style="margin-top: 0; padding-top: 0; border-top: none;">
+        <div class="result-block-content">
+          <div class="result-row"><span class="name">Pressão de pulso máxima (PP<sub>max</sub>)</span></div>
+          <div class="formula formula-eq">PP<sub>max</sub> = PAS<sub>max</sub> − PAD<sub>max</sub></div>
+        </div>
+        <div class="result-box" id="result-pp-max">—</div>
+      </div>
+
+      <div class="result-block">
+        <div class="result-block-content">
+          <div class="result-row"><span class="name">Pressão de pulso mínima (PP<sub>min</sub>)</span></div>
+          <div class="formula formula-eq">PP<sub>min</sub> = PAS<sub>min</sub> − PAD<sub>min</sub></div>
+        </div>
+        <div class="result-box" id="result-pp-min">—</div>
+      </div>
+
+      <div class="result-block">
+        <div class="result-block-content">
+          <div class="result-row">
+            <span class="name">Variação da Pressão de Pulso (ΔPP)</span>
+            <button type="button" class="info-btn" id="dpp-info-btn">?</button>
+          </div>
+          <div class="formula formula-eq">
+            ΔPP (%) = 100 × (PP<sub>max</sub> − PP<sub>min</sub>) / [(PP<sub>max</sub> + PP<sub>min</sub>) / 2]
+          </div>
+        </div>
+        <div class="result-box" id="result-dpp">—</div>
+      </div>
+
+      <div class="interpretation" id="interpretation">
+        <span class="label">Interpretação:</span>
+        <span id="interpretation-text">Preencha os valores de PAS e PAD máximas e mínimas no ciclo respiratório.</span>
+      </div>
+    </section>
+
+    <section>
+      <h2>Pré-requisitos e Ressalvas</h2>
+      <div class="guidelines-text">
+        <p>O ΔPP é um preditor dinâmico de <strong>fluido-responsividade</strong> baseado na interação coração-pulmão durante a ventilação mecânica. A queda da pré-carga durante a insuflação reduz o volume sistólico em pacientes com reserva de pré-carga ("respondedores").</p>
+        <p>Para que o ΔPP seja válido, o paciente deve atender a <strong>todos</strong> os seguintes critérios:</p>
+        <ul>
+          <li>Ventilação mecânica <strong>controlada</strong>, sem esforço respiratório espontâneo;</li>
+          <li>Volume corrente ≥ <strong>8 mL/kg</strong> de peso predito;</li>
+          <li><strong>Ritmo sinusal</strong> regular (sem arritmias frequentes);</li>
+          <li>Tórax e abdome fechados (não confiável em toracotomia ou hipertensão intra-abdominal grave);</li>
+          <li>Ausência de <strong>disfunção ventricular direita</strong> importante;</li>
+          <li>Complacência pulmonar e parede torácica não muito reduzidas (cuidado em SDRA grave).</li>
+        </ul>
+        <p>Em pacientes com volume corrente baixo (4–6 mL/kg) ou ritmo irregular, considere manobras complementares: <strong>tidal volume challenge</strong> (aumento transitório do VC para 8 mL/kg), <strong>elevação passiva dos membros inferiores</strong> ou <strong>mini-bólus de fluido</strong>.</p>
+        <p class="ref">Fontes: Michard F, et al. Am J Respir Crit Care Med. 2000;162:134–138. · Cannesson M, et al. Anesthesiology. 2011;115:231–241 (zona cinzenta 9–13%). · Monnet X, Marik PE, Teboul JL. Intensive Care Med. 2016;42:1935–1947.</p>
+      </div>
+    </section>
+
+    <footer class="footer-buttons"></footer>
+  </div>
+
+  <script>
+    (function () {
+      var pasMax = document.getElementById('pas-max');
+      var padMax = document.getElementById('pad-max');
+      var pasMin = document.getElementById('pas-min');
+      var padMin = document.getElementById('pad-min');
+
+      var resultPpMax = document.getElementById('result-pp-max');
+      var resultPpMin = document.getElementById('result-pp-min');
+      var resultDpp = document.getElementById('result-dpp');
+      var interpretation = document.getElementById('interpretation');
+      var interpretationText = document.getElementById('interpretation-text');
+
+      var infoBtn = document.getElementById('dpp-info-btn');
+      var infoPop = null;
+
+      function toNumber(input) {
+        var v = parseFloat(input.value);
+        return isNaN(v) ? NaN : v;
+      }
+
+      function clearResults(msg) {
+        resultPpMax.textContent = '—';
+        resultPpMin.textContent = '—';
+        resultDpp.textContent = '—';
+        resultDpp.className = 'result-box';
+        interpretation.className = 'interpretation';
+        interpretationText.textContent = msg || 'Preencha os valores de PAS e PAD máximas e mínimas no ciclo respiratório.';
+      }
+
+      function update() {
+        var pSmax = toNumber(pasMax);
+        var pDmax = toNumber(padMax);
+        var pSmin = toNumber(pasMin);
+        var pDmin = toNumber(padMin);
+
+        if (!isFinite(pSmax) || !isFinite(pDmax) || !isFinite(pSmin) || !isFinite(pDmin)) {
+          clearResults();
+          return;
+        }
+        if (pSmax <= 0 || pDmax <= 0 || pSmin <= 0 || pDmin <= 0) {
+          clearResults('Valores devem ser positivos.');
+          return;
+        }
+        if (pSmax <= pDmax || pSmin <= pDmin) {
+          clearResults('A PAS deve ser maior que a PAD em cada batimento.');
+          return;
+        }
+
+        var ppMax = pSmax - pDmax;
+        var ppMin = pSmin - pDmin;
+
+        // Por convenção, PPmax ≥ PPmin. Se o usuário inverter, reordena automaticamente.
+        if (ppMin > ppMax) {
+          var tmp = ppMax; ppMax = ppMin; ppMin = tmp;
+        }
+
+        var ppMean = (ppMax + ppMin) / 2;
+        if (ppMean <= 0) {
+          clearResults('Pressão de pulso média inválida.');
+          return;
+        }
+
+        var dpp = 100 * (ppMax - ppMin) / ppMean;
+
+        resultPpMax.textContent = ppMax.toFixed(0) + ' mmHg';
+        resultPpMin.textContent = ppMin.toFixed(0) + ' mmHg';
+        resultDpp.textContent = dpp.toFixed(1) + ' %';
+
+        // Classificação
+        resultDpp.className = 'result-box';
+        interpretation.className = 'interpretation';
+        if (dpp >= 13) {
+          resultDpp.classList.add('responder');
+          interpretation.classList.add('responder');
+          interpretationText.innerHTML =
+            '<strong>Provável respondedor a fluidos.</strong> ΔPP ≥ 13% prediz aumento ≥ 15% do volume sistólico após expansão volêmica em pacientes com os pré-requisitos atendidos.';
+        } else if (dpp <= 9) {
+          resultDpp.classList.add('non-responder');
+          interpretation.classList.add('non-responder');
+          interpretationText.innerHTML =
+            '<strong>Provável não-respondedor a fluidos.</strong> ΔPP ≤ 9% torna pouco provável o ganho hemodinâmico com expansão volêmica; considere outras causas de instabilidade e/ou suporte vasoativo/inotrópico.';
+        } else {
+          resultDpp.classList.add('gray-zone');
+          interpretation.classList.add('gray-zone');
+          interpretationText.innerHTML =
+            '<strong>Zona cinzenta (9–13%).</strong> Resposta a fluidos incerta. Considere teste complementar: <em>tidal volume challenge</em>, elevação passiva dos membros inferiores ou mini-bólus de 100 mL.';
+        }
+      }
+
+      pasMax.addEventListener('input', update);
+      padMax.addEventListener('input', update);
+      pasMin.addEventListener('input', update);
+      padMin.addEventListener('input', update);
+
+      function buildInfoPop() {
+        if (infoPop) return infoPop;
+        infoPop = document.createElement('div');
+        infoPop.className = 'ees-info-pop';
+        infoPop.innerHTML =
+          '<h3>Como medir o ΔPP</h3>' +
+          '<p><span class="step-label">1) Identifique a pressão de pulso de cada batimento</span><br>' +
+          '<code>PP = PAS − PAD</code></p>' +
+          '<p><span class="step-label">2) Em um mesmo ciclo respiratório</span>, encontre o batimento com a <strong>maior PP</strong> (PP<sub>max</sub>, geralmente no final da insuflação) e o com a <strong>menor PP</strong> (PP<sub>min</sub>, ao final da expiração).</p>' +
+          '<p><span class="step-label">3) Calcule</span><br>' +
+          '<code>ΔPP (%) = 100 × (PP<sub>max</sub> − PP<sub>min</sub>) / [(PP<sub>max</sub> + PP<sub>min</sub>)/2]</code></p>' +
+          '<p><span class="step-label">Interpretação clássica:</span><br>' +
+          '<code>ΔPP ≥ 13%</code> → provável respondedor;<br>' +
+          '<code>ΔPP ≤ 9%</code> → provável não-respondedor;<br>' +
+          '<code>9–13%</code> → zona cinzenta (Cannesson, 2011).</p>' +
+          '<p>Válido apenas em ventilação mecânica controlada, VC ≥ 8 mL/kg, ritmo sinusal e tórax/abdome fechados.</p>';
+        return infoPop;
+      }
+
+      if (infoBtn) {
+        infoBtn.addEventListener('click', function (event) {
+          event.stopPropagation();
+          var pop = buildInfoPop();
+          var isVisible = pop.parentElement != null;
+          if (isVisible) {
+            pop.parentElement.removeChild(pop);
+          } else {
+            infoBtn.closest('.result-block').appendChild(pop);
+          }
+        });
+
+        document.addEventListener('click', function (e) {
+          if (!infoPop) return;
+          if (!infoPop.contains(e.target) && e.target !== infoBtn && infoPop.parentElement) {
+            infoPop.parentElement.removeChild(infoPop);
+          }
+        });
+      }
+
+      // Inicialização
+      clearResults();
+    })();
+  </script>
+  <script src="analytics.js"></script>
+  <script src="js/site-footer.js"></script>
+</body>
+</html>

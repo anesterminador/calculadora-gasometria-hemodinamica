@@ -93,6 +93,35 @@
       touch-action: none;
       cursor: crosshair;
     }
+    #canvas { user-select: none; -webkit-user-select: none; }
+    #magnifier {
+      position: absolute;
+      width: 140px; height: 140px;
+      border-radius: 50%;
+      border: 3px solid #fff;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.55);
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 5;
+      background: #000;
+      transition: opacity 0.08s linear;
+    }
+    #magnifier[hidden] { display: none; }
+    #mag-canvas {
+      display: block;
+      width: 100%; height: 100%;
+      image-rendering: pixelated;
+      image-rendering: -moz-crisp-edges;
+    }
+    #mag-swatch {
+      position: absolute;
+      bottom: 6px; left: 50%;
+      transform: translateX(-50%);
+      width: 26px; height: 14px;
+      border-radius: 4px;
+      border: 1.5px solid rgba(255,255,255,0.9);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.6);
+    }
     .step-controls {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -273,6 +302,10 @@
       <h2>2. Marcar pontos</h2>
       <div class="canvas-wrap">
         <canvas id="canvas"></canvas>
+        <div id="magnifier" hidden>
+          <canvas id="mag-canvas" width="140" height="140"></canvas>
+          <div id="mag-swatch"></div>
+        </div>
       </div>
       <div class="step-controls">
         <button class="step-btn" data-step="roi"><span class="step-num">1</span>Área do traçado</button>
@@ -286,7 +319,7 @@
         <span id="tol-val">40%</span>
       </div>
       <p class="hint" style="margin-top:0.25rem;">Aumente se a foto estiver com cor distorcida ou desbotada e a curva não for detectada; diminua se a detecção estiver capturando elementos vizinhos da mesma cor.</p>
-      <p class="hint" id="step-hint"><strong>Passo 1:</strong> toque o botão "Área do traçado" e marque dois cantos (sup. esq. e inf. dir.) da região com a curva da pressão arterial.</p>
+      <p class="hint" id="step-hint"><strong>Passo 1:</strong> toque o botão "Área do traçado" e <strong>arraste um retângulo</strong> sobre a região com a curva da pressão arterial.</p>
 
       <details class="optional">
         <summary>Calibração opcional em mmHg (para também ver PP em mmHg)</summary>
@@ -472,12 +505,10 @@
         var msg = '';
         switch (state.active) {
           case 'roi':
-            if (state.roi.length === 0) msg = '<strong>Passo 1:</strong> toque no <strong>canto superior esquerdo</strong> da área que contém o traçado.';
-            else if (state.roi.length === 1) msg = '<strong>Passo 1:</strong> toque no <strong>canto inferior direito</strong> da área. Procure incluir vários ciclos cardíacos.';
-            else msg = '<strong>Área definida.</strong> Avance para o passo 2.';
+            msg = '<strong>Passo 1:</strong> <strong>arraste um retângulo</strong> sobre a área do traçado da pressão arterial (toque, segure e arraste de um canto a outro). Procure incluir vários ciclos cardíacos.';
             break;
           case 'color':
-            msg = '<strong>Passo 2:</strong> toque <strong>sobre a curva</strong>, de preferência num pico bem visível, para amostrar a cor.';
+            msg = '<strong>Passo 2:</strong> toque <strong>sobre a curva</strong> e, se quiser ajustar, <strong>arraste com o dedo</strong> — uma lupa aparece para você ver pixel a pixel. Solte quando o alvo estiver sobre a curva.';
             break;
           case 'cal':
             if (state.cal.length === 0) msg = '<strong>Calibração (opcional):</strong> toque no primeiro ponto da escala mmHg (ex.: linha do 100).';
@@ -491,39 +522,108 @@
         stepHint.innerHTML = msg;
       }
 
-      // --------- Canvas tap ---------
+      // --------- Lupa (magnifier) ---------
+      var magEl = $('magnifier');
+      var magCanvas = $('mag-canvas');
+      var magCtx = magCanvas.getContext('2d');
+      var magSwatch = $('mag-swatch');
+
+      function pointerToCoords(e) {
+        var rect = canvas.getBoundingClientRect();
+        var cssX = e.clientX - rect.left;
+        var cssY = e.clientY - rect.top;
+        var cx = cssX * (canvas.width / rect.width);
+        var cy = cssY * (canvas.height / rect.height);
+        return {
+          css: { x: cssX, y: cssY },
+          img: { x: cx / imgScale, y: cy / imgScale }
+        };
+      }
+
+      function sampleColorAt(imgP) {
+        var px = Math.max(1, Math.min(hiddenCanvas.width - 2, Math.round(imgP.x)));
+        var py = Math.max(1, Math.min(hiddenCanvas.height - 2, Math.round(imgP.y)));
+        var data = hiddenCtx.getImageData(px - 1, py - 1, 3, 3).data;
+        var r = 0, g = 0, b = 0, n = 0;
+        for (var i = 0; i < data.length; i += 4) { r += data[i]; g += data[i+1]; b += data[i+2]; n++; }
+        return { r: r/n, g: g/n, b: b/n };
+      }
+
+      function showMagnifier(imgP, cssP) {
+        var size = 140;
+        var wrapW = canvas.clientWidth;
+        var wrapH = canvas.clientHeight;
+        // posição: 30 px acima do toque; se não couber, abaixo
+        var top = cssP.y - size - 30;
+        if (top < 5) top = cssP.y + 30;
+        if (top + size > wrapH - 5) top = wrapH - size - 5;
+        if (top < 5) top = 5;
+        var left = cssP.x - size / 2;
+        if (left < 5) left = 5;
+        if (left + size > wrapW - 5) left = wrapW - size - 5;
+        magEl.style.left = left + 'px';
+        magEl.style.top = top + 'px';
+        magEl.hidden = false;
+
+        // desenha a região zoom (4x): 35 px da imagem original → 140 px na lupa
+        var srcSize = 35;
+        var srcX = Math.max(0, Math.min(hiddenCanvas.width - srcSize, Math.round(imgP.x - srcSize / 2)));
+        var srcY = Math.max(0, Math.min(hiddenCanvas.height - srcSize, Math.round(imgP.y - srcSize / 2)));
+        magCtx.imageSmoothingEnabled = false;
+        magCtx.clearRect(0, 0, size, size);
+        magCtx.drawImage(hiddenCanvas, srcX, srcY, srcSize, srcSize, 0, 0, size, size);
+        // Crosshair
+        magCtx.save();
+        magCtx.lineWidth = 2;
+        magCtx.strokeStyle = '#ffffff';
+        magCtx.beginPath();
+        magCtx.arc(size / 2, size / 2, 9, 0, Math.PI * 2);
+        magCtx.stroke();
+        magCtx.lineWidth = 1;
+        magCtx.beginPath();
+        magCtx.moveTo(size/2, size/2 - 14); magCtx.lineTo(size/2, size/2 - 11);
+        magCtx.moveTo(size/2, size/2 + 11); magCtx.lineTo(size/2, size/2 + 14);
+        magCtx.moveTo(size/2 - 14, size/2); magCtx.lineTo(size/2 - 11, size/2);
+        magCtx.moveTo(size/2 + 11, size/2); magCtx.lineTo(size/2 + 14, size/2);
+        magCtx.stroke();
+        magCtx.fillStyle = 'rgba(0,0,0,0.85)';
+        magCtx.beginPath();
+        magCtx.arc(size/2, size/2, 1.5, 0, Math.PI * 2);
+        magCtx.fill();
+        magCtx.restore();
+
+        // amostra de cor (swatch)
+        var c = sampleColorAt(imgP);
+        magSwatch.style.background = 'rgb(' + Math.round(c.r) + ',' + Math.round(c.g) + ',' + Math.round(c.b) + ')';
+        return c;
+      }
+
+      function hideMagnifier() {
+        magEl.hidden = true;
+      }
+
+      // --------- Drag handlers ---------
+      var drag = null;
+
       canvas.addEventListener('pointerdown', function (e) {
         if (!img || !state.active) return;
         e.preventDefault();
-        var rect = canvas.getBoundingClientRect();
-        var cx = (e.clientX - rect.left) * (canvas.width / rect.width);
-        var cy = (e.clientY - rect.top) * (canvas.height / rect.height);
-        var ix = cx / imgScale;
-        var iy = cy / imgScale;
+        try { canvas.setPointerCapture(e.pointerId); } catch (_) {}
+        var c = pointerToCoords(e);
 
         if (state.active === 'roi') {
-          state.roi.push({ x: ix, y: iy });
-          if (state.roi.length === 2) {
-            var p1 = state.roi[0], p2 = state.roi[1];
-            state.roi = [
-              { x: Math.min(p1.x, p2.x), y: Math.min(p1.y, p2.y) },
-              { x: Math.max(p1.x, p2.x), y: Math.max(p1.y, p2.y) }
-            ];
-            state.active = null;
-          }
+          drag = { mode: 'roi', startImg: c.img, currentImg: c.img };
+          redraw();
         } else if (state.active === 'color') {
-          var px = Math.max(1, Math.min(hiddenCanvas.width - 2, Math.round(ix)));
-          var py = Math.max(1, Math.min(hiddenCanvas.height - 2, Math.round(iy)));
-          var data = hiddenCtx.getImageData(px - 1, py - 1, 3, 3).data;
-          var r = 0, g = 0, b = 0, n = 0;
-          for (var i = 0; i < data.length; i += 4) { r += data[i]; g += data[i+1]; b += data[i+2]; n++; }
-          state.color = { r: r/n, g: g/n, b: b/n };
-          state.colorPoint = { x: ix, y: iy };
-          state.active = null;
+          var col = showMagnifier(c.img, c.css);
+          state.color = col;
+          state.colorPoint = c.img;
+          drag = { mode: 'color' };
+          redraw();
         } else if (state.active === 'cal') {
           var v = parseFloat(prompt('Valor em mmHg deste ponto da escala:', state.cal.length === 0 ? '100' : '0'));
           if (!isFinite(v)) return;
-          state.cal.push({ x: ix, y: iy, mmHg: v });
+          state.cal.push({ x: c.img.x, y: c.img.y, mmHg: v });
           if (state.cal.length === 2) {
             if (state.cal[0].mmHg === state.cal[1].mmHg || state.cal[0].y === state.cal[1].y) {
               alert('Os dois pontos de calibração precisam ter valores e posições verticais diferentes.');
@@ -532,11 +632,58 @@
               state.active = null;
             }
           }
+          updateStepUi();
+          updateRunButton();
+          updateHint();
+          redraw();
         }
+      });
 
+      canvas.addEventListener('pointermove', function (e) {
+        if (!drag) return;
+        e.preventDefault();
+        var c = pointerToCoords(e);
+        if (drag.mode === 'roi') {
+          drag.currentImg = c.img;
+          redraw();
+        } else if (drag.mode === 'color') {
+          var col = showMagnifier(c.img, c.css);
+          state.color = col;
+          state.colorPoint = c.img;
+          redraw();
+        }
+      });
+
+      function endDrag(e) {
+        if (!drag) return;
+        if (e) try { canvas.releasePointerCapture(e.pointerId); } catch (_) {}
+        if (drag.mode === 'roi') {
+          var p1 = drag.startImg, p2 = drag.currentImg;
+          var dx = Math.abs(p2.x - p1.x), dy = Math.abs(p2.y - p1.y);
+          if (dx >= 8 && dy >= 8) {
+            state.roi = [
+              { x: Math.min(p1.x, p2.x), y: Math.min(p1.y, p2.y) },
+              { x: Math.max(p1.x, p2.x), y: Math.max(p1.y, p2.y) }
+            ];
+            state.active = null;
+          } else {
+            // arrasto muito curto: ignora e mantém active
+          }
+        } else if (drag.mode === 'color') {
+          state.active = null;
+          hideMagnifier();
+        }
+        drag = null;
         updateStepUi();
         updateRunButton();
         updateHint();
+        redraw();
+      }
+
+      canvas.addEventListener('pointerup', endDrag);
+      canvas.addEventListener('pointercancel', function (e) {
+        if (drag && drag.mode === 'color') hideMagnifier();
+        drag = null;
         redraw();
       });
 
@@ -546,7 +693,19 @@
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-        if (state.roi.length === 2) {
+        if (drag && drag.mode === 'roi') {
+          var p1 = drag.startImg, p2 = drag.currentImg;
+          var d0 = imgToCanvas({ x: Math.min(p1.x, p2.x), y: Math.min(p1.y, p2.y) });
+          var d1 = imgToCanvas({ x: Math.max(p1.x, p2.x), y: Math.max(p1.y, p2.y) });
+          ctx.save();
+          ctx.fillStyle = 'rgba(88,166,255,0.12)';
+          ctx.strokeStyle = 'rgba(88,166,255,0.95)';
+          ctx.lineWidth = 2;
+          ctx.setLineDash([6, 4]);
+          ctx.fillRect(d0.x, d0.y, d1.x - d0.x, d1.y - d0.y);
+          ctx.strokeRect(d0.x, d0.y, d1.x - d0.x, d1.y - d0.y);
+          ctx.restore();
+        } else if (state.roi.length === 2) {
           var r0 = imgToCanvas(state.roi[0]);
           var r1 = imgToCanvas(state.roi[1]);
           ctx.save();
@@ -555,8 +714,6 @@
           ctx.setLineDash([6, 4]);
           ctx.strokeRect(r0.x, r0.y, r1.x - r0.x, r1.y - r0.y);
           ctx.restore();
-        } else if (state.roi.length === 1) {
-          drawDot(state.roi[0], 'rgba(88,166,255,0.9)', '');
         }
 
         state.cal.forEach(function (p) { drawDot(p, '#ffd139', String(p.mmHg) + ' mmHg'); });

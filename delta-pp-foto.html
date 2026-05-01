@@ -95,16 +95,15 @@
     }
     #canvas { user-select: none; -webkit-user-select: none; }
     #magnifier {
-      position: absolute;
+      position: fixed;
       width: 140px; height: 140px;
       border-radius: 50%;
       border: 3px solid #fff;
       box-shadow: 0 8px 24px rgba(0,0,0,0.55);
       overflow: hidden;
       pointer-events: none;
-      z-index: 5;
+      z-index: 999;
       background: #000;
-      transition: opacity 0.08s linear;
     }
     #magnifier[hidden] { display: none; }
     #mag-canvas {
@@ -184,27 +183,6 @@
       font-size: 0.85rem; color: var(--accent);
       font-variant-numeric: tabular-nums;
       min-width: 2.6rem; text-align: right;
-    }
-    details.optional {
-      margin-top: 0.75rem;
-      border: 1px dashed var(--border);
-      border-radius: 10px;
-      padding: 0.5rem 0.75rem;
-      background: var(--bg);
-    }
-    details.optional summary {
-      cursor: pointer;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text-muted);
-    }
-    details.optional[open] summary { color: var(--accent); margin-bottom: 0.5rem; }
-    details.optional .opt-controls {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;
-    }
-    details.optional .opt-controls .step-btn {
-      padding: 0.5rem;
-      font-size: 0.8rem;
     }
     .result-block {
       display: flex; align-items: center; gap: 1rem;
@@ -289,7 +267,7 @@
     <section>
       <h2>1. Foto do monitor</h2>
       <p class="hint">Tire ou envie uma foto do traçado da <strong>pressão arterial invasiva</strong>. Inclua um trecho contínuo com vários ciclos cardíacos (5–10 segundos).</p>
-      <p class="hint" style="margin-top:0.45rem;"><strong>Por que não precisa calibrar a escala em mmHg?</strong> O ΔPP é uma razão entre amplitudes (ΔPP = 100 × [PP<sub>max</sub> − PP<sub>min</sub>] ÷ média), então o fator pixel→mmHg se cancela. Calibrar é <em>opcional</em>, apenas para também exibir PP<sub>max</sub>/PP<sub>min</sub> em mmHg.</p>
+      <p class="hint" style="margin-top:0.45rem;">O ΔPP é uma razão entre amplitudes (ΔPP = 100 × [PP<sub>max</sub> − PP<sub>min</sub>] ÷ média), então o fator pixel→mmHg se cancela e não é necessário calibrar a escala.</p>
       <div class="upload-row">
         <button class="btn primary" id="btn-camera">Tirar foto</button>
         <button class="btn" id="btn-gallery">Escolher imagem</button>
@@ -320,17 +298,6 @@
       </div>
       <p class="hint" style="margin-top:0.25rem;">Aumente se a foto estiver com cor distorcida ou desbotada e a curva não for detectada; diminua se a detecção estiver capturando elementos vizinhos da mesma cor.</p>
       <p class="hint" id="step-hint"><strong>Passo 1:</strong> toque o botão "Área do traçado" e <strong>arraste um retângulo</strong> sobre a região com a curva da pressão arterial.</p>
-
-      <details class="optional">
-        <summary>Calibração opcional em mmHg (para também ver PP em mmHg)</summary>
-        <div style="margin-bottom: 0.45rem;">
-          <p class="hint" style="margin: 0 0 0.4rem;">Toque em dois pontos da escala vertical com valor conhecido. Não influencia o ΔPP, apenas converte PP<sub>max</sub>/PP<sub>min</sub> de pixels para mmHg.</p>
-        </div>
-        <div class="opt-controls">
-          <button class="step-btn" data-step="cal"><span class="step-num">+</span>Calibrar mmHg</button>
-          <button class="step-btn" id="btn-clear-cal">Limpar calibração</button>
-        </div>
-      </details>
     </section>
 
     <section id="step-result" hidden>
@@ -344,15 +311,15 @@
       </div>
       <div class="result-block">
         <div class="result-block-content">
-          <div class="name">Pressão de pulso máxima (PP<sub>max</sub>)</div>
-          <div class="formula" id="formula-pp-max">Maior amplitude PAS−PAD detectada na imagem.</div>
+          <div class="name">Amplitude máxima (PP<sub>max</sub>)</div>
+          <div class="formula">Maior amplitude detectada (em pixels da imagem).</div>
         </div>
         <div class="result-box" id="result-pp-max">—</div>
       </div>
       <div class="result-block">
         <div class="result-block-content">
-          <div class="name">Pressão de pulso mínima (PP<sub>min</sub>)</div>
-          <div class="formula" id="formula-pp-min">Menor amplitude PAS−PAD detectada na imagem.</div>
+          <div class="name">Amplitude mínima (PP<sub>min</sub>)</div>
+          <div class="formula">Menor amplitude detectada (em pixels da imagem).</div>
         </div>
         <div class="result-box" id="result-pp-min">—</div>
       </div>
@@ -390,7 +357,6 @@
         roi: [],          // [{x, y}, {x, y}] em px da imagem
         color: null,      // {r, g, b}
         colorPoint: null, // {x, y}
-        cal: [],          // opcional: [{x, y, mmHg}, {x, y, mmHg}]
         active: null,
         result: null
       };
@@ -445,7 +411,6 @@
         state.roi = [];
         state.color = null;
         state.colorPoint = null;
-        state.cal = [];
         state.active = null;
         state.result = null;
         updateStepUi();
@@ -456,18 +421,6 @@
       }
 
       $('btn-reset-marks').addEventListener('click', resetMarks);
-      $('btn-clear-cal').addEventListener('click', function () {
-        state.cal = [];
-        if (state.active === 'cal') state.active = null;
-        updateStepUi();
-        if (state.result) {
-          // recalcula apenas as exibições em mmHg
-          state.result = null;
-          stepResult.hidden = true;
-        }
-        redraw();
-        updateHint();
-      });
 
       // --------- Steps ---------
       stepBtns.forEach(function (btn) {
@@ -476,7 +429,6 @@
           var step = btn.dataset.step;
           if (step === 'roi') state.roi = [];
           if (step === 'color') { state.color = null; state.colorPoint = null; }
-          if (step === 'cal') state.cal = [];
           state.active = step;
           updateStepUi();
           updateRunButton();
@@ -489,8 +441,7 @@
         stepBtns.forEach(function (btn) {
           var step = btn.dataset.step;
           var done = (step === 'roi' && state.roi.length === 2)
-            || (step === 'color' && state.color)
-            || (step === 'cal' && state.cal.length === 2);
+            || (step === 'color' && state.color);
           btn.dataset.done = done ? 'true' : 'false';
           btn.dataset.active = (state.active === step) ? 'true' : 'false';
         });
@@ -509,11 +460,6 @@
             break;
           case 'color':
             msg = '<strong>Passo 2:</strong> toque <strong>sobre a curva</strong> e, se quiser ajustar, <strong>arraste com o dedo</strong> — uma lupa aparece para você ver pixel a pixel. Solte quando o alvo estiver sobre a curva.';
-            break;
-          case 'cal':
-            if (state.cal.length === 0) msg = '<strong>Calibração (opcional):</strong> toque no primeiro ponto da escala mmHg (ex.: linha do 100).';
-            else if (state.cal.length === 1) msg = '<strong>Calibração (opcional):</strong> toque no segundo ponto da escala mmHg (ex.: linha do 0).';
-            else msg = '<strong>Calibração concluída.</strong> Recalcule para ver PP em mmHg.';
             break;
           default:
             if (state.roi.length === 2 && state.color) msg = 'Tudo pronto. Toque em <strong>Calcular ΔPP</strong>.';
@@ -536,7 +482,8 @@
         var cy = cssY * (canvas.height / rect.height);
         return {
           css: { x: cssX, y: cssY },
-          img: { x: cx / imgScale, y: cy / imgScale }
+          img: { x: cx / imgScale, y: cy / imgScale },
+          client: { x: e.clientX, y: e.clientY }
         };
       }
 
@@ -549,18 +496,15 @@
         return { r: r/n, g: g/n, b: b/n };
       }
 
-      function showMagnifier(imgP, cssP) {
+      function showMagnifier(imgP, clientP) {
         var size = 140;
-        var wrapW = canvas.clientWidth;
-        var wrapH = canvas.clientHeight;
-        // posição: 30 px acima do toque; se não couber, abaixo
-        var top = cssP.y - size - 30;
-        if (top < 5) top = cssP.y + 30;
-        if (top + size > wrapH - 5) top = wrapH - size - 5;
-        if (top < 5) top = 5;
-        var left = cssP.x - size / 2;
+        // posição FIXA no viewport, SEMPRE acima do dedo (offset constante)
+        var offsetY = 70; // distância do dedo até a base da lupa
+        var top = clientP.y - size - offsetY;
+        if (top < 5) top = 5; // se chegar no topo da tela, gruda lá (não flipa)
+        var left = clientP.x - size / 2;
         if (left < 5) left = 5;
-        if (left + size > wrapW - 5) left = wrapW - size - 5;
+        if (left + size > window.innerWidth - 5) left = window.innerWidth - size - 5;
         magEl.style.left = left + 'px';
         magEl.style.top = top + 'px';
         magEl.hidden = false;
@@ -615,26 +559,10 @@
           drag = { mode: 'roi', startImg: c.img, currentImg: c.img };
           redraw();
         } else if (state.active === 'color') {
-          var col = showMagnifier(c.img, c.css);
+          var col = showMagnifier(c.img, c.client);
           state.color = col;
           state.colorPoint = c.img;
           drag = { mode: 'color' };
-          redraw();
-        } else if (state.active === 'cal') {
-          var v = parseFloat(prompt('Valor em mmHg deste ponto da escala:', state.cal.length === 0 ? '100' : '0'));
-          if (!isFinite(v)) return;
-          state.cal.push({ x: c.img.x, y: c.img.y, mmHg: v });
-          if (state.cal.length === 2) {
-            if (state.cal[0].mmHg === state.cal[1].mmHg || state.cal[0].y === state.cal[1].y) {
-              alert('Os dois pontos de calibração precisam ter valores e posições verticais diferentes.');
-              state.cal = [];
-            } else {
-              state.active = null;
-            }
-          }
-          updateStepUi();
-          updateRunButton();
-          updateHint();
           redraw();
         }
       });
@@ -647,7 +575,7 @@
           drag.currentImg = c.img;
           redraw();
         } else if (drag.mode === 'color') {
-          var col = showMagnifier(c.img, c.css);
+          var col = showMagnifier(c.img, c.client);
           state.color = col;
           state.colorPoint = c.img;
           redraw();
@@ -713,18 +641,6 @@
           ctx.lineWidth = 2;
           ctx.setLineDash([6, 4]);
           ctx.strokeRect(r0.x, r0.y, r1.x - r0.x, r1.y - r0.y);
-          ctx.restore();
-        }
-
-        state.cal.forEach(function (p) { drawDot(p, '#ffd139', String(p.mmHg) + ' mmHg'); });
-        if (state.cal.length === 2) {
-          var c0 = imgToCanvas(state.cal[0]);
-          var c1 = imgToCanvas(state.cal[1]);
-          ctx.save();
-          ctx.strokeStyle = 'rgba(255,209,57,0.5)';
-          ctx.setLineDash([3, 3]);
-          ctx.beginPath();
-          ctx.moveTo(c0.x, c0.y); ctx.lineTo(c1.x, c1.y); ctx.stroke();
           ctx.restore();
         }
 
@@ -825,9 +741,16 @@
         var threshold = 25 + tolPct;
         var thrSq = threshold * threshold;
 
-        var rough = new Array(roiW);
+        // Para cada coluna registramos o MAIOR grupo contíguo de pixels que casam
+        // (filtra pontilhados de referência) e armazenamos yTop, yBottom e yCenter.
+        // yTop = topo da curva (maior pressão local)
+        // yBottom = base da curva (menor pressão local)
+        // Em upstrokes/downstrokes íngremes, [yTop, yBottom] cobre todo o trecho
+        // que a curva atravessa naquela coluna — este é o "envelope" usado para
+        // detectar picos sistólicos (min yTop) e vales diastólicos (max yBottom)
+        // sem colapsar para o centro.
+        var perCol = new Array(roiW);
         for (var x = 0; x < roiW; x++) {
-          // varre coluna e mantém o maior grupo contíguo de pixels que casam
           var bestStart = -1, bestEnd = -1, bestSum = 0;
           var gStart = -1, gSum = 0;
           for (var y = 0; y < roiH; y++) {
@@ -853,115 +776,147 @@
               bestStart = gStart; bestEnd = roiH - 1; bestSum = gSum;
             }
           }
-          rough[x] = (bestStart >= 0) ? (bestSum / (bestEnd - bestStart + 1)) : null;
-        }
-
-        // Filtro de mediana (janela 5) para limpar colunas que pegaram um pontilhado
-        var medW = 2;
-        var medianed = new Array(roiW);
-        for (var x = 0; x < roiW; x++) {
-          var win = [];
-          for (var k = -medW; k <= medW; k++) {
-            var j = x + k;
-            if (j < 0 || j >= roiW) continue;
-            if (rough[j] !== null) win.push(rough[j]);
+          if (bestStart >= 0) {
+            perCol[x] = {
+              yT: bestStart,
+              yB: bestEnd,
+              yC: bestSum / (bestEnd - bestStart + 1)
+            };
+          } else {
+            perCol[x] = null;
           }
-          if (!win.length) { medianed[x] = null; continue; }
-          win.sort(function (a, b) { return a - b; });
-          medianed[x] = win[Math.floor(win.length / 2)];
         }
 
-        // Compacta em array de pontos (xImg, yImg)
+        // Mediana janela 5 aplicada a yT, yB e yC independentemente.
+        var medW = 2;
+        function medianAt(getter) {
+          var out = new Array(roiW);
+          for (var x = 0; x < roiW; x++) {
+            var win = [];
+            for (var k = -medW; k <= medW; k++) {
+              var j = x + k;
+              if (j < 0 || j >= roiW) continue;
+              if (perCol[j]) win.push(getter(perCol[j]));
+            }
+            if (!win.length) { out[x] = null; continue; }
+            win.sort(function (a, b) { return a - b; });
+            out[x] = win[Math.floor(win.length / 2)];
+          }
+          return out;
+        }
+        var yTarr = medianAt(function (p) { return p.yT; });
+        var yBarr = medianAt(function (p) { return p.yB; });
+        var yCarr = medianAt(function (p) { return p.yC; });
+
+        // Compacta em array de pontos (xImg, yC, yT, yB) — yC é usado para visualização
         var curve = [];
         for (var x = 0; x < roiW; x++) {
-          if (medianed[x] !== null) curve.push({ xImg: x0 + x, yImg: y0 + medianed[x] });
+          if (yCarr[x] !== null) {
+            curve.push({
+              xImg: x0 + x,
+              yImg: y0 + yCarr[x],
+              yC: y0 + yCarr[x],
+              yT: y0 + yTarr[x],
+              yB: y0 + yBarr[x]
+            });
+          }
         }
         if (curve.length < 30) return { error: 'Não foi possível detectar a curva. Aumente a tolerância de cor, refine a cor amostrada ou ajuste a área.' };
 
-        // Suavização (média móvel janela 7)
-        var ys = curve.map(function (p) { return p.yImg; });
-        var smoothed = [];
-        var w = 3;
-        for (var i = 0; i < ys.length; i++) {
-          var s = 0, n = 0;
-          for (var k = -w; k <= w; k++) {
-            var j = i + k;
-            if (j < 0 || j >= ys.length) continue;
-            s += ys[j]; n++;
+        // Suavização leve (janela 5) só do yC para visualização
+        function smoothInPlace(field, w) {
+          var src = curve.map(function (p) { return p[field]; });
+          for (var i = 0; i < curve.length; i++) {
+            var s = 0, n = 0;
+            for (var k = -w; k <= w; k++) {
+              var j = i + k;
+              if (j < 0 || j >= src.length) continue;
+              s += src[j]; n++;
+            }
+            curve[i][field] = s / n;
           }
-          smoothed.push(s / n);
         }
-        for (var i = 0; i < curve.length; i++) curve[i].yImg = smoothed[i];
+        smoothInPlace('yC', 2);
+        smoothInPlace('yImg', 2);
+        smoothInPlace('yT', 1);
+        smoothInPlace('yB', 1);
 
-        // Detecção de extremos locais
-        var minDist = Math.max(8, Math.round(roiW * 0.02));
-        var winCmp = Math.max(3, Math.round(minDist / 2));
-        var systolics = [], diastolics = [];
-        for (var i = winCmp; i < curve.length - winCmp; i++) {
-          var loc = curve[i].yImg;
-          var minLocal = loc, maxLocal = loc;
-          for (var k = -winCmp; k <= winCmp; k++) {
-            if (k === 0) continue;
-            var vv = curve[i + k].yImg;
-            if (vv < minLocal) minLocal = vv;
-            if (vv > maxLocal) maxLocal = vv;
+        var allYT = curve.map(function (p) { return p.yT; });
+        var allYB = curve.map(function (p) { return p.yB; });
+        var minYT = Math.min.apply(null, allYT);
+        var maxYB = Math.max.apply(null, allYB);
+        var rangeY = maxYB - minYT;
+        if (rangeY < 5) return { error: 'Curva detectada quase plana. Refine a área ou a cor amostrada.' };
+
+        // Estima período cardíaco por auto-correlação simples no yT
+        // (busca lag entre 8 e 80 px com correlação máxima)
+        var yTcent = curve.map(function (p) { return p.yT - (minYT + maxYB) / 2; });
+        var minLag = Math.max(8, Math.round(curve.length * 0.012));
+        var maxLag = Math.min(curve.length - 5, Math.max(40, Math.round(curve.length * 0.18)));
+        var bestLag = minLag, bestCorr = -Infinity;
+        for (var lag = minLag; lag <= maxLag; lag++) {
+          var corr = 0, nC = 0;
+          for (var i = 0; i < yTcent.length - lag; i++) {
+            corr += yTcent[i] * yTcent[i + lag]; nC++;
           }
-          // sistólico = yImg mínimo (mais alto na tela)
-          if (loc <= minLocal) {
-            if (!systolics.length || (curve[i].xImg - systolics[systolics.length - 1].xImg) >= minDist) {
+          corr /= nC;
+          if (corr > bestCorr) { bestCorr = corr; bestLag = lag; }
+        }
+        var cycleW = bestLag;
+
+        // Detecta sistólicos = mínimos locais de yT em janela ~ 0.4·cycleW
+        // e prominência ≥ 25% do range total
+        var winSys = Math.max(5, Math.round(cycleW * 0.4));
+        var minProm = rangeY * 0.25;
+        var systolics = [];
+        for (var i = winSys; i < curve.length - winSys; i++) {
+          var loc = curve[i].yT;
+          var isMin = true;
+          for (var k = -winSys; k <= winSys; k++) {
+            if (k === 0) continue;
+            if (curve[i + k].yT < loc) { isMin = false; break; }
+          }
+          if (isMin && (maxYB - loc) >= minProm) {
+            if (!systolics.length || (curve[i].xImg - systolics[systolics.length - 1].xImg) >= Math.round(cycleW * 0.55)) {
               systolics.push(curve[i]);
             }
           }
-          // diastólico = yImg máximo (mais baixo na tela)
-          if (loc >= maxLocal) {
-            if (!diastolics.length || (curve[i].xImg - diastolics[diastolics.length - 1].xImg) >= minDist) {
-              diastolics.push(curve[i]);
-            }
-          }
         }
 
-        // Filtra por prominência mínima (15% do range)
-        var allY = curve.map(function (p) { return p.yImg; });
-        var minY = Math.min.apply(null, allY);
-        var maxY = Math.max.apply(null, allY);
-        var rangeY = maxY - minY;
-        var minProm = rangeY * 0.15;
-
-        // Combina e compacta em sequências alternadas (pega o mais extremo de cada sequência)
-        var allExt = [];
-        systolics.forEach(function (p) { allExt.push({ p: p, type: 's' }); });
-        diastolics.forEach(function (p) { allExt.push({ p: p, type: 'd' }); });
-        allExt.sort(function (a, b) { return a.p.xImg - b.p.xImg; });
-        var compact = [];
-        for (var i = 0; i < allExt.length; i++) {
-          var cur = allExt[i];
-          if (compact.length && compact[compact.length - 1].type === cur.type) {
-            var last = compact[compact.length - 1];
-            if (cur.type === 's' && cur.p.yImg < last.p.yImg) compact[compact.length - 1] = cur;
-            if (cur.type === 'd' && cur.p.yImg > last.p.yImg) compact[compact.length - 1] = cur;
-          } else {
-            compact.push(cur);
-          }
+        if (systolics.length < 3) {
+          return { error: 'Poucos picos sistólicos detectados (' + systolics.length + '). Verifique a área e a cor amostrada.' };
         }
 
-        // Forma ciclos: diastólico → sistólico subsequente
+        // Para cada par de sistólicos consecutivos, diastólico = ponto de
+        // MAIOR yB no intervalo (vale real da pressão; ignora notch dicrótico,
+        // pois o notch tem yB menor que o vale real entre dois batimentos).
         var cycles = [];
-        for (var i = 0; i < compact.length - 1; i++) {
-          if (compact[i].type === 'd' && compact[i + 1].type === 's') {
-            var d = compact[i].p, s = compact[i + 1].p;
-            var ppPx = d.yImg - s.yImg; // amplitude em pixels (positivo)
-            if (ppPx >= minProm) {
-              cycles.push({
-                systolic: s,
-                diastolic: d,
-                ppPx: ppPx
-              });
-            }
+        // mapa xImg → índice na curva
+        var idxByX = {};
+        for (var i = 0; i < curve.length; i++) idxByX[curve[i].xImg] = i;
+
+        for (var i = 1; i < systolics.length; i++) {
+          var sysPrev = systolics[i - 1];
+          var sysCurr = systolics[i];
+          var idxPrev = idxByX[sysPrev.xImg];
+          var idxCurr = idxByX[sysCurr.xImg];
+          if (idxPrev == null || idxCurr == null || idxCurr - idxPrev < 4) continue;
+          var bestY = -Infinity, bestPt = null;
+          for (var j = idxPrev + 1; j < idxCurr; j++) {
+            if (curve[j].yB > bestY) { bestY = curve[j].yB; bestPt = curve[j]; }
           }
+          if (!bestPt) continue;
+          var ppPx = bestPt.yB - sysCurr.yT;
+          if (ppPx < minProm * 0.5) continue;
+          cycles.push({
+            systolic: { xImg: sysCurr.xImg, yImg: sysCurr.yT, yT: sysCurr.yT, yB: sysCurr.yB },
+            diastolic: { xImg: bestPt.xImg, yImg: bestPt.yB, yT: bestPt.yT, yB: bestPt.yB },
+            ppPx: ppPx
+          });
         }
 
         if (cycles.length < 2) {
-          return { error: 'Foram detectados menos de 2 ciclos válidos. Verifique a área selecionada e a cor amostrada, ou tente uma foto com mais batimentos.' };
+          return { error: 'Menos de 2 ciclos válidos detectados. Tente outra área ou outra cor.' };
         }
 
         var ppMaxCycle = cycles[0], ppMinCycle = cycles[0];
@@ -970,21 +925,10 @@
           if (cycles[i].ppPx < ppMinCycle.ppPx) ppMinCycle = cycles[i];
         }
 
-        // ΔPP a partir das amplitudes em PIXELS (não precisa calibrar)
         var ppMaxPx = ppMaxCycle.ppPx;
         var ppMinPx = ppMinCycle.ppPx;
         var ppMeanPx = (ppMaxPx + ppMinPx) / 2;
         var dpp = ppMeanPx > 0 ? 100 * (ppMaxPx - ppMinPx) / ppMeanPx : NaN;
-
-        // Calibração opcional: converte para mmHg se o usuário forneceu
-        var ppMaxMmHg = null, ppMinMmHg = null;
-        if (state.cal.length === 2) {
-          var cal = state.cal.slice().sort(function (a, b) { return a.y - b.y; });
-          // mmHg/pixel (em valor absoluto)
-          var mmHgPerPx = Math.abs((cal[1].mmHg - cal[0].mmHg) / (cal[1].y - cal[0].y));
-          ppMaxMmHg = ppMaxPx * mmHgPerPx;
-          ppMinMmHg = ppMinPx * mmHgPerPx;
-        }
 
         var confidence = 'baixa';
         if (cycles.length >= 4) confidence = 'média';
@@ -997,13 +941,12 @@
           cycles: cycles,
           ppMaxPx: ppMaxPx,
           ppMinPx: ppMinPx,
-          ppMaxMmHg: ppMaxMmHg,
-          ppMinMmHg: ppMinMmHg,
           dpp: dpp,
           ppMaxCycle: ppMaxCycle,
           ppMinCycle: ppMinCycle,
           confidence: confidence,
-          nCycles: cycles.length
+          nCycles: cycles.length,
+          cycleWidth: cycleW
         };
       }
 
@@ -1012,8 +955,6 @@
         var rMax = $('result-pp-max');
         var rMin = $('result-pp-min');
         var rDpp = $('result-dpp');
-        var fMax = $('formula-pp-max');
-        var fMin = $('formula-pp-min');
         var interp = $('interpretation');
         var interpText = $('interpretation-text');
         var meta1 = $('meta-cycles');
@@ -1037,18 +978,8 @@
         }
 
         rDpp.textContent = res.dpp.toFixed(1) + ' %';
-
-        if (res.ppMaxMmHg !== null) {
-          rMax.textContent = res.ppMaxMmHg.toFixed(0) + ' mmHg';
-          rMin.textContent = res.ppMinMmHg.toFixed(0) + ' mmHg';
-          fMax.textContent = 'Maior PAS−PAD detectado (calibrado pela escala da foto).';
-          fMin.textContent = 'Menor PAS−PAD detectado (calibrado pela escala da foto).';
-        } else {
-          rMax.textContent = res.ppMaxPx.toFixed(0) + ' px';
-          rMin.textContent = res.ppMinPx.toFixed(0) + ' px';
-          fMax.textContent = 'Amplitude em pixels (sem calibração). Para ver em mmHg, use a calibração opcional.';
-          fMin.textContent = 'Amplitude em pixels (sem calibração).';
-        }
+        rMax.textContent = res.ppMaxPx.toFixed(0) + ' px';
+        rMin.textContent = res.ppMinPx.toFixed(0) + ' px';
 
         meta1.textContent = 'Ciclos detectados: ' + res.nCycles;
         meta2.textContent = 'Confiança: ' + res.confidence;

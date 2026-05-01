@@ -286,9 +286,9 @@
         </div>
       </div>
       <div class="step-controls">
-        <button class="step-btn" data-step="roi"><span class="step-num">1</span>Área do traçado</button>
-        <button class="step-btn" data-step="color"><span class="step-num">2</span>Cor da curva</button>
-        <button class="step-btn run" id="btn-run" disabled>Calcular ΔPP</button>
+        <button class="step-btn" data-step="tilt"><span class="step-num">1</span>Ajustar tela</button>
+        <button class="step-btn" data-step="roi"><span class="step-num">2</span>Área do traçado</button>
+        <button class="step-btn" data-step="color"><span class="step-num">3</span>Cor da curva</button>
         <button class="step-btn reset" id="btn-reset-marks">Recomeçar marcações</button>
       </div>
       <div class="tol-row">
@@ -297,7 +297,7 @@
         <span id="tol-val">40%</span>
       </div>
       <p class="hint" style="margin-top:0.25rem;">Aumente se a foto estiver com cor distorcida ou desbotada e a curva não for detectada; diminua se a detecção estiver capturando elementos vizinhos da mesma cor.</p>
-      <p class="hint" id="step-hint"><strong>Passo 1:</strong> toque o botão "Área do traçado" e <strong>arraste um retângulo</strong> sobre a região com a curva da pressão arterial.</p>
+      <p class="hint" id="step-hint"><strong>Passo 1 (opcional):</strong> toque em "Ajustar tela" para corrigir a inclinação da foto, ou pule direto para o "Área do traçado" se a foto já estiver reta.</p>
     </section>
 
     <section id="step-result" hidden>
@@ -332,12 +332,17 @@
         <span id="meta-confidence">Confiança: —</span>
       </div>
       <div class="warning" id="result-warning" hidden></div>
-      <p class="hint" style="margin-top:0.9rem;">Os pontos detectados (sístoles em vermelho-claro, diástoles em verde-claro) e os ciclos com PP<sub>max</sub>/PP<sub>min</sub> ficam destacados sobre a foto. Revise visualmente. Se a detecção estiver errada, refine a área ou a cor amostrada — ou utilize a versão com entrada manual.</p>
+      <p class="hint" style="margin-top:0.9rem;">Os pontos detectados (sístoles em vermelho-claro, diástoles em verde-claro) ficam sobre a foto. <strong>Você pode arrastar qualquer bolinha</strong> para corrigir manualmente — o ΔPP recalcula sozinho ao soltar. Se a detecção geral estiver errada, refine a área ou a cor amostrada.</p>
     </section>
 
     <section>
       <h2>Pré-requisitos clínicos</h2>
       <p class="hint">Para que o ΔPP seja válido, o paciente deve estar em <strong>ventilação mecânica controlada</strong>, sem esforço espontâneo, com volume corrente ≥ 8 mL/kg, em ritmo sinusal e com tórax/abdome fechados. Em SDRA grave, hipertensão intra-abdominal ou disfunção ventricular direita, a confiabilidade é reduzida. Considere manobras complementares (tidal volume challenge, elevação passiva de membros, mini-bólus) em zona cinzenta.</p>
+    </section>
+
+    <section style="border-color: rgba(234,179,8,0.4); background: rgba(234,179,8,0.06);">
+      <h2 style="color: #fde68a;">⚠ Aviso</h2>
+      <p class="hint">Esta ferramenta é <strong>experimental</strong> e foi criada exclusivamente para <strong>fins de estudo e aprendizado</strong>. A detecção automática a partir de uma foto está sujeita a erros de iluminação, ângulo, resolução, presença de linhas de referência e outros fatores. <strong>Não substitui o valor de ΔPP/PPV exibido pelo monitor multiparamétrico do paciente</strong> nem qualquer julgamento clínico. Sempre confirme a decisão de manejo volêmico com o número do monitor e com avaliação clínica integrada.</p>
     </section>
 
     <footer class="footer-buttons"></footer>
@@ -354,18 +359,21 @@
       var hiddenCtx = hiddenCanvas.getContext('2d', { willReadFrequently: true });
 
       var state = {
-        roi: [],          // [{x, y}, {x, y}] em px da imagem
-        color: null,      // {r, g, b}
-        colorPoint: null, // {x, y}
+        roi: [],
+        color: null,
+        colorPoint: null,
         active: null,
-        result: null
+        result: null,
+        zoom: null,
+        monitorSlope: null,
+        tiltCorners: null,     // [{x,y},{x,y},{x,y},{x,y}] = TL, TR, BR, BL
+        tiltApplied: false     // true quando o usuário já confirmou o warp
       };
 
       var $ = function (id) { return document.getElementById(id); };
       var stepHint = $('step-hint');
       var stepProcess = $('step-process');
       var stepResult = $('step-result');
-      var btnRun = $('btn-run');
       var stepBtns = document.querySelectorAll('.step-btn[data-step]');
 
       // --------- Upload ---------
@@ -386,6 +394,11 @@
             stepProcess.hidden = false;
             stepResult.hidden = true;
             fitCanvasToImage();
+            // Pré-tratamento: contrast stretch + saturação. Usuário vê o
+            // resultado tratado e amostra cor a partir dele.
+            try { enhanceHiddenImage(); } catch (_) {}
+            // Detecta inclinação da tela do monitor (maior região escura).
+            try { state.monitorSlope = detectMonitorTilt(); } catch (_) { state.monitorSlope = null; }
             redraw();
             stepProcess.scrollIntoView({ behavior: 'smooth', block: 'start' });
           };
@@ -407,12 +420,241 @@
         imgScale = scale;
       }
 
+      function fitCanvasToRoi(z) {
+        // Modo zoom: canvas mostra só o recorte da ROI, sempre em 1024 px de
+        // largura interna (= alta resolução visual), com altura proporcional
+        // ao aspecto da ROI.
+        var maxW = 1024;
+        var roiW = z.x1 - z.x0;
+        var roiH = z.y1 - z.y0;
+        if (roiW < 1 || roiH < 1) return;
+        canvas.width = maxW;
+        canvas.height = Math.max(80, Math.round((roiH / roiW) * maxW));
+      }
+
+      // === Detecção de cantos da tela por saturação cromática ===
+      // Funciona para qualquer cor de moldura (a tela tem conteúdo colorido,
+      // a moldura é monocromática). Retorna [TL, TR, BR, BL] ou null.
+      function detectScreenCorners() {
+        var w = hiddenCanvas.width, h = hiddenCanvas.height;
+        if (!w || !h) return null;
+        var d = hiddenCtx.getImageData(0, 0, w, h).data;
+        var pTL = null, pTR = null, pBR = null, pBL = null;
+        var minPos = Infinity, maxPos = -Infinity, minDif = Infinity, maxDif = -Infinity;
+        var step = Math.max(1, Math.floor(Math.max(w, h) / 800));
+        for (var y = 0; y < h; y += step) {
+          for (var x = 0; x < w; x += step) {
+            var i = (y * w + x) * 4;
+            var r = d[i], g = d[i+1], b = d[i+2];
+            var sat = Math.max(r, g, b) - Math.min(r, g, b);
+            if (sat < 50) continue;
+            var s = x + y, dif = x - y;
+            if (s < minPos) { minPos = s; pTL = { x: x, y: y }; }
+            if (s > maxPos) { maxPos = s; pBR = { x: x, y: y }; }
+            if (dif > maxDif) { maxDif = dif; pTR = { x: x, y: y }; }
+            if (dif < minDif) { minDif = dif; pBL = { x: x, y: y }; }
+          }
+        }
+        if (!pTL || !pTR || !pBR || !pBL) return null;
+        return [pTL, pTR, pBR, pBL];
+      }
+
+      // === Homografia (4 pontos) ===
+      function solveHomography(src, dst) {
+        var A = [], b = [];
+        for (var i = 0; i < 4; i++) {
+          var x = src[i].x, y = src[i].y, X = dst[i].x, Y = dst[i].y;
+          A.push([x, y, 1, 0, 0, 0, -x*X, -y*X]); b.push(X);
+          A.push([0, 0, 0, x, y, 1, -x*Y, -y*Y]); b.push(Y);
+        }
+        for (var col = 0; col < 8; col++) {
+          var maxRow = col;
+          for (var r = col + 1; r < 8; r++) if (Math.abs(A[r][col]) > Math.abs(A[maxRow][col])) maxRow = r;
+          if (maxRow !== col) { var t = A[col]; A[col] = A[maxRow]; A[maxRow] = t; var tb = b[col]; b[col] = b[maxRow]; b[maxRow] = tb; }
+          if (Math.abs(A[col][col]) < 1e-10) return null;
+          for (var rr = col + 1; rr < 8; rr++) {
+            var f = A[rr][col] / A[col][col];
+            for (var cc = col; cc < 8; cc++) A[rr][cc] -= f * A[col][cc];
+            b[rr] -= f * b[col];
+          }
+        }
+        var h = new Array(9); h[8] = 1;
+        for (var ii = 7; ii >= 0; ii--) {
+          var sm = b[ii];
+          for (var jj = ii + 1; jj < 8; jj++) sm -= A[ii][jj] * h[jj];
+          h[ii] = sm / A[ii][ii];
+        }
+        return h;
+      }
+
+      function inverse3x3(m) {
+        var a = m[0], bb = m[1], c = m[2], dd = m[3], e = m[4], f = m[5], g = m[6], hh = m[7], iii = m[8];
+        var det = a*(e*iii - f*hh) - bb*(dd*iii - f*g) + c*(dd*hh - e*g);
+        if (Math.abs(det) < 1e-12) return null;
+        var inv = 1 / det;
+        return [
+          (e*iii - f*hh) * inv, -(bb*iii - c*hh) * inv, (bb*f - c*e) * inv,
+          -(dd*iii - f*g) * inv, (a*iii - c*g) * inv, -(a*f - c*dd) * inv,
+          (dd*hh - e*g) * inv, -(a*hh - bb*g) * inv, (a*e - bb*dd) * inv
+        ];
+      }
+
+      // Aplica warp perspectivo: 4 cantos da source → retângulo outW x outH
+      function warpQuadrilateral(corners, outW, outH) {
+        var dst = [{x:0,y:0},{x:outW,y:0},{x:outW,y:outH},{x:0,y:outH}];
+        var H = solveHomography(corners, dst);
+        if (!H) return null;
+        var Hi = inverse3x3(H);
+        if (!Hi) return null;
+        var sW = hiddenCanvas.width, sH = hiddenCanvas.height;
+        var srcData = hiddenCtx.getImageData(0, 0, sW, sH).data;
+        var outCanvas = document.createElement('canvas');
+        outCanvas.width = outW; outCanvas.height = outH;
+        var outCtx = outCanvas.getContext('2d');
+        var outImg = outCtx.createImageData(outW, outH);
+        var od = outImg.data;
+        for (var Y = 0; Y < outH; Y++) {
+          for (var X = 0; X < outW; X++) {
+            var wp = Hi[6]*X + Hi[7]*Y + Hi[8];
+            var sx = (Hi[0]*X + Hi[1]*Y + Hi[2]) / wp;
+            var sy = (Hi[3]*X + Hi[4]*Y + Hi[5]) / wp;
+            var x0 = Math.floor(sx), y0 = Math.floor(sy);
+            var dx = sx - x0, dy = sy - y0;
+            var oi = (Y * outW + X) * 4;
+            od[oi+3] = 255;
+            if (x0 < 0 || x0 >= sW - 1 || y0 < 0 || y0 >= sH - 1) continue;
+            for (var ch = 0; ch < 3; ch++) {
+              var i00 = (y0 * sW + x0) * 4 + ch;
+              var i01 = i00 + 4;
+              var i10 = i00 + sW * 4;
+              var i11 = i10 + 4;
+              od[oi + ch] = (1-dx)*(1-dy)*srcData[i00] + dx*(1-dy)*srcData[i01] + (1-dx)*dy*srcData[i10] + dx*dy*srcData[i11];
+            }
+          }
+        }
+        outCtx.putImageData(outImg, 0, 0);
+        return outCanvas;
+      }
+
+      // Pré-tratamento moderado: contrast stretch por percentis 1–99 (recupera
+      // dynamic range esmagado por JPEG/baixa luz) + saturação 1.3×. Aplica
+      // direto no hiddenCanvas, então o usuário vê e amostra cor da imagem
+      // já tratada — não há mismatch entre o que ele vê e o que o algoritmo
+      // processa. Conservador o bastante pra não criar artefatos em fotos boas.
+      function enhanceHiddenImage() {
+        var w = hiddenCanvas.width, h = hiddenCanvas.height;
+        if (!w || !h) return;
+        var idata = hiddenCtx.getImageData(0, 0, w, h);
+        var d = idata.data;
+        var n = w * h;
+        var hR = new Uint32Array(256), hG = new Uint32Array(256), hB = new Uint32Array(256);
+        for (var i = 0; i < d.length; i += 4) { hR[d[i]]++; hG[d[i+1]]++; hB[d[i+2]]++; }
+        function pct(hh, p) {
+          var t = n * p / 100, s = 0;
+          for (var v = 0; v < 256; v++) { s += hh[v]; if (s >= t) return v; }
+          return 255;
+        }
+        var loR = pct(hR, 1), hiR = pct(hR, 99);
+        var loG = pct(hG, 1), hiG = pct(hG, 99);
+        var loB = pct(hB, 1), hiB = pct(hB, 99);
+        var dR = Math.max(1, hiR - loR), dG = Math.max(1, hiG - loG), dB = Math.max(1, hiB - loB);
+        var sat = 1.3;
+        for (var j = 0; j < d.length; j += 4) {
+          var r = (d[j] - loR) * 255 / dR;
+          var g = (d[j+1] - loG) * 255 / dG;
+          var b = (d[j+2] - loB) * 255 / dB;
+          if (r < 0) r = 0; else if (r > 255) r = 255;
+          if (g < 0) g = 0; else if (g > 255) g = 255;
+          if (b < 0) b = 0; else if (b > 255) b = 255;
+          var avg = (r + g + b) / 3;
+          r = avg + (r - avg) * sat;
+          g = avg + (g - avg) * sat;
+          b = avg + (b - avg) * sat;
+          d[j] = r < 0 ? 0 : (r > 255 ? 255 : r);
+          d[j+1] = g < 0 ? 0 : (g > 255 ? 255 : g);
+          d[j+2] = b < 0 ? 0 : (b > 255 ? 255 : b);
+        }
+        hiddenCtx.putImageData(idata, 0, 0);
+      }
+
+      // Detecta a inclinação da tela do monitor: maior região escura é a tela.
+      // Calcula a orientação do eixo principal por momentos. Retorna a slope
+      // (rise/run) ou null se não houver tela óbvia. Funciona em qualquer
+      // foto onde a tela preta esteja claramente delimitada.
+      function detectMonitorTilt() {
+        var nW = hiddenCanvas.width, nH = hiddenCanvas.height;
+        if (!nW || !nH) return null;
+        var step = Math.max(1, Math.ceil(Math.max(nW, nH) / 500));
+        var sW = Math.floor(nW / step), sH = Math.floor(nH / step);
+        if (sW < 30 || sH < 30) return null;
+        var imd = hiddenCtx.getImageData(0, 0, nW, nH).data;
+        var dark = new Uint8Array(sW * sH);
+        var darkN = 0;
+        for (var sy = 0; sy < sH; sy++) {
+          for (var sx = 0; sx < sW; sx++) {
+            var di = (sy * step * nW + sx * step) * 4;
+            if (imd[di] + imd[di+1] + imd[di+2] < 220) { dark[sy * sW + sx] = 1; darkN++; }
+          }
+        }
+        if (darkN < sW * sH * 0.05) return null;
+        // CC 4-conn na imagem reduzida
+        var lab = new Int32Array(sW * sH);
+        var par = [0];
+        function rt(a) { while (par[a] !== a) { par[a] = par[par[a]]; a = par[a]; } return a; }
+        var nL = 1;
+        for (var yy = 0; yy < sH; yy++) {
+          for (var xx = 0; xx < sW; xx++) {
+            if (!dark[yy * sW + xx]) continue;
+            var ix = yy * sW + xx;
+            var lL = xx > 0 ? lab[ix - 1] : 0;
+            var uL = yy > 0 ? lab[ix - sW] : 0;
+            if (lL && uL) {
+              lab[ix] = lL;
+              var ra = rt(lL), rb = rt(uL);
+              if (ra !== rb) par[ra] = rb;
+            } else if (lL) lab[ix] = lL;
+            else if (uL) lab[ix] = uL;
+            else { lab[ix] = nL; par.push(nL); nL++; }
+          }
+        }
+        var sz = new Int32Array(nL + 1);
+        for (var ii = 0; ii < lab.length; ii++) {
+          if (lab[ii]) { var r = rt(lab[ii]); lab[ii] = r; sz[r]++; }
+        }
+        var bigL = 0, bigS = 0;
+        for (var jj = 1; jj < sz.length; jj++) if (sz[jj] > bigS) { bigS = sz[jj]; bigL = jj; }
+        if (bigS < sW * sH * 0.08) return null; // tela deve ocupar ≥ 8% da imagem
+
+        // Centróide e momentos de segunda ordem da maior região
+        var cxs = 0, cys = 0, np = 0;
+        for (var y2 = 0; y2 < sH; y2++) for (var x2 = 0; x2 < sW; x2++) {
+          if (lab[y2 * sW + x2] === bigL) { cxs += x2; cys += y2; np++; }
+        }
+        cxs /= np; cys /= np;
+        var muXX = 0, muYY = 0, muXY = 0;
+        for (var y3 = 0; y3 < sH; y3++) for (var x3 = 0; x3 < sW; x3++) {
+          if (lab[y3 * sW + x3] === bigL) {
+            var dx = x3 - cxs, dy = y3 - cys;
+            muXX += dx * dx; muYY += dy * dy; muXY += dx * dy;
+          }
+        }
+        if (muXX <= muYY) return null; // eixo maior não é horizontal: provavelmente não é a tela
+        var theta = 0.5 * Math.atan2(2 * muXY, muXX - muYY);
+        if (Math.abs(theta) > 0.5) return null; // > ~28°: rejeita
+        return Math.tan(theta);
+      }
+
       function resetMarks() {
         state.roi = [];
         state.color = null;
         state.colorPoint = null;
         state.active = null;
         state.result = null;
+        state.tiltCorners = null;
+        if (state.zoom) {
+          state.zoom = null;
+          if (img) fitCanvasToImage();
+        }
         updateStepUi();
         updateRunButton();
         if (img) redraw();
@@ -427,7 +669,36 @@
         btn.addEventListener('click', function () {
           if (!img) return;
           var step = btn.dataset.step;
-          if (step === 'roi') state.roi = [];
+          if (step === 'tilt') {
+            // Sai do zoom se houver
+            if (state.zoom) { state.zoom = null; fitCanvasToImage(); }
+            // Auto-detecta os 4 cantos por saturação cromática
+            var detected = detectScreenCorners();
+            var iw = hiddenCanvas.width, ih = hiddenCanvas.height;
+            // Margem mínima pra que as bolinhas nunca encostem no extremo
+            // da tela do canvas — caso contrário fica difícil de pegar.
+            var marg = Math.max(28, Math.round(Math.min(iw, ih) * 0.04));
+            if (detected) {
+              state.tiltCorners = detected.map(function (p) {
+                return {
+                  x: Math.max(marg, Math.min(iw - marg, p.x)),
+                  y: Math.max(marg, Math.min(ih - marg, p.y))
+                };
+              });
+            } else {
+              // fallback: retângulo confortável dentro da imagem
+              state.tiltCorners = [
+                { x: marg, y: marg },
+                { x: iw - marg, y: marg },
+                { x: iw - marg, y: ih - marg },
+                { x: marg, y: ih - marg }
+              ];
+            }
+          }
+          if (step === 'roi') {
+            state.roi = [];
+            if (state.zoom) { state.zoom = null; fitCanvasToImage(); }
+          }
           if (step === 'color') { state.color = null; state.colorPoint = null; }
           state.active = step;
           updateStepUi();
@@ -437,32 +708,81 @@
         });
       });
 
+      function confirmTilt() {
+        if (!state.tiltCorners) return;
+        // Calcula dimensões do retângulo de saída baseadas nas distâncias
+        // entre os cantos (média entre top/bottom para largura, entre
+        // left/right para altura).
+        var c = state.tiltCorners;
+        function dist(a, b) { return Math.hypot(b.x - a.x, b.y - a.y); }
+        var topW = dist(c[0], c[1]), botW = dist(c[3], c[2]);
+        var leftH = dist(c[0], c[3]), rightH = dist(c[1], c[2]);
+        var outW = Math.round((topW + botW) / 2);
+        var outH = Math.round((leftH + rightH) / 2);
+        // Limita tamanho máximo para performance
+        var maxDim = 1600;
+        if (outW > maxDim) { outH = Math.round(outH * maxDim / outW); outW = maxDim; }
+        if (outH > maxDim) { outW = Math.round(outW * maxDim / outH); outH = maxDim; }
+        if (outW < 100 || outH < 50) return;
+        var warped = warpQuadrilateral(c, outW, outH);
+        if (!warped) return;
+        // Substitui hiddenCanvas pelo warped (a imagem agora está retificada)
+        hiddenCanvas.width = outW;
+        hiddenCanvas.height = outH;
+        hiddenCtx.drawImage(warped, 0, 0);
+        // Re-aplica pré-tratamento já no espaço warped
+        try { enhanceHiddenImage(); } catch (_) {}
+        // newImg agora vem do hiddenCanvas (que tem warped + tratamento),
+        // não do warped cru — assim quando fitCanvasToImage redesenhar
+        // hiddenCanvas a partir de img, o tratamento é preservado.
+        var newImg = new Image();
+        newImg.onload = function () {
+          img = newImg;
+          state.tiltCorners = null;
+          state.tiltApplied = true;
+          state.active = null;
+          // A imagem agora está retificada: zera a slope detectada na foto
+          // ORIGINAL (que era a inclinação da tela antes do warp). Caso
+          // contrário a correção seria aplicada DUAS VEZES no ppPx.
+          state.monitorSlope = 0;
+          fitCanvasToImage();
+          updateStepUi();
+          updateRunButton();
+          updateHint();
+          redraw();
+        };
+        newImg.src = hiddenCanvas.toDataURL();
+      }
+
       function updateStepUi() {
         stepBtns.forEach(function (btn) {
           var step = btn.dataset.step;
           var done = (step === 'roi' && state.roi.length === 2)
-            || (step === 'color' && state.color);
+            || (step === 'color' && state.color)
+            || (step === 'tilt' && state.tiltApplied);
           btn.dataset.done = done ? 'true' : 'false';
           btn.dataset.active = (state.active === step) ? 'true' : 'false';
         });
       }
 
       function updateRunButton() {
-        var ok = state.roi.length === 2 && state.color;
-        btnRun.disabled = !ok;
+        // No-op: o botão "Calcular" foi removido; cálculo é automático.
       }
 
       function updateHint() {
         var msg = '';
         switch (state.active) {
+          case 'tilt':
+            msg = '<strong>Ajustar tela:</strong> os 4 cantos azuis foram detectados automaticamente sobre a tela do monitor. <strong>Arraste qualquer canto</strong> para ajustar manualmente. Toque em <strong>Confirmar ajuste de tela</strong> para recortar e endireitar a imagem.';
+            break;
           case 'roi':
-            msg = '<strong>Passo 1:</strong> <strong>arraste um retângulo</strong> sobre a área do traçado da pressão arterial (toque, segure e arraste de um canto a outro). Procure incluir vários ciclos cardíacos.';
+            msg = '<strong>Passo 2:</strong> <strong>arraste um retângulo</strong> sobre a área do traçado da pressão arterial (toque, segure e arraste de um canto a outro). Procure incluir vários ciclos cardíacos.';
             break;
           case 'color':
-            msg = '<strong>Passo 2:</strong> toque <strong>sobre a curva</strong> e, se quiser ajustar, <strong>arraste com o dedo</strong> — uma lupa aparece para você ver pixel a pixel. Solte quando o alvo estiver sobre a curva.';
+            msg = '<strong>Passo 3:</strong> toque <strong>sobre a curva</strong> e, se quiser ajustar, <strong>arraste com o dedo</strong> — uma lupa aparece para você ver pixel a pixel. Solte quando o alvo estiver sobre a curva.';
             break;
           default:
-            if (state.roi.length === 2 && state.color) msg = 'Tudo pronto. Toque em <strong>Calcular ΔPP</strong>.';
+            if (state.roi.length === 2 && state.color) msg = 'Cálculo automático concluído. Você pode arrastar qualquer bolinha para refinar.';
             else msg = 'Toque nos passos numerados acima e siga as instruções.';
         }
         stepHint.innerHTML = msg;
@@ -480,20 +800,48 @@
         var cssY = e.clientY - rect.top;
         var cx = cssX * (canvas.width / rect.width);
         var cy = cssY * (canvas.height / rect.height);
+        var imgX, imgY;
+        if (state.zoom) {
+          var z = state.zoom;
+          imgX = z.x0 + cx * ((z.x1 - z.x0) / canvas.width);
+          imgY = z.y0 + cy * ((z.y1 - z.y0) / canvas.height);
+        } else {
+          imgX = cx / imgScale;
+          imgY = cy / imgScale;
+        }
         return {
           css: { x: cssX, y: cssY },
-          img: { x: cx / imgScale, y: cy / imgScale },
+          img: { x: imgX, y: imgY },
           client: { x: e.clientX, y: e.clientY }
         };
       }
 
       function sampleColorAt(imgP) {
-        var px = Math.max(1, Math.min(hiddenCanvas.width - 2, Math.round(imgP.x)));
-        var py = Math.max(1, Math.min(hiddenCanvas.height - 2, Math.round(imgP.y)));
-        var data = hiddenCtx.getImageData(px - 1, py - 1, 3, 3).data;
-        var r = 0, g = 0, b = 0, n = 0;
-        for (var i = 0; i < data.length; i += 4) { r += data[i]; g += data[i+1]; b += data[i+2]; n++; }
-        return { r: r/n, g: g/n, b: b/n };
+        // Numa janela 11×11 ao redor do toque: filtra pixels com chroma ≥ 30
+        // (descarta cinza/preto/branco), depois pega a MÉDIA dos 25% mais
+        // brilhantes (centro da curva, não bordas anti-aliasadas).
+        // Robustez: testado em fotos reais com curvas finas (BeneVision N15)
+        // onde mediana simples retornava o fundo escuro.
+        var s = 5;
+        var px = Math.max(s, Math.min(hiddenCanvas.width - s - 1, Math.round(imgP.x)));
+        var py = Math.max(s, Math.min(hiddenCanvas.height - s - 1, Math.round(imgP.y)));
+        var d = hiddenCtx.getImageData(px - s, py - s, 2*s+1, 2*s+1).data;
+        var cands = [];
+        for (var i = 0; i < d.length; i += 4) {
+          var r = d[i], g = d[i+1], b = d[i+2];
+          var ch = Math.max(r, g, b) - Math.min(r, g, b);
+          if (ch >= 30) cands.push({ r: r, g: g, b: b, sum: r + g + b });
+        }
+        if (!cands.length) {
+          // fallback: pixel exato do toque
+          var dCenter = hiddenCtx.getImageData(px, py, 1, 1).data;
+          return { r: dCenter[0], g: dCenter[1], b: dCenter[2] };
+        }
+        cands.sort(function (a, b) { return b.sum - a.sum; });
+        var topN = Math.max(1, Math.floor(cands.length * 0.25));
+        var sR = 0, sG = 0, sB = 0;
+        for (var k = 0; k < topN; k++) { sR += cands[k].r; sG += cands[k].g; sB += cands[k].b; }
+        return { r: Math.round(sR/topN), g: Math.round(sG/topN), b: Math.round(sB/topN) };
       }
 
       function showMagnifier(imgP, clientP) {
@@ -548,12 +896,99 @@
 
       // --------- Drag handlers ---------
       var drag = null;
+      var dotDrag = null; // ajuste fino: { cycleIdx, type: 'sys'|'dia' }
+
+      function hitTestDot(canvasX, canvasY) {
+        // Retorna { cycleIdx, type } se tocou em alguma bolinha; senão null.
+        if (!state.result || !state.result.cycles) return null;
+        var R = 18; // raio de hit em pixels do canvas (generoso pra mobile)
+        for (var i = 0; i < state.result.cycles.length; i++) {
+          var cyc = state.result.cycles[i];
+          var sP = imgToCanvas({ x: cyc.systolic.xImg, y: cyc.systolic.yT });
+          if (Math.hypot(canvasX - sP.x, canvasY - sP.y) < R) return { cycleIdx: i, type: 'sys' };
+          var dP = imgToCanvas({ x: cyc.diastolic.xImg, y: cyc.diastolic.yB });
+          if (Math.hypot(canvasX - dP.x, canvasY - dP.y) < R) return { cycleIdx: i, type: 'dia' };
+        }
+        return null;
+      }
+
+      function recomputeFromCycles() {
+        if (!state.result || !state.result.cycles) return;
+        var cycles = state.result.cycles;
+        var ppMaxC = cycles[0], ppMinC = cycles[0];
+        for (var i = 1; i < cycles.length; i++) {
+          if (cycles[i].ppPx > ppMaxC.ppPx) ppMaxC = cycles[i];
+          if (cycles[i].ppPx < ppMinC.ppPx) ppMinC = cycles[i];
+        }
+        state.result.ppMaxCycle = ppMaxC;
+        state.result.ppMinCycle = ppMinC;
+        state.result.ppMaxPx = ppMaxC.ppPx;
+        state.result.ppMinPx = ppMinC.ppPx;
+        var mean = (ppMaxC.ppPx + ppMinC.ppPx) / 2;
+        state.result.dpp = mean > 0 ? 100 * (ppMaxC.ppPx - ppMinC.ppPx) / mean : NaN;
+        state.result.systolics = cycles.map(function (c) { return c.systolic; });
+        state.result.diastolics = cycles.map(function (c) { return c.diastolic; });
+        renderResult(state.result, { noScroll: true });
+      }
 
       canvas.addEventListener('pointerdown', function (e) {
-        if (!img || !state.active) return;
+        if (!img) return;
+        // Antes de tudo: testa se o usuário tocou em uma bolinha pra ajuste fino
+        // (só vale quando os passos ROI/Cor já estão completos e há resultado)
+        if (!state.active && state.result && state.result.cycles) {
+          var rectHit = canvas.getBoundingClientRect();
+          var cssX = e.clientX - rectHit.left;
+          var cssY = e.clientY - rectHit.top;
+          var cxHit = cssX * (canvas.width / rectHit.width);
+          var cyHit = cssY * (canvas.height / rectHit.height);
+          var hit = hitTestDot(cxHit, cyHit);
+          if (hit) {
+            e.preventDefault();
+            try { canvas.setPointerCapture(e.pointerId); } catch (_) {}
+            dotDrag = hit;
+            // Lupa já no toque inicial: mostra a posição atual da bolinha
+            var cyc0 = state.result.cycles[hit.cycleIdx];
+            var initImg = (hit.type === 'sys')
+              ? { x: cyc0.systolic.xImg, y: cyc0.systolic.yT }
+              : { x: cyc0.diastolic.xImg, y: cyc0.diastolic.yB };
+            showMagnifier(initImg, { x: e.clientX, y: e.clientY });
+            return;
+          }
+        }
+        if (!state.active) return;
         e.preventDefault();
         try { canvas.setPointerCapture(e.pointerId); } catch (_) {}
         var c = pointerToCoords(e);
+
+        // No passo "tilt": testa primeiro o check verde no centro, depois os 4 cantos.
+        if (state.active === 'tilt' && state.tiltCorners) {
+          var rectT = canvas.getBoundingClientRect();
+          var cssXT = e.clientX - rectT.left;
+          var cssYT = e.clientY - rectT.top;
+          var ccxT = cssXT * (canvas.width / rectT.width);
+          var ccyT = cssYT * (canvas.height / rectT.height);
+          // Hit-test do check verde central
+          var csT = state.tiltCorners.map(imgToCanvas);
+          var ckXT = (csT[0].x + csT[1].x + csT[2].x + csT[3].x) / 4;
+          var ckYT = (csT[0].y + csT[1].y + csT[2].y + csT[3].y) / 4;
+          if (Math.hypot(ccxT - ckXT, ccyT - ckYT) < 40) {
+            drag = null;
+            confirmTilt();
+            return;
+          }
+          // Hit-test dos 4 cantos
+          var Rh = 22;
+          for (var ci = 0; ci < 4; ci++) {
+            var cp = csT[ci];
+            if (Math.hypot(ccxT - cp.x, ccyT - cp.y) < Rh) {
+              drag = { mode: 'tiltCorner', cornerIdx: ci };
+              showMagnifier(state.tiltCorners[ci], { x: e.clientX, y: e.clientY });
+              return;
+            }
+          }
+          drag = null;
+          return;
+        }
 
         if (state.active === 'roi') {
           drag = { mode: 'roi', startImg: c.img, currentImg: c.img };
@@ -568,6 +1003,23 @@
       });
 
       canvas.addEventListener('pointermove', function (e) {
+        if (dotDrag) {
+          e.preventDefault();
+          var c2 = pointerToCoords(e);
+          var cyc = state.result.cycles[dotDrag.cycleIdx];
+          if (dotDrag.type === 'sys') {
+            cyc.systolic.xImg = c2.img.x;
+            cyc.systolic.yImg = c2.img.y;
+            cyc.systolic.yT = c2.img.y;
+          } else {
+            cyc.diastolic.xImg = c2.img.x;
+            cyc.diastolic.yImg = c2.img.y;
+            cyc.diastolic.yB = c2.img.y;
+          }
+          cyc.ppPx = cyc.diastolic.yB - cyc.systolic.yT;
+          redraw();
+          return;
+        }
         if (!drag) return;
         e.preventDefault();
         var c = pointerToCoords(e);
@@ -579,12 +1031,29 @@
           state.color = col;
           state.colorPoint = c.img;
           redraw();
+        } else if (drag.mode === 'tiltCorner' && state.tiltCorners) {
+          state.tiltCorners[drag.cornerIdx] = { x: c.img.x, y: c.img.y };
+          showMagnifier(c.img, c.client);
+          redraw();
         }
       });
 
       function endDrag(e) {
+        if (dotDrag) {
+          if (e) try { canvas.releasePointerCapture(e.pointerId); } catch (_) {}
+          dotDrag = null;
+          recomputeFromCycles();
+          redraw();
+          return;
+        }
         if (!drag) return;
         if (e) try { canvas.releasePointerCapture(e.pointerId); } catch (_) {}
+        if (drag.mode === 'tiltCorner') {
+          drag = null;
+          hideMagnifier();
+          redraw();
+          return;
+        }
         if (drag.mode === 'roi') {
           var p1 = drag.startImg, p2 = drag.currentImg;
           var dx = Math.abs(p2.x - p1.x), dy = Math.abs(p2.y - p1.y);
@@ -594,6 +1063,13 @@
               { x: Math.max(p1.x, p2.x), y: Math.max(p1.y, p2.y) }
             ];
             state.active = null;
+            // Auto-zoom: dá zoom no recorte da ROI para facilitar a marcação
+            // da cor da curva.
+            state.zoom = {
+              x0: state.roi[0].x, y0: state.roi[0].y,
+              x1: state.roi[1].x, y1: state.roi[1].y
+            };
+            fitCanvasToRoi(state.zoom);
           } else {
             // arrasto muito curto: ignora e mantém active
           }
@@ -601,11 +1077,18 @@
           state.active = null;
           hideMagnifier();
         }
+        var wasColor = drag && drag.mode === 'color';
         drag = null;
         updateStepUi();
         updateRunButton();
         updateHint();
         redraw();
+        // Auto-calcula imediatamente após escolher a cor (sem scroll)
+        if (wasColor && state.roi.length === 2 && state.color) {
+          state.result = process();
+          renderResult(state.result, { noScroll: true });
+          redraw();
+        }
       }
 
       canvas.addEventListener('pointerup', endDrag);
@@ -619,7 +1102,68 @@
       function redraw() {
         if (!img) return;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        if (state.zoom) {
+          var zr = state.zoom;
+          ctx.drawImage(
+            img,
+            zr.x0, zr.y0, zr.x1 - zr.x0, zr.y1 - zr.y0, // recorte da imagem original
+            0, 0, canvas.width, canvas.height            // preenche todo o canvas
+          );
+        } else {
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        }
+
+        // Quadrilátero de ajuste de tela: 4 cantos arrastáveis
+        if (state.active === 'tilt' && state.tiltCorners) {
+          var cs = state.tiltCorners.map(imgToCanvas);
+          ctx.save();
+          // overlay escuro fora do quadrilátero (efeito Adobe Scan)
+          ctx.fillStyle = 'rgba(0,0,0,0.5)';
+          ctx.beginPath();
+          ctx.rect(0, 0, canvas.width, canvas.height);
+          ctx.moveTo(cs[0].x, cs[0].y);
+          for (var k = 1; k < 4; k++) ctx.lineTo(cs[k].x, cs[k].y);
+          ctx.closePath();
+          ctx.fill('evenodd');
+          // arestas
+          ctx.strokeStyle = '#58a6ff';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(cs[0].x, cs[0].y);
+          for (var kk = 1; kk < 4; kk++) ctx.lineTo(cs[kk].x, cs[kk].y);
+          ctx.closePath();
+          ctx.stroke();
+          // cantos: bolinhas grandes
+          for (var k2 = 0; k2 < 4; k2++) {
+            ctx.fillStyle = '#0f1419';
+            ctx.beginPath(); ctx.arc(cs[k2].x, cs[k2].y, 13, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = '#58a6ff';
+            ctx.beginPath(); ctx.arc(cs[k2].x, cs[k2].y, 9, 0, Math.PI * 2); ctx.fill();
+            ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.arc(cs[k2].x, cs[k2].y, 9, 0, Math.PI * 2); ctx.stroke();
+          }
+          // Check verde clicável no centro do quadrilátero
+          var ckX = (cs[0].x + cs[1].x + cs[2].x + cs[3].x) / 4;
+          var ckY = (cs[0].y + cs[1].y + cs[2].y + cs[3].y) / 4;
+          var ckR = 36;
+          // sombra
+          ctx.fillStyle = 'rgba(0,0,0,0.45)';
+          ctx.beginPath(); ctx.arc(ckX + 2, ckY + 3, ckR, 0, Math.PI * 2); ctx.fill();
+          // círculo verde
+          ctx.fillStyle = '#22c55e';
+          ctx.beginPath(); ctx.arc(ckX, ckY, ckR, 0, Math.PI * 2); ctx.fill();
+          ctx.strokeStyle = '#fff'; ctx.lineWidth = 3;
+          ctx.beginPath(); ctx.arc(ckX, ckY, ckR, 0, Math.PI * 2); ctx.stroke();
+          // ✓ checkmark
+          ctx.strokeStyle = '#fff'; ctx.lineWidth = 6;
+          ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+          ctx.beginPath();
+          ctx.moveTo(ckX - 14, ckY + 2);
+          ctx.lineTo(ckX - 4, ckY + 12);
+          ctx.lineTo(ckX + 16, ckY - 10);
+          ctx.stroke();
+          ctx.restore();
+        }
 
         if (drag && drag.mode === 'roi') {
           var p1 = drag.startImg, p2 = drag.currentImg;
@@ -633,7 +1177,9 @@
           ctx.fillRect(d0.x, d0.y, d1.x - d0.x, d1.y - d0.y);
           ctx.strokeRect(d0.x, d0.y, d1.x - d0.x, d1.y - d0.y);
           ctx.restore();
-        } else if (state.roi.length === 2) {
+        } else if (state.roi.length === 2 && !state.zoom) {
+          // Em modo zoom o canvas inteiro JÁ é a ROI; não precisa desenhar
+          // o retângulo (ele cobriria a tela inteira).
           var r0 = imgToCanvas(state.roi[0]);
           var r1 = imgToCanvas(state.roi[1]);
           ctx.save();
@@ -654,9 +1200,10 @@
           var res = state.result;
           ctx.save();
           if (res.curve && res.curve.length > 1) {
-            // Envelope: banda entre yT (topo) e yB (base) — onde os picos
-            // e vales sentam exatamente. Banda leve + duas linhas fortes.
-            ctx.fillStyle = 'rgba(88,166,255,0.12)';
+            // Envelope: banda entre yT (topo) e yB (base). Banda preenchida
+            // mais opaca + linhas grossas com contorno escuro pra destacar
+            // sobre fotos coloridas (curva vermelha, ECG verde, etc.).
+            ctx.fillStyle = 'rgba(88,166,255,0.28)';
             ctx.beginPath();
             for (var i = 0; i < res.curve.length; i++) {
               var ptT = imgToCanvas({ x: res.curve[i].xImg, y: res.curve[i].yT });
@@ -669,22 +1216,24 @@
             ctx.closePath();
             ctx.fill();
 
-            ctx.strokeStyle = 'rgba(88,166,255,0.9)';
-            ctx.lineWidth = 1.4;
-            // linha superior (yT)
-            ctx.beginPath();
-            for (var i = 0; i < res.curve.length; i++) {
-              var pT = imgToCanvas({ x: res.curve[i].xImg, y: res.curve[i].yT });
-              if (i === 0) ctx.moveTo(pT.x, pT.y); else ctx.lineTo(pT.x, pT.y);
+            // Função interna para desenhar uma linha de envelope com halo escuro
+            function strokeEnvelope(getter) {
+              ctx.beginPath();
+              for (var i = 0; i < res.curve.length; i++) {
+                var p = imgToCanvas({ x: res.curve[i].xImg, y: getter(res.curve[i]) });
+                if (i === 0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y);
+              }
+              // Halo escuro embaixo
+              ctx.lineWidth = 4.5;
+              ctx.strokeStyle = 'rgba(8,15,25,0.85)';
+              ctx.stroke();
+              // Linha azul forte por cima
+              ctx.lineWidth = 2.2;
+              ctx.strokeStyle = '#58a6ff';
+              ctx.stroke();
             }
-            ctx.stroke();
-            // linha inferior (yB)
-            ctx.beginPath();
-            for (var i = 0; i < res.curve.length; i++) {
-              var pB = imgToCanvas({ x: res.curve[i].xImg, y: res.curve[i].yB });
-              if (i === 0) ctx.moveTo(pB.x, pB.y); else ctx.lineTo(pB.x, pB.y);
-            }
-            ctx.stroke();
+            strokeEnvelope(function (p) { return p.yT; });
+            strokeEnvelope(function (p) { return p.yB; });
           }
           ctx.restore();
           (res.systolics || []).forEach(function (p) { drawDot({ x: p.xImg, y: p.yImg }, '#fca5a5', ''); });
@@ -697,11 +1246,17 @@
       function drawDot(pImg, color, label) {
         var p = imgToCanvas(pImg);
         ctx.save();
-        ctx.fillStyle = color;
-        ctx.strokeStyle = '#0f1419';
-        ctx.lineWidth = 1;
+        // Halo escuro maior por fora pra destacar mesmo em fundo claro
+        ctx.fillStyle = 'rgba(8,15,25,0.7)';
         ctx.beginPath();
-        ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, 8, 0, Math.PI * 2);
+        ctx.fill();
+        // Bolinha colorida sólida
+        ctx.fillStyle = color;
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 6, 0, Math.PI * 2);
         ctx.fill();
         ctx.stroke();
         if (label) {
@@ -716,30 +1271,41 @@
       }
 
       function drawCycle(cycle, color, label) {
-        var s = imgToCanvas({ x: cycle.systolic.xImg, y: cycle.systolic.yImg });
-        var d = imgToCanvas({ x: cycle.diastolic.xImg, y: cycle.diastolic.yImg });
+        // Mostra a amplitude PP como BARRA VERTICAL no x do sistólico,
+        // explicitando que a medida é vertical (delta Y), não diagonal.
+        // Topo da barra = pico sistólico (yT); base = topo + ppPx (= yB diastólico).
+        var top = imgToCanvas({ x: cycle.systolic.xImg, y: cycle.systolic.yImg });
+        var bot = imgToCanvas({ x: cycle.systolic.xImg, y: cycle.systolic.yImg + cycle.ppPx });
         ctx.save();
         ctx.strokeStyle = color;
         ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.moveTo(s.x, s.y); ctx.lineTo(d.x, d.y);
+        ctx.moveTo(top.x, top.y);
+        ctx.lineTo(bot.x, bot.y);
+        ctx.stroke();
+        // caps horizontais nas extremidades
+        ctx.beginPath();
+        ctx.moveTo(top.x - 6, top.y); ctx.lineTo(top.x + 6, top.y);
+        ctx.moveTo(bot.x - 6, bot.y); ctx.lineTo(bot.x + 6, bot.y);
         ctx.stroke();
         ctx.fillStyle = color;
         ctx.font = 'bold 11px Plus Jakarta Sans, sans-serif';
-        ctx.fillText(label, Math.min(s.x, d.x) + 8, Math.min(s.y, d.y) - 4);
+        ctx.fillText(label, top.x + 9, top.y - 4);
         ctx.restore();
       }
 
-      function imgToCanvas(p) { return { x: p.x * imgScale, y: p.y * imgScale }; }
+      function imgToCanvas(p) {
+        if (state.zoom) {
+          var z = state.zoom;
+          return {
+            x: (p.x - z.x0) * (canvas.width / (z.x1 - z.x0)),
+            y: (p.y - z.y0) * (canvas.height / (z.y1 - z.y0))
+          };
+        }
+        return { x: p.x * imgScale, y: p.y * imgScale };
+      }
 
-      // --------- Cálculo ---------
-      btnRun.addEventListener('click', function () {
-        if (btnRun.disabled) return;
-        var res = process();
-        state.result = res;
-        renderResult(res);
-        redraw();
-      });
+      // (Cálculo agora é automático ao terminar a seleção de cor.)
 
       function process() {
         // ROI no espaço da imagem original
@@ -764,10 +1330,74 @@
         var threshold = 25 + tolPct;
         var thrSq = threshold * threshold;
 
+        // === Pré-passagem: máscara binária + remoção de linhas horizontais ===
+        // Constroi máscara de pixels que casam com a cor; em seguida zera
+        // QUALQUER row com cobertura > 35% da largura (sinal de linha
+        // horizontal de referência sólida, tracejada ou pontilhada).
+        // A curva real, mesmo no plateau diastólico mais plano, dificilmente
+        // ultrapassa 30% por row. Linhas de referência cobrem 70-100%.
+        // Esta passagem precisa rodar ANTES das componentes conectadas para
+        // evitar que a curva fique agarrada às linhas em pontos de cruzamento.
+        var mask = new Uint8Array(roiW * roiH);
+        var rowCount = new Int32Array(roiH);
+        for (var y = 0; y < roiH; y++) {
+          var rowBase = y * roiW;
+          for (var x = 0; x < roiW; x++) {
+            var pIdx = (rowBase + x) * 4;
+            var dr = data[pIdx] - target.r;
+            var dg = data[pIdx + 1] - target.g;
+            var db = data[pIdx + 2] - target.b;
+            if ((dr*dr + dg*dg + db*db) < thrSq) {
+              mask[rowBase + x] = 1;
+              rowCount[y]++;
+            }
+          }
+        }
+        // Threshold para identificar reference rows (linhas horizontais).
+        // NÃO mexemos no mask: deixamos curva + linhas juntas para que
+        // permaneçam uma ÚNICA componente conectada (a curva atravessa as
+        // linhas em alguns pontos e isso "cola" tudo em uma componente só).
+        // A exclusão das linhas acontece apenas na extração por coluna,
+        // onde reference rows são tratadas como "não-curva" — assim yT/yB
+        // refletem só os pixels da curva real, sem contaminação de linha.
+        var refRowThr = Math.round(roiW * 0.35);
+
+        // === Correção de inclinação (tilt) baseada nas reference rows ===
+        // Linhas horizontais do monitor (referências de mmHg) são, na realidade,
+        // perfeitamente horizontais. Quando aparecem inclinadas na foto, isso
+        // revela a inclinação do celular. Faço regressão linear das matched
+        // pixels nas rows com alta cobertura para estimar a slope global,
+        // depois aplico essa correção a yT/yB ao extrair a curva.
+        var tiltSlope = 0;
+        var tiltSumX = 0, tiltSumY = 0, tiltSumXY = 0, tiltSumXX = 0, tiltN = 0;
+        for (var yr = 0; yr < roiH; yr++) {
+          if (rowCount[yr] <= refRowThr) continue;
+          // examina pixels nas rows ±2 ao redor de yr
+          for (var yo = Math.max(0, yr - 2); yo <= Math.min(roiH - 1, yr + 2); yo++) {
+            var rb3 = yo * roiW;
+            for (var xc = 0; xc < roiW; xc++) {
+              if (mask[rb3 + xc]) {
+                tiltSumX += xc; tiltSumY += yo;
+                tiltSumXY += xc * yo; tiltSumXX += xc * xc;
+                tiltN++;
+              }
+            }
+          }
+        }
+        if (tiltN > 100) {
+          var denom = tiltN * tiltSumXX - tiltSumX * tiltSumX;
+          if (denom !== 0) {
+            tiltSlope = (tiltN * tiltSumXY - tiltSumX * tiltSumY) / denom;
+            // Limita a slope a +-0.5 (≈ 26°) para evitar correção absurda
+            if (tiltSlope > 0.5) tiltSlope = 0.5;
+            if (tiltSlope < -0.5) tiltSlope = -0.5;
+          }
+        }
+
         // === Componentes conectadas (4-conectividade, union-find) ===
-        // Isola a curva (maior componente conectada) das linhas horizontais
-        // de referência (mesmo que da mesma cor) — cada pontilhado/segmento
-        // forma componentes pequenas separadas e é descartado.
+        // Roda na máscara já limpa de linhas horizontais. A curva é a maior
+        // componente; pontilhados/dashes residuais (se sobraram) ficam como
+        // componentes pequenas e são descartados.
         var labels = new Int32Array(roiW * roiH);
         var parent = [0]; // disjoint-set parents
         function findRoot(a) {
@@ -775,60 +1405,103 @@
           return a;
         }
         var nextLabel = 1;
+        // 8-conectividade: olha left, up, up-left e up-right. Pequenos gaps
+        // de 1 pixel diagonais (causados por compressão JPEG ou anti-aliasing
+        // na curva) ficam unidos na mesma componente.
         for (var y = 0; y < roiH; y++) {
           for (var x = 0; x < roiW; x++) {
-            var pIdx = (y * roiW + x) * 4;
-            var dr = data[pIdx] - target.r;
-            var dg = data[pIdx + 1] - target.g;
-            var db = data[pIdx + 2] - target.b;
-            if ((dr*dr + dg*dg + db*db) >= thrSq) continue;
+            if (!mask[y * roiW + x]) continue;
             var idxL = y * roiW + x;
             var leftL = (x > 0) ? labels[idxL - 1] : 0;
             var upL = (y > 0) ? labels[idxL - roiW] : 0;
-            if (leftL && upL) {
-              labels[idxL] = leftL;
-              var rA = findRoot(leftL), rB = findRoot(upL);
-              if (rA !== rB) parent[rA] = rB;
-            } else if (leftL) {
-              labels[idxL] = leftL;
-            } else if (upL) {
-              labels[idxL] = upL;
-            } else {
+            var upLeftL = (x > 0 && y > 0) ? labels[idxL - roiW - 1] : 0;
+            var upRightL = (x < roiW - 1 && y > 0) ? labels[idxL - roiW + 1] : 0;
+            var nbrs = [];
+            if (leftL) nbrs.push(leftL);
+            if (upL) nbrs.push(upL);
+            if (upLeftL) nbrs.push(upLeftL);
+            if (upRightL) nbrs.push(upRightL);
+            if (nbrs.length === 0) {
               labels[idxL] = nextLabel;
               parent.push(nextLabel);
               nextLabel++;
+            } else {
+              labels[idxL] = nbrs[0];
+              for (var nn = 1; nn < nbrs.length; nn++) {
+                var rA2 = findRoot(nbrs[0]), rB2 = findRoot(nbrs[nn]);
+                if (rA2 !== rB2) parent[rA2] = rB2;
+              }
             }
           }
         }
-        // Resolve labels e calcula tamanho de cada componente
+        // Resolve labels + calcula tamanho, yMin e yMax de cada componente.
+        // Score = pixel_count × (y_range + 1): linhas horizontais (y_range≈1)
+        // perdem para curvas (y_range = amplitude). Componente com maior score = curva.
         var sizes = new Int32Array(nextLabel + 1);
+        var yMins = new Int32Array(nextLabel + 1);
+        var yMaxs = new Int32Array(nextLabel + 1);
+        for (var i = 0; i < yMins.length; i++) yMins[i] = roiH;
         for (var i = 0; i < labels.length; i++) {
           if (labels[i]) {
             var root = findRoot(labels[i]);
             labels[i] = root;
             sizes[root]++;
+            var yy = (i / roiW) | 0;
+            if (yy < yMins[root]) yMins[root] = yy;
+            if (yy > yMaxs[root]) yMaxs[root] = yy;
           }
         }
-        // Encontra a maior componente = curva
-        var curveLabel = 0, maxSize = 0;
+        var curveLabel = 0, bestScore = 0;
         for (var i = 1; i < sizes.length; i++) {
-          if (sizes[i] > maxSize) { maxSize = sizes[i]; curveLabel = i; }
+          if (sizes[i] === 0) continue;
+          var yRange = yMaxs[i] - yMins[i];
+          var score = sizes[i] * (yRange + 1);
+          if (score > bestScore) { bestScore = score; curveLabel = i; }
         }
-        if (!curveLabel || maxSize < 30) {
+        if (!curveLabel || sizes[curveLabel] < 30) {
           return { error: 'Não foi possível detectar a curva. Aumente a tolerância de cor, refine a cor amostrada ou ajuste a área.' };
         }
+        var maxSize = sizes[curveLabel];
 
-        // Para cada coluna, registra o maior grupo contíguo de pixels da CURVA
-        // (componente principal). Linhas horizontais de referência ficam fora.
-        // yTop = topo da curva (maior pressão local)
-        // yBottom = base da curva (menor pressão local)
+        // A curva pode estar quebrada em VÁRIAS componentes por gaps de cor
+        // (compressão JPEG, gradiente de iluminação, etc.). Aceitamos como
+        // "curva" todas as componentes que estão na MESMA FAIXA VERTICAL da
+        // maior — assim pedaços esquerdo/direito separados por gaps entram
+        // junto, mas labels (números, texto) com posição vertical diferente
+        // ficam de fora.
+        var validLabels = {};
+        validLabels[curveLabel] = true;
+        var bestYMin = yMins[curveLabel], bestYMax = yMaxs[curveLabel];
+        var bestYRange = Math.max(1, bestYMax - bestYMin);
+        for (var ic = 1; ic < sizes.length; ic++) {
+          if (ic === curveLabel || sizes[ic] < 15) continue;
+          var ovS = Math.max(bestYMin, yMins[ic]);
+          var ovE = Math.min(bestYMax, yMaxs[ic]);
+          var ov = Math.max(0, ovE - ovS);
+          var compYR = Math.max(1, yMaxs[ic] - yMins[ic]);
+          // Sobrepõe pelo menos 50% da componente menor: muito provável
+          // ser outro pedaço da mesma curva.
+          if (ov >= Math.min(compYR, bestYRange) * 0.5) {
+            validLabels[ic] = true;
+          }
+        }
+
+        // Marca reference rows: rows com cobertura > 35% são linhas horizontais
+        // de referência. A extração por coluna IGNORA essas rows — qualquer
+        // run que passe por uma reference row é cortado nela, e pegamos só
+        // a maior sub-run resultante. Isso elimina contaminação de linhas
+        // horizontais na medida da amplitude (yT/yB).
+        var isRefRow = new Uint8Array(roiH);
+        for (var y = 0; y < roiH; y++) if (rowCount[y] > refRowThr) isRefRow[y] = 1;
+
         var perCol = new Array(roiW);
         for (var x = 0; x < roiW; x++) {
           var bestStart = -1, bestEnd = -1, bestSum = 0;
           var gStart = -1, gSum = 0;
           for (var y = 0; y < roiH; y++) {
-            var match = (labels[y * roiW + x] === curveLabel);
-            if (match) {
+            // Pixel "válido" = é curva E NÃO está em uma reference row
+            var valid = validLabels[labels[y * roiW + x]] && !isRefRow[y];
+            if (valid) {
               if (gStart < 0) { gStart = y; gSum = 0; }
               gSum += y;
             } else if (gStart >= 0) {
@@ -975,7 +1648,14 @@
             if (curve[j].yB > bestY) { bestY = curve[j].yB; bestPt = curve[j]; }
           }
           if (!bestPt) continue;
-          var ppPx = bestPt.yB - sysCurr.yT;
+          // Correção de inclinação. Hierarquia:
+          // (1) state.monitorSlope se a tela do monitor foi detectada
+          //     (mais robusto: usa a forma física da tela, não depende de
+          //      linhas de referência dentro do ROI);
+          // (2) tiltSlope das linhas horizontais dentro do ROI (fallback);
+          // (3) 0 (sem correção).
+          var slopeUsed = (state.monitorSlope != null) ? state.monitorSlope : tiltSlope;
+          var ppPx = (bestPt.yB - sysCurr.yT) - slopeUsed * (bestPt.xImg - sysCurr.xImg);
           if (ppPx < minProm * 0.5) continue;
           cycles.push({
             systolic: { xImg: sysCurr.xImg, yImg: sysCurr.yT, yT: sysCurr.yT, yB: sysCurr.yB },
@@ -1076,19 +1756,26 @@
         if (!opts.noScroll) stepResult.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
 
-      // Slider de tolerância
+      // Slider de tolerância — recalcula em TEMPO REAL durante o arrasto,
+      // com throttling via requestAnimationFrame (máx ~60 FPS) para garantir
+      // fluidez mesmo em celular. Sem auto-scroll.
       var tolInput = $('tol-input');
       var tolVal = $('tol-val');
-      tolInput.addEventListener('input', function () {
-        tolVal.textContent = tolInput.value + '%';
-      });
-      tolInput.addEventListener('change', function () {
-        // Recalcula automaticamente sem rolar a página até o resultado
-        if (state.roi.length === 2 && state.color) {
+      var tolRafPending = false;
+      function recomputeFromSlider() {
+        if (state.roi.length !== 2 || !state.color) return;
+        if (tolRafPending) return;
+        tolRafPending = true;
+        requestAnimationFrame(function () {
+          tolRafPending = false;
           state.result = process();
           renderResult(state.result, { noScroll: true });
           redraw();
-        }
+        });
+      }
+      tolInput.addEventListener('input', function () {
+        tolVal.textContent = tolInput.value + '%';
+        recomputeFromSlider();
       });
 
       updateStepUi();

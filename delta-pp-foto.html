@@ -137,6 +137,25 @@
     .step-btn.reset { grid-column: 1 / -1; }
     .hint { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem; text-align: justify; }
     .hint strong { color: var(--text); }
+    .tol-row {
+      display: flex; align-items: center; gap: 0.6rem;
+      margin: 0.6rem 0 0.2rem;
+      padding: 0.45rem 0.6rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg);
+    }
+    .tol-row label { font-size: 0.85rem; color: var(--text); flex-shrink: 0; }
+    .tol-row input[type="range"] {
+      flex: 1;
+      accent-color: var(--accent);
+      min-width: 0;
+    }
+    .tol-row #tol-val {
+      font-size: 0.85rem; color: var(--accent);
+      font-variant-numeric: tabular-nums;
+      min-width: 2.6rem; text-align: right;
+    }
     details.optional {
       margin-top: 0.75rem;
       border: 1px dashed var(--border);
@@ -261,6 +280,12 @@
         <button class="step-btn run" id="btn-run" disabled>Calcular ΔPP</button>
         <button class="step-btn reset" id="btn-reset-marks">Recomeçar marcações</button>
       </div>
+      <div class="tol-row">
+        <label for="tol-input">Tolerância de cor</label>
+        <input type="range" id="tol-input" min="10" max="80" step="5" value="40">
+        <span id="tol-val">40%</span>
+      </div>
+      <p class="hint" style="margin-top:0.25rem;">Aumente se a foto estiver com cor distorcida ou desbotada e a curva não for detectada; diminua se a detecção estiver capturando elementos vizinhos da mesma cor.</p>
       <p class="hint" id="step-hint"><strong>Passo 1:</strong> toque o botão "Área do traçado" e marque dois cantos (sup. esq. e inf. dir.) da região com a curva da pressão arterial.</p>
 
       <details class="optional">
@@ -632,23 +657,69 @@
 
         var data = hiddenCtx.getImageData(x0, y0, roiW, roiH).data;
 
-        // Extração da curva por similaridade de cor: para cada coluna,
-        // computa o centróide vertical (yImg) dos pixels que casam com a cor amostrada.
+        // Extração da curva — versão robusta a linhas de referência da mesma cor.
+        // Para cada coluna, encontra grupos verticais contíguos de pixels que casam
+        // com a cor amostrada e seleciona o GRUPO MAIS ESPESSO (a curva tende a ser
+        // mais espessa que pontilhados de referência). Em seguida aplica filtro de
+        // mediana entre colunas para descartar outliers isolados.
         var target = state.color;
-        var threshold = 70;
-        var curve = [];
+        var tolPct = parseInt($('tol-input').value, 10);
+        // Mapeia 10–80% para distância RGB euclidiana ~25–125 (defaut 40% → ~65)
+        var threshold = 25 + tolPct;
+        var thrSq = threshold * threshold;
+
+        var rough = new Array(roiW);
         for (var x = 0; x < roiW; x++) {
-          var sumY = 0, nMatch = 0;
+          // varre coluna e mantém o maior grupo contíguo de pixels que casam
+          var bestStart = -1, bestEnd = -1, bestSum = 0;
+          var gStart = -1, gSum = 0;
           for (var y = 0; y < roiH; y++) {
             var idx = (y * roiW + x) * 4;
-            var r = data[idx], g = data[idx + 1], b = data[idx + 2];
-            var dr = r - target.r, dg = g - target.g, db = b - target.b;
-            var dist = Math.sqrt(dr*dr + dg*dg + db*db);
-            if (dist < threshold) { sumY += y; nMatch++; }
+            var dr = data[idx] - target.r;
+            var dg = data[idx + 1] - target.g;
+            var db = data[idx + 2] - target.b;
+            var match = (dr*dr + dg*dg + db*db) < thrSq;
+            if (match) {
+              if (gStart < 0) { gStart = y; gSum = 0; }
+              gSum += y;
+            } else if (gStart >= 0) {
+              var len = y - gStart;
+              if (len > (bestEnd - bestStart + 1)) {
+                bestStart = gStart; bestEnd = y - 1; bestSum = gSum;
+              }
+              gStart = -1;
+            }
           }
-          if (nMatch > 0) curve.push({ xImg: x0 + x, yImg: y0 + sumY / nMatch });
+          if (gStart >= 0) {
+            var len2 = roiH - gStart;
+            if (len2 > (bestEnd - bestStart + 1)) {
+              bestStart = gStart; bestEnd = roiH - 1; bestSum = gSum;
+            }
+          }
+          rough[x] = (bestStart >= 0) ? (bestSum / (bestEnd - bestStart + 1)) : null;
         }
-        if (curve.length < 30) return { error: 'Não foi possível detectar a curva. Refine a cor amostrada ou ajuste a área.' };
+
+        // Filtro de mediana (janela 5) para limpar colunas que pegaram um pontilhado
+        var medW = 2;
+        var medianed = new Array(roiW);
+        for (var x = 0; x < roiW; x++) {
+          var win = [];
+          for (var k = -medW; k <= medW; k++) {
+            var j = x + k;
+            if (j < 0 || j >= roiW) continue;
+            if (rough[j] !== null) win.push(rough[j]);
+          }
+          if (!win.length) { medianed[x] = null; continue; }
+          win.sort(function (a, b) { return a - b; });
+          medianed[x] = win[Math.floor(win.length / 2)];
+        }
+
+        // Compacta em array de pontos (xImg, yImg)
+        var curve = [];
+        for (var x = 0; x < roiW; x++) {
+          if (medianed[x] !== null) curve.push({ xImg: x0 + x, yImg: y0 + medianed[x] });
+        }
+        if (curve.length < 30) return { error: 'Não foi possível detectar a curva. Aumente a tolerância de cor, refine a cor amostrada ou ajuste a área.' };
 
         // Suavização (média móvel janela 7)
         var ys = curve.map(function (p) { return p.yImg; });
@@ -846,6 +917,21 @@
 
         stepResult.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
+
+      // Slider de tolerância
+      var tolInput = $('tol-input');
+      var tolVal = $('tol-val');
+      tolInput.addEventListener('input', function () {
+        tolVal.textContent = tolInput.value + '%';
+      });
+      tolInput.addEventListener('change', function () {
+        // Recalcula automaticamente se já houver resultado
+        if (state.roi.length === 2 && state.color) {
+          state.result = process();
+          renderResult(state.result);
+          redraw();
+        }
+      });
 
       updateStepUi();
       updateRunButton();

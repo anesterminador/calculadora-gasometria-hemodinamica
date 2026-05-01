@@ -654,12 +654,35 @@
           var res = state.result;
           ctx.save();
           if (res.curve && res.curve.length > 1) {
-            ctx.strokeStyle = 'rgba(88,166,255,0.85)';
-            ctx.lineWidth = 1.5;
+            // Envelope: banda entre yT (topo) e yB (base) — onde os picos
+            // e vales sentam exatamente. Banda leve + duas linhas fortes.
+            ctx.fillStyle = 'rgba(88,166,255,0.12)';
             ctx.beginPath();
             for (var i = 0; i < res.curve.length; i++) {
-              var pt = imgToCanvas({ x: res.curve[i].xImg, y: res.curve[i].yImg });
-              if (i === 0) ctx.moveTo(pt.x, pt.y); else ctx.lineTo(pt.x, pt.y);
+              var ptT = imgToCanvas({ x: res.curve[i].xImg, y: res.curve[i].yT });
+              if (i === 0) ctx.moveTo(ptT.x, ptT.y); else ctx.lineTo(ptT.x, ptT.y);
+            }
+            for (var i = res.curve.length - 1; i >= 0; i--) {
+              var ptB = imgToCanvas({ x: res.curve[i].xImg, y: res.curve[i].yB });
+              ctx.lineTo(ptB.x, ptB.y);
+            }
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.strokeStyle = 'rgba(88,166,255,0.9)';
+            ctx.lineWidth = 1.4;
+            // linha superior (yT)
+            ctx.beginPath();
+            for (var i = 0; i < res.curve.length; i++) {
+              var pT = imgToCanvas({ x: res.curve[i].xImg, y: res.curve[i].yT });
+              if (i === 0) ctx.moveTo(pT.x, pT.y); else ctx.lineTo(pT.x, pT.y);
+            }
+            ctx.stroke();
+            // linha inferior (yB)
+            ctx.beginPath();
+            for (var i = 0; i < res.curve.length; i++) {
+              var pB = imgToCanvas({ x: res.curve[i].xImg, y: res.curve[i].yB });
+              if (i === 0) ctx.moveTo(pB.x, pB.y); else ctx.lineTo(pB.x, pB.y);
             }
             ctx.stroke();
           }
@@ -741,24 +764,70 @@
         var threshold = 25 + tolPct;
         var thrSq = threshold * threshold;
 
-        // Para cada coluna registramos o MAIOR grupo contíguo de pixels que casam
-        // (filtra pontilhados de referência) e armazenamos yTop, yBottom e yCenter.
+        // === Componentes conectadas (4-conectividade, union-find) ===
+        // Isola a curva (maior componente conectada) das linhas horizontais
+        // de referência (mesmo que da mesma cor) — cada pontilhado/segmento
+        // forma componentes pequenas separadas e é descartado.
+        var labels = new Int32Array(roiW * roiH);
+        var parent = [0]; // disjoint-set parents
+        function findRoot(a) {
+          while (parent[a] !== a) { parent[a] = parent[parent[a]]; a = parent[a]; }
+          return a;
+        }
+        var nextLabel = 1;
+        for (var y = 0; y < roiH; y++) {
+          for (var x = 0; x < roiW; x++) {
+            var pIdx = (y * roiW + x) * 4;
+            var dr = data[pIdx] - target.r;
+            var dg = data[pIdx + 1] - target.g;
+            var db = data[pIdx + 2] - target.b;
+            if ((dr*dr + dg*dg + db*db) >= thrSq) continue;
+            var idxL = y * roiW + x;
+            var leftL = (x > 0) ? labels[idxL - 1] : 0;
+            var upL = (y > 0) ? labels[idxL - roiW] : 0;
+            if (leftL && upL) {
+              labels[idxL] = leftL;
+              var rA = findRoot(leftL), rB = findRoot(upL);
+              if (rA !== rB) parent[rA] = rB;
+            } else if (leftL) {
+              labels[idxL] = leftL;
+            } else if (upL) {
+              labels[idxL] = upL;
+            } else {
+              labels[idxL] = nextLabel;
+              parent.push(nextLabel);
+              nextLabel++;
+            }
+          }
+        }
+        // Resolve labels e calcula tamanho de cada componente
+        var sizes = new Int32Array(nextLabel + 1);
+        for (var i = 0; i < labels.length; i++) {
+          if (labels[i]) {
+            var root = findRoot(labels[i]);
+            labels[i] = root;
+            sizes[root]++;
+          }
+        }
+        // Encontra a maior componente = curva
+        var curveLabel = 0, maxSize = 0;
+        for (var i = 1; i < sizes.length; i++) {
+          if (sizes[i] > maxSize) { maxSize = sizes[i]; curveLabel = i; }
+        }
+        if (!curveLabel || maxSize < 30) {
+          return { error: 'Não foi possível detectar a curva. Aumente a tolerância de cor, refine a cor amostrada ou ajuste a área.' };
+        }
+
+        // Para cada coluna, registra o maior grupo contíguo de pixels da CURVA
+        // (componente principal). Linhas horizontais de referência ficam fora.
         // yTop = topo da curva (maior pressão local)
         // yBottom = base da curva (menor pressão local)
-        // Em upstrokes/downstrokes íngremes, [yTop, yBottom] cobre todo o trecho
-        // que a curva atravessa naquela coluna — este é o "envelope" usado para
-        // detectar picos sistólicos (min yTop) e vales diastólicos (max yBottom)
-        // sem colapsar para o centro.
         var perCol = new Array(roiW);
         for (var x = 0; x < roiW; x++) {
           var bestStart = -1, bestEnd = -1, bestSum = 0;
           var gStart = -1, gSum = 0;
           for (var y = 0; y < roiH; y++) {
-            var idx = (y * roiW + x) * 4;
-            var dr = data[idx] - target.r;
-            var dg = data[idx + 1] - target.g;
-            var db = data[idx + 2] - target.b;
-            var match = (dr*dr + dg*dg + db*db) < thrSq;
+            var match = (labels[y * roiW + x] === curveLabel);
             if (match) {
               if (gStart < 0) { gStart = y; gSum = 0; }
               gSum += y;
@@ -950,7 +1019,8 @@
         };
       }
 
-      function renderResult(res) {
+      function renderResult(res, opts) {
+        opts = opts || {};
         stepResult.hidden = false;
         var rMax = $('result-pp-max');
         var rMin = $('result-pp-min');
@@ -973,7 +1043,7 @@
           interpText.textContent = res.error;
           meta1.textContent = 'Ciclos detectados: 0';
           meta2.textContent = 'Confiança: —';
-          stepResult.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          if (!opts.noScroll) stepResult.scrollIntoView({ behavior: 'smooth', block: 'start' });
           return;
         }
 
@@ -1003,7 +1073,7 @@
           warn.textContent = 'Confiança baixa: poucos ciclos identificados na imagem. Idealmente capture um trecho com pelo menos 4–6 ciclos cardíacos para avaliar a variação respiratória.';
         }
 
-        stepResult.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (!opts.noScroll) stepResult.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
 
       // Slider de tolerância
@@ -1013,10 +1083,10 @@
         tolVal.textContent = tolInput.value + '%';
       });
       tolInput.addEventListener('change', function () {
-        // Recalcula automaticamente se já houver resultado
+        // Recalcula automaticamente sem rolar a página até o resultado
         if (state.roi.length === 2 && state.color) {
           state.result = process();
-          renderResult(state.result);
+          renderResult(state.result, { noScroll: true });
           redraw();
         }
       });

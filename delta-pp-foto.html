@@ -1017,6 +1017,7 @@
             cyc.diastolic.yB = c2.img.y;
           }
           cyc.ppPx = cyc.diastolic.yB - cyc.systolic.yT;
+          showMagnifier(c2.img, c2.client);
           redraw();
           return;
         }
@@ -1042,6 +1043,7 @@
         if (dotDrag) {
           if (e) try { canvas.releasePointerCapture(e.pointerId); } catch (_) {}
           dotDrag = null;
+          hideMagnifier();
           recomputeFromCycles();
           redraw();
           return;

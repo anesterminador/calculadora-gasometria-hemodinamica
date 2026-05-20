@@ -1,0 +1,8 @@
+# Backups locais (gerados por fazer-backup.bat)
+*.zip
+
+# Config local do Claude Code (nao deve ir pro repositorio)
+.claude/
+
+# Pasta de logs locais
+logs/

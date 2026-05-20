@@ -966,6 +966,132 @@
 
     <footer class="footer-buttons"></footer>
   </div><!-- Script de avaliação ácido-básica (reaproveitado da página original) -->
+
+  <!-- ============================================================
+       SEED do paciente de exemplo
+       Insere 1x no localStorage um paciente fictício com 4 exames
+       evolutivos (choque séptico → recuperação) na primeira abertura
+       da página. Não dispara de novo se a flag já estiver setada,
+       mesmo que o usuário delete o paciente — para evitar reinserção
+       indesejada. Para forçar reinserção, abra o DevTools e rode:
+         localStorage.removeItem('gasosExemploInjetado_v1')
+       ============================================================ -->
+  <script>
+    (function seedPacienteExemplo() {
+      var FLAG_KEY = 'gasosExemploInjetado_v1';
+      var STORAGE_KEY = 'gasosHistorico_v1';
+      if (localStorage.getItem(FLAG_KEY) === 'true') return;
+
+      var historicoExistente = [];
+      try {
+        var raw = localStorage.getItem(STORAGE_KEY);
+        historicoExistente = raw ? JSON.parse(raw) : [];
+        if (!Array.isArray(historicoExistente)) historicoExistente = [];
+      } catch (e) {
+        historicoExistente = [];
+      }
+
+      var NOME = 'Carlos Alberto (exemplo)';
+      // Evita duplicar se por alguma razão já existe
+      if (historicoExistente.some(function (r) { return r && r.paciente === NOME; })) {
+        localStorage.setItem(FLAG_KEY, 'true');
+        return;
+      }
+
+      // Datas em horário de Brasília (UTC-3). toISOString() converte para UTC,
+      // mas a função formatarDataLegivel da página exibe em horário local — então
+      // o usuário vai ver os horários originais (08:00, 12:00, 18:00, 08:00).
+      function brt(iso) { return new Date(iso + '-03:00').toISOString(); }
+
+      var EXAMES = [
+        // ====== Exame 1: Admissão na UTI cirúrgica — choque séptico ======
+        {
+          paciente: NOME,
+          dataHoraISO: brt('2026-05-18T08:00:00'),
+          tipo: 'arterial',
+          valores: {
+            Altura: '172', Peso: '78',
+            Hb: '11.2', Hematocrito: '33', Plaquetas: '180',
+            Na: '138', K: '4.2', Ca: '8.1', Mg: '1.8', Cl: '106',
+            pH: '7.21', PaO2: '72', PaCO2: '30', SaO2: '93', FiO2: '50',
+            HCO3: '12', BaseExcess: '-14',
+            PvO2: '32', PvCO2: '42', SvO2: '65', HCO3v: '14',
+            Lactato: '6.8', Glicemia: '165', RNI: '1.4', TTPa: '38', Albumina: '2.5',
+            CO: '7.5', FC: '125', PAMRadial: '58', PAPMedia: '22', POAP: '12', PVC: '10',
+            Observacoes: 'Admissão UTI cirúrgica. Sr. Carlos Alberto, 62a, apendicite perfurada com peritonite difusa há 36h. Choque séptico hipotensivo em noradrenalina 0,4 mcg/kg/min. Lactato elevado, sinais de hipoperfusão tecidual. Cirurgia de emergência indicada.',
+            retentorSim: false, retentorNao: true
+          },
+          distPrimario: 'Acidose metabólica de ânion gap aumentado (lactato), parcialmente compensada'
+        },
+        // ====== Exame 2: Após reanimação volêmica e ATB ======
+        {
+          paciente: NOME,
+          dataHoraISO: brt('2026-05-18T12:00:00'),
+          tipo: 'arterial',
+          valores: {
+            Altura: '172', Peso: '78',
+            Hb: '9.8', Hematocrito: '30', Plaquetas: '165',
+            Na: '140', K: '4.5', Ca: '8.0', Mg: '1.9', Cl: '110',
+            pH: '7.28', PaO2: '85', PaCO2: '34', SaO2: '96', FiO2: '40',
+            HCO3: '16', BaseExcess: '-9',
+            PvO2: '35', PvCO2: '44', SvO2: '70', HCO3v: '18',
+            Lactato: '4.2', Glicemia: '140', RNI: '1.3', TTPa: '35', Albumina: '2.3',
+            CO: '6.8', FC: '110', PAMRadial: '68', PAPMedia: '20', POAP: '10', PVC: '8',
+            Observacoes: 'Pós-bolus de cristaloide 30 mL/kg + início de Pip-Tazo. Noradrenalina reduzida a 0,2 mcg/kg/min. PAM melhorando. Lactato em queda mas ainda alto. Hipercloremia incipiente após SF 0,9%. Aguardando cirurgia.',
+            retentorSim: false, retentorNao: true
+          },
+          distPrimario: 'Acidose metabólica de AG alto + componente hiperclorêmico, em melhora'
+        },
+        // ====== Exame 3: Pós-operatório imediato ======
+        {
+          paciente: NOME,
+          dataHoraISO: brt('2026-05-18T18:00:00'),
+          tipo: 'arterial',
+          valores: {
+            Altura: '172', Peso: '78',
+            Hb: '10.2', Hematocrito: '31', Plaquetas: '160',
+            Na: '142', K: '4.0', Ca: '8.3', Mg: '2.0', Cl: '112',
+            pH: '7.34', PaO2: '95', PaCO2: '36', SaO2: '97', FiO2: '35',
+            HCO3: '20', BaseExcess: '-4',
+            PvO2: '38', PvCO2: '42', SvO2: '73', HCO3v: '22',
+            Lactato: '2.5', Glicemia: '118', RNI: '1.2', TTPa: '32', Albumina: '2.6',
+            CO: '5.5', FC: '95', PAMRadial: '75', PAPMedia: '18', POAP: '8', PVC: '7',
+            Observacoes: 'Pós-laparotomia exploradora com apendicectomia e lavagem peritoneal. Hemodinâmica em recuperação. Lactato em queda franca. Noradrenalina 0,1 mcg/kg/min. SvcO2 normalizando.',
+            retentorSim: false, retentorNao: true
+          },
+          distPrimario: 'Acidose metabólica leve mista, em resolução'
+        },
+        // ====== Exame 4: POD1 — recuperação ======
+        {
+          paciente: NOME,
+          dataHoraISO: brt('2026-05-19T08:00:00'),
+          tipo: 'arterial',
+          valores: {
+            Altura: '172', Peso: '78',
+            Hb: '10.8', Hematocrito: '32', Plaquetas: '175',
+            Na: '140', K: '4.2', Ca: '8.6', Mg: '2.0', Cl: '108',
+            pH: '7.41', PaO2: '98', PaCO2: '38', SaO2: '98', FiO2: '30',
+            HCO3: '24', BaseExcess: '0',
+            PvO2: '40', PvCO2: '42', SvO2: '76', HCO3v: '26',
+            Lactato: '1.4', Glicemia: '105', RNI: '1.1', TTPa: '30', Albumina: '2.9',
+            CO: '5.0', FC: '82', PAMRadial: '82', PAPMedia: '16', POAP: '9', PVC: '8',
+            Observacoes: 'POD1. Estável sem aminas há 4h. Gasometria normalizada. Diurese adequada. Plano: desmame da ventilação mecânica e progressão para extubação ao longo do dia.',
+            retentorSim: false, retentorNao: true
+          },
+          distPrimario: 'Equilíbrio ácido-básico normal'
+        }
+      ];
+
+      var novoHistorico = historicoExistente.concat(EXAMES);
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(novoHistorico));
+        localStorage.setItem(FLAG_KEY, 'true');
+      } catch (e) {
+        // QuotaExceeded ou similar — silencia
+      }
+    })();
+  </script>
+
   <script>
     const inputIds = ['pH','PaCO2','HCO3','Na','K','Cl','Lactato','Albumina'];
     const STORAGE_KEY = 'gasosHistorico_v1';
@@ -1915,77 +2041,144 @@
         <head>
           <meta charset="UTF-8">
           <title>Evolução – ${safeNome}</title>
-          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+          <meta name="theme-color" content="#0b1117">
+          <link rel="preconnect" href="https://fonts.googleapis.com">
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+          <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
           <style>
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            :root {
+              --bg: #0b1117;
+              --bg-elev: #121922;
+              --bg-card: #161e28;
+              --border: #233140;
+              --border-strong: #2f4054;
+              --text: #e6edf3;
+              --text-muted: #8b9cad;
+              --text-faint: #5a6878;
+              --accent: #58a6ff;
+              --accent-bright: #79b8ff;
+              --accent-soft: rgba(88, 166, 255, 0.14);
+              --success: #3fb950;
+              --warning: #e6a700;
+              --danger: #f85149;
+            }
+            html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
             body {
-              font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-              background: #0f1419;
-              color: #e6edf3;
-              margin: 0;
-              padding: 1rem 1rem 4rem;
+              font-family: 'Plus Jakarta Sans', system-ui, -apple-system, "Segoe UI", sans-serif;
+              background: var(--bg);
+              background-image: radial-gradient(ellipse 70% 40% at 50% 0%, rgba(88,166,255,0.07), transparent 60%);
+              color: var(--text);
+              padding: 1.1rem 1rem calc(env(safe-area-inset-bottom, 0px) + 5rem);
+              min-height: 100vh;
+              line-height: 1.5;
+            }
+            ::selection { background: rgba(88,166,255,0.32); color: #fff; }
+            *::-webkit-scrollbar { width: 8px; height: 8px; }
+            *::-webkit-scrollbar-thumb { background: #3a4654; border-radius: 8px; }
+            *::-webkit-scrollbar-track { background: transparent; }
+            *::-webkit-tap-highlight-color { -webkit-tap-highlight-color: transparent; }
+
+            .page-header {
+              max-width: 1200px;
+              margin: 0 auto 0.85rem;
+              display: flex;
+              flex-wrap: wrap;
+              align-items: baseline;
+              gap: 0.5rem 1rem;
             }
             h1 {
-              font-size: 1.1rem;
-              margin-bottom: 0.75rem;
-              font-weight: 600;
+              font-size: 1.2rem;
+              font-weight: 700;
+              letter-spacing: -0.01em;
+              color: var(--text);
             }
+            h1 .nome {
+              color: var(--accent-bright);
+              font-weight: 800;
+            }
+            .header-meta {
+              font-size: 0.78rem;
+              color: var(--text-muted);
+              font-weight: 500;
+            }
+
             .tabs {
               display: inline-flex;
+              background: var(--bg-elev);
+              border: 1px solid var(--border);
               border-radius: 999px;
-              border: 1px solid #2d3843;
-              overflow: hidden;
-              margin-bottom: 0.75rem;
+              padding: 3px;
+              margin: 0 auto 1rem;
+              max-width: 1200px;
             }
             .tab-button {
-              padding: 0.4rem 0.9rem;
-              font-size: 0.8rem;
+              padding: 0.5rem 1.15rem;
+              font-size: 0.85rem;
               border: none;
               background: transparent;
-              color: #8b9cad;
+              color: var(--text-muted);
               cursor: pointer;
+              border-radius: 999px;
+              font-weight: 600;
+              font-family: inherit;
+              transition: background 0.15s, color 0.15s;
             }
+            .tab-button:hover { color: var(--text); }
             .tab-button.active {
-              background: #1a2129;
-              color: #ffd139;
+              background: var(--accent);
+              color: #0b1117;
             }
-            .tab-content {
-              display: none;
-            }
+            .tab-content { display: none; }
             .tab-content.active {
               display: block;
+              animation: fadeRise 0.3s ease both;
+              max-width: 1200px;
+              margin: 0 auto;
             }
+            @keyframes fadeRise {
+              from { opacity: 0; transform: translateY(6px); }
+              to   { opacity: 1; transform: translateY(0); }
+            }
+
             .gaso-table-wrapper {
               overflow-x: auto;
-              border-radius: 8px;
-              border: 1px solid #2d3843;
-              background: #151b23;
-              padding: 0.25rem;
+              border-radius: 12px;
+              border: 1px solid var(--border);
+              background: var(--bg-card);
+              padding: 0.5rem;
+              -webkit-overflow-scrolling: touch;
             }
             .gaso-table {
               width: 100%;
               border-collapse: collapse;
               min-width: 520px;
-              font-size: 0.8rem;
+              font-size: 0.82rem;
             }
-            .gaso-table th,
-            .gaso-table td {
-              border-bottom: 1px solid #222a33;
-              border-right: 1px solid #222a33;
-              padding: 0.25rem 0.4rem;
+            .gaso-table th, .gaso-table td {
+              border-bottom: 1px solid #1c252f;
+              padding: 0.35rem 0.55rem;
               text-align: center;
               white-space: nowrap;
             }
-            .gaso-table th:first-child,
-            .gaso-table td:first-child {
+            .gaso-table th:first-child, .gaso-table td:first-child {
               text-align: left;
-              background: #151b23;
+              background: var(--bg-card);
+              font-weight: 600;
+              position: sticky;
+              left: 0;
             }
             .gaso-table tr.group-row td {
               background: #10161d;
               font-weight: 700;
               text-align: left;
               white-space: normal;
-              color: #58a6ff;
+              color: var(--accent-bright);
+              font-size: 0.74rem;
+              letter-spacing: 0.05em;
+              text-transform: uppercase;
+              padding: 0.55rem 0.6rem;
             }
             .gaso-table tr.long-text-row td {
               white-space: normal;
@@ -1995,216 +2188,376 @@
             }
             .gaso-table th {
               font-weight: 700;
-              color: #ffd139;
+              color: var(--text);
               background: #181f27;
+              font-size: 0.78rem;
             }
-            .gaso-table thead th {
-              border-bottom: 1px solid #2d3843;
+            .gaso-table thead th { border-bottom: 1px solid var(--border-strong); }
+
+            /* === CONTROLES DO GRÁFICO === */
+            .chart-controls {
+              display: flex;
+              flex-wrap: wrap;
+              align-items: center;
+              gap: 0.45rem;
+              margin-bottom: 0.85rem;
             }
-            .placeholder-grafico {
-              font-size: 0.85rem;
-              color: #8b9cad;
-              padding: 0.75rem 0.5rem 0.5rem;
-              position: relative; /* para o dropdown ancorar no botão */
+            .preset-pill {
+              padding: 0.4rem 0.85rem;
+              font-size: 0.78rem;
+              border-radius: 999px;
+              border: 1px solid var(--border);
+              background: var(--bg-elev);
+              color: var(--text-muted);
+              cursor: pointer;
+              font-weight: 600;
+              font-family: inherit;
+              transition: all 0.15s;
+              white-space: nowrap;
             }
-            /* Botão principal "Selecionar parâmetros" */
+            .preset-pill:hover {
+              border-color: var(--accent);
+              color: var(--text);
+            }
+            .preset-pill.linkar {
+              background: rgba(248, 81, 73, 0.07);
+              border-color: rgba(248, 81, 73, 0.35);
+              color: #ff8a82;
+            }
+            .preset-pill.linkar:hover {
+              background: rgba(248, 81, 73, 0.15);
+              border-color: var(--danger);
+            }
             #btn-parametros-grafico {
               display: inline-flex;
               align-items: center;
               justify-content: center;
               gap: 0.4rem;
-              margin-bottom: 0.4rem;
-              border-radius: 999px;
-              border: 1px solid #ffd139;
-              background: rgba(255, 209, 57, 0.06);
-              color: #ffd139;
               padding: 0.45rem 0.95rem;
+              border-radius: 999px;
+              border: 1px solid var(--border-strong);
+              background: var(--bg-elev);
+              color: var(--text);
               font-size: 0.8rem;
               font-weight: 600;
               cursor: pointer;
-              box-shadow: 0 0 0 1px rgba(0,0,0,0.4);
-              transition: background 0.15s, transform 0.1s, box-shadow 0.15s, border-color 0.15s;
-            }
-            #btn-parametros-grafico::after {
-              content: '▾';
-              font-size: 0.8rem;
+              font-family: inherit;
+              transition: all 0.15s;
             }
             #btn-parametros-grafico:hover {
-              background: rgba(255, 209, 57, 0.14);
-              transform: translateY(-1px);
-              box-shadow: 0 6px 14px rgba(0,0,0,0.45);
+              border-color: var(--accent);
+              background: var(--bg-card);
             }
-            /* Moldura visual para o gráfico */
-            .chart-frame {
-              margin-top: 0.8rem;
-              padding: 0.6rem 0.75rem 0.4rem;
-              border-radius: 12px;
-              border: 1px solid #2d3843;
-              background: radial-gradient(circle at top left, rgba(88,166,255,0.08), transparent 55%),
-                          #050810;
-              box-shadow: 0 18px 32px rgba(0,0,0,0.65);
-              position: relative;
-            }
-            .chart-export-button {
-              position: absolute;
-              top: 8px;
-              right: 10px;
-              padding: 0.25rem 0.7rem;
-              border-radius: 999px;
-              border: 1px solid #2d3843;
-              background: rgba(15, 20, 25, 0.9);
-              color: #e6edf3;
-              font-size: 0.75rem;
-              font-weight: 600;
-              cursor: pointer;
-              box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            #btn-parametros-grafico .arrow { font-size: 0.7rem; opacity: 0.7; }
+            #btn-parametros-grafico.open .arrow { transform: rotate(180deg); }
+            .params-counter {
               display: inline-flex;
               align-items: center;
-              gap: 0.3rem;
+              justify-content: center;
+              min-width: 1.3rem;
+              height: 1.3rem;
+              padding: 0 0.35rem;
+              border-radius: 999px;
+              background: var(--accent);
+              color: #0b1117;
+              font-size: 0.7rem;
+              font-weight: 800;
             }
-            .chart-export-button::before {
-              content: '⤓';
-              font-size: 0.8rem;
-            }
-            .chart-export-button:hover {
-              background: rgba(36, 41, 47, 0.95);
-              border-color: #58a6ff;
-            }
-            /* Garante que o gráfico ocupe toda a largura dentro da moldura */
-            #grafico-evolucao {
-              display: block;
-              margin-top: 0;
-            }
-            /* Dropdown principal com a lista de grupos */
+            .params-counter[hidden] { display: none; }
+
+            /* === PAINEL DE SELEÇÃO === */
             .param-menu {
-              position: absolute;
-              top: 2.3rem;
-              left: 0;
-              z-index: 40;
-              min-width: 260px;
-              max-width: 360px;
-              padding: 0.35rem 0.3rem;
-              border-radius: 10px;
-              border: 1px solid #2d3843;
-              background: #0c1117;
-              box-shadow: 0 16px 32px rgba(0,0,0,0.6);
+              background: var(--bg-elev);
+              border: 1px solid var(--border-strong);
+              border-radius: 12px;
+              padding: 0.5rem;
+              max-height: 380px;
+              overflow-y: auto;
+              margin-bottom: 0.85rem;
+              box-shadow: 0 12px 28px rgba(0,0,0,0.5);
+              animation: fadeRise 0.2s ease both;
             }
+            .param-menu[hidden] { display: none; }
             .param-group {
               border-radius: 8px;
-              overflow: hidden;
               margin: 0.1rem 0;
-              background: transparent;
-              border: 1px solid transparent;
             }
             .param-group-header {
               width: 100%;
               display: flex;
               align-items: center;
               justify-content: space-between;
-              padding: 0.35rem 0.55rem;
+              gap: 0.5rem;
+              padding: 0.5rem 0.65rem;
               background: transparent;
               border: none;
-              color: #c9d1d9;
-              font-size: 0.8rem;
-              font-weight: 600;
+              color: var(--text);
+              font-size: 0.82rem;
+              font-weight: 700;
               text-align: left;
               cursor: pointer;
+              border-radius: 8px;
+              font-family: inherit;
             }
-            .param-group-header span {
-              pointer-events: none;
-            }
+            .param-group-header:hover { background: rgba(88,166,255,0.05); }
             .param-group-header::after {
               content: '▸';
-              font-size: 0.8rem;
-              opacity: 0.8;
+              font-size: 0.7rem;
+              opacity: 0.6;
+              transition: transform 0.15s;
             }
             .param-group-header.open {
-              background: rgba(88, 166, 255, 0.18);
-              border-bottom: 1px solid #2d3843;
+              background: rgba(88,166,255,0.1);
+              color: var(--accent-bright);
             }
-            .param-group-header.open::after {
-              content: '▾';
-            }
+            .param-group-header.open::after { transform: rotate(90deg); }
             .param-group-list {
-              padding: 0.25rem 0.5rem 0.45rem;
+              padding: 0.2rem 0.5rem 0.5rem;
               display: none;
+              grid-template-columns: 1fr;
+              gap: 0.1rem;
             }
-            /* Linha com checkbox + rótulo dentro do grupo */
+            @media (min-width: 700px) {
+              .param-group-list { grid-template-columns: repeat(2, 1fr); }
+            }
+            .param-group-header.open + .param-group-list { display: grid; }
             .param-option {
               display: flex;
               align-items: center;
-              gap: 0.35rem;
-              padding: 0.15rem 0;
-              font-size: 0.78rem;
-              color: #c9d1d9;
+              gap: 0.5rem;
+              padding: 0.35rem 0.5rem;
+              font-size: 0.8rem;
+              color: var(--text);
               cursor: pointer;
+              border-radius: 6px;
+              transition: background 0.1s;
             }
+            .param-option:hover { background: rgba(255,255,255,0.04); }
             .param-option input[type="checkbox"] {
-              width: 0.85rem;
-              height: 0.85rem;
-              accent-color: #58a6ff;
+              width: 0.95rem;
+              height: 0.95rem;
+              accent-color: var(--accent);
+              cursor: pointer;
+              flex-shrink: 0;
             }
-            .param-option span {
-              flex: 1;
+            .param-option input[type="checkbox"]:checked ~ span { color: var(--accent-bright); font-weight: 600; }
+
+            /* === EXPORT === */
+            .chart-export-area {
+              display: flex;
+              justify-content: flex-end;
+              margin-bottom: 0.6rem;
+              gap: 0.4rem;
             }
-            .param-option input[type="checkbox"]:checked + span {
-              color: #ffd139;
+            .chart-export-button {
+              padding: 0.4rem 0.85rem;
+              border-radius: 999px;
+              border: 1px solid var(--border);
+              background: var(--bg-elev);
+              color: var(--text-muted);
+              font-size: 0.75rem;
+              font-weight: 600;
+              cursor: pointer;
+              font-family: inherit;
+              display: inline-flex;
+              align-items: center;
+              gap: 0.35rem;
+              transition: all 0.15s;
             }
-            /* Barra inferior fixa para ações (Voltar / Exportar) */
+            .chart-export-button:hover {
+              border-color: var(--accent);
+              color: var(--text);
+            }
+            .chart-export-button[hidden] { display: none; }
+
+            /* === GRID DE CARDS === */
+            .charts-grid {
+              display: grid;
+              grid-template-columns: 1fr;
+              gap: 0.75rem;
+            }
+            @media (min-width: 600px) { .charts-grid { grid-template-columns: repeat(2, 1fr); } }
+            @media (min-width: 980px) { .charts-grid { grid-template-columns: repeat(3, 1fr); } }
+            @media (min-width: 1300px) { .charts-grid { grid-template-columns: repeat(4, 1fr); } }
+            .charts-grid[hidden] { display: none; }
+
+            .chart-card {
+              background: linear-gradient(140deg, var(--bg-card) 0%, #121a23 100%);
+              border: 1px solid var(--border);
+              border-radius: 14px;
+              padding: 0.9rem 1rem 0.7rem 1.15rem;
+              position: relative;
+              overflow: hidden;
+              box-shadow: 0 1px 0 rgba(255,255,255,0.03) inset, 0 4px 12px rgba(0,0,0,0.25);
+              animation: fadeRise 0.35s ease both;
+            }
+            .chart-card::before {
+              content: '';
+              position: absolute;
+              left: 0; top: 0; bottom: 0;
+              width: 3px;
+              background: var(--text-faint);
+              transition: background 0.2s;
+            }
+            .chart-card[data-status="normal"]::before { background: var(--success); }
+            .chart-card[data-status="warn"]::before { background: var(--warning); }
+            .chart-card[data-status="alterado"]::before { background: var(--danger); }
+
+            .card-row {
+              display: flex;
+              justify-content: space-between;
+              align-items: flex-start;
+              gap: 0.5rem;
+            }
+            .card-title { flex: 1; min-width: 0; }
+            .param-label {
+              font-size: 0.88rem;
+              font-weight: 700;
+              color: var(--text);
+              line-height: 1.2;
+            }
+            .param-unit {
+              font-size: 0.72rem;
+              font-weight: 500;
+              color: var(--text-muted);
+              margin-left: 0.3rem;
+            }
+            .param-range {
+              display: block;
+              font-size: 0.68rem;
+              color: var(--text-faint);
+              margin-top: 0.2rem;
+              letter-spacing: 0.01em;
+            }
+            .card-value { text-align: right; flex-shrink: 0; }
+            .value {
+              font-size: 1.55rem;
+              font-weight: 800;
+              letter-spacing: -0.02em;
+              color: var(--text);
+              font-variant-numeric: tabular-nums;
+              line-height: 1;
+              display: block;
+            }
+            .chart-card[data-status="normal"] .value { color: var(--success); }
+            .chart-card[data-status="warn"] .value { color: var(--warning); }
+            .chart-card[data-status="alterado"] .value { color: var(--danger); }
+            .trend {
+              display: inline-flex;
+              align-items: center;
+              gap: 0.15rem;
+              font-size: 0.72rem;
+              font-weight: 700;
+              color: var(--text-muted);
+              margin-top: 0.3rem;
+              font-variant-numeric: tabular-nums;
+            }
+            .trend.up { color: #ff9b91; }
+            .trend.down { color: #6dd07c; }
+            .trend.flat { color: var(--text-muted); }
+
+            .card-chart {
+              width: 100%;
+              height: 64px;
+              display: block;
+              margin-top: 0.55rem;
+              overflow: visible;
+            }
+            .card-axis {
+              display: flex;
+              justify-content: space-between;
+              font-size: 0.66rem;
+              color: var(--text-faint);
+              margin-top: 0.3rem;
+              font-variant-numeric: tabular-nums;
+            }
+
+            /* === ESTADO VAZIO === */
+            .charts-empty {
+              padding: 2.5rem 1rem;
+              text-align: center;
+              color: var(--text-muted);
+              font-size: 0.92rem;
+              border: 1px dashed var(--border);
+              border-radius: 14px;
+              background: rgba(88,166,255,0.02);
+              animation: fadeRise 0.3s ease both;
+            }
+            .charts-empty[hidden] { display: none; }
+            .charts-empty .icon {
+              display: block;
+              font-size: 1.8rem;
+              margin-bottom: 0.45rem;
+              opacity: 0.55;
+            }
+            .charts-empty .hint {
+              font-size: 0.78rem;
+              color: var(--text-faint);
+              margin-top: 0.4rem;
+            }
+
+            /* === BARRA INFERIOR === */
             .bottom-bar-evolucao {
               position: fixed;
               left: 0;
               right: 0;
               bottom: 0;
-              padding: 0.55rem 1rem;
-              background: rgba(10, 14, 18, 0.96);
-              border-top: 1px solid #2d3843;
+              padding: 0.65rem 1rem calc(env(safe-area-inset-bottom, 0px) + 0.65rem);
+              background: rgba(11, 17, 23, 0.94);
+              -webkit-backdrop-filter: blur(12px);
+              backdrop-filter: blur(12px);
+              border-top: 1px solid var(--border);
               display: flex;
               align-items: center;
               justify-content: space-between;
               gap: 0.75rem;
-              box-shadow: 0 -6px 18px rgba(0,0,0,0.7);
-              backdrop-filter: blur(10px);
+              z-index: 100;
             }
             .bottom-bar-evolucao button {
               border-radius: 999px;
-              padding: 0.4rem 1.1rem;
-              font-size: 0.8rem;
-              font-weight: 600;
-              border: 1px solid #2d3843;
-              background: #151b23;
-              color: #e6edf3;
+              padding: 0.55rem 1.2rem;
+              font-size: 0.82rem;
+              font-weight: 700;
+              border: 1px solid var(--border-strong);
+              background: var(--bg-elev);
+              color: var(--text);
               cursor: pointer;
-              display: inline-flex;
-              align-items: center;
-              justify-content: center;
-              gap: 0.3rem;
-            }
-            #btn-evo-voltar {
-              background: transparent;
-            }
-            #btn-evo-exportar-tabela {
-              background: #2ea043;
-              border-color: #2ea043;
-              color: #0f1419;
+              font-family: inherit;
+              transition: all 0.15s;
             }
             .bottom-bar-evolucao button:hover {
-              filter: brightness(1.05);
+              border-color: var(--accent);
+              background: var(--bg-card);
             }
-            /* Ajustes para telas estreitas (iPhone, etc.) */
+            #btn-evo-voltar { background: transparent; }
+            #btn-evo-exportar-tabela {
+              background: linear-gradient(135deg, #3fc55c, #2ea043);
+              border-color: #2ea043;
+              color: #0b1117;
+              box-shadow: 0 4px 12px rgba(46,160,67,0.25);
+            }
+            #btn-evo-exportar-tabela:hover {
+              filter: brightness(1.08);
+              transform: translateY(-1px);
+            }
+
             @media (max-width: 600px) {
-              body {
-                padding: 0.6rem 0.35rem 4rem;
-              }
-              .chart-frame {
-                margin-top: 0.6rem;
-                padding: 0.5rem 0.5rem 0.35rem;
-              }
+              body { padding: 0.85rem 0.6rem calc(env(safe-area-inset-bottom, 0px) + 5rem); }
+              h1 { font-size: 1.05rem; }
+              .chart-card { padding: 0.75rem 0.85rem 0.55rem 1rem; }
+              .value { font-size: 1.35rem; }
+              .gaso-table { font-size: 0.75rem; }
+              .preset-pill { padding: 0.35rem 0.7rem; font-size: 0.72rem; }
+              #btn-parametros-grafico { padding: 0.4rem 0.85rem; font-size: 0.75rem; }
+              .param-label { font-size: 0.82rem; }
             }
           </style>
         </head>
         <body>
-          <h1>Evolução – ${safeNome}</h1>
+          <div class="page-header">
+            <h1>Evolução · <span class="nome">${safeNome}</span></h1>
+            <span class="header-meta">${ordenados.length} exame${ordenados.length === 1 ? '' : 's'} no histórico</span>
+          </div>
           <div class="tabs">
             <button class="tab-button active" data-tab="tabela">Tabela</button>
             <button class="tab-button" data-tab="grafico">Evolução gráfica</button>
@@ -2213,17 +2566,29 @@
             ${tabelaHTML}
           </div>
           <div id="tab-grafico" class="tab-content">
-            <div class="placeholder-grafico">
-              <button id="btn-parametros-grafico" class="tab-button active" type="button">
-                Selecionar parâmetros para evolução
+            <div class="chart-controls">
+              <button id="btn-parametros-grafico" type="button">
+                <span class="text">Parâmetros</span>
+                <span class="params-counter" hidden>0</span>
+                <span class="arrow">▾</span>
               </button>
-              <div id="menu-parametros-grafico" class="param-menu" hidden></div>
-              <div class="chart-frame">
-                <button id="btn-exportar-grafico" class="chart-export-button" type="button">
-                  Exportar PNG
-                </button>
-                <svg id="grafico-evolucao" width="100%" height="320" viewBox="0 0 800 320"></svg>
-              </div>
+              <button class="preset-pill" data-preset="gases">Gases</button>
+              <button class="preset-pill" data-preset="hemodinamica">Hemodinâmica</button>
+              <button class="preset-pill" data-preset="eletrolitos">Eletrólitos</button>
+              <button class="preset-pill" data-preset="tudo">Tudo</button>
+              <button class="preset-pill linkar" data-preset="limpar">Limpar</button>
+            </div>
+            <div id="menu-parametros-grafico" class="param-menu" hidden></div>
+            <div class="chart-export-area">
+              <button id="btn-exportar-grafico" class="chart-export-button" type="button" hidden>
+                ⤓ Exportar PNG
+              </button>
+            </div>
+            <div id="charts-grid" class="charts-grid" hidden></div>
+            <div id="charts-empty" class="charts-empty">
+              <span class="icon">📈</span>
+              Selecione parâmetros acima para visualizar a evolução
+              <div class="hint">Dica: comece com um preset (Gases, Hemodinâmica…) ou abra "Parâmetros" pra escolher individualmente</div>
             </div>
           </div>
           <div class="bottom-bar-evolucao">
@@ -2289,13 +2654,15 @@
 
               var btnMenu = document.getElementById('btn-parametros-grafico');
               var menu = document.getElementById('menu-parametros-grafico');
-              var svg = document.getElementById('grafico-evolucao');
+              var gridEl = document.getElementById('charts-grid');
+              var emptyEl = document.getElementById('charts-empty');
               var btnExport = document.getElementById('btn-exportar-grafico');
-              var chartFrame = document.querySelector('.chart-frame');
+              var counterEl = btnMenu ? btnMenu.querySelector('.params-counter') : null;
               var btnVoltar = document.getElementById('btn-evo-voltar');
               var btnExportTabela = document.getElementById('btn-evo-exportar-tabela');
+              var presetButtons = document.querySelectorAll('.preset-pill[data-preset]');
 
-              if (btnMenu && menu && svg) {
+              if (btnMenu && menu && gridEl) {
                 // Monta menu hierárquico: primeiro escolhe o grupo, depois abre a lista de parâmetros daquele grupo
                 var grupos = {};
                 parametros.forEach(function(p) {
@@ -2338,17 +2705,10 @@
 
                   header.addEventListener('click', function () {
                     var isOpen = header.classList.contains('open');
-                    // fecha todos os outros grupos
                     menu.querySelectorAll('.param-group-header').forEach(function(h) {
                       h.classList.remove('open');
                     });
-                    menu.querySelectorAll('.param-group-list').forEach(function(l) {
-                      l.style.display = 'none';
-                    });
-                    if (!isOpen) {
-                      header.classList.add('open');
-                      lista.style.display = 'block';
-                    }
+                    if (!isOpen) header.classList.add('open');
                   });
 
                   grupoWrap.appendChild(header);
@@ -2360,71 +2720,29 @@
                 btnMenu.addEventListener('click', function(ev) {
                   ev.stopPropagation();
                   menu.hidden = !menu.hidden;
+                  btnMenu.classList.toggle('open', !menu.hidden);
                 });
 
                 // Fechar dropdown ao clicar fora
                 document.addEventListener('click', function (ev) {
                   if (menu.hidden) return;
-                  if (!menu.contains(ev.target) && ev.target !== btnMenu) {
+                  if (!menu.contains(ev.target) && !btnMenu.contains(ev.target)) {
                     menu.hidden = true;
+                    btnMenu.classList.remove('open');
                   }
                 });
 
-                // Exportar o gráfico como PNG, capturando exatamente o container (.chart-frame)
+                // Exportar o grid de cards como PNG via html2canvas
                 function exportarGrafico() {
-                  if (!chartFrame) return;
-                  var width = chartFrame.offsetWidth;
-                  var height = chartFrame.offsetHeight;
+                  if (!gridEl || gridEl.hidden) return;
+                  if (!window.html2canvas) return;
 
-                  // Usa html2canvas se disponível (captura pixel a pixel exatamente o que o usuário vê)
-                  if (window.html2canvas) {
-                    // Esconde temporariamente o botão de exportação para não aparecer na imagem
-                    var antigoDisplay = btnExport ? btnExport.style.display : '';
-                    if (btnExport) btnExport.style.display = 'none';
-
-                    window.html2canvas(chartFrame, {
-                      backgroundColor: null,
-                      width: width,
-                      height: height,
-                      scale: window.devicePixelRatio || 2
-                    }).then(function(canvas) {
-                      if (btnExport) btnExport.style.display = antigoDisplay;
-                      canvas.toBlob(function (pngBlob) {
-                        if (!pngBlob) return;
-                        var a = document.createElement('a');
-                        a.href = URL.createObjectURL(pngBlob);
-                        a.download = 'evolucao-grafico.png';
-                        document.body.appendChild(a);
-                        a.click();
-                        document.body.removeChild(a);
-                      }, 'image/png');
-                    }).catch(function() {
-                      if (btnExport) btnExport.style.display = antigoDisplay;
-                    });
-                    return;
-                  }
-
-                  // Fallback simples: exporta apenas o SVG
-                  if (!svg) return;
-                  var serializer = new XMLSerializer();
-                  var svgString = serializer.serializeToString(svg);
-                  var blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
-                  var url = URL.createObjectURL(blob);
-                  var img = new Image();
-                  var scale = window.devicePixelRatio || 2;
-                  var svgWidth = svg.clientWidth || 800;
-                  var svgHeight = svg.clientHeight || 320;
-
-                  img.onload = function () {
-                    var canvas = document.createElement('canvas');
-                    canvas.width = svgWidth * scale;
-                    canvas.height = svgHeight * scale;
-                    var ctx = canvas.getContext('2d');
-                    ctx.setTransform(scale, 0, 0, scale, 0, 0);
-                    ctx.fillStyle = '#050810';
-                    ctx.fillRect(0, 0, svgWidth, svgHeight);
-                    ctx.drawImage(img, 0, 0, svgWidth, svgHeight);
-                    URL.revokeObjectURL(url);
+                  window.html2canvas(gridEl, {
+                    backgroundColor: '#0b1117',
+                    scale: window.devicePixelRatio || 2,
+                    useCORS: true,
+                    logging: false
+                  }).then(function(canvas) {
                     canvas.toBlob(function (pngBlob) {
                       if (!pngBlob) return;
                       var a = document.createElement('a');
@@ -2434,8 +2752,9 @@
                       a.click();
                       document.body.removeChild(a);
                     }, 'image/png');
-                  };
-                  img.src = url;
+                  }).catch(function(err) {
+                    console.warn('Erro ao exportar:', err);
+                  });
                 }
 
                 if (btnExport) {
@@ -2510,245 +2829,414 @@
                   });
                 }
 
-                function desenharGraficoMulti() {
-                  function parseNum(x) {
-                    return parseFloat((x || '').toString().replace(',', '.'));
+                // ============================================================
+                // Helpers para os mini-gráficos (small multiples)
+                // ============================================================
+
+                function parseNum(x) {
+                  return parseFloat((x || '').toString().replace(',', '.'));
+                }
+
+                // Faixas de referência fisiológicas (para banda sombreada e status)
+                var REFERENCIAS = {
+                  pH: { min: 7.35, max: 7.45 },
+                  PaCO2: { min: 35, max: 45 },
+                  PaO2: { min: 80, max: 100 },
+                  SaO2: { min: 95, max: 100 },
+                  FiO2: { min: 21, max: 50 },
+                  HCO3: { min: 22, max: 26 },
+                  BaseExcess: { min: -2, max: 2 },
+                  Hb: { min: 12, max: 16 },
+                  Hematocrito: { min: 36, max: 48 },
+                  Plaquetas: { min: 150, max: 400 },
+                  Na: { min: 135, max: 145 },
+                  K: { min: 3.5, max: 5.0 },
+                  Ca: { min: 8.5, max: 10.5 },
+                  Mg: { min: 1.7, max: 2.4 },
+                  Cl: { min: 98, max: 107 },
+                  Albumina: { min: 3.5, max: 5.0 },
+                  Lactato: { min: 0.5, max: 2.0 },
+                  CO: { min: 4, max: 8 },
+                  FC: { min: 60, max: 100 },
+                  PAMRadial: { min: 65, max: 95 },
+                  PvO2: { min: 35, max: 45 },
+                  PvCO2: { min: 41, max: 51 },
+                  SvO2: { min: 65, max: 80 },
+                  HCO3v: { min: 22, max: 28 },
+                  GapCO2: { min: 0, max: 6 },
+                  CaO2: { min: 16, max: 22 },
+                  CvO2: { min: 12, max: 17 }
+                };
+
+                function statusOf(v, p) {
+                  var ref = REFERENCIAS[p.id];
+                  if (!ref) return 'neutro';
+                  if (v >= ref.min && v <= ref.max) return 'normal';
+                  var spread = Math.max(ref.max - ref.min, 0.001);
+                  if (v < ref.min - spread * 0.4 || v > ref.max + spread * 0.4) return 'alterado';
+                  return 'warn';
+                }
+
+                function formatValue(v) {
+                  if (v === null || v === undefined || isNaN(v)) return '—';
+                  var abs = Math.abs(v);
+                  if (abs >= 100) return v.toFixed(0);
+                  if (abs >= 10) return v.toFixed(1);
+                  return v.toFixed(2);
+                }
+                function formatPt(s) { return String(s).replace('.', ','); }
+                function formatDelta(d) {
+                  return (d >= 0 ? '+' : '') + formatPt(formatValue(d));
+                }
+                function formatTime(t) {
+                  return new Date(t).toLocaleString('pt-BR', {
+                    day: '2-digit', month: '2-digit',
+                    hour: '2-digit', minute: '2-digit'
+                  });
+                }
+                function escapeHtml(s) {
+                  return (s == null ? '' : s.toString()).replace(/[&<>"']/g, function(c){
+                    return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];
+                  });
+                }
+
+                // Catmull-Rom-like smoothing → cubic bezier path
+                function buildSmoothPath(pts) {
+                  if (!pts.length) return '';
+                  if (pts.length === 1) return 'M ' + pts[0].x + ' ' + pts[0].y;
+                  if (pts.length === 2) return 'M ' + pts[0].x + ' ' + pts[0].y + ' L ' + pts[1].x + ' ' + pts[1].y;
+                  var d = 'M ' + pts[0].x + ' ' + pts[0].y;
+                  var t = 0.2;
+                  for (var i = 0; i < pts.length - 1; i++) {
+                    var p0 = pts[i - 1] || pts[i];
+                    var p1 = pts[i];
+                    var p2 = pts[i + 1];
+                    var p3 = pts[i + 2] || p2;
+                    var c1x = p1.x + (p2.x - p0.x) * t;
+                    var c1y = p1.y + (p2.y - p0.y) * t;
+                    var c2x = p2.x - (p3.x - p1.x) * t;
+                    var c2y = p2.y - (p3.y - p1.y) * t;
+                    d += ' C ' + c1x.toFixed(2) + ' ' + c1y.toFixed(2) +
+                         ', ' + c2x.toFixed(2) + ' ' + c2y.toFixed(2) +
+                         ', ' + p2.x.toFixed(2) + ' ' + p2.y.toFixed(2);
                   }
+                  return d;
+                }
+
+                function extrairPontos(p) {
+                  var pts = [];
+                  series.forEach(function(reg) {
+                    if (!reg.t) return;
+                    var ts = new Date(reg.t).getTime();
+                    var vReg = reg.valores || {};
+                    var raw = vReg[p.id];
+                    if ((raw === undefined || raw === '') && p.id === 'CaO2') {
+                      var Hb = parseNum(vReg.Hb);
+                      var SaO2 = parseNum(vReg.SaO2);
+                      var PaO2 = parseNum(vReg.PaO2);
+                      if (![Hb, SaO2, PaO2].some(isNaN)) {
+                        raw = (Hb * 1.34 * SaO2 / 100) + (0.0031 * PaO2);
+                      }
+                    } else if ((raw === undefined || raw === '') && p.id === 'CvO2') {
+                      var Hb2 = parseNum(vReg.Hb);
+                      var SvO2 = parseNum(vReg.SvO2);
+                      var PvO2 = parseNum(vReg.PvO2);
+                      if (![Hb2, SvO2, PvO2].some(isNaN)) {
+                        raw = (Hb2 * 1.34 * SvO2 / 100) + (0.0031 * PvO2);
+                      }
+                    } else if ((raw === undefined || raw === '') && p.id === 'GapCO2') {
+                      var PaCO2v = parseNum(vReg.PaCO2);
+                      var PvCO2v = parseNum(vReg.PvCO2);
+                      if (![PaCO2v, PvCO2v].some(isNaN)) {
+                        raw = PvCO2v - PaCO2v;
+                      }
+                    }
+                    var v = parseNum(raw);
+                    if (!isNaN(v)) {
+                      pts.push({ t: ts, v: v });
+                    }
+                  });
+                  pts.sort(function(a, b) { return a.t - b.t; });
+                  return pts;
+                }
+
+                function createChartCard(param, idx) {
+                  var pts = extrairPontos(param);
+                  if (!pts.length) return null;
+
+                  var card = document.createElement('div');
+                  card.className = 'chart-card';
+                  card.style.animationDelay = (idx * 35) + 'ms';
+
+                  var last = pts[pts.length - 1];
+                  var prev = pts.length >= 2 ? pts[pts.length - 2] : null;
+                  var status = statusOf(last.v, param);
+                  card.dataset.status = status;
+
+                  // Header (label + valor + delta)
+                  var rowHeader = document.createElement('div');
+                  rowHeader.className = 'card-row';
+
+                  var titleEl = document.createElement('div');
+                  titleEl.className = 'card-title';
+                  var labelHtml = '<span class="param-label">' + escapeHtml(param.label) + '</span>';
+                  if (param.unidade) labelHtml += '<span class="param-unit">' + escapeHtml(param.unidade) + '</span>';
+                  var ref = REFERENCIAS[param.id];
+                  if (ref) {
+                    labelHtml += '<span class="param-range">Ref: ' +
+                      escapeHtml(formatPt(formatValue(ref.min))) + ' – ' +
+                      escapeHtml(formatPt(formatValue(ref.max))) + '</span>';
+                  }
+                  titleEl.innerHTML = labelHtml;
+
+                  var valueEl = document.createElement('div');
+                  valueEl.className = 'card-value';
+                  var valueHtml = '<span class="value">' + escapeHtml(formatPt(formatValue(last.v))) + '</span>';
+                  if (prev) {
+                    var delta = last.v - prev.v;
+                    var threshold = Math.max(Math.abs(last.v) * 0.005, 0.02);
+                    var dir = Math.abs(delta) < threshold ? 'flat' : (delta > 0 ? 'up' : 'down');
+                    var arrow = dir === 'up' ? '▲' : dir === 'down' ? '▼' : '→';
+                    valueHtml += '<span class="trend ' + dir + '">' + arrow + ' ' + escapeHtml(formatDelta(delta)) + '</span>';
+                  }
+                  valueEl.innerHTML = valueHtml;
+
+                  rowHeader.appendChild(titleEl);
+                  rowHeader.appendChild(valueEl);
+                  card.appendChild(rowHeader);
+
+                  // SVG (mini-chart com banda de referência + linha smooth + área gradient)
+                  var W = 240, H = 64;
+                  var padL = 4, padR = 4, padT = 4, padB = 4;
+                  var ww = W - padL - padR;
+                  var hh = H - padT - padB;
+
+                  var tMin = pts[0].t;
+                  var tMax = pts[pts.length - 1].t;
+                  if (tMax === tMin) tMax = tMin + 1;
+
+                  var vMin = pts[0].v, vMax = pts[0].v;
+                  pts.forEach(function(p) {
+                    if (p.v < vMin) vMin = p.v;
+                    if (p.v > vMax) vMax = p.v;
+                  });
+                  if (ref) {
+                    vMin = Math.min(vMin, ref.min);
+                    vMax = Math.max(vMax, ref.max);
+                  }
+                  if (vMax === vMin) vMax = vMin + 1;
+                  var spanV = vMax - vMin;
+                  vMin -= spanV * 0.15;
+                  vMax += spanV * 0.15;
+
+                  function xS(t) { return padL + ((t - tMin) / (tMax - tMin)) * ww; }
+                  function yS(v) { return padT + hh - ((v - vMin) / (vMax - vMin)) * hh; }
+
+                  var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                  svg.setAttribute('class', 'card-chart');
+                  svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+                  svg.setAttribute('preserveAspectRatio', 'none');
+
+                  // Banda de referência (sombreada verde)
+                  if (ref) {
+                    var refY1 = yS(ref.max);
+                    var refY2 = yS(ref.min);
+                    var refRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                    refRect.setAttribute('x', padL);
+                    refRect.setAttribute('y', refY1);
+                    refRect.setAttribute('width', ww);
+                    refRect.setAttribute('height', Math.max(0.5, refY2 - refY1));
+                    refRect.setAttribute('fill', 'rgba(63, 185, 80, 0.09)');
+                    svg.appendChild(refRect);
+                    [refY1, refY2].forEach(function(y) {
+                      var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                      line.setAttribute('x1', padL);
+                      line.setAttribute('x2', W - padR);
+                      line.setAttribute('y1', y);
+                      line.setAttribute('y2', y);
+                      line.setAttribute('stroke', 'rgba(63, 185, 80, 0.3)');
+                      line.setAttribute('stroke-width', '1');
+                      line.setAttribute('stroke-dasharray', '2,3');
+                      svg.appendChild(line);
+                    });
+                  }
+
+                  var coords = pts.map(function(p) {
+                    return { x: xS(p.t), y: yS(p.v), v: p.v, t: p.t };
+                  });
+
+                  var lineColor = status === 'normal' ? '#3fb950'
+                                : status === 'warn'    ? '#e6a700'
+                                : status === 'alterado'? '#f85149'
+                                : '#58a6ff';
+
+                  // Defs + gradient para área sob a curva
+                  var gradId = 'grad-' + param.id + '-' + idx;
+                  var defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+                  var grad = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+                  grad.setAttribute('id', gradId);
+                  grad.setAttribute('x1', '0'); grad.setAttribute('y1', '0');
+                  grad.setAttribute('x2', '0'); grad.setAttribute('y2', '1');
+                  var stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+                  stop1.setAttribute('offset', '0%');
+                  stop1.setAttribute('stop-color', lineColor);
+                  stop1.setAttribute('stop-opacity', '0.28');
+                  var stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+                  stop2.setAttribute('offset', '100%');
+                  stop2.setAttribute('stop-color', lineColor);
+                  stop2.setAttribute('stop-opacity', '0');
+                  grad.appendChild(stop1);
+                  grad.appendChild(stop2);
+                  defs.appendChild(grad);
+                  svg.appendChild(defs);
+
+                  // Área embaixo da linha
+                  var smoothPath = buildSmoothPath(coords);
+                  var areaPath = smoothPath +
+                    ' L ' + coords[coords.length - 1].x.toFixed(2) + ' ' + (H - padB) +
+                    ' L ' + coords[0].x.toFixed(2) + ' ' + (H - padB) + ' Z';
+                  var area = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                  area.setAttribute('d', areaPath);
+                  area.setAttribute('fill', 'url(#' + gradId + ')');
+                  area.setAttribute('stroke', 'none');
+                  svg.appendChild(area);
+
+                  // Linha smooth
+                  var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                  path.setAttribute('d', smoothPath);
+                  path.setAttribute('fill', 'none');
+                  path.setAttribute('stroke', lineColor);
+                  path.setAttribute('stroke-width', '2');
+                  path.setAttribute('stroke-linecap', 'round');
+                  path.setAttribute('stroke-linejoin', 'round');
+                  svg.appendChild(path);
+
+                  // Pontos + tooltip nativo (title)
+                  coords.forEach(function(c, i) {
+                    var isLast = i === coords.length - 1;
+                    var dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                    dot.setAttribute('cx', c.x.toFixed(2));
+                    dot.setAttribute('cy', c.y.toFixed(2));
+                    dot.setAttribute('r', isLast ? '3.2' : '2.4');
+                    dot.setAttribute('fill', lineColor);
+                    dot.setAttribute('stroke', '#0b1117');
+                    dot.setAttribute('stroke-width', '1.4');
+                    svg.appendChild(dot);
+
+                    // Hit-area maior + tooltip nativo
+                    var hit = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                    hit.setAttribute('cx', c.x.toFixed(2));
+                    hit.setAttribute('cy', c.y.toFixed(2));
+                    hit.setAttribute('r', '10');
+                    hit.setAttribute('fill', 'transparent');
+                    hit.style.cursor = 'pointer';
+                    var tipText = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+                    tipText.textContent = formatPt(formatValue(c.v)) + (param.unidade ? ' ' + param.unidade : '') + ' · ' + formatTime(c.t);
+                    hit.appendChild(tipText);
+                    svg.appendChild(hit);
+                  });
+
+                  card.appendChild(svg);
+
+                  // Footer: datas extremas
+                  var axisDiv = document.createElement('div');
+                  axisDiv.className = 'card-axis';
+                  axisDiv.innerHTML =
+                    '<span>' + escapeHtml(formatTime(pts[0].t)) + '</span>' +
+                    '<span>' + escapeHtml(formatTime(pts[pts.length - 1].t)) + '</span>';
+                  card.appendChild(axisDiv);
+
+                  return card;
+                }
+
+                function updateCounter(n) {
+                  if (!counterEl) return;
+                  if (n > 0) {
+                    counterEl.textContent = n;
+                    counterEl.hidden = false;
+                  } else {
+                    counterEl.hidden = true;
+                  }
+                }
+
+                function renderCharts() {
                   var selecionados = [];
                   var checks = menu.querySelectorAll('input[type="checkbox"]:checked');
                   checks.forEach(function(cb) {
                     var conf = parametros.find(function(p) { return p.id === cb.value; });
                     if (conf) selecionados.push(conf);
                   });
-                  svg.innerHTML = '';
-                  if (!selecionados.length) return;
 
-                  // Monta pontos por parâmetro
-                  var seriesPorParam = {};
-                  selecionados.forEach(function(p) { seriesPorParam[p.id] = []; });
+                  gridEl.innerHTML = '';
+                  updateCounter(selecionados.length);
 
-                  series.forEach(function(reg) {
-                    if (!reg.t) return;
-                    var t = new Date(reg.t).getTime();
-                    var vReg = reg.valores || {};
-                    selecionados.forEach(function(p) {
-                      var raw = vReg[p.id];
-
-                      // Se não houver valor salvo para derivados selecionados, calcula a partir dos dados base
-                      if ((raw === undefined || raw === '') && p.id === 'CaO2') {
-                        var Hb = parseNum(vReg.Hb);
-                        var SaO2 = parseNum(vReg.SaO2);
-                        var PaO2 = parseNum(vReg.PaO2);
-                        if (![Hb, SaO2, PaO2].some(isNaN)) {
-                          raw = (Hb * 1.34 * SaO2 / 100) + (0.0031 * PaO2);
-                        }
-                      } else if ((raw === undefined || raw === '') && p.id === 'CvO2') {
-                        var Hb2 = parseNum(vReg.Hb);
-                        var SvO2 = parseNum(vReg.SvO2);
-                        var PvO2 = parseNum(vReg.PvO2);
-                        if (![Hb2, SvO2, PvO2].some(isNaN)) {
-                          raw = (Hb2 * 1.34 * SvO2 / 100) + (0.0031 * PvO2);
-                        }
-                      } else if ((raw === undefined || raw === '') && p.id === 'GapCO2') {
-                        var PaCO2 = parseNum(vReg.PaCO2);
-                        var PvCO2 = parseNum(vReg.PvCO2);
-                        if (![PaCO2, PvCO2].some(isNaN)) {
-                          raw = PvCO2 - PaCO2;
-                        }
-                      }
-
-                      var v = parseNum(raw);
-                      if (!isNaN(v)) {
-                        seriesPorParam[p.id].push({ t: t, v: v });
-                      }
-                    });
-                  });
-
-                  // Remove parâmetros sem pontos
-                  selecionados = selecionados.filter(function(p) {
-                    return (seriesPorParam[p.id] || []).length;
-                  });
-                  if (!selecionados.length) return;
-
-                  // Ordena por tempo e calcula ranges globais
-                  var todosPontos = [];
-                  selecionados.forEach(function(p) {
-                    seriesPorParam[p.id].sort(function(a,b){ return a.t - b.t; });
-                    todosPontos = todosPontos.concat(seriesPorParam[p.id]);
-                  });
-                  todosPontos.sort(function(a,b){ return a.t - b.t; });
-
-                  var tMin = todosPontos[0].t;
-                  var tMax = todosPontos[todosPontos.length - 1].t;
-                  if (tMax === tMin) tMax = tMin + 1;
-
-                  // Calcula intervalo vertical a partir dos próprios dados,
-                  // ajustando para que o valor máximo ocupe ~90% da altura do eixo Y
-                  var vDataMin = Infinity, vDataMax = -Infinity;
-                  selecionados.forEach(function(p) {
-                    var pts = seriesPorParam[p.id];
-                    pts.forEach(function(pt) {
-                      vDataMin = Math.min(vDataMin, pt.v);
-                      vDataMax = Math.max(vDataMax, pt.v);
-                    });
-                  });
-                  if (!isFinite(vDataMin) || !isFinite(vDataMax)) return;
-                  if (vDataMax === vDataMin) {
-                    vDataMax = vDataMin + 1;
-                  }
-                  var spanDados = vDataMax - vDataMin;
-                  // Limite inferior ~10% abaixo do menor valor, topo com folga menor para aproveitar melhor a área
-                  var vMin = vDataMin - spanDados * 0.10;
-                  var vMax = vDataMax + spanDados * 0.05;
-
-                  // Espaços laterais e verticais dinâmicos em função do tamanho efetivo do SVG
-                  var rect = svg.getBoundingClientRect();
-                  var svgWidth = rect.width || svg.clientWidth || 800;
-                  var svgHeight = rect.height || svg.clientHeight || 320;
-                  var padX = Math.max(40, svgWidth * 0.06);       // margem esquerda
-                  var padRight = Math.max(24, svgWidth * 0.03);   // margem direita
-                  var padY = Math.max(24, svgHeight * 0.06);      // margem superior
-                  var padBottom = Math.max(30, svgHeight * 0.14); // margem inferior
-                  var w = svgWidth - padX - padRight;
-                  var h = svgHeight - padY - padBottom;
-
-                  function xScale(t) {
-                    return padX + ((t - tMin) / (tMax - tMin)) * w;
-                  }
-                  function yScale(v) {
-                    return padY + h - ((v - vMin) / (vMax - vMin)) * h;
+                  if (!selecionados.length) {
+                    gridEl.hidden = true;
+                    if (emptyEl) emptyEl.hidden = false;
+                    if (btnExport) btnExport.hidden = true;
+                    return;
                   }
 
-                  // Eixos
-                  var eixoX = document.createElementNS('http://www.w3.org/2000/svg','line');
-                  eixoX.setAttribute('x1', padX);
-                  eixoX.setAttribute('y1', padY + h);
-                  eixoX.setAttribute('x2', padX + w);
-                  eixoX.setAttribute('y2', padY + h);
-                  eixoX.setAttribute('stroke', '#ffffff');
-                  eixoX.setAttribute('stroke-width', '1.5');
-                  svg.appendChild(eixoX);
-
-                  var eixoY = document.createElementNS('http://www.w3.org/2000/svg','line');
-                  eixoY.setAttribute('x1', padX);
-                  eixoY.setAttribute('y1', padY);
-                  eixoY.setAttribute('x2', padX);
-                  eixoY.setAttribute('y2', padY + h);
-                  eixoY.setAttribute('stroke', '#ffffff');
-                  eixoY.setAttribute('stroke-width', '1.5');
-                  svg.appendChild(eixoY);
-
-                  // Ticks em X: uma marca por data/hora real, alinhada com as bolinhas (texto na vertical)
-                  var temposUnicos = [];
-                  todosPontos.forEach(function(pt) {
-                    if (temposUnicos.indexOf(pt.t) === -1) temposUnicos.push(pt.t);
-                  });
-                  temposUnicos.sort(function(a, b) { return a - b; });
-                  var maxTicks = 10;
-                  var step = Math.max(1, Math.ceil(temposUnicos.length / maxTicks));
-                  for (var i = 0; i < temposUnicos.length; i += step) {
-                    var tTick = temposUnicos[i];
-                    var xTick = xScale(tTick);
-                    var lbl = document.createElementNS('http://www.w3.org/2000/svg','text');
-                    lbl.setAttribute('x', xTick);
-                    // posiciona logo abaixo do eixo X e gira o texto,
-                    // mas mantendo tudo dentro da área visível do SVG
-                    var yTick = padY + h + 10;
-                    lbl.setAttribute('y', yTick);
-                    lbl.setAttribute('fill', '#ffffff');
-                    lbl.setAttribute('font-size', '9');
-                    lbl.setAttribute('text-anchor', 'end');
-                    lbl.setAttribute('transform', 'rotate(-90 ' + xTick + ' ' + yTick + ')');
-                    lbl.textContent = new Date(tTick).toLocaleString('pt-BR',{
-                      hour: '2-digit',
-                      minute: '2-digit',
-                      day: '2-digit',
-                      month: '2-digit'
-                    });
-                    svg.appendChild(lbl);
-                  }
-
-                  // Ticks numéricos no eixo Y
-                  var nTicksY = 5;
-                  for (var j = 0; j < nTicksY; j++) {
-                    var fracY = (nTicksY === 1) ? 0 : j / (nTicksY - 1);
-                    var vTick = vMin + (vMax - vMin) * fracY;
-                    var yTickPos = yScale(vTick);
-
-                    // Pequena marca horizontal
-                    var tickLine = document.createElementNS('http://www.w3.org/2000/svg','line');
-                    tickLine.setAttribute('x1', padX - 4);
-                    tickLine.setAttribute('y1', yTickPos);
-                    tickLine.setAttribute('x2', padX);
-                    tickLine.setAttribute('y2', yTickPos);
-                    tickLine.setAttribute('stroke', '#ffffff');
-                    tickLine.setAttribute('stroke-width', '1');
-                    svg.appendChild(tickLine);
-
-                    // Valor numérico
-                    var vLbl = document.createElementNS('http://www.w3.org/2000/svg','text');
-                    vLbl.setAttribute('x', padX - 6);
-                    vLbl.setAttribute('y', yTickPos + 3);
-                    vLbl.setAttribute('fill', '#ffffff');
-                    vLbl.setAttribute('font-size', '9');
-                    vLbl.setAttribute('text-anchor', 'end');
-                    vLbl.textContent = vTick.toFixed(1);
-                    svg.appendChild(vLbl);
-                  }
-
-                  // Paleta de cores
-                  var cores = ['#58a6ff','#3fb950','#f1c40f','#ff7b72','#a371f7','#2f81f7','#c9d1d9'];
-                  // Linhas, pontos e rótulos que acompanham cada linha
+                  var rendered = 0;
                   selecionados.forEach(function(p, idx) {
-                    var cor = cores[idx % cores.length];
-                    var pts = seriesPorParam[p.id];
-                    if (!pts.length) return;
-
-                    var path = document.createElementNS('http://www.w3.org/2000/svg','path');
-                    var d = '';
-                    pts.forEach(function(pt, i) {
-                      var x = xScale(pt.t);
-                      var y = yScale(pt.v);
-                      d += (i === 0 ? 'M ' : ' L ') + x + ' ' + y;
-                    });
-                    path.setAttribute('d', d);
-                    path.setAttribute('fill', 'none');
-                    path.setAttribute('stroke', cor);
-                    path.setAttribute('stroke-width', '2');
-                    svg.appendChild(path);
-
-                    // Desenha pontos
-                    pts.forEach(function(pt) {
-                      var cx = xScale(pt.t);
-                      var cy = yScale(pt.v);
-                      var circ = document.createElementNS('http://www.w3.org/2000/svg','circle');
-                      circ.setAttribute('cx', cx);
-                      circ.setAttribute('cy', cy);
-                      circ.setAttribute('r', 3);
-                      circ.setAttribute('fill', cor);
-                      svg.appendChild(circ);
-                    });
-
-                    // Rótulo no último ponto da série, acompanhando a linha
-                    var ultimo = pts[pts.length - 1];
-                    var lx = xScale(ultimo.t) + 6;
-                    var ly = yScale(ultimo.v) - 4;
-                    var lbl = document.createElementNS('http://www.w3.org/2000/svg','text');
-                    lbl.setAttribute('x', lx);
-                    lbl.setAttribute('y', ly);
-                    lbl.setAttribute('fill', cor);
-                    lbl.setAttribute('font-size', '10');
-                    lbl.setAttribute('text-anchor', 'start');
-                    lbl.setAttribute('alignment-baseline', 'middle');
-                    lbl.textContent = p.label + (p.unidade ? ' (' + p.unidade + ')' : '');
-                    svg.appendChild(lbl);
+                    var card = createChartCard(p, idx);
+                    if (card) {
+                      gridEl.appendChild(card);
+                      rendered++;
+                    }
                   });
+
+                  if (rendered === 0) {
+                    gridEl.hidden = true;
+                    if (emptyEl) {
+                      emptyEl.hidden = false;
+                      emptyEl.innerHTML =
+                        '<span class="icon">⚠️</span>' +
+                        'Nenhum dos parâmetros selecionados tem valores nos exames.' +
+                        '<div class="hint">Tente outros parâmetros ou volte e edite os exames pra incluir os valores.</div>';
+                    }
+                    if (btnExport) btnExport.hidden = true;
+                  } else {
+                    gridEl.hidden = false;
+                    if (emptyEl) emptyEl.hidden = true;
+                    if (btnExport) btnExport.hidden = false;
+                  }
                 }
 
-                // Recalcula sempre que mudar seleção
-                menu.addEventListener('change', desenharGraficoMulti);
-                // Começa sem nada selecionado
-                svg.innerHTML = '';
+                // Presets — selecionam um grupo predefinido de parâmetros
+                var PRESETS = {
+                  'gases': ['pH', 'PaCO2', 'HCO3', 'BaseExcess', 'Lactato', 'PaO2', 'SaO2'],
+                  'hemodinamica': ['CO', 'FC', 'PAMRadial', 'SvO2'],
+                  'eletrolitos': ['Na', 'K', 'Cl', 'Ca', 'Mg', 'Albumina']
+                };
+
+                function applyPreset(name) {
+                  var ids;
+                  if (name === 'tudo') {
+                    ids = parametros.map(function(p) { return p.id; });
+                  } else if (name === 'limpar') {
+                    ids = [];
+                  } else {
+                    ids = PRESETS[name] || [];
+                  }
+                  var allChecks = menu.querySelectorAll('input[type="checkbox"]');
+                  allChecks.forEach(function(cb) {
+                    cb.checked = ids.indexOf(cb.value) >= 0;
+                  });
+                  renderCharts();
+                }
+
+                presetButtons.forEach(function(btn) {
+                  btn.addEventListener('click', function() {
+                    applyPreset(btn.getAttribute('data-preset'));
+                  });
+                });
+
+                // Recalcula sempre que mudar seleção no menu
+                menu.addEventListener('change', renderCharts);
+
+                // Estado inicial: nada selecionado, mostra empty state
+                renderCharts();
               }
             })();
           <\/script>

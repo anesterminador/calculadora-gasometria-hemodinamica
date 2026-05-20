@@ -1,9 +1,20 @@
-const CACHE_NAME = 'hemodinamica-v69';
+const CACHE_NAME = 'hemodinamica-v73';
 
 const ASSETS = [
   '/',
   '/index.html',
   '/analytics.js',
+  '/manifest.webmanifest',
+  '/icon-192.png',
+  '/icon-512.png',
+  '/Logo Hemodinâmica_regular.png',
+  '/ico-instagram.png',
+  '/vac-beat.png',
+  '/volume-vesical-medidas.png',
+  '/regra-3-3-2.png',
+  '/mallampati-classes.png',
+  '/js/site-footer.css',
+  '/js/site-footer.js',
   '/calculadora.html',
   '/gasometria-acido-base.html',
   '/obesidade.html',
@@ -23,9 +34,16 @@ const ASSETS = [
   '/choque-maximal-allowable-blood-loss.html',
   '/choque-delta-pp.html',
   '/delta-pp-foto.html',
+  '/choque-acoplamento-chen.html',
+  '/calculadora-diluicoes.html',
+  '/salina-hiper-hipotonica.html',
+  '/avaliacao-perioperatoria-integrada.html',
+  '/anafilaxia.html',
+  '/intoxicacao-anestesico-local.html',
   '/pocus-diafragma.html',
   '/pocus-gastrico.html',
   '/pocus-vesical.html',
+  '/pocus-veia-cava-inferior.html',
   '/via-aerea-diffmask.html',
   '/via-aerea-el-ganzouri.html',
   '/via-aerea-lemon.html',
@@ -39,7 +57,16 @@ const ASSETS = [
 
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
+    caches.open(CACHE_NAME).then(cache =>
+      // addAll falha de forma atômica: se UM asset falhar, a instalação inteira aborta.
+      // Usamos add() por item e ignoramos falhas individuais (ex.: recurso renomeado/temporário fora do ar)
+      // para que o SW ainda seja instalado e o restante das páginas funcione offline.
+      Promise.all(ASSETS.map(url =>
+        cache.add(url).catch(err => {
+          console.warn('[SW] Falha ao cachear', url, err);
+        })
+      ))
+    )
   );
 });
 
@@ -90,49 +117,4 @@ self.addEventListener('fetch', event => {
       .catch(() => caches.match(request).then(cached => cached || fetch(request)))
   );
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

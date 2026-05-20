@@ -153,3 +153,264 @@ button:focus-visible {
   position: relative;
   top: -0.03rem;
 }
+
+/* =========================================================
+   FAVORITOS — estrelinha auto-injetada em cada calculadora
+   (não aparece no index, definido via JS)
+   ========================================================= */
+.fav-button {
+  position: fixed;
+  top: max(0.9rem, env(safe-area-inset-top, 0.9rem));
+  right: 0.9rem;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  border: 1px solid #233140;
+  background: rgba(11, 17, 23, 0.85);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: #8b9cad;
+  cursor: pointer;
+  font-size: 1.25rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  z-index: 60;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  transition: transform 0.15s ease, color 0.15s, border-color 0.15s, background 0.15s;
+}
+.fav-button:hover {
+  color: #f1c40f;
+  border-color: #f1c40f;
+  transform: translateY(-1px);
+}
+.fav-button:active { transform: translateY(0); }
+.fav-button.is-fav {
+  color: #f1c40f;
+  border-color: rgba(241, 196, 15, 0.55);
+  background: rgba(241, 196, 15, 0.1);
+}
+.fav-button.is-fav:hover {
+  color: #ffd84a;
+  border-color: #ffd84a;
+}
+.fav-button .star-icon {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+@keyframes favPop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+.fav-button.just-toggled .star-icon { animation: favPop 0.35s ease; }
+@media (max-width: 480px) {
+  .fav-button { width: 38px; height: 38px; top: 0.7rem; right: 0.7rem; }
+}
+
+/* =========================================================
+   FAB DO DRAWER (botão flutuante de menu, bottom-right)
+   ========================================================= */
+.drawer-fab {
+  position: fixed;
+  right: 1rem;
+  bottom: max(1rem, calc(env(safe-area-inset-bottom, 0px) + 1rem));
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  border: 1px solid #2f4054;
+  background: linear-gradient(135deg, #1a2330, #121922);
+  color: #e6edf3;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  z-index: 70;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.05) inset,
+    0 8px 24px rgba(0, 0, 0, 0.5),
+    0 0 0 0 rgba(88, 166, 255, 0);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s;
+}
+.drawer-fab:hover {
+  border-color: #58a6ff;
+  transform: translateY(-1px);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 12px 28px rgba(0, 0, 0, 0.6),
+    0 0 0 4px rgba(88, 166, 255, 0.12);
+}
+.drawer-fab:active { transform: translateY(0); }
+.drawer-fab svg { width: 24px; height: 24px; }
+@media (max-width: 480px) {
+  .drawer-fab { width: 48px; height: 48px; right: 0.85rem; }
+}
+
+/* =========================================================
+   DRAWER PANEL (painel lateral, slide da direita)
+   ========================================================= */
+.drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  z-index: 80;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s ease;
+}
+.drawer-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.drawer-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(360px, 86vw);
+  background: linear-gradient(180deg, #121922 0%, #0b1117 100%);
+  border-left: 1px solid #233140;
+  box-shadow: -16px 0 48px rgba(0, 0, 0, 0.5);
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.28s cubic-bezier(0.22, 0.61, 0.36, 1);
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  color: #e6edf3;
+  overflow: hidden;
+}
+.drawer-panel.open { transform: translateX(0); }
+
+.drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.1rem 0.7rem;
+  border-bottom: 1px solid #1c252f;
+}
+.drawer-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #e6edf3;
+  letter-spacing: 0.01em;
+}
+.drawer-close {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid #233140;
+  background: transparent;
+  color: #8b9cad;
+  cursor: pointer;
+  font-size: 1.3rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+.drawer-close:hover { color: #e6edf3; border-color: #58a6ff; }
+
+.drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.6rem 0.6rem calc(env(safe-area-inset-bottom, 0px) + 1rem);
+}
+
+.drawer-section-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #5a6878;
+  padding: 0.7rem 0.65rem 0.3rem;
+}
+
+.drawer-item {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.7rem 0.75rem;
+  border-radius: 10px;
+  color: #e6edf3;
+  text-decoration: none;
+  font-size: 0.92rem;
+  font-weight: 500;
+  margin: 0.1rem 0;
+  border: 1px solid transparent;
+  transition: background 0.12s, border-color 0.12s, transform 0.1s;
+}
+.drawer-item:hover {
+  background: rgba(88, 166, 255, 0.08);
+  border-color: rgba(88, 166, 255, 0.25);
+}
+.drawer-item:active { transform: translateY(0.5px); }
+
+.drawer-item .di-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: #79b8ff;
+}
+
+.drawer-item.hero {
+  background: linear-gradient(135deg, rgba(46, 160, 67, 0.16), rgba(46, 160, 67, 0.04));
+  border-color: rgba(46, 160, 67, 0.5);
+}
+.drawer-item.hero .di-icon { color: #3fb950; }
+
+.drawer-item.danger .di-icon { color: #ff9b91; }
+
+.drawer-item .di-sub {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 400;
+  color: #8b9cad;
+  margin-top: 0.1rem;
+}
+
+.drawer-fav-empty {
+  padding: 0.65rem 0.75rem;
+  font-size: 0.78rem;
+  color: #5a6878;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.drawer-footer {
+  padding: 0.65rem 0.85rem calc(env(safe-area-inset-bottom, 0px) + 0.65rem);
+  border-top: 1px solid #1c252f;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.drawer-offline-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.28rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(46, 160, 67, 0.1);
+  border: 1px solid rgba(46, 160, 67, 0.35);
+  color: #6cd97e;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.drawer-offline-chip::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #3fb950;
+  box-shadow: 0 0 6px rgba(63, 185, 80, 0.6);
+}

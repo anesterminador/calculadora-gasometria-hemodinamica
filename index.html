@@ -271,6 +271,101 @@
       font-size: 0.9rem;
     }
 
+    /* ===== HERO CARD (Avaliação Perioperatória Integrada) ===== */
+    .hero-card {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.2rem 1.25rem;
+      margin-bottom: 1.25rem;
+      background:
+        linear-gradient(135deg, rgba(46, 160, 67, 0.18) 0%, rgba(46, 160, 67, 0.04) 60%, transparent 100%),
+        linear-gradient(140deg, var(--bg-card) 0%, #121a23 100%);
+      border: 1px solid rgba(46, 160, 67, 0.55);
+      border-radius: var(--radius-lg);
+      color: var(--text);
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.04) inset,
+        0 12px 28px rgba(0, 0, 0, 0.35),
+        0 0 0 1px rgba(46, 160, 67, 0.15);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s;
+      animation: fadeRise 0.4s ease both;
+    }
+    .hero-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--success-bright);
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.05) inset,
+        0 18px 36px rgba(0, 0, 0, 0.45),
+        0 0 0 1px rgba(63, 185, 80, 0.35);
+    }
+    .hero-card:active { transform: translateY(0); }
+    .hero-card-icon {
+      width: 52px;
+      height: 52px;
+      flex-shrink: 0;
+      border-radius: 14px;
+      background: rgba(63, 185, 80, 0.18);
+      color: var(--success-bright);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 18px rgba(63, 185, 80, 0.2);
+    }
+    .hero-card-icon svg { width: 28px; height: 28px; }
+    .hero-card-text { flex: 1; min-width: 0; }
+    .hero-card-eyebrow {
+      font-size: 0.66rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--success-bright);
+      margin-bottom: 0.2rem;
+    }
+    .hero-card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      color: var(--text);
+    }
+    .hero-card-subtitle {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+      line-height: 1.45;
+    }
+    .hero-card-chevron {
+      width: 22px;
+      height: 22px;
+      flex-shrink: 0;
+      color: var(--success-bright);
+      transition: transform 0.18s;
+    }
+    .hero-card:hover .hero-card-chevron { transform: translateX(3px); }
+
+    /* ===== TITULOS DE SECAO ===== */
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin: 1.25rem 0.25rem 0.5rem;
+    }
+    .section-title .section-icon {
+      width: 14px;
+      height: 14px;
+      color: #f1c40f;
+    }
+    #favoritos-section[hidden] { display: none; }
+
     /* ===== LISTA DE CATEGORIAS ===== */
     .card-list {
       display: flex;
@@ -541,9 +636,6 @@
         <img src="Logo Hemodinâmica_regular.png" alt="Hemodinâmica" class="logo">
       </a>
       <p class="subtitle">Ferramentas do curso Hemodinâmica · Anest-Review</p>
-      <div class="status-row">
-        <span class="status-chip" id="offline-chip" title="Calculadoras armazenadas para uso sem internet">Disponível offline</span>
-      </div>
     </header>
 
     <div class="search-wrap">
@@ -555,6 +647,31 @@
       <span class="search-kbd" aria-hidden="true">/</span>
       <div class="search-results" id="search-results" hidden role="listbox"></div>
     </div>
+
+    <!-- HERO CARD: Avaliação Perioperatória Integrada -->
+    <a href="avaliacao-perioperatoria-integrada.html" class="hero-card">
+      <div class="hero-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 2 4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6l-8-4Z"/>
+          <path d="m9 12 2 2 4-4"/>
+        </svg>
+      </div>
+      <div class="hero-card-text">
+        <div class="hero-card-eyebrow">Recomendado</div>
+        <div class="hero-card-title">Avaliação Perioperatória Integrada</div>
+        <div class="hero-card-subtitle">Todos os parâmetros num único quadro — ácido-base, hemodinâmica, evolução e histórico do paciente</div>
+      </div>
+      <svg class="hero-card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+    </a>
+
+    <!-- FAVORITOS (preenchido via JS apenas se houver) -->
+    <section id="favoritos-section" hidden>
+      <h2 class="section-title">
+        <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.95 6.02 6.64.97-4.8 4.68 1.13 6.6L12 17.65l-5.92 3.12 1.13-6.6-4.8-4.68 6.64-.97L12 2.5z"/></svg>
+        Seus favoritos
+      </h2>
+      <div class="card-list" id="favoritos-list" style="margin-bottom: 1.25rem;"></div>
+    </section>
 
     <nav class="card-list">
       <!-- GASOMETRIA -->
@@ -602,23 +719,13 @@
         </div>
       </details>
 
-      <!-- AVALIAÇÃO PERIOPERATÓRIA INTEGRADA -->
-      <a href="avaliacao-perioperatoria-integrada.html" class="card-link highlight-green">
-        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M12 2 4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6l-8-4Z"/>
-          <path d="m9 12 2 2 4-4"/>
-        </svg>
-        <span class="card-label">Avaliação Perioperatória Integrada</span>
-        <svg class="card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-      </a>
-
       <!-- DILUIÇÕES -->
       <details class="pocus-menu">
         <summary class="card-link outline-blue">
           <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M12 2.7c3.5 5 6 8.3 6 11.3a6 6 0 0 1-12 0c0-3 2.5-6.3 6-11.3Z"/>
           </svg>
-          <span class="card-label">Calculadora de Diluições</span>
+          <span class="card-label">Diluições</span>
           <svg class="card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
         </summary>
         <div class="pocus-sub">
@@ -639,7 +746,7 @@
           <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M3 12c2 0 2-3 4-3s2 6 4 6 2-9 4-9 2 6 4 6 2-3 2-3"/>
           </svg>
-          <span class="card-label">Calculadoras POCUS</span>
+          <span class="card-label">POCUS</span>
           <svg class="card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
         </summary>
         <div class="pocus-sub">
@@ -932,6 +1039,71 @@
       { name: 'Mechanical Power (VCV)', cat: 'Ventilação', kw: 'mechanical power vcv volume controlado potencia mecanica vili', url: 'ventilacao-mp-vcv.html' },
       { name: 'Peso Predito pela Altura', cat: 'Ventilação', kw: 'peso predito altura devine ibw volume corrente 6ml kg', url: 'ventilacao-peso-predito.html' }
     ];
+
+    /* ============================================
+       FAVORITOS — popula a seção "Seus favoritos"
+       lendo a API window.HemoFav (definida em
+       js/site-footer.js). Renderiza o que existe;
+       esconde tudo se não houver nenhum.
+       ============================================ */
+    (function () {
+      function renderFavoritos() {
+        var section = document.getElementById('favoritos-section');
+        var list = document.getElementById('favoritos-list');
+        if (!section || !list) return;
+
+        var favs = (window.HemoFav && typeof window.HemoFav.get === 'function')
+          ? window.HemoFav.get()
+          : [];
+
+        if (!favs.length) {
+          section.hidden = true;
+          list.innerHTML = '';
+          return;
+        }
+
+        // Tenta enriquecer com info do índice de calculadoras
+        var byUrl = {};
+        CALCULATORS.forEach(function (c) { byUrl[c.url] = c; });
+
+        var html = '';
+        favs.forEach(function (f) {
+          var info = byUrl[f.url];
+          var cat = info ? info.cat : '';
+          html +=
+            '<a href="' + encodeURI(f.url) + '" class="card-link" style="padding: 0.85rem 1rem;">' +
+              '<svg class="card-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="color:#f1c40f;">' +
+                '<path d="M12 2.5l2.95 6.02 6.64.97-4.8 4.68 1.13 6.6L12 17.65l-5.92 3.12 1.13-6.6-4.8-4.68 6.64-.97L12 2.5z"/>' +
+              '</svg>' +
+              '<span class="card-label">' + escapeHtml(f.label) +
+                (cat ? '<span class="card-subtitle">' + escapeHtml(cat) + '</span>' : '') +
+              '</span>' +
+              '<svg class="card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>' +
+            '</a>';
+        });
+        list.innerHTML = html;
+        section.hidden = false;
+      }
+
+      function escapeHtml(s) {
+        return (s == null ? '' : String(s)).replace(/[&<>"']/g, function (c) {
+          return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c];
+        });
+      }
+
+      function start() {
+        renderFavoritos();
+        if (window.HemoFav && typeof window.HemoFav.onChange === 'function') {
+          window.HemoFav.onChange(renderFavoritos);
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', start);
+      } else {
+        start();
+      }
+    })();
 
     /* ============================================
        BUSCA — normalização (remove acentos), match

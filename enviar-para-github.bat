@@ -58,8 +58,8 @@ git push <NUL
 if errorlevel 1 (
     echo.
     echo Erro ao enviar para o GitHub.
-    echo Possiveis causas: sem conexao, credenciais expiradas,
-    echo conflito remoto (rode "git pull" antes).
+    echo Possiveis causas: sem conexao, credenciais expiradas
+    echo ou conflito remoto - nesse caso, rode 'git pull' antes.
 )
 
 :fim

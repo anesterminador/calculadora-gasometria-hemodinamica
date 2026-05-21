@@ -28,7 +28,7 @@
                        radial-gradient(ellipse 60% 40% at 100% 100%, rgba(63, 185, 80, 0.05), transparent);
       color: var(--text);
       line-height: 1.5;
-      padding: 0 1rem 6.5rem; /* mais espaço para rolar sem esconder o rodapé atrás da barra fixa */
+      padding: 0 1rem calc(env(safe-area-inset-bottom, 0px) + 9.5rem); /* espaço pra barra fixa (botões + footer) */
     }
     .wrap {
       max-width: 1100px;
@@ -425,13 +425,39 @@
       bottom: 0;
       width: 100%;
       max-width: 1100px;
-      padding: 0.55rem 1.2rem 0.75rem;
+      padding: 0.55rem 1.2rem calc(env(safe-area-inset-bottom, 0px) + 0.55rem);
       display: flex;
-      gap: 0.5rem;
+      flex-direction: column;
+      gap: 0.55rem;
       background: linear-gradient(to top, rgba(15, 20, 25, 0.98), rgba(15, 20, 25, 0.92));
       border-top: 1px solid var(--border);
       box-shadow: 0 -8px 16px rgba(0, 0, 0, 0.6);
       z-index: 90;
+    }
+    .history-actions-row {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .history-actions .footer-buttons {
+      padding-top: 0.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      gap: 0.5rem;
+    }
+    /* Footer iOS-style compacto dentro da barra fixa */
+    .history-actions .footer-link {
+      width: 60px;
+      height: 60px;
+      padding: 0.38rem 0.32rem;
+      border-radius: 15px;
+    }
+    .history-actions .footer-icon { width: 21px; height: 21px; }
+    .history-actions .footer-icon svg { width: 20px; height: 20px; }
+    .history-actions .footer-label { font-size: 0.56rem; }
+    .history-actions .footer-link-instagram { width: 60px; height: 60px; }
+    .history-actions .footer-link-instagram img {
+      width: 60px;
+      height: 60px;
+      border-radius: 15px;
     }
     .history-button {
       flex: 1;
@@ -864,8 +890,11 @@
       </details>
 
       <div class="history-actions">
-        <button type="button" class="history-button primary" id="btnSalvarGaso">Salvar exame</button>
-        <button type="button" class="history-button secondary" id="btnHistoricoGaso">Histórico</button>
+        <div class="history-actions-row">
+          <button type="button" class="history-button primary" id="btnSalvarGaso">Salvar exame</button>
+          <button type="button" class="history-button secondary" id="btnHistoricoGaso">Histórico</button>
+        </div>
+        <footer class="footer-buttons"></footer>
       </div>
     </section>
 
@@ -964,7 +993,6 @@
       </div>
     </div>
 
-    <footer class="footer-buttons"></footer>
   </div><!-- Script de avaliação ácido-básica (reaproveitado da página original) -->
 
   <!-- ============================================================

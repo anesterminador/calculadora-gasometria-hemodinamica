@@ -48,7 +48,7 @@
         radial-gradient(ellipse 50% 35% at 100% 100%, rgba(46,160,67,0.04), transparent 60%);
       color: var(--text);
       line-height: 1.5;
-      padding: 1.25rem 1rem calc(env(safe-area-inset-bottom, 0px) + 5rem);
+      padding: 1.25rem 1rem calc(env(safe-area-inset-bottom, 0px) + 9.5rem);
       min-height: 100vh;
     }
     .wrap { max-width: 720px; margin: 0 auto; }
@@ -171,12 +171,54 @@
       border-left: 3px solid var(--accent);
       border-radius: 10px;
       padding: 0.95rem 1.05rem;
-      font-size: 0.83rem;
-      color: var(--text-muted);
+      font-size: 0.85rem;
+      color: var(--text);
       margin-bottom: 1.3rem;
       line-height: 1.6;
     }
-    .card-hint strong { color: var(--text); font-weight: 700; }
+    .card-hint strong { color: var(--accent-bright); font-weight: 700; }
+    .card-hint em { color: var(--text); font-style: italic; }
+    /* Quando o shortcut "Calcular" mora dentro do hint */
+    .card-hint .calc-shortcut {
+      margin: 0.85rem 0 0;
+    }
+    /* Estrutura "Critério" centralizado + linhas com OU */
+    .card-hint .hint-criterion-title {
+      text-align: center;
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-bright);
+      margin-bottom: 0.55rem;
+    }
+    .card-hint .hint-criterion-line {
+      text-align: center;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      color: var(--text);
+    }
+    .card-hint .hint-criterion-or {
+      text-align: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      margin: 0.45rem 0;
+      position: relative;
+    }
+    .card-hint .hint-criterion-or::before,
+    .card-hint .hint-criterion-or::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      width: calc(50% - 1.5rem);
+      height: 1px;
+      background: rgba(88, 166, 255, 0.18);
+    }
+    .card-hint .hint-criterion-or::before { left: 0; }
+    .card-hint .hint-criterion-or::after { right: 0; }
     .card-hint .hint-label {
       display: block;
       font-size: 0.68rem;
@@ -522,6 +564,57 @@
       color: var(--accent-bright);
       font-weight: 600;
     }
+    /* Peso do DASI ao lado do critério */
+    .risk-criterion-label .rc-weight {
+      display: inline-block;
+      margin-left: 0.4rem;
+      padding: 0.1rem 0.45rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-variant-numeric: tabular-nums;
+    }
+    .risk-criterion input:checked ~ .risk-criterion-label .rc-weight {
+      color: var(--accent-bright);
+      border-color: rgba(88, 166, 255, 0.4);
+      background: rgba(88, 166, 255, 0.1);
+    }
+
+    /* Shortcut "Calcular pelo DASI" embutido no card de pergunta */
+    .calc-shortcut {
+      margin: 0.6rem 0 0.8rem;
+      display: flex;
+      justify-content: center;
+    }
+    .calc-shortcut-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.55rem 1.1rem;
+      background: rgba(88, 166, 255, 0.06);
+      border: 1px dashed rgba(88, 166, 255, 0.45);
+      border-radius: 999px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .calc-shortcut-btn:hover {
+      background: rgba(88, 166, 255, 0.12);
+      border-color: var(--accent);
+      border-style: solid;
+      color: var(--accent-bright);
+      transform: translateY(-1px);
+    }
+    .calc-shortcut-btn svg {
+      color: var(--accent-bright);
+      flex-shrink: 0;
+    }
 
     /* Resultado */
     .risk-result {
@@ -760,18 +853,30 @@
       letter-spacing: 0.1em;
       white-space: nowrap;
       flex-shrink: 0;
+      /* Largura mínima compartilhada entre todos os pills:
+         alinha o início da coluna de botões verticalmente */
+      min-width: 200px;
     }
     .pill-options {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.4rem;
+      gap: 0.45rem;
       flex: 1;
       min-width: 0;
       justify-content: flex-end;
     }
-    @media (max-width: 480px) {
+    /* Botões internos com largura mínima consistente
+       → todos os botões têm o mesmo "encaixe" visual */
+    .pill-options .pill-opt {
+      min-width: 92px;
+      justify-content: center;
+      flex: 0 0 auto;
+    }
+    @media (max-width: 600px) {
       .pill-row { padding: 0.6rem 0.85rem; gap: 0.5rem; }
+      .pill-label { min-width: 0; }
       .pill-options { justify-content: flex-start; }
+      .pill-options .pill-opt { flex: 1 1 auto; min-width: 80px; }
     }
     .pill-opt {
       display: inline-flex;
@@ -811,10 +916,14 @@
       border-color: var(--accent);
       border-style: solid;
     }
-    .pill-opt.pill-link::after {
+    /* Ícone external/calc só aparece quando o label realmente referencia
+       um link externo (atributo href). Pra ações que abrem modal,
+       o estilo dashed border já diferencia o botão. */
+    .pill-opt.pill-link[href]::after {
       content: '↗';
       font-size: 0.85rem;
       opacity: 0.7;
+      margin-left: 0.15rem;
     }
 
     /* Hint embaixo de um pill-row (ex: descrição dos modificadores) */
@@ -1009,16 +1118,42 @@
       left: 0;
       right: 0;
       bottom: 0;
-      padding: 0.65rem 1rem calc(env(safe-area-inset-bottom, 0px) + 0.65rem);
+      padding: 0.6rem 1rem calc(env(safe-area-inset-bottom, 0px) + 0.6rem);
       background: rgba(11, 17, 23, 0.94);
       -webkit-backdrop-filter: blur(12px);
       backdrop-filter: blur(12px);
       border-top: 1px solid var(--border);
       display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      z-index: 50;
+    }
+    .controls-actions {
+      display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 0.75rem;
-      z-index: 50;
+    }
+    .controls .footer-buttons {
+      padding-top: 0.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      gap: 0.5rem;
+    }
+    /* Footer iOS-style um pouco menor dentro da barra fixa */
+    .controls .footer-link {
+      width: 60px;
+      height: 60px;
+      padding: 0.38rem 0.32rem;
+      border-radius: 15px;
+    }
+    .controls .footer-icon { width: 21px; height: 21px; }
+    .controls .footer-icon svg { width: 20px; height: 20px; }
+    .controls .footer-label { font-size: 0.56rem; }
+    .controls .footer-link-instagram { width: 60px; height: 60px; }
+    .controls .footer-link-instagram img {
+      width: 60px;
+      height: 60px;
+      border-radius: 15px;
     }
     .ctrl-btn {
       flex: 1;
@@ -1062,7 +1197,7 @@
 
     /* Responsivo */
     @media (max-width: 480px) {
-      body { padding: 0.85rem 0.7rem calc(env(safe-area-inset-bottom, 0px) + 5rem); }
+      body { padding: 0.85rem 0.7rem calc(env(safe-area-inset-bottom, 0px) + 9.5rem); }
       h1 { font-size: 1.15rem; }
       .card { padding: 1.25rem 1.1rem 1.05rem; }
       .card-hint { padding: 0.8rem 0.9rem; }
@@ -1152,14 +1287,17 @@
   </div>
 
   <div class="controls">
-    <button type="button" class="ctrl-btn" id="btn-back" disabled>
-      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
-      Voltar
-    </button>
-    <button type="button" class="ctrl-btn reset" id="btn-reset">
-      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
-      Reiniciar
-    </button>
+    <div class="controls-actions">
+      <button type="button" class="ctrl-btn" id="btn-back" disabled>
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+        Voltar
+      </button>
+      <button type="button" class="ctrl-btn reset" id="btn-reset">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+        Reiniciar
+      </button>
+    </div>
+    <footer class="footer-buttons"></footer>
   </div>
 
   <script>
@@ -1279,7 +1417,7 @@
               options: [
                 { value: 'baixo',   label: 'Baixo' },
                 { value: 'elevado', label: 'Elevado' },
-                { label: 'Calcular ↗', action: 'open-risk-calc' }
+                { label: 'Calcular', action: 'open-risk-calc' }
               ]
             },
             {
@@ -1316,6 +1454,7 @@
         },
         info_elevated_no_mod: {
           type: 'info',
+          autoSkip: true,    // não exibe; só acumula recs e segue pro próximo
           eyebrow: 'Risco elevado, sem modificadores',
           title: 'Recomendações neste caminho',
           recs: [
@@ -1327,6 +1466,7 @@
         },
         info_mod_present: {
           type: 'info',
+          autoSkip: true,
           eyebrow: 'Modificador de risco presente',
           title: 'Recomendações neste caminho',
           recs: [
@@ -1345,17 +1485,36 @@
           step: 5,
           eyebrow: 'Passo 5 · Capacidade funcional',
           title: 'Capacidade funcional pobre ou desconhecida?',
-          hint: '<strong>Critério:</strong> DASI ≤ 34 <em>ou</em> METs &lt; 4 — o paciente não consegue subir 2 andares, caminhar 4 quadras em terreno plano ou equivalente.',
-          recs: [{ cls: '2a', html: '<strong>Estimativa de capacidade funcional</strong> (DASI / METs)' }],
+          hint:
+            '<div class="hint-criterion-title">Critério</div>' +
+            '<div class="hint-criterion-line">&lt; 4 METs · o paciente não consegue subir 2 andares ou caminhar 4 quadras em terreno plano</div>' +
+            '<div class="hint-criterion-or">ou</div>' +
+            '<div class="hint-criterion-line">DASI ≤ 34</div>',
+          calcShortcut: { kind: 'capacity', label: 'Calcular DASI' },
           options: [
-            { label: 'Não — capacidade ≥ 4 METs (boa)', kind: 'yes', next: 't_good_capacity' },
-            { label: 'Sim — capacidade pobre ou desconhecida', kind: 'no', next: 'q_testing_impact' }
+            { label: 'Não — capacidade ≥ 4 METs (boa)', next: 't_good_capacity' },
+            { label: 'Sim — capacidade pobre ou desconhecida', next: 't_poor_capacity' }
           ]
         },
         t_good_capacity: {
           type: 'terminal', kind: 'proceed',
           title: 'Prosseguir à cirurgia',
           body: 'Boa capacidade funcional (DASI > 34 ou ≥ 4 METs) → o paciente pode ser encaminhado à cirurgia.'
+        },
+        t_poor_capacity: {
+          type: 'terminal', kind: 'warn',
+          title: 'Considerar avaliação adicional',
+          body: '<p>Capacidade funcional <strong>pobre ou desconhecida</strong> (DASI ≤ 34 ou METs &lt; 4). A diretriz recomenda avaliação por biomarcadores e, se alterados, prosseguir com avaliação cardíaca dirigida.</p>',
+          recs: [
+            {
+              cls: '2a',
+              html:
+                '<strong>Considerar NT-proBNP e troponina</strong>' +
+                '<small>Limites de anormalidade: BNP &gt; 92 ng/L · NT-proBNP ≥ 300 ng/L · troponina &gt; percentil 99 do URL do ensaio.<br>' +
+                '<strong>Se alterados:</strong> considerar avaliação com <strong>cardiologista</strong>, <strong>ecocardiograma</strong>, ' +
+                '<strong>teste de estresse não-invasivo</strong> e/ou <strong>angiotomografia de coronárias (CCTA)</strong>.</small>'
+            }
+          ]
         },
 
         // ===== 6. TESTES VÃO IMPACTAR? =====
@@ -1633,7 +1792,7 @@
         totalEl.textContent = '';
       } else {
         var step = node.step || state.history.length;
-        var total = 11;
+        var total = 5;
         var pct = Math.min(100, Math.round((step / total) * 100));
         fill.style.width = pct + '%';
         stepEl.textContent = 'Passo ' + step + ' de ' + total;
@@ -1754,14 +1913,41 @@
           chipsHtml += '</div>';
         }
 
+        var shortcutHtml = '';
+        if (node.calcShortcut) {
+          shortcutHtml =
+            '<div class="calc-shortcut">' +
+              '<button type="button" class="calc-shortcut-btn" data-action="open-calc" data-calc-kind="' + escapeHtml(node.calcShortcut.kind || 'risk') + '">' +
+                '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+                  '<rect x="4" y="3" width="16" height="18" rx="2"/>' +
+                  '<line x1="8" y1="7" x2="16" y2="7"/>' +
+                  '<line x1="8" y1="11" x2="10" y2="11"/>' +
+                  '<line x1="13" y1="11" x2="16" y2="11"/>' +
+                  '<line x1="8" y1="15" x2="10" y2="15"/>' +
+                  '<line x1="13" y1="15" x2="16" y2="15"/>' +
+                '</svg>' +
+                escapeHtml(node.calcShortcut.label || 'Calcular') +
+              '</button>' +
+            '</div>';
+        }
+
+        // Se existe hint + shortcut, o shortcut vai DENTRO do card do hint.
+        // Senão, fica num bloco solo (raro).
+        var hintHtml = '';
+        if (hasHint) {
+          hintHtml = '<div class="card-hint">' + node.hint + (shortcutHtml ? shortcutHtml : '') + '</div>';
+        }
+        var standaloneShortcut = (!hasHint && shortcutHtml) ? shortcutHtml : '';
+
         html +=
           '<section class="card">' +
             '<div class="card-eyebrow">' + escapeHtml(node.eyebrow || '') + '</div>' +
             '<h2 class="card-title">' + escapeHtml(node.title) + '</h2>' +
             (node.bodyHtml ? '<div class="card-body">' + node.bodyHtml + '</div>' : '') +
-            (hasHint ? '<div class="card-hint">' + node.hint + '</div>' : '') +
+            hintHtml +
             chipsHtml +
             (node.recs && node.recs.length ? renderRecs(node.recs) : '') +
+            standaloneShortcut +
             '<div class="options">';
 
         node.options.forEach(function (opt, idx) {
@@ -1889,7 +2075,8 @@
           goTo(nextId, label);
         });
       });
-      // multi_question — pill selection
+      // multi_question — pill selection (ATUALIZAÇÃO PARCIAL, sem render completo,
+      // pra evitar "piscada" do card)
       stage.querySelectorAll('.pill-opt[data-group]').forEach(function (btn) {
         btn.addEventListener('click', function () {
           var group = btn.getAttribute('data-group');
@@ -1897,7 +2084,22 @@
           var nodeId = currentId();
           if (!state.multiSelections[nodeId]) state.multiSelections[nodeId] = {};
           state.multiSelections[nodeId][group] = value;
-          render();
+          // Toggle visual SÓ nos pills deste grupo
+          stage.querySelectorAll('.pill-opt[data-group="' + group + '"]').forEach(function (b) {
+            b.classList.toggle('is-selected', b === btn);
+          });
+          // Reavalia se "Continuar" deve habilitar
+          var node = currentNode();
+          if (node.type === 'multi_question') {
+            var sel = state.multiSelections[nodeId] || {};
+            var allSelected = node.groups.every(function (g) {
+              var hasSelectable = g.options.some(function (o) { return !o.href && !o.action; });
+              if (!hasSelectable) return true;
+              return !!sel[g.key];
+            });
+            var cb = stage.querySelector('#btn-multi-continue');
+            if (cb) cb.disabled = !allSelected;
+          }
         });
       });
       var continueBtn = stage.querySelector('#btn-multi-continue');
@@ -1927,21 +2129,25 @@
         });
       });
 
-      // Chips clicáveis (Passo 1 — fatores de risco)
+      // Chips clicáveis (Passo 1 — fatores de risco) — atualização parcial
       stage.querySelectorAll('button.chip[data-factor-id]').forEach(function (btn) {
         btn.addEventListener('click', function () {
           var id = btn.getAttribute('data-factor-id');
           toggleFactor(id);
-          render();
+          var active = isFactorActive(id);
+          btn.classList.toggle('is-active', active);
+          btn.setAttribute('aria-pressed', active ? 'true' : 'false');
         });
       });
 
-      // Form de onboarding (sexo + inputs do paciente)
+      // Form de onboarding (sexo) — atualização parcial
       stage.querySelectorAll('.sex-toggle .sex-opt').forEach(function (btn) {
         btn.addEventListener('click', function () {
           state.patient.sexo = btn.getAttribute('data-sex');
           recomputeAutoFactors();
-          render();
+          stage.querySelectorAll('.sex-toggle .sex-opt').forEach(function (b) {
+            b.classList.toggle('is-selected', b === btn);
+          });
         });
       });
       function bindFormField(id, handler) {
@@ -1994,6 +2200,10 @@
       updatePatientBar();
     }
 
+    function isAutoSkipInfo(node) {
+      return node && node.type === 'info' && node.autoSkip === true && node.next;
+    }
+
     function goTo(id, label) {
       if (!FLOW.nodes[id]) return;
       // Acumula recs do nó atual (perguntas/info podem ter recs próprias do nó)
@@ -2003,20 +2213,41 @@
           state.accumRecs.push({ from: currentId(), cls: r.cls, html: r.html });
         });
       }
-      // Acumula label da escolha no breadcrumb
       if (label) state.pathLabels.push(label);
-      // Avança
       state.history.push(id);
+
+      // Auto-skip de info-nodes silenciosos:
+      // acumula recs e empilha o next, sem renderizar a tela intermediária.
+      // (As recs aparecem só no terminal/resumo final.)
+      var safety = 50;
+      while (safety-- > 0) {
+        var top = currentNode();
+        if (!isAutoSkipInfo(top)) break;
+        if (top.recs && top.recs.length) {
+          top.recs.forEach(function (r) {
+            state.accumRecs.push({ from: currentId(), cls: r.cls, html: r.html });
+          });
+        }
+        state.history.push(top.next);
+      }
+
       render();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function back() {
       if (state.history.length <= 1) return;
-      // Limpa multiSelections do nó que está sendo desempilhado
-      // (não vai mais existir na timeline ativa)
+      // Pop o atual
       var popped = state.history.pop();
       delete state.multiSelections[popped];
+      // Continua desempilhando se o novo topo for um info auto-skip
+      var safety = 50;
+      while (state.history.length > 1 && safety-- > 0) {
+        var top = currentNode();
+        if (!isAutoSkipInfo(top)) break;
+        var p = state.history.pop();
+        delete state.multiSelections[p];
+      }
       state.pathLabels.pop();
       rebuildAccumRecs();
       render();
@@ -2027,6 +2258,13 @@
       while (state.pathLabels.length >= crumbIdx) {
         var popped = state.history.pop();
         delete state.multiSelections[popped];
+        // Desempilha info auto-skips de uma só vez (eles não consomem pathLabel)
+        while (state.history.length > 1) {
+          var top = currentNode();
+          if (!isAutoSkipInfo(top)) break;
+          var p2 = state.history.pop();
+          delete state.multiSelections[p2];
+        }
         state.pathLabels.pop();
       }
       rebuildAccumRecs();
@@ -2079,15 +2317,19 @@
     });
 
     /* ===========================================================
-       Modal de calculadora de risco (RCRI / AUB-HAS2)
-       Aberto pelo botão "Calcular" no pill de Risco.
-       Threshold de "elevado": RCRI > 1 (≥2 pts), AUB-HAS2 ≥ 2 pts.
+       Modal de calculadora (genérico — risco e capacidade)
+       Threshold de "anormal":
+         - RCRI > 1 → risco elevado
+         - AUB-HAS2 ≥ 2 → risco elevado
+         - DASI ≤ 34 → capacidade pobre
        =========================================================== */
-    var RISK_CALCS = {
+    var CALCS = {
       rcri: {
+        kind: 'risk',
+        type: 'count',
         title: 'RCRI',
         subtitle: 'Revised Cardiac Risk Index (Lee)',
-        criteria: [
+        items: [
           'Cirurgia de alto risco (intraperitoneal, intratorácica ou vascular suprainguinal)',
           'Doença isquêmica do coração',
           'História de insuficiência cardíaca congestiva',
@@ -2095,8 +2337,9 @@
           'Diabetes mellitus em uso de insulina',
           'Creatinina sérica > 2,0 mg/dL (176 µmol/L)'
         ],
-        elevatedIf: function (score) { return score > 1; },
-        maceText: function (score) {
+        isAbnormal: function (score) { return score > 1; },
+        badge: function (isAbn) { return isAbn ? 'Elevado' : 'Baixo'; },
+        resultText: function (score) {
           if (score >= 3) return 'MACE estimado ~11%';
           if (score === 2) return 'MACE estimado ~6,6%';
           if (score === 1) return 'MACE estimado ~0,9%';
@@ -2104,9 +2347,11 @@
         }
       },
       aubhas2: {
+        kind: 'risk',
+        type: 'count',
         title: 'AUB-HAS2',
         subtitle: 'Cardiovascular Risk Index',
-        criteria: [
+        items: [
           'História de doença cardíaca',
           'Angina ou dispneia (sintomas de doença cardíaca)',
           'Idade ≥ 75 anos',
@@ -2114,16 +2359,47 @@
           'Cirurgia vascular arterial',
           'Cirurgia de emergência'
         ],
-        elevatedIf: function (score) { return score >= 2; },
-        maceText: function (score) {
+        isAbnormal: function (score) { return score >= 2; },
+        badge: function (isAbn) { return isAbn ? 'Elevado' : 'Baixo'; },
+        resultText: function (score) {
           if (score >= 5) return 'Risco muito alto';
           if (score >= 3) return 'Risco alto';
           if (score === 2) return 'Risco moderado-alto';
           if (score === 1) return 'Risco baixo';
           return 'Risco muito baixo';
         }
+      },
+      dasi: {
+        kind: 'capacity',
+        type: 'weighted',
+        title: 'DASI',
+        subtitle: 'Duke Activity Status Index',
+        items: [
+          { weight: 2.75, label: 'Cuidar de si (comer, vestir, banho, banheiro)' },
+          { weight: 1.75, label: 'Andar dentro de casa' },
+          { weight: 2.75, label: 'Andar 1–2 quarteirões em terreno plano' },
+          { weight: 5.50, label: 'Subir 1 lance de escada ou uma ladeira' },
+          { weight: 8.00, label: 'Correr uma distância curta' },
+          { weight: 2.70, label: 'Tarefas leves de casa (tirar pó, lavar louça)' },
+          { weight: 3.50, label: 'Tarefas moderadas (aspirar, varrer, guardar compras)' },
+          { weight: 8.00, label: 'Trabalho pesado (esfregar piso, mover móveis)' },
+          { weight: 4.50, label: 'Apanhar folhas / cortar grama' },
+          { weight: 5.25, label: 'Relações sexuais' },
+          { weight: 6.00, label: 'Lazer moderado (boliche, dança, tênis, chutar bola)' },
+          { weight: 7.50, label: 'Esportes vigorosos (natação, futebol, basquete)' }
+        ],
+        isAbnormal: function (score) { return score <= 34; }, // capacidade POBRE
+        badge: function (isAbn) { return isAbn ? 'Pobre' : 'Boa'; },
+        resultText: function (score) {
+          var vo2 = 0.43 * score + 9.6;
+          var mets = vo2 / 3.5;
+          return 'Estimativa: ' + mets.toFixed(1).replace('.', ',') + ' METs · DASI ' + score.toFixed(2).replace('.', ',');
+        }
       }
     };
+
+    // Alias retrocompat (usado antes da generalização)
+    var RISK_CALCS = CALCS;
 
     var riskModal = {
       el: document.getElementById('risk-modal'),
@@ -2141,14 +2417,54 @@
       currentScore: 0
     };
 
-    function openRiskModal() {
+    function openCalcModal(kind) {
+      riskModal.currentKind = kind || 'risk';
       riskModal.currentCalc = null;
       riskModal.currentScore = 0;
-      showRiskScreen('select');
+
+      // Filtra opções da tela de escolha por kind
+      var available = Object.keys(CALCS).filter(function (k) {
+        return CALCS[k].kind === riskModal.currentKind;
+      });
+
+      // Reinscreve a tela de escolha somente com as calcs deste kind
+      renderCalcChoiceScreen(available);
+
+      if (available.length === 1) {
+        chooseCalc(available[0]);
+      } else {
+        showRiskScreen('select');
+      }
       riskModal.el.hidden = false;
-      // Próximo tick pra animação
       requestAnimationFrame(function () { riskModal.el.classList.add('open'); });
       document.body.style.overflow = 'hidden';
+    }
+    // Retrocompat
+    function openRiskModal() { openCalcModal('risk'); }
+
+    function renderCalcChoiceScreen(keys) {
+      var screen = riskModal.el.querySelector('.risk-screen[data-screen="select"]');
+      if (!screen) return;
+      var head = '<p class="risk-modal-text">Escolha uma calculadora. Ao confirmar, o resultado é aplicado no fluxograma.</p>';
+      var html = head;
+      keys.forEach(function (k) {
+        var c = CALCS[k];
+        html +=
+          '<button type="button" class="risk-choice" data-calc="' + escapeHtml(k) + '">' +
+            '<div class="risk-choice-content">' +
+              '<span class="risk-choice-title">' + escapeHtml(c.title) + '</span>' +
+              '<span class="risk-choice-desc">' + escapeHtml(c.subtitle) + '</span>' +
+            '</div>' +
+            '<svg class="risk-choice-arrow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>' +
+          '</button>';
+      });
+      screen.innerHTML = html;
+      // Re-bind
+      screen.querySelectorAll('.risk-choice[data-calc]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          chooseCalc(btn.getAttribute('data-calc'));
+        });
+      });
     }
     function closeRiskModal() {
       riskModal.el.classList.remove('open');
@@ -2173,64 +2489,90 @@
       }
     }
     function chooseCalc(key) {
-      if (!RISK_CALCS[key]) return;
+      if (!CALCS[key]) return;
       riskModal.currentCalc = key;
-      var calc = RISK_CALCS[key];
+      var calc = CALCS[key];
       var html = '';
-      calc.criteria.forEach(function (label, idx) {
+      calc.items.forEach(function (item, idx) {
         var id = 'risk-c-' + idx;
+        var isWeighted = calc.type === 'weighted';
+        var label = isWeighted ? item.label : item;
+        var weight = isWeighted ? item.weight : 1;
         html +=
           '<label class="risk-criterion">' +
-            '<input type="checkbox" id="' + id + '" data-idx="' + idx + '">' +
-            '<span class="risk-criterion-label">' + escapeHtml(label) + '</span>' +
+            '<input type="checkbox" id="' + id + '" data-idx="' + idx + '" data-weight="' + weight + '">' +
+            '<span class="risk-criterion-label">' + escapeHtml(label) +
+              (isWeighted ? '<span class="rc-weight">' + weight.toFixed(2).replace('.', ',') + '</span>' : '') +
+            '</span>' +
           '</label>';
       });
       riskModal.criteriaEl.innerHTML = html;
       riskModal.currentScore = 0;
-      updateRiskScore();
+      updateCalcScore();
       showRiskScreen('calc');
 
-      // Bind checkbox handlers
       riskModal.criteriaEl.querySelectorAll('input[type="checkbox"]').forEach(function (cb) {
-        cb.addEventListener('change', updateRiskScore);
+        cb.addEventListener('change', updateCalcScore);
       });
     }
-    function updateRiskScore() {
-      var checked = riskModal.criteriaEl.querySelectorAll('input[type="checkbox"]:checked').length;
-      riskModal.currentScore = checked;
-      var calc = RISK_CALCS[riskModal.currentCalc];
-      var isElev = calc.elevatedIf(checked);
-      riskModal.scoreEl.textContent = checked;
-      riskModal.badgeEl.textContent = isElev ? 'Elevado' : 'Baixo';
-      riskModal.classTextEl.textContent = calc.maceText(checked);
-      riskModal.resultEl.classList.toggle('is-elevated', isElev);
+
+    function updateCalcScore() {
+      var calc = CALCS[riskModal.currentCalc];
+      var score = 0;
+      riskModal.criteriaEl.querySelectorAll('input[type="checkbox"]:checked').forEach(function (cb) {
+        var w = parseFloat(cb.getAttribute('data-weight')) || 1;
+        score += w;
+      });
+      riskModal.currentScore = score;
+      var isAbn = calc.isAbnormal(score);
+      // Score formatado: inteiro pra 'count', 2 casas pra 'weighted'
+      riskModal.scoreEl.textContent = calc.type === 'weighted'
+        ? score.toFixed(2).replace('.', ',')
+        : score;
+      riskModal.badgeEl.textContent = calc.badge(isAbn);
+      riskModal.classTextEl.textContent = calc.resultText(score);
+      riskModal.resultEl.classList.toggle('is-elevated', isAbn);
     }
-    function confirmRisk() {
+    // Retrocompat
+    function updateRiskScore() { return updateCalcScore(); }
+
+    function confirmCalc() {
       if (!riskModal.currentCalc) return;
-      var calc = RISK_CALCS[riskModal.currentCalc];
-      var isElev = calc.elevatedIf(riskModal.currentScore);
-      var value = isElev ? 'elevado' : 'baixo';
-      // Aplica no pill de Risco do q_risk
-      var nodeId = currentId();
-      if (!state.multiSelections[nodeId]) state.multiSelections[nodeId] = {};
-      state.multiSelections[nodeId].risco = value;
-      closeRiskModal();
-      render();
+      var calc = CALCS[riskModal.currentCalc];
+      var isAbn = calc.isAbnormal(riskModal.currentScore);
+
+      if (calc.kind === 'risk') {
+        // Aplica no pill de Risco do q_risk
+        var nodeId = currentId();
+        if (!state.multiSelections[nodeId]) state.multiSelections[nodeId] = {};
+        state.multiSelections[nodeId].risco = isAbn ? 'elevado' : 'baixo';
+        closeRiskModal();
+        render();
+      } else if (calc.kind === 'capacity') {
+        // No q_capacity: abn=POBRE → terminal de biomarcadores; normal=BOA → terminal proceed
+        var label, nextId;
+        if (isAbn) {
+          label = 'Sim — capacidade pobre · DASI ' + riskModal.currentScore.toFixed(2).replace('.', ',');
+          nextId = 't_poor_capacity';
+        } else {
+          label = 'Não — capacidade ≥ 4 METs · DASI ' + riskModal.currentScore.toFixed(2).replace('.', ',');
+          nextId = 't_good_capacity';
+        }
+        closeRiskModal();
+        goTo(nextId, label);
+      }
     }
+    // Retrocompat
+    function confirmRisk() { return confirmCalc(); }
 
     // Handlers fixos
     riskModal.close.addEventListener('click', closeRiskModal);
     riskModal.back.addEventListener('click', function () {
       showRiskScreen('select');
     });
-    riskModal.confirmBtn.addEventListener('click', confirmRisk);
+    riskModal.confirmBtn.addEventListener('click', confirmCalc);
     riskModal.el.addEventListener('click', function (e) {
       if (e.target === riskModal.el) closeRiskModal();
-    });
-    riskModal.el.querySelectorAll('.risk-choice[data-calc]').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        chooseCalc(btn.getAttribute('data-calc'));
-      });
     });
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && !riskModal.el.hidden) {
@@ -2238,12 +2580,16 @@
       }
     });
 
-    // Bind do botão "Calcular" no pill — usa delegação no stage
+    // Delegação global: botões que abrem o modal (pill "Calcular" e shortcut DASI)
     document.getElementById('stage').addEventListener('click', function (e) {
-      var btn = e.target.closest('.pill-opt[data-action="open-risk-calc"]');
-      if (btn) {
+      // pill-opt do q_risk
+      var riskBtn = e.target.closest('.pill-opt[data-action="open-risk-calc"]');
+      if (riskBtn) { e.preventDefault(); openCalcModal('risk'); return; }
+      // shortcut genérico (q_capacity → DASI)
+      var calcBtn = e.target.closest('[data-action="open-calc"]');
+      if (calcBtn) {
         e.preventDefault();
-        openRiskModal();
+        openCalcModal(calcBtn.getAttribute('data-calc-kind') || 'risk');
       }
     });
 

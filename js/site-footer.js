@@ -15,23 +15,41 @@
 (function() {
   var FOOTER_CONFIG = {
     homeHref: 'index.html',
-    homeLabel: 'Página Inicial',
+    homeLabel: 'Início',
     showContact: true,
     contactUrl: 'https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content',
     instagramUrl: 'https://www.instagram.com/hemodinamicareview/',
     instagramIcon: 'ico-instagram.png'
   };
 
+  // SVGs inline (stroke=currentColor — herda a cor branca do parent)
+  var ICONS = {
+    home:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10"/></svg>',
+    mail:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>',
+    share: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v13"/><path d="m8 7 4-4 4 4"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>'
+  };
+
   function buildFooterHtml() {
     var parts = [
-      '<a href="' + FOOTER_CONFIG.homeHref + '" class="footer-link">' + FOOTER_CONFIG.homeLabel + '</a>'
+      '<a href="' + FOOTER_CONFIG.homeHref + '" class="footer-link footer-link-home">' +
+        '<span class="footer-icon">' + ICONS.home + '</span>' +
+        '<span class="footer-label">' + FOOTER_CONFIG.homeLabel + '</span>' +
+      '</a>'
     ];
     if (FOOTER_CONFIG.showContact) {
       parts.push(
-        '<a href="' + FOOTER_CONFIG.contactUrl + '" target="_blank" rel="noopener noreferrer" class="footer-link">Contato</a>'
+        '<a href="' + FOOTER_CONFIG.contactUrl + '" target="_blank" rel="noopener noreferrer" class="footer-link footer-link-contact">' +
+          '<span class="footer-icon">' + ICONS.mail + '</span>' +
+          '<span class="footer-label">Contato</span>' +
+        '</a>'
       );
     }
-    parts.push('<a href="#" class="footer-link footer-link-share">Compartilhar</a>');
+    parts.push(
+      '<a href="#" class="footer-link footer-link-share">' +
+        '<span class="footer-icon">' + ICONS.share + '</span>' +
+        '<span class="footer-label">Compartilhar</span>' +
+      '</a>'
+    );
     parts.push(
       '<a href="' + FOOTER_CONFIG.instagramUrl + '" target="_blank" rel="noopener noreferrer" class="footer-link footer-link-instagram" aria-label="Instagram Hemodinâmica Review" title="Instagram Hemodinâmica Review"><img src="' + FOOTER_CONFIG.instagramIcon + '" alt="Instagram"></a>'
     );

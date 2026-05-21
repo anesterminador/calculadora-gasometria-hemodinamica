@@ -399,6 +399,40 @@
     if (e.key === 'Escape' && isOpen) close();
   });
 
+  // Detecta barras fixas no rodapé (.controls, .history-actions, .bottom-bar-evolucao)
+  // e reposiciona o FAB acima delas pra não ficar coberto.
+  function positionFabAboveFixedBars() {
+    var selectors = '.controls, .history-actions, .bottom-bar-evolucao';
+    var bars = document.querySelectorAll(selectors);
+    var maxOverlap = 0;
+    bars.forEach(function (bar) {
+      if (!bar) return;
+      var style = window.getComputedStyle(bar);
+      if (style.position !== 'fixed' || style.display === 'none' || bar.hidden) return;
+      var rect = bar.getBoundingClientRect();
+      var fromBottom = Math.max(0, window.innerHeight - rect.top);
+      if (fromBottom > maxOverlap) maxOverlap = fromBottom;
+    });
+    if (maxOverlap > 30) {
+      fab.style.bottom = (maxOverlap + 14) + 'px';
+    } else {
+      fab.style.bottom = '';
+    }
+  }
+
+  // Observa mudanças de tamanho das barras fixas (ex.: rotação do device, expand/collapse)
+  function watchFabPosition() {
+    positionFabAboveFixedBars();
+    window.addEventListener('resize', positionFabAboveFixedBars);
+    // ResizeObserver pra reagir a barras que mudam de altura
+    if (window.ResizeObserver) {
+      var ro = new ResizeObserver(positionFabAboveFixedBars);
+      document.querySelectorAll('.controls, .history-actions, .bottom-bar-evolucao').forEach(function (b) {
+        try { ro.observe(b); } catch (e) {}
+      });
+    }
+  }
+
   // Anexa após DOM pronto
   function mount() {
     document.body.appendChild(fab);
@@ -406,12 +440,12 @@
     document.body.appendChild(panel);
     renderCriticals();
     renderFavs();
-    // Re-renderiza favs quando mudar (estrela toggla em outra parte do site)
     if (window.HemoFav && typeof window.HemoFav.onChange === 'function') {
       window.HemoFav.onChange(function () {
         if (isOpen) renderFavs();
       });
     }
+    watchFabPosition();
   }
 
   if (document.readyState === 'loading') {

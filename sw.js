@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hemodinamica-v81';
+const CACHE_NAME = 'hemodinamica-v90';
 
 const ASSETS = [
   '/',
@@ -38,6 +38,7 @@ const ASSETS = [
   '/calculadora-diluicoes.html',
   '/salina-hiper-hipotonica.html',
   '/avaliacao-perioperatoria-integrada.html',
+  '/avaliacao-pre-anestesica-interativa.html',
   '/anafilaxia.html',
   '/intoxicacao-anestesico-local.html',
   '/pocus-diafragma.html',
@@ -117,6 +118,7 @@ self.addEventListener('fetch', event => {
       .catch(() => caches.match(request).then(cached => cached || fetch(request)))
   );
 });
+
 
 
 

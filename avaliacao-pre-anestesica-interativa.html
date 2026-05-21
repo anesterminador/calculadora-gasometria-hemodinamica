@@ -1,0 +1,2255 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Avaliação Pré-anestésica interativa · AHA 2024</title>
+  <meta name="description" content="Fluxograma stepwise AHA 2024 para avaliação cardiovascular perioperatória, navegado clique a clique.">
+  <link rel="icon" href="icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="icon-512.png?v=2">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <meta name="theme-color" content="#0b1117">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0b1117;
+      --bg-elev: #121922;
+      --bg-card: #161e28;
+      --bg-card-hover: #1a232e;
+      --bg-input: #0e151d;
+      --border: #233140;
+      --border-strong: #2f4054;
+      --text: #e6edf3;
+      --text-muted: #8b9cad;
+      --text-faint: #5a6878;
+      --accent: #58a6ff;
+      --accent-bright: #79b8ff;
+      --accent-soft: rgba(88, 166, 255, 0.14);
+      --success: #2ea043;
+      --success-bright: #3fb950;
+      --warning: #e6a700;
+      --warning-bright: #f0b429;
+      --caution: #ff9b54;
+      --danger: #f85149;
+      /* AHA Classes of Recommendation */
+      --aha-1: #2ea043;
+      --aha-2a: #e6a700;
+      --aha-2b: #ff9b54;
+      --aha-3: #f85149;
+    }
+    html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      background-image:
+        radial-gradient(ellipse 70% 40% at 50% 0%, rgba(88,166,255,0.08), transparent 60%),
+        radial-gradient(ellipse 50% 35% at 100% 100%, rgba(46,160,67,0.04), transparent 60%);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 1.25rem 1rem calc(env(safe-area-inset-bottom, 0px) + 5rem);
+      min-height: 100vh;
+    }
+    .wrap { max-width: 720px; margin: 0 auto; }
+
+    /* Header */
+    header {
+      text-align: center;
+      margin-bottom: 1.25rem;
+      animation: fadeRise 0.4s ease both;
+    }
+    .logo-link { display: block; text-decoration: none; }
+    .logo {
+      max-width: 600px;
+      width: 100%;
+      height: auto;
+      margin-bottom: 0.65rem;
+      filter: drop-shadow(0 8px 24px rgba(88,166,255,0.1));
+    }
+    @media (max-width: 768px) {
+      .logo { min-width: 240px; max-width: min(600px, calc(100vw - 2rem)); }
+    }
+    h1 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.25rem;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+    .source-chip {
+      display: inline-block;
+      margin-top: 0.5rem;
+      padding: 0.22rem 0.65rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      border-radius: 999px;
+      background: rgba(248,81,73,0.08);
+      border: 1px solid rgba(248,81,73,0.4);
+      color: #ff8a82;
+    }
+
+    /* Progress bar */
+    .progress-wrap {
+      max-width: 720px;
+      margin: 0 auto 1rem;
+    }
+    .progress-bar {
+      height: 4px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--success-bright), var(--accent-bright));
+      transition: width 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
+      width: 0%;
+    }
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 0.45rem;
+      letter-spacing: 0.03em;
+      font-weight: 600;
+    }
+
+    /* Card principal */
+    .card {
+      background: linear-gradient(140deg, var(--bg-card) 0%, #121a23 100%);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.4rem 1.5rem 1.25rem;
+      box-shadow: 0 1px 0 rgba(255,255,255,0.03) inset, 0 12px 28px rgba(0,0,0,0.35);
+      animation: fadeRise 0.32s ease both;
+    }
+    .card-eyebrow {
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent-bright);
+      margin-bottom: 0.65rem;
+    }
+    .card-title {
+      font-size: 1.22rem;
+      font-weight: 700;
+      line-height: 1.4;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.75rem;
+    }
+    .card-body {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 1.1rem;
+    }
+    .card-body p + p { margin-top: 0.55rem; }
+    .card-body ul {
+      margin: 0.55rem 0 0;
+      padding-left: 1.2rem;
+    }
+    .card-body li { margin-bottom: 0.25rem; }
+    .card-body em {
+      font-style: normal;
+      color: var(--text);
+      font-weight: 600;
+    }
+    .card-body strong { color: var(--text); }
+
+    .card-hint {
+      background: rgba(88,166,255,0.04);
+      border: 1px solid rgba(88,166,255,0.18);
+      border-left: 3px solid var(--accent);
+      border-radius: 10px;
+      padding: 0.95rem 1.05rem;
+      font-size: 0.83rem;
+      color: var(--text-muted);
+      margin-bottom: 1.3rem;
+      line-height: 1.6;
+    }
+    .card-hint strong { color: var(--text); font-weight: 700; }
+    .card-hint .hint-label {
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-bright);
+      margin-bottom: 0.6rem;
+    }
+
+    /* Chips para listas escaneáveis (fatores de risco, condições, etc.) */
+    .chip-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem 0.45rem;
+    }
+    .chip {
+      display: inline-block;
+      padding: 0.3rem 0.7rem;
+      background: rgba(88,166,255,0.10);
+      border: 1px solid rgba(88,166,255,0.24);
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: 0.005em;
+      white-space: nowrap;
+      line-height: 1.3;
+    }
+    .chip.chip-warn {
+      background: rgba(230,167,0,0.10);
+      border-color: rgba(230,167,0,0.32);
+    }
+    .chip.chip-danger {
+      background: rgba(248,81,73,0.10);
+      border-color: rgba(248,81,73,0.32);
+    }
+    /* Chips clicáveis (toggle de fatores presentes) */
+    button.chip {
+      cursor: pointer;
+      font-family: inherit;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      transition: all 0.15s;
+    }
+    button.chip:hover {
+      background: rgba(88,166,255,0.18);
+      border-color: rgba(88,166,255,0.4);
+      transform: translateY(-1px);
+    }
+    button.chip.is-active {
+      background: rgba(230,167,0,0.18);
+      border-color: rgba(230,167,0,0.6);
+      color: var(--warning-bright);
+      box-shadow: 0 0 0 2px rgba(230,167,0,0.15);
+    }
+    button.chip.is-active:hover {
+      background: rgba(230,167,0,0.26);
+      border-color: var(--warning-bright);
+    }
+    .chip-hint {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--text-faint);
+      margin-top: 0.55rem;
+      font-style: italic;
+    }
+
+    /* === ONBOARDING FORM === */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.85rem 0.8rem;
+      margin: 0.5rem 0 1rem;
+    }
+    .form-grid .field-full { grid-column: 1 / -1; }
+    @media (max-width: 480px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .form-grid .field-full { grid-column: auto; }
+    }
+    .field label {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.35rem;
+    }
+    .field input {
+      width: 100%;
+      padding: 0.65rem 0.85rem;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      color-scheme: dark;
+    }
+    .field input::placeholder { color: var(--text-faint); }
+    .field input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+    .sex-toggle {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .sex-toggle .sex-opt {
+      flex: 1;
+      padding: 0.6rem 0.85rem;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.92rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .sex-toggle .sex-opt:hover {
+      border-color: var(--accent);
+      color: var(--text);
+    }
+    .sex-toggle .sex-opt.is-selected {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent-bright);
+    }
+    .patient-summary {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1rem;
+      padding: 0.65rem 0.85rem;
+      background: rgba(63, 185, 80, 0.06);
+      border: 1px solid rgba(63, 185, 80, 0.22);
+      border-radius: 10px;
+      font-size: 0.82rem;
+      color: var(--text);
+      margin-bottom: 1rem;
+      animation: fadeRise 0.25s ease both;
+    }
+    .patient-summary[hidden] { display: none; }
+    .patient-summary .ps-label {
+      font-size: 0.66rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--success-bright);
+      margin-right: 0.25rem;
+    }
+    .patient-summary .ps-item strong {
+      font-weight: 700;
+      color: var(--text);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* === MODAL DE CALCULADORA DE RISCO === */
+    .risk-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.62);
+      -webkit-backdrop-filter: blur(4px);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .risk-modal-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .risk-modal-backdrop[hidden] { display: none; }
+    .risk-modal {
+      background: linear-gradient(140deg, var(--bg-card) 0%, #121a23 100%);
+      border: 1px solid var(--border-strong);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 520px;
+      max-height: calc(100vh - 2rem);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+      transform: translateY(12px) scale(0.97);
+      transition: transform 0.22s cubic-bezier(0.22, 0.61, 0.36, 1);
+    }
+    .risk-modal-backdrop.open .risk-modal { transform: translateY(0) scale(1); }
+    .risk-modal-header {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.95rem 1rem 0.8rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .risk-modal-back {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      border: 1px solid var(--border-strong);
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      flex-shrink: 0;
+      font-family: inherit;
+    }
+    .risk-modal-back:hover { color: var(--text); border-color: var(--accent); }
+    .risk-modal-back[hidden] { display: none; }
+    .risk-modal-title {
+      flex: 1;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+      text-align: center;
+    }
+    .risk-modal-title small {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-top: 0.15rem;
+    }
+    .risk-modal-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      border: 1px solid var(--border-strong);
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1.2rem;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      flex-shrink: 0;
+    }
+    .risk-modal-close:hover { color: var(--text); border-color: var(--danger); }
+    .risk-modal-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem 1.1rem;
+    }
+    .risk-screen[hidden] { display: none; }
+
+    .risk-modal-text {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      margin-bottom: 0.85rem;
+      line-height: 1.5;
+    }
+
+    /* Tela 1: escolha de calculadora */
+    .risk-choice {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.85rem;
+      width: 100%;
+      padding: 1rem 1.1rem;
+      background: var(--bg-elev);
+      border: 1px solid rgba(88, 166, 255, 0.32);
+      border-radius: 12px;
+      color: var(--text);
+      text-align: left;
+      font-family: inherit;
+      cursor: pointer;
+      margin-bottom: 0.65rem;
+      transition: all 0.15s;
+    }
+    .risk-choice:hover {
+      border-color: var(--accent);
+      background: var(--bg-card-hover);
+      transform: translateY(-1px);
+    }
+    .risk-choice-arrow {
+      flex-shrink: 0;
+      color: var(--text-faint);
+      transition: transform 0.15s, color 0.15s;
+    }
+    .risk-choice:hover .risk-choice-arrow {
+      color: var(--accent);
+      transform: translateX(3px);
+    }
+    .risk-choice-content { flex: 1; }
+    .risk-choice-title {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+    .risk-choice-desc {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 400;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+      line-height: 1.45;
+    }
+
+    /* Tela 2: critérios (checkboxes) */
+    .risk-criterion {
+      display: flex;
+      gap: 0.7rem;
+      align-items: flex-start;
+      padding: 0.65rem 0.75rem;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 0.4rem;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .risk-criterion:hover { border-color: rgba(88,166,255,0.4); }
+    .risk-criterion input[type="checkbox"] {
+      width: 1.1rem;
+      height: 1.1rem;
+      accent-color: var(--accent);
+      cursor: pointer;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+    .risk-criterion-label {
+      flex: 1;
+      font-size: 0.9rem;
+      color: var(--text);
+      line-height: 1.4;
+      user-select: none;
+    }
+    .risk-criterion input:checked ~ .risk-criterion-label {
+      color: var(--accent-bright);
+      font-weight: 600;
+    }
+
+    /* Resultado */
+    .risk-result {
+      margin-top: 0.85rem;
+      padding: 1rem 1.1rem;
+      background: rgba(88,166,255,0.04);
+      border: 1px solid rgba(88,166,255,0.22);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .risk-result.is-elevated {
+      background: rgba(230,167,0,0.08);
+      border-color: rgba(230,167,0,0.4);
+    }
+    .risk-score-box {
+      flex-shrink: 0;
+      text-align: center;
+      padding: 0.4rem 0.85rem;
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      min-width: 64px;
+    }
+    .risk-score-label {
+      display: block;
+      font-size: 0.62rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .risk-score-value {
+      display: block;
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--accent-bright);
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+    .risk-result.is-elevated .risk-score-value { color: var(--warning-bright); }
+    .risk-classification { flex: 1; }
+    .risk-class-badge {
+      display: inline-block;
+      padding: 0.18rem 0.65rem;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: rgba(63,185,80,0.18);
+      color: var(--success-bright);
+      border: 1px solid rgba(63,185,80,0.4);
+    }
+    .risk-result.is-elevated .risk-class-badge {
+      background: rgba(230,167,0,0.18);
+      color: var(--warning-bright);
+      border-color: rgba(230,167,0,0.5);
+    }
+    .risk-class-text {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+    }
+
+    .risk-modal-footer {
+      padding: 0.85rem 1.1rem calc(env(safe-area-inset-bottom, 0px) + 0.85rem);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+    }
+    .risk-modal-footer[hidden] { display: none; }
+    .risk-modal-confirm {
+      padding: 0.7rem 1.4rem;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, var(--accent-bright), var(--accent));
+      color: #0b1117;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: filter 0.15s, transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 12px rgba(88,166,255,0.25);
+    }
+    .risk-modal-confirm:hover {
+      filter: brightness(1.08);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(88,166,255,0.35);
+    }
+
+    @media (max-width: 480px) {
+      .risk-modal { max-height: calc(100vh - 1.5rem); border-radius: 14px; }
+      .risk-modal-header { padding: 0.85rem 0.9rem 0.7rem; }
+      .risk-modal-body { padding: 0.85rem 0.9rem; }
+      .risk-modal-title { font-size: 0.9rem; }
+      .risk-choice { padding: 0.85rem 0.95rem; }
+    }
+
+    /* Patient bar populada (header de paciente durante a navegação) */
+    .patient-bar {
+      max-width: 720px;
+      margin: -0.35rem auto 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.45rem 0.6rem;
+      padding: 0.45rem 1rem;
+      background: rgba(88,166,255,0.06);
+      border: 1px solid rgba(88,166,255,0.22);
+      border-radius: 999px;
+      font-size: 0.78rem;
+    }
+    .patient-bar .pb-name {
+      font-weight: 700;
+      color: var(--text);
+    }
+    .patient-bar .pb-sep {
+      color: var(--text-faint);
+    }
+    .patient-bar .pb-meta {
+      color: var(--text-muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Opções */
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      margin-top: 0.8rem;
+    }
+    .option-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.95rem 1.1rem;
+      background: var(--bg-elev);
+      border: 1px solid rgba(88, 166, 255, 0.32);
+      border-radius: 12px;
+      color: var(--text);
+      text-align: left;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.12s, border-color 0.15s, background 0.15s, box-shadow 0.15s;
+      width: 100%;
+    }
+    .option-btn:hover {
+      border-color: var(--accent);
+      background: var(--bg-card-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 14px rgba(88, 166, 255, 0.15);
+    }
+    .option-btn:active { transform: translateY(0); }
+    .option-btn .opt-key {
+      flex-shrink: 0;
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+    .option-btn .opt-text {
+      flex: 1;
+      line-height: 1.35;
+    }
+    .option-btn .opt-sub {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 400;
+      color: var(--text-muted);
+      margin-top: 0.18rem;
+    }
+    .option-btn .opt-arrow {
+      flex-shrink: 0;
+      color: var(--text-faint);
+      transition: transform 0.15s, color 0.15s;
+    }
+    .option-btn:hover .opt-arrow {
+      color: var(--accent);
+      transform: translateX(3px);
+    }
+    /* Nota: opções não-primary têm contorno azul neutro (não induzir resposta).
+       Antes havia variantes verde/vermelho para data-kind="yes"/"no" — removidas. */
+    .option-btn[data-kind="primary"] {
+      background: linear-gradient(135deg, var(--accent-bright), var(--accent));
+      color: #0b1117;
+      border-color: var(--accent-bright);
+    }
+    .option-btn[data-kind="primary"] .opt-key {
+      background: rgba(11, 17, 23, 0.18);
+      color: #0b1117;
+      border-color: transparent;
+    }
+    .option-btn[data-kind="primary"] .opt-arrow { color: #0b1117; }
+    .option-btn[disabled] {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+    .option-btn[disabled]:hover {
+      transform: none;
+      box-shadow: none;
+      filter: none;
+    }
+
+    /* === Linhas de "pill" (label + opções de resposta inline) === */
+    /* Cada linha é UMA moldura: label embutido à esquerda + opções inline à direita */
+    .pill-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.55rem 0.9rem;
+      margin: 0.85rem 0 0.6rem;
+      padding: 0.55rem 0.95rem 0.55rem 1.05rem;
+      background: rgba(88,166,255,0.04);
+      border: 1px solid rgba(88,166,255,0.28);
+      border-radius: 14px;
+    }
+    .pill-label {
+      font-size: 0.76rem;
+      font-weight: 800;
+      color: var(--accent-bright);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .pill-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      flex: 1;
+      min-width: 0;
+      justify-content: flex-end;
+    }
+    @media (max-width: 480px) {
+      .pill-row { padding: 0.6rem 0.85rem; gap: 0.5rem; }
+      .pill-options { justify-content: flex-start; }
+    }
+    .pill-opt {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.45rem 0.95rem;
+      background: var(--bg-elev);
+      border: 1px solid var(--border-strong);
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      font-family: inherit;
+      text-decoration: none;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .pill-opt:hover {
+      border-color: var(--accent);
+      background: var(--bg-card-hover);
+      transform: translateY(-1px);
+    }
+    .pill-opt.is-selected {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent-bright);
+      box-shadow: 0 0 0 2px rgba(88,166,255,0.18);
+    }
+    .pill-opt.pill-link {
+      color: var(--text-muted);
+      border-style: dashed;
+      font-weight: 500;
+    }
+    .pill-opt.pill-link:hover {
+      color: var(--accent-bright);
+      border-color: var(--accent);
+      border-style: solid;
+    }
+    .pill-opt.pill-link::after {
+      content: '↗';
+      font-size: 0.85rem;
+      opacity: 0.7;
+    }
+
+    /* Hint embaixo de um pill-row (ex: descrição dos modificadores) */
+    .pill-hint {
+      background: rgba(88,166,255,0.04);
+      border: 1px solid rgba(88,166,255,0.18);
+      border-left: 3px solid var(--accent);
+      border-radius: 10px;
+      padding: 0.85rem 1rem;
+      margin: 0 0 1.1rem;
+    }
+    .pill-hint .hint-label {
+      display: block;
+      font-size: 0.66rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent-bright);
+      margin-bottom: 0.5rem;
+    }
+
+    /* Patient bar (header de paciente, ainda não populado) */
+    .patient-bar {
+      max-width: 720px;
+      margin: -0.35rem auto 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      padding: 0.5rem 0.95rem;
+      background: rgba(88,166,255,0.06);
+      border: 1px solid rgba(88,166,255,0.18);
+      border-radius: 999px;
+      font-size: 0.8rem;
+    }
+    .patient-bar[hidden] { display: none; }
+
+    /* Recomendações inline (em info-nodes) */
+    .recs {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      margin: 0.85rem 0 0.4rem;
+    }
+    .rec {
+      display: flex;
+      gap: 0.6rem;
+      align-items: flex-start;
+      padding: 0.7rem 0.85rem;
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      border-left-width: 3px;
+      font-size: 0.88rem;
+      line-height: 1.45;
+    }
+    .rec.aha-1   { border-left-color: var(--aha-1); }
+    .rec.aha-2a  { border-left-color: var(--aha-2a); }
+    .rec.aha-2b  { border-left-color: var(--aha-2b); }
+    .rec.aha-3   { border-left-color: var(--aha-3); }
+    .rec-text { flex: 1; }
+    .rec-text strong { color: var(--text); }
+    .rec-text small {
+      display: block;
+      color: var(--text-muted);
+      font-size: 0.74rem;
+      margin-top: 0.15rem;
+    }
+    .aha-badge {
+      flex-shrink: 0;
+      padding: 0.12rem 0.5rem;
+      border-radius: 999px;
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #0b1117;
+      align-self: flex-start;
+      margin-top: 0.1rem;
+    }
+    .aha-badge.aha-1  { background: var(--aha-1); }
+    .aha-badge.aha-2a { background: var(--aha-2a); }
+    .aha-badge.aha-2b { background: var(--aha-2b); }
+
+    /* Terminal */
+    .terminal-card {
+      border-color: rgba(46,160,67,0.55);
+      background:
+        linear-gradient(135deg, rgba(46,160,67,0.16) 0%, rgba(46,160,67,0.04) 60%, transparent 100%),
+        linear-gradient(140deg, var(--bg-card) 0%, #121a23 100%);
+    }
+    .terminal-card.kind-warn {
+      border-color: rgba(230,167,0,0.55);
+      background:
+        linear-gradient(135deg, rgba(230,167,0,0.16) 0%, rgba(230,167,0,0.04) 60%, transparent 100%),
+        linear-gradient(140deg, var(--bg-card) 0%, #121a23 100%);
+    }
+    .terminal-card.kind-stop {
+      border-color: rgba(248,81,73,0.55);
+      background:
+        linear-gradient(135deg, rgba(248,81,73,0.14) 0%, rgba(248,81,73,0.04) 60%, transparent 100%),
+        linear-gradient(140deg, var(--bg-card) 0%, #121a23 100%);
+    }
+    .terminal-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.6rem;
+      background: rgba(46,160,67,0.18);
+      color: var(--success-bright);
+      box-shadow: 0 0 22px rgba(63,185,80,0.18);
+    }
+    .terminal-card.kind-warn .terminal-icon {
+      background: rgba(230,167,0,0.18);
+      color: var(--warning-bright);
+      box-shadow: 0 0 22px rgba(240,180,41,0.18);
+    }
+    .terminal-card.kind-stop .terminal-icon {
+      background: rgba(248,81,73,0.16);
+      color: var(--danger);
+      box-shadow: 0 0 22px rgba(248,81,73,0.18);
+    }
+    .terminal-icon svg { width: 28px; height: 28px; }
+    .terminal-eyebrow {
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--success-bright);
+    }
+    .terminal-card.kind-warn .terminal-eyebrow { color: var(--warning-bright); }
+    .terminal-card.kind-stop .terminal-eyebrow { color: var(--danger); }
+    .terminal-card .card-title { font-size: 1.45rem; margin-bottom: 0.6rem; }
+
+    /* Resumo de recomendações acumuladas (no terminal) */
+    .accum-recs-title {
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-top: 1.4rem;
+      margin-bottom: 0.55rem;
+    }
+    .accum-recs-empty {
+      padding: 0.85rem;
+      text-align: center;
+      color: var(--text-faint);
+      font-size: 0.85rem;
+      font-style: italic;
+      background: rgba(255,255,255,0.02);
+      border: 1px dashed var(--border);
+      border-radius: 10px;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      margin-top: 1.5rem;
+      padding: 0.6rem 0.75rem;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.74rem;
+      color: var(--text-muted);
+    }
+    .crumb-label { font-weight: 700; color: var(--text-faint); letter-spacing: 0.05em; text-transform: uppercase; }
+    .crumb-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.15rem 0.5rem;
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: var(--text);
+      cursor: pointer;
+      transition: border-color 0.12s;
+    }
+    .crumb-item:hover { border-color: var(--accent); }
+    .crumb-sep { color: var(--text-faint); }
+
+    /* Controles inferior */
+    .controls {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 0.65rem 1rem calc(env(safe-area-inset-bottom, 0px) + 0.65rem);
+      background: rgba(11, 17, 23, 0.94);
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      z-index: 50;
+    }
+    .ctrl-btn {
+      flex: 1;
+      max-width: 220px;
+      border-radius: 999px;
+      padding: 0.65rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      border: 1px solid var(--border-strong);
+      background: var(--bg-elev);
+      color: var(--text);
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+    }
+    .ctrl-btn:hover {
+      border-color: var(--accent);
+      background: var(--bg-card);
+    }
+    .ctrl-btn[disabled] {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .ctrl-btn.reset {
+      color: #ff9b91;
+      border-color: rgba(248,81,73,0.3);
+    }
+    .ctrl-btn.reset:hover {
+      border-color: var(--danger);
+      background: rgba(248,81,73,0.08);
+    }
+
+    @keyframes fadeRise {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Responsivo */
+    @media (max-width: 480px) {
+      body { padding: 0.85rem 0.7rem calc(env(safe-area-inset-bottom, 0px) + 5rem); }
+      h1 { font-size: 1.15rem; }
+      .card { padding: 1.25rem 1.1rem 1.05rem; }
+      .card-hint { padding: 0.8rem 0.9rem; }
+      .chip { padding: 0.28rem 0.65rem; font-size: 0.75rem; }
+      .card-title { font-size: 1.08rem; }
+      .terminal-card .card-title { font-size: 1.25rem; }
+      .option-btn { padding: 0.85rem 0.95rem; font-size: 0.9rem; }
+    }
+  </style>
+  <link rel="stylesheet" href="js/site-footer.css">
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="logo-link">
+        <img src="Logo Hemodinâmica_regular.png" alt="Hemodinâmica" class="logo">
+      </a>
+      <h1>Avaliação Pré-anestésica</h1>
+      <span class="source-chip">AHA 2024</span>
+    </header>
+
+    <div class="patient-bar" id="patient-bar" hidden></div>
+
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+      <div class="progress-meta">
+        <span id="progress-step">—</span>
+        <span id="progress-total">Caminho da decisão</span>
+      </div>
+    </div>
+
+    <main id="stage" aria-live="polite"></main>
+  </div>
+
+  <!-- ============================================================
+       MODAL: Calculadora de risco (RCRI / AUB-HAS2)
+       Aberto via opção "Não sei calcular" no pill de Risco.
+       Ao confirmar, marca automaticamente "Baixo" ou "Elevado".
+       ============================================================ -->
+  <div class="risk-modal-backdrop" id="risk-modal" hidden role="dialog" aria-modal="true" aria-labelledby="risk-modal-title">
+    <div class="risk-modal">
+      <header class="risk-modal-header">
+        <button type="button" class="risk-modal-back" id="risk-modal-back" aria-label="Voltar para escolha de calculadora" hidden>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/></svg>
+        </button>
+        <span class="risk-modal-title" id="risk-modal-title">Calcular risco</span>
+        <button type="button" class="risk-modal-close" id="risk-modal-close" aria-label="Fechar">×</button>
+      </header>
+      <div class="risk-modal-body">
+        <div class="risk-screen" data-screen="select">
+          <p class="risk-modal-text">Escolha uma calculadora. Ao final, o risco aparece classificado e você confirma pra preencher automaticamente.</p>
+          <button type="button" class="risk-choice" data-calc="rcri">
+            <div class="risk-choice-content">
+              <span class="risk-choice-title">RCRI · Índice de Lee</span>
+              <span class="risk-choice-desc">Revised Cardiac Risk Index — 6 critérios. Risco elevado se &gt; 1 ponto.</span>
+            </div>
+            <svg class="risk-choice-arrow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+          <button type="button" class="risk-choice" data-calc="aubhas2">
+            <div class="risk-choice-content">
+              <span class="risk-choice-title">AUB-HAS2</span>
+              <span class="risk-choice-desc">Cardiovascular Risk Index (American University of Beirut). Risco elevado se ≥ 2 pontos.</span>
+            </div>
+            <svg class="risk-choice-arrow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+        </div>
+        <div class="risk-screen" data-screen="calc" hidden>
+          <div class="risk-criteria" id="risk-criteria"></div>
+          <div class="risk-result" id="risk-result">
+            <div class="risk-score-box">
+              <span class="risk-score-label">Pontos</span>
+              <span class="risk-score-value" id="risk-score-value">0</span>
+            </div>
+            <div class="risk-classification">
+              <span class="risk-class-badge" id="risk-class-badge">Baixo</span>
+              <span class="risk-class-text" id="risk-class-text">—</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="risk-modal-footer" id="risk-modal-footer" hidden>
+        <button type="button" class="risk-modal-confirm" id="risk-modal-confirm">
+          Usar este resultado
+        </button>
+      </footer>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button type="button" class="ctrl-btn" id="btn-back" disabled>
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+      Voltar
+    </button>
+    <button type="button" class="ctrl-btn reset" id="btn-reset">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+      Reiniciar
+    </button>
+  </div>
+
+  <script>
+    /* ===========================================================
+       FLUXO — AHA 2024 Stepwise Approach to Perioperative
+       Cardiac Assessment (Figure 1, Circulation 2024;150:e351)
+       =========================================================== */
+    var FLOW = {
+      start: 'intro',
+      nodes: {
+        // ===== ONBOARDING DO PACIENTE =====
+        intro: {
+          type: 'intro_form',
+          eyebrow: 'Dados do paciente',
+          title: 'Quem você está avaliando?',
+          body: 'Os dados ficam apenas no seu dispositivo. Todos os campos são opcionais — mas, se preencher, alguns fatores de risco são pré-marcados automaticamente.',
+          next: 'q_factors',
+          nextLabel: 'Iniciar avaliação'
+        },
+
+        // ===== 1. FATORES DE RISCO / DOENÇA / SINTOMAS =====
+        q_factors: {
+          type: 'question',
+          step: 1,
+          eyebrow: 'Passo 1 · Triagem',
+          title: 'Fatores de risco, doença CV ou sintomas presentes?',
+          bodyHtml: '<p>Paciente adulto agendado para cirurgia <strong>não-cardíaca</strong>.</p>',
+          factorChips: {
+            title: 'Fatores de risco cardiovascular',
+            chipsHintWhenAutoApplied: 'Pré-marcados pela idade/IMC do paciente. Toque pra (des)marcar.',
+            items: [
+              { id: 'hipertensao',         label: 'Hipertensão' },
+              { id: 'tabagismo',           label: 'Tabagismo' },
+              { id: 'hipercolesterolemia', label: 'Hipercolesterolemia' },
+              { id: 'diabetes',            label: 'Diabetes' },
+              { id: 'mulher65',            label: 'Mulher > 65 a' },
+              { id: 'homem55',             label: 'Homem > 55 a' },
+              { id: 'obesidade',           label: 'Obesidade' },
+              { id: 'hf_dac',              label: 'História familiar de DAC prematura' }
+            ]
+          },
+          options: [
+            { label: 'Sim, tem fatores / doença / sintomas', kind: 'yes', next: 'q_emergency' },
+            { label: 'Não tem',                              kind: 'no',  next: 't_no_factors' }
+          ]
+        },
+        t_no_factors: {
+          type: 'terminal', kind: 'proceed',
+          title: 'Prosseguir à cirurgia',
+          body: 'Sem fatores de risco, doença CV ou sintomas → <strong>avaliação cardíaca adicional pré-operatória não é indicada</strong>.'
+        },
+
+        // ===== 2. EMERGÊNCIA =====
+        q_emergency: {
+          type: 'question',
+          step: 2,
+          eyebrow: 'Passo 2 · Urgência',
+          title: 'É cirurgia de emergência?',
+          hint: 'Emergência = atraso colocaria a vida ou um membro/órgão em risco imediato.',
+          options: [
+            { label: 'Sim, é emergência', kind: 'yes', next: 't_emergency' },
+            { label: 'Não, é eletiva ou urgência sem risco imediato', kind: 'no', next: 'q_acute' }
+          ]
+        },
+        t_emergency: {
+          type: 'terminal', kind: 'proceed',
+          title: 'Prosseguir à cirurgia imediatamente',
+          body: 'O risco do atraso supera o benefício da avaliação. Otimização cardiovascular deve ocorrer <strong>no intra e pós-operatório</strong>, com surveillance apropriada.'
+        },
+
+        // ===== 3. CONDIÇÕES AGUDAS =====
+        q_acute: {
+          type: 'question',
+          step: 3,
+          eyebrow: 'Passo 3 · Condições agudas',
+          title: 'Alguma destas condições agudas?',
+          hint:
+            '<span class="hint-label">Quadros que mudam tudo</span>' +
+            '<div class="chip-list">' +
+              '<span class="chip chip-danger">Síndrome coronariana aguda</span>' +
+              '<span class="chip chip-danger">Arritmia cardíaca instável</span>' +
+              '<span class="chip chip-danger">IC descompensada</span>' +
+            '</div>',
+          options: [
+            { label: 'Sim, uma delas está presente', kind: 'yes', next: 't_acute' },
+            { label: 'Não',                          kind: 'no',  next: 'q_risk' }
+          ]
+        },
+        t_acute: {
+          type: 'terminal', kind: 'stop',
+          title: 'Manejo da condição aguda antes da cirurgia',
+          body:
+            'Iniciar o <strong>manejo da condição cardíaca aguda</strong> e convocar <strong>discussão multidisciplinar</strong> para uma das opções abaixo:' +
+            '<ul style="margin-top:0.5rem;">' +
+              '<li>Adiamento da cirurgia até estabilização</li>' +
+              '<li>Tratamento não-invasivo</li>' +
+              '<li>Cuidado paliativo (quando aplicável)</li>' +
+            '</ul>'
+        },
+
+        // ===== 4. ESTIMATIVA DE RISCO PERIOPERATÓRIO (multi-pergunta) =====
+        q_risk: {
+          type: 'multi_question',
+          step: 4,
+          eyebrow: 'Passo 4 · Estimação do risco',
+          title: 'Risco calculado e modificadores',
+          bodyHtml:
+            '<p>Estime o risco com <strong>RCRI</strong>, <strong>AUB-HAS2</strong> ou <strong>ACS-NSQIP</strong> e indique se algum modificador está presente.</p>',
+          recs: [{
+            cls: '2a',
+            html: '<strong>Calculadora de risco para eventos cardiovasculares adversos</strong>'
+          }],
+          groups: [
+            {
+              key: 'risco',
+              label: 'Risco',
+              options: [
+                { value: 'baixo',   label: 'Baixo' },
+                { value: 'elevado', label: 'Elevado' },
+                { label: 'Calcular ↗', action: 'open-risk-calc' }
+              ]
+            },
+            {
+              key: 'mods',
+              label: 'Modificadores de risco',
+              options: [
+                { value: 'ausente',  label: 'Ausentes' },
+                { value: 'presente', label: 'Presentes' }
+              ],
+              chipsBelowTitle: 'Modificadores que pontuam',
+              chipsBelow: [
+                { label: 'Valvopatia grave', cls: 'warn' },
+                { label: 'HAP grave', cls: 'warn' },
+                { label: 'Cardiopatia congênita de alto risco', cls: 'warn' },
+                { label: 'Stent / CABG prévios', cls: 'warn' },
+                { label: 'AVC recente', cls: 'warn' },
+                { label: 'CIED (MP / CDI)', cls: 'warn' },
+                { label: 'Fragilidade', cls: 'warn' }
+              ]
+            }
+          ],
+          resolve: function (sel) {
+            // Modificador presente domina (qualquer risco) → consultoria MD + ECG + ECO
+            if (sel.mods === 'presente') return 'info_mod_present';
+            // Sem modificadores → baixo → libera; elevado → ECG (2b) + GDMT
+            if (sel.risco === 'baixo') return 't_low_no_mod';
+            return 'info_elevated_no_mod';
+          }
+        },
+        t_low_no_mod: {
+          type: 'terminal', kind: 'proceed',
+          title: 'Prosseguir à cirurgia',
+          body: 'Risco baixo + sem modificadores → não há indicação de avaliação cardíaca adicional.'
+        },
+        info_elevated_no_mod: {
+          type: 'info',
+          eyebrow: 'Risco elevado, sem modificadores',
+          title: 'Recomendações neste caminho',
+          recs: [
+            { cls: '2b', html: '<strong>Considerar ECG de 12 derivações</strong> em pacientes assintomáticos de risco elevado sem DCV estabelecida<small>Seção 4.1</small>' },
+            { cls: '2a', html: '<strong>Considerar GDMT</strong> (terapia guiada por diretriz) para redução de risco CV de longo prazo<small>Seção 7</small>' }
+          ],
+          next: 'q_capacity',
+          nextLabel: 'Avaliar capacidade funcional'
+        },
+        info_mod_present: {
+          type: 'info',
+          eyebrow: 'Modificador de risco presente',
+          title: 'Recomendações neste caminho',
+          recs: [
+            { cls: '2a', html: '<strong>Consultoria multidisciplinar</strong> sobre timing da cirurgia, testes diagnósticos e manejo perioperatório' },
+            { cls: '2a', html: '<strong>ECG de 12 derivações</strong> é razoável em pacientes com DCV estabelecida ou sintomas<small>Seção 4.1</small>' },
+            { cls: '1',  html: '<strong>Ecocardiograma</strong> para suspeita de valvopatia moderada/grave, nova dispneia ou disfunção ventricular nova/agravada<small>Seções 4.2, 6.4.1, 6.4.3</small>' },
+            { cls: '2a', html: '<strong>Considerar GDMT</strong> para redução de risco CV de longo prazo<small>Seção 7</small>' }
+          ],
+          next: 'q_capacity',
+          nextLabel: 'Avaliar capacidade funcional'
+        },
+
+        // ===== 5. CAPACIDADE FUNCIONAL =====
+        q_capacity: {
+          type: 'question',
+          step: 5,
+          eyebrow: 'Passo 5 · Capacidade funcional',
+          title: 'Capacidade funcional pobre ou desconhecida?',
+          hint: '<strong>Critério:</strong> DASI ≤ 34 <em>ou</em> METs &lt; 4 — o paciente não consegue subir 2 andares, caminhar 4 quadras em terreno plano ou equivalente.',
+          recs: [{ cls: '2a', html: '<strong>Estimativa de capacidade funcional</strong> (DASI / METs)' }],
+          options: [
+            { label: 'Não — capacidade ≥ 4 METs (boa)', kind: 'yes', next: 't_good_capacity' },
+            { label: 'Sim — capacidade pobre ou desconhecida', kind: 'no', next: 'q_testing_impact' }
+          ]
+        },
+        t_good_capacity: {
+          type: 'terminal', kind: 'proceed',
+          title: 'Prosseguir à cirurgia',
+          body: 'Boa capacidade funcional (DASI > 34 ou ≥ 4 METs) → o paciente pode ser encaminhado à cirurgia.'
+        },
+
+        // ===== 6. TESTES VÃO IMPACTAR? =====
+        q_testing_impact: {
+          type: 'question',
+          step: 6,
+          eyebrow: 'Passo 6 · Utilidade de testes adicionais',
+          title: 'Testes adicionais vão de fato impactar a decisão ou o manejo perioperatório?',
+          hint: 'Se o resultado não muda nem a conduta cirúrgica nem o manejo anestésico, o teste não é útil.',
+          options: [
+            { label: 'Sim — vão impactar a decisão', kind: 'yes', next: 'info_biomarkers' },
+            { label: 'Não — não vão impactar',       kind: 'no',  next: 't_no_impact' }
+          ]
+        },
+        t_no_impact: {
+          type: 'terminal', kind: 'warn',
+          title: 'Prosseguir à cirurgia OU estratégias alternativas',
+          body:
+            'Se testes adicionais não impactam a conduta, considerar:' +
+            '<ul style="margin-top:0.5rem;">' +
+              '<li>Prosseguir à cirurgia</li>' +
+              '<li>Adiamento</li>' +
+              '<li>Tratamento não-invasivo</li>' +
+              '<li>Cuidado paliativo</li>' +
+            '</ul>' +
+            '<p style="margin-top:0.65rem; font-size:0.85rem; color:var(--text-muted);">A decisão final deve ser <strong>compartilhada</strong> com paciente, equipe cirúrgica e cardiológica.</p>'
+        },
+
+        // ===== 7. BIOMARCADORES =====
+        info_biomarkers: {
+          type: 'info',
+          eyebrow: 'Passo 7 · Biomarcadores',
+          title: 'Avaliação de biomarcadores pré-operatórios',
+          bodyHtml:
+            '<p>Solicitar biomarcadores para estratificar risco antes de prosseguir com avaliação adicional.</p>' +
+            '<p style="margin-top:0.45rem;"><strong>Limites considerados anormais:</strong></p>' +
+            '<ul style="margin-top:0.3rem;">' +
+              '<li>Troponina &gt; percentil 99 do URL do ensaio</li>' +
+              '<li>BNP &gt; 92 ng/L</li>' +
+              '<li>NT-proBNP ≥ 300 ng/L</li>' +
+            '</ul>',
+          recs: [
+            { cls: '2a', html: '<strong>BNP / NT-proBNP</strong>' },
+            { cls: '2b', html: '<strong>Considerar troponina</strong>' }
+          ],
+          next: 'q_biomarker_result',
+          nextLabel: 'Próximo: resultado dos biomarcadores'
+        },
+        q_biomarker_result: {
+          type: 'question',
+          step: 8,
+          eyebrow: 'Passo 8 · Resultado',
+          title: 'Resultado dos biomarcadores',
+          options: [
+            { label: 'Biomarcadores normais',   kind: 'yes', next: 't_biomarker_normal' },
+            { label: 'Biomarcadores anormais',  kind: 'no',  next: 'q_team_decision' }
+          ]
+        },
+        t_biomarker_normal: {
+          type: 'terminal', kind: 'proceed',
+          title: 'Prosseguir à cirurgia',
+          body: 'Biomarcadores normais → não há indicação de testes cardíacos adicionais.'
+        },
+
+        // ===== 8. DISCUSSÃO MULTIDISCIPLINAR =====
+        q_team_decision: {
+          type: 'question',
+          step: 9,
+          eyebrow: 'Passo 9 · Decisão multidisciplinar',
+          title: 'Discussão multidisciplinar sobre riscos e benefícios da avaliação cardíaca adicional',
+          hint: 'A equipe (anestesia + cirurgia + cardiologia) precisa pesar se exames adicionais mudarão a conduta.',
+          options: [
+            { label: 'Prosseguir com avaliação cardíaca',  kind: 'yes', next: 'info_cardiac_eval' },
+            { label: 'Diferir avaliação cardíaca adicional', kind: 'no',  next: 't_defer' }
+          ]
+        },
+        t_defer: {
+          type: 'terminal', kind: 'warn',
+          title: 'Estratégias alternativas',
+          body:
+            'Considerar:' +
+            '<ul style="margin-top:0.5rem;">' +
+              '<li>Adiamento da cirurgia</li>' +
+              '<li>Tratamento não-invasivo ou invasivo</li>' +
+              '<li>Cuidado paliativo</li>' +
+              '<li>OU prosseguir à cirurgia com vigilância apropriada</li>' +
+            '</ul>',
+          recs: [{ cls: '2b', html: '<strong>Considerar surveillance de troponina pós-operatória</strong>' }]
+        },
+
+        // ===== 9. AVALIAÇÃO CARDÍACA ADICIONAL =====
+        info_cardiac_eval: {
+          type: 'info',
+          eyebrow: 'Passo 10 · Exames cardíacos',
+          title: 'Avaliação cardíaca adicional',
+          bodyHtml: '<p>Considerar a investigação cardíaca mais apropriada conforme o quadro clínico:</p>',
+          recs: [
+            { cls: 'plain', html: '<strong>Ecocardiograma</strong>' },
+            { cls: '2b',    html: '<strong>Teste de estresse não-invasivo</strong>' },
+            { cls: '2b',    html: '<strong>Angio-TC coronariana (CCTA)</strong>' }
+          ],
+          next: 'q_findings',
+          nextLabel: 'Próximo: classificar achados'
+        },
+        q_findings: {
+          type: 'question',
+          step: 11,
+          eyebrow: 'Passo 11 · Resultado dos exames',
+          title: 'Achados dos exames cardíacos',
+          hint: '<strong>Alto risco:</strong> teste de estresse ou CCTA sugestivos de doença de tronco da coronária esquerda (LM) ou doença multiarterial.',
+          options: [
+            { label: 'Achados de baixo risco',   kind: 'yes', next: 't_findings_low' },
+            { label: 'Achados de alto risco',    kind: 'no',  next: 't_findings_high' }
+          ]
+        },
+        t_findings_low: {
+          type: 'terminal', kind: 'proceed',
+          title: 'Prosseguir à cirurgia',
+          body: 'Achados de baixo risco nos exames complementares → encaminhar à cirurgia.'
+        },
+        t_findings_high: {
+          type: 'terminal', kind: 'warn',
+          title: 'Achados de alto risco — estratégias alternativas',
+          body:
+            'Considerar:' +
+            '<ul style="margin-top:0.5rem;">' +
+              '<li>Adiamento da cirurgia</li>' +
+              '<li>Tratamento não-invasivo ou invasivo (ex.: revascularização)</li>' +
+              '<li>Cuidado paliativo</li>' +
+              '<li>OU prosseguir com a cirurgia com vigilância intensiva</li>' +
+            '</ul>',
+          recs: [{ cls: '2b', html: '<strong>Considerar surveillance de troponina pós-operatória</strong>' }]
+        }
+      }
+    };
+
+    /* ===========================================================
+       Estado, render e navegação
+       =========================================================== */
+    var state = {
+      history: [FLOW.start],     // pilha de IDs visitados (último = atual)
+      accumRecs: [],             // recomendações acumuladas (lista de { from, cls, html })
+      pathLabels: [],            // labels das escolhas (pra breadcrumb)
+      multiSelections: {},       // seleções parciais em nós multi_question
+      patient: {                 // dados do onboarding (todos opcionais)
+        nome: '',
+        sexo: '',                // 'F' | 'M' | ''
+        nascimento: '',          // ISO yyyy-mm-dd
+        alturaCm: null,
+        pesoKg: null
+      },
+      factorsManual: {},         // overrides manuais do user: { factorId: bool }
+      factorsAuto: {}            // marcados automaticamente a partir do paciente
+    };
+
+    function getIdade() {
+      var n = state.patient.nascimento;
+      if (!n) return null;
+      var d = new Date(n);
+      if (isNaN(d.getTime())) return null;
+      var hoje = new Date();
+      var idade = hoje.getFullYear() - d.getFullYear();
+      var m = hoje.getMonth() - d.getMonth();
+      if (m < 0 || (m === 0 && hoje.getDate() < d.getDate())) idade--;
+      return idade;
+    }
+    function getIMC() {
+      var p = state.patient;
+      if (!p.alturaCm || !p.pesoKg) return null;
+      var h = p.alturaCm / 100;
+      if (h <= 0) return null;
+      return p.pesoKg / (h * h);
+    }
+    function recomputeAutoFactors() {
+      var auto = {};
+      var idade = getIdade();
+      var imc = getIMC();
+      var sexo = state.patient.sexo;
+      if (sexo === 'F' && idade != null && idade > 65) auto.mulher65 = true;
+      if (sexo === 'M' && idade != null && idade > 55) auto.homem55 = true;
+      if (imc != null && imc >= 30) auto.obesidade = true;
+      state.factorsAuto = auto;
+    }
+    function isFactorActive(factorId) {
+      if (Object.prototype.hasOwnProperty.call(state.factorsManual, factorId)) {
+        return !!state.factorsManual[factorId];
+      }
+      return !!state.factorsAuto[factorId];
+    }
+    function toggleFactor(factorId) {
+      var currentlyActive = isFactorActive(factorId);
+      state.factorsManual[factorId] = !currentlyActive;
+    }
+    function updatePatientBar() {
+      var bar = document.getElementById('patient-bar');
+      if (!bar) return;
+      var p = state.patient;
+      var hasAny = p.nome || p.sexo || p.nascimento || p.alturaCm || p.pesoKg;
+      // Só mostra a barra DEPOIS do onboarding (não na tela do form)
+      var node = currentNode();
+      if (!hasAny || (node && node.type === 'intro_form')) {
+        bar.hidden = true;
+        bar.innerHTML = '';
+        return;
+      }
+      var idade = getIdade();
+      var imc = getIMC();
+      var parts = [];
+      if (p.nome) parts.push('<span class="pb-name">' + escapeHtml(p.nome) + '</span>');
+      var meta = [];
+      if (idade != null) meta.push(idade + ' a');
+      if (p.sexo) meta.push(p.sexo === 'F' ? 'F' : 'M');
+      if (p.pesoKg) meta.push(p.pesoKg.toString().replace('.', ',') + ' kg');
+      if (p.alturaCm) meta.push(p.alturaCm + ' cm');
+      if (imc != null) meta.push('IMC ' + imc.toFixed(1).replace('.', ','));
+      if (meta.length) parts.push('<span class="pb-meta">' + escapeHtml(meta.join(' · ')) + '</span>');
+      bar.innerHTML = parts.join('<span class="pb-sep">·</span>');
+      bar.hidden = false;
+    }
+
+    function currentId() { return state.history[state.history.length - 1]; }
+    function currentNode() { return FLOW.nodes[currentId()]; }
+
+    function escapeHtml(s) {
+      return (s == null ? '' : String(s)).replace(/[&<>"']/g, function (c) {
+        return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c];
+      });
+    }
+
+    function renderRecs(recs, addedAt) {
+      if (!recs || !recs.length) return '';
+      var html = '<div class="recs">';
+      recs.forEach(function (r) {
+        var clsName = r.cls === 'plain' ? '' : 'aha-' + r.cls;
+        var badge = r.cls === 'plain'
+          ? ''
+          : '<span class="aha-badge aha-' + r.cls + '">Classe ' + r.cls + '</span>';
+        html +=
+          '<div class="rec ' + clsName + '">' +
+            '<div class="rec-text">' + r.html + '</div>' +
+            badge +
+          '</div>';
+      });
+      html += '</div>';
+      return html;
+    }
+
+    function renderBreadcrumb() {
+      if (state.pathLabels.length === 0) return '';
+      var html = '<div class="breadcrumb"><span class="crumb-label">Caminho:</span>';
+      state.pathLabels.forEach(function (lbl, i) {
+        html += (i ? '<span class="crumb-sep">›</span>' : '') +
+          '<span class="crumb-item" data-back-to="' + (i + 1) + '">' + escapeHtml(lbl) + '</span>';
+      });
+      html += '</div>';
+      return html;
+    }
+
+    function pluralRecs(n) {
+      if (!n) return '';
+      return n + ' recomendação' + (n === 1 ? '' : 'ões');
+    }
+
+    function renderProgress(node) {
+      var fill = document.getElementById('progress-fill');
+      var stepEl = document.getElementById('progress-step');
+      var totalEl = document.getElementById('progress-total');
+      if (node.type === 'terminal') {
+        fill.style.width = '100%';
+        stepEl.textContent = 'Conduta definida';
+        totalEl.textContent = pluralRecs(state.accumRecs.length);
+      } else if (node.type === 'intro' || node.type === 'intro_form') {
+        fill.style.width = '0%';
+        stepEl.textContent = 'Antes de começar';
+        totalEl.textContent = '';
+      } else {
+        var step = node.step || state.history.length;
+        var total = 11;
+        var pct = Math.min(100, Math.round((step / total) * 100));
+        fill.style.width = pct + '%';
+        stepEl.textContent = 'Passo ' + step + ' de ' + total;
+        totalEl.textContent = pluralRecs(state.accumRecs.length);
+      }
+    }
+
+    function render() {
+      var node = currentNode();
+      var stage = document.getElementById('stage');
+      renderProgress(node);
+
+      var btnBack = document.getElementById('btn-back');
+      btnBack.disabled = state.history.length <= 1;
+
+      var html = '';
+
+      if (node.type === 'intro') {
+        html +=
+          '<section class="card">' +
+            '<div class="card-eyebrow">' + escapeHtml(node.eyebrow || '') + '</div>' +
+            '<h2 class="card-title">' + escapeHtml(node.title) + '</h2>' +
+            '<div class="card-body">' + (node.body || '') + '</div>' +
+            '<div class="options">' +
+              '<button type="button" class="option-btn" data-kind="primary" data-next="' + node.next + '" data-label="">' +
+                '<span class="opt-key">▸</span>' +
+                '<span class="opt-text">' + escapeHtml(node.nextLabel || 'Continuar') + '</span>' +
+                '<svg class="opt-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>' +
+              '</button>' +
+            '</div>' +
+          '</section>';
+      }
+      else if (node.type === 'intro_form') {
+        var p = state.patient;
+        // Resumo derivado (idade + IMC) visível se houver dados
+        var idade = getIdade();
+        var imc = getIMC();
+        var hasDerived = idade != null || imc != null;
+        var summaryHtml = '';
+        if (hasDerived) {
+          var bits = [];
+          if (idade != null) bits.push('<span class="ps-item"><strong>' + idade + ' anos</strong></span>');
+          if (imc != null) {
+            var imcStr = imc.toFixed(1).replace('.', ',');
+            var imcCat = imc < 18.5 ? 'baixo peso' : imc < 25 ? 'eutrófico' : imc < 30 ? 'sobrepeso' : 'obesidade';
+            bits.push('<span class="ps-item">IMC <strong>' + imcStr + '</strong> (' + imcCat + ')</span>');
+          }
+          summaryHtml =
+            '<div class="patient-summary">' +
+              '<span class="ps-label">Calculado</span>' +
+              bits.join('') +
+            '</div>';
+        }
+
+        html +=
+          '<section class="card">' +
+            '<div class="card-eyebrow">' + escapeHtml(node.eyebrow || '') + '</div>' +
+            '<h2 class="card-title">' + escapeHtml(node.title) + '</h2>' +
+            '<p class="card-body">' + escapeHtml(node.body || '') + '</p>' +
+            '<div class="form-grid">' +
+              '<div class="field field-full">' +
+                '<label for="p-nome">Nome ou identificação</label>' +
+                '<input type="text" id="p-nome" autocomplete="off" placeholder="Ex.: Carlos Alberto" value="' + escapeHtml(p.nome) + '">' +
+              '</div>' +
+              '<div class="field field-full">' +
+                '<label>Sexo</label>' +
+                '<div class="sex-toggle">' +
+                  '<button type="button" class="sex-opt' + (p.sexo === 'F' ? ' is-selected' : '') + '" data-sex="F">Feminino</button>' +
+                  '<button type="button" class="sex-opt' + (p.sexo === 'M' ? ' is-selected' : '') + '" data-sex="M">Masculino</button>' +
+                '</div>' +
+              '</div>' +
+              '<div class="field field-full">' +
+                '<label for="p-nasc">Data de nascimento</label>' +
+                '<input type="date" id="p-nasc" value="' + escapeHtml(p.nascimento) + '" max="' + new Date().toISOString().slice(0,10) + '">' +
+              '</div>' +
+              '<div class="field">' +
+                '<label for="p-altura">Altura (cm)</label>' +
+                '<input type="number" id="p-altura" min="50" max="250" step="1" inputmode="numeric" placeholder="172" value="' + (p.alturaCm != null ? p.alturaCm : '') + '">' +
+              '</div>' +
+              '<div class="field">' +
+                '<label for="p-peso">Peso (kg)</label>' +
+                '<input type="number" id="p-peso" min="2" max="400" step="0.1" inputmode="decimal" placeholder="78" value="' + (p.pesoKg != null ? p.pesoKg : '') + '">' +
+              '</div>' +
+            '</div>' +
+            summaryHtml +
+            '<div class="options">' +
+              '<button type="button" class="option-btn" data-kind="primary" data-next="' + node.next + '" data-label="" id="btn-start-eval">' +
+                '<span class="opt-key">▸</span>' +
+                '<span class="opt-text">' + escapeHtml(node.nextLabel || 'Iniciar avaliação') + '</span>' +
+                '<svg class="opt-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>' +
+              '</button>' +
+            '</div>' +
+          '</section>';
+      }
+      else if (node.type === 'question') {
+        var hasHint = !!node.hint;
+        var hasChips = !!node.factorChips;
+        var chipsHtml = '';
+        if (hasChips) {
+          var fc = node.factorChips;
+          var someAuto = fc.items.some(function (it) { return state.factorsAuto[it.id]; });
+          chipsHtml += '<div class="card-hint">';
+          chipsHtml += '<span class="hint-label">' + escapeHtml(fc.title) + '</span>';
+          chipsHtml += '<div class="chip-list">';
+          fc.items.forEach(function (it) {
+            var active = isFactorActive(it.id);
+            chipsHtml +=
+              '<button type="button" class="chip' + (active ? ' is-active' : '') + '" ' +
+                'data-factor-id="' + escapeHtml(it.id) + '" ' +
+                'aria-pressed="' + (active ? 'true' : 'false') + '">' +
+                escapeHtml(it.label) +
+              '</button>';
+          });
+          chipsHtml += '</div>';
+          if (someAuto && fc.chipsHintWhenAutoApplied) {
+            chipsHtml += '<span class="chip-hint">' + escapeHtml(fc.chipsHintWhenAutoApplied) + '</span>';
+          }
+          chipsHtml += '</div>';
+        }
+
+        html +=
+          '<section class="card">' +
+            '<div class="card-eyebrow">' + escapeHtml(node.eyebrow || '') + '</div>' +
+            '<h2 class="card-title">' + escapeHtml(node.title) + '</h2>' +
+            (node.bodyHtml ? '<div class="card-body">' + node.bodyHtml + '</div>' : '') +
+            (hasHint ? '<div class="card-hint">' + node.hint + '</div>' : '') +
+            chipsHtml +
+            (node.recs && node.recs.length ? renderRecs(node.recs) : '') +
+            '<div class="options">';
+
+        node.options.forEach(function (opt, idx) {
+          html +=
+            '<button type="button" class="option-btn" data-kind="' + (opt.kind || '') + '" ' +
+              'data-next="' + opt.next + '" data-label="' + escapeHtml(opt.label) + '" data-opt-idx="' + idx + '">' +
+              '<span class="opt-key">' + (idx + 1) + '</span>' +
+              '<span class="opt-text">' + escapeHtml(opt.label) +
+                (opt.sub ? '<span class="opt-sub">' + escapeHtml(opt.sub) + '</span>' : '') +
+              '</span>' +
+              '<svg class="opt-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>' +
+            '</button>';
+        });
+        html += '</div></section>';
+        html += renderBreadcrumb();
+      }
+      else if (node.type === 'info') {
+        html +=
+          '<section class="card">' +
+            '<div class="card-eyebrow">' + escapeHtml(node.eyebrow || '') + '</div>' +
+            '<h2 class="card-title">' + escapeHtml(node.title) + '</h2>' +
+            (node.bodyHtml ? '<div class="card-body">' + node.bodyHtml + '</div>' : '') +
+            renderRecs(node.recs) +
+            '<div class="options">' +
+              '<button type="button" class="option-btn" data-kind="primary" data-next="' + node.next + '" data-label="' + escapeHtml(node.nextLabel || 'Continuar') + '">' +
+                '<span class="opt-key">▸</span>' +
+                '<span class="opt-text">' + escapeHtml(node.nextLabel || 'Continuar') + '</span>' +
+                '<svg class="opt-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>' +
+              '</button>' +
+            '</div>' +
+          '</section>';
+        html += renderBreadcrumb();
+      }
+      else if (node.type === 'multi_question') {
+        var nodeId = currentId();
+        var sel = state.multiSelections[nodeId] || (state.multiSelections[nodeId] = {});
+
+        html += '<section class="card">' +
+          '<div class="card-eyebrow">' + escapeHtml(node.eyebrow || '') + '</div>' +
+          '<h2 class="card-title">' + escapeHtml(node.title) + '</h2>' +
+          (node.bodyHtml ? '<div class="card-body">' + node.bodyHtml + '</div>' : '') +
+          (node.recs && node.recs.length ? renderRecs(node.recs) : '');
+
+        node.groups.forEach(function (g) {
+          html += '<div class="pill-row" data-group="' + escapeHtml(g.key) + '">';
+          html += '<span class="pill-label">' + escapeHtml(g.label) + '</span>';
+          html += '<div class="pill-options">';
+          g.options.forEach(function (opt) {
+            if (opt.href) {
+              html += '<a class="pill-opt pill-link" href="' + escapeHtml(opt.href) + '" target="_blank" rel="noopener">' + escapeHtml(opt.label) + '</a>';
+            } else if (opt.action) {
+              html += '<button type="button" class="pill-opt pill-link" data-action="' + escapeHtml(opt.action) + '" data-group="' + escapeHtml(g.key) + '">' + escapeHtml(opt.label) + '</button>';
+            } else {
+              var selected = sel[g.key] === opt.value;
+              html += '<button type="button" class="pill-opt' + (selected ? ' is-selected' : '') + '" data-group="' + escapeHtml(g.key) + '" data-value="' + escapeHtml(opt.value) + '">' + escapeHtml(opt.label) + '</button>';
+            }
+          });
+          html += '</div></div>';
+
+          // Hint (chips ou texto) abaixo desse grupo
+          if (g.chipsBelow && g.chipsBelow.length) {
+            html += '<div class="pill-hint">' +
+              '<span class="hint-label">' + escapeHtml(g.chipsBelowTitle || (g.label + ' incluem')) + '</span>' +
+              '<div class="chip-list">';
+            g.chipsBelow.forEach(function (c) {
+              var cls = c && c.cls ? ' chip-' + c.cls : '';
+              var label = typeof c === 'string' ? c : c.label;
+              html += '<span class="chip' + cls + '">' + escapeHtml(label) + '</span>';
+            });
+            html += '</div></div>';
+          }
+        });
+
+        // Botão Continuar
+        var allSelected = node.groups.every(function (g) {
+          // Grupos com APENAS opções tipo link (sem value) não bloqueiam
+          var hasSelectable = g.options.some(function (o) { return !o.href; });
+          if (!hasSelectable) return true;
+          return !!sel[g.key];
+        });
+        html +=
+          '<div class="options">' +
+            '<button type="button" class="option-btn" data-kind="primary" id="btn-multi-continue"' + (allSelected ? '' : ' disabled') + '>' +
+              '<span class="opt-key">▸</span>' +
+              '<span class="opt-text">Continuar</span>' +
+              '<svg class="opt-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>' +
+            '</button>' +
+          '</div>' +
+        '</section>';
+        html += renderBreadcrumb();
+      }
+      else if (node.type === 'terminal') {
+        var kind = node.kind || 'proceed';
+        var iconSvg = kind === 'proceed'
+          ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>'
+          : kind === 'warn'
+          ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/></svg>'
+          : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6v6H9z"/></svg>';
+        var eyebrow = kind === 'proceed' ? 'Conduta · Liberar' : kind === 'warn' ? 'Conduta · Estratégias alternativas' : 'Conduta · Parar';
+
+        html +=
+          '<section class="card terminal-card kind-' + kind + '">' +
+            '<div class="terminal-icon">' + iconSvg + '</div>' +
+            '<div class="terminal-eyebrow">' + eyebrow + '</div>' +
+            '<h2 class="card-title">' + escapeHtml(node.title) + '</h2>' +
+            '<div class="card-body">' + (node.body || '') + '</div>' +
+            (node.recs && node.recs.length ? renderRecs(node.recs) : '') +
+            '<div class="accum-recs-title">Resumo das recomendações acumuladas</div>' +
+            (state.accumRecs.length
+              ? renderRecs(state.accumRecs.map(function (r) { return { cls: r.cls, html: r.html }; }))
+              : '<div class="accum-recs-empty">Nenhuma recomendação adicional foi acumulada neste caminho.</div>') +
+          '</section>';
+        html += renderBreadcrumb();
+      }
+
+      stage.innerHTML = html;
+
+      // Bind handlers
+      stage.querySelectorAll('.option-btn').forEach(function (btn) {
+        // multi_question usa o mesmo botão (#btn-multi-continue), tratado abaixo
+        if (btn.id === 'btn-multi-continue') return;
+        btn.addEventListener('click', function () {
+          var nextId = btn.getAttribute('data-next');
+          var label = btn.getAttribute('data-label') || '';
+          goTo(nextId, label);
+        });
+      });
+      // multi_question — pill selection
+      stage.querySelectorAll('.pill-opt[data-group]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var group = btn.getAttribute('data-group');
+          var value = btn.getAttribute('data-value');
+          var nodeId = currentId();
+          if (!state.multiSelections[nodeId]) state.multiSelections[nodeId] = {};
+          state.multiSelections[nodeId][group] = value;
+          render();
+        });
+      });
+      var continueBtn = stage.querySelector('#btn-multi-continue');
+      if (continueBtn) {
+        continueBtn.addEventListener('click', function () {
+          if (continueBtn.disabled) return;
+          var node = currentNode();
+          if (node.type !== 'multi_question' || typeof node.resolve !== 'function') return;
+          var sel = state.multiSelections[currentId()] || {};
+          var nextId = node.resolve(sel);
+          if (!nextId || !FLOW.nodes[nextId]) return;
+          // Constrói label do breadcrumb a partir das seleções selecionáveis
+          var labelParts = [];
+          node.groups.forEach(function (g) {
+            var v = sel[g.key];
+            if (!v) return;
+            var opt = g.options.find(function (o) { return o.value === v; });
+            if (opt) labelParts.push(g.label + ': ' + opt.label);
+          });
+          goTo(nextId, labelParts.join(' · '));
+        });
+      }
+      stage.querySelectorAll('[data-back-to]').forEach(function (el) {
+        el.addEventListener('click', function () {
+          var n = parseInt(el.getAttribute('data-back-to'), 10);
+          backTo(n);
+        });
+      });
+
+      // Chips clicáveis (Passo 1 — fatores de risco)
+      stage.querySelectorAll('button.chip[data-factor-id]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var id = btn.getAttribute('data-factor-id');
+          toggleFactor(id);
+          render();
+        });
+      });
+
+      // Form de onboarding (sexo + inputs do paciente)
+      stage.querySelectorAll('.sex-toggle .sex-opt').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          state.patient.sexo = btn.getAttribute('data-sex');
+          recomputeAutoFactors();
+          render();
+        });
+      });
+      function bindFormField(id, handler) {
+        var el = stage.querySelector('#' + id);
+        if (!el) return;
+        el.addEventListener('input', handler);
+        el.addEventListener('change', handler);
+      }
+      bindFormField('p-nome', function () {
+        state.patient.nome = stage.querySelector('#p-nome').value.trim();
+      });
+      bindFormField('p-nasc', function () {
+        state.patient.nascimento = stage.querySelector('#p-nasc').value;
+        recomputeAutoFactors();
+        // Re-render só do summary derivado (sem perder foco no input)
+        var summary = stage.querySelector('.patient-summary');
+        if (summary) {
+          var idade = getIdade(), imc = getIMC();
+          if (idade != null || imc != null) {
+            var bits = [];
+            if (idade != null) bits.push('<span class="ps-item"><strong>' + idade + ' anos</strong></span>');
+            if (imc != null) {
+              var imcStr = imc.toFixed(1).replace('.', ',');
+              var imcCat = imc < 18.5 ? 'baixo peso' : imc < 25 ? 'eutrófico' : imc < 30 ? 'sobrepeso' : 'obesidade';
+              bits.push('<span class="ps-item">IMC <strong>' + imcStr + '</strong> (' + imcCat + ')</span>');
+            }
+            summary.innerHTML = '<span class="ps-label">Calculado</span>' + bits.join('');
+            summary.hidden = false;
+          } else {
+            summary.hidden = true;
+          }
+        }
+      });
+      bindFormField('p-altura', function () {
+        var v = parseFloat(stage.querySelector('#p-altura').value);
+        state.patient.alturaCm = isFinite(v) && v > 0 ? v : null;
+        recomputeAutoFactors();
+        var nascEl = stage.querySelector('#p-nasc'); // dispara o handler do nasc pra atualizar summary
+        if (nascEl) nascEl.dispatchEvent(new Event('input'));
+      });
+      bindFormField('p-peso', function () {
+        var v = parseFloat(stage.querySelector('#p-peso').value);
+        state.patient.pesoKg = isFinite(v) && v > 0 ? v : null;
+        recomputeAutoFactors();
+        var nascEl = stage.querySelector('#p-nasc');
+        if (nascEl) nascEl.dispatchEvent(new Event('input'));
+      });
+
+      // Atualiza a patient-bar do topo (escondida no intro_form)
+      updatePatientBar();
+    }
+
+    function goTo(id, label) {
+      if (!FLOW.nodes[id]) return;
+      // Acumula recs do nó atual (perguntas/info podem ter recs próprias do nó)
+      var cur = currentNode();
+      if (cur && cur.recs && cur.recs.length) {
+        cur.recs.forEach(function (r) {
+          state.accumRecs.push({ from: currentId(), cls: r.cls, html: r.html });
+        });
+      }
+      // Acumula label da escolha no breadcrumb
+      if (label) state.pathLabels.push(label);
+      // Avança
+      state.history.push(id);
+      render();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function back() {
+      if (state.history.length <= 1) return;
+      // Limpa multiSelections do nó que está sendo desempilhado
+      // (não vai mais existir na timeline ativa)
+      var popped = state.history.pop();
+      delete state.multiSelections[popped];
+      state.pathLabels.pop();
+      rebuildAccumRecs();
+      render();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function backTo(crumbIdx) {
+      while (state.pathLabels.length >= crumbIdx) {
+        var popped = state.history.pop();
+        delete state.multiSelections[popped];
+        state.pathLabels.pop();
+      }
+      rebuildAccumRecs();
+      render();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function rebuildAccumRecs() {
+      state.accumRecs = [];
+      // Refaz: para cada nó visitado (exceto o último atual), pega suas recs
+      for (var i = 0; i < state.history.length - 1; i++) {
+        var node = FLOW.nodes[state.history[i]];
+        if (node && node.recs && node.recs.length) {
+          node.recs.forEach(function (r) {
+            state.accumRecs.push({ from: state.history[i], cls: r.cls, html: r.html });
+          });
+        }
+      }
+    }
+
+    function reset() {
+      state = { history: [FLOW.start], accumRecs: [], pathLabels: [], multiSelections: {} };
+      render();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    document.getElementById('btn-back').addEventListener('click', back);
+    document.getElementById('btn-reset').addEventListener('click', function () {
+      if (state.history.length > 1) {
+        if (!confirm('Reiniciar avaliação? Você vai voltar ao início.')) return;
+      }
+      reset();
+    });
+
+    // Atalhos: ← (voltar), Enter (continuar em multi_question), 1-9 (opções)
+    document.addEventListener('keydown', function (e) {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.key === 'ArrowLeft' || e.key === 'Backspace') {
+        e.preventDefault(); back();
+      } else if (e.key === 'Enter') {
+        var continueBtn = document.querySelector('#btn-multi-continue:not([disabled])');
+        if (continueBtn) { e.preventDefault(); continueBtn.click(); }
+      } else if (/^[1-9]$/.test(e.key)) {
+        var idx = parseInt(e.key, 10) - 1;
+        // Em multi_question, atalhos numéricos ficam ambíguos (2 grupos) — ignoramos
+        if (currentNode().type === 'multi_question') return;
+        var btns = document.querySelectorAll('#stage .option-btn');
+        if (btns[idx]) { e.preventDefault(); btns[idx].click(); }
+      }
+    });
+
+    /* ===========================================================
+       Modal de calculadora de risco (RCRI / AUB-HAS2)
+       Aberto pelo botão "Calcular" no pill de Risco.
+       Threshold de "elevado": RCRI > 1 (≥2 pts), AUB-HAS2 ≥ 2 pts.
+       =========================================================== */
+    var RISK_CALCS = {
+      rcri: {
+        title: 'RCRI',
+        subtitle: 'Revised Cardiac Risk Index (Lee)',
+        criteria: [
+          'Cirurgia de alto risco (intraperitoneal, intratorácica ou vascular suprainguinal)',
+          'Doença isquêmica do coração',
+          'História de insuficiência cardíaca congestiva',
+          'História de doença cerebrovascular (AVC ou AIT)',
+          'Diabetes mellitus em uso de insulina',
+          'Creatinina sérica > 2,0 mg/dL (176 µmol/L)'
+        ],
+        elevatedIf: function (score) { return score > 1; },
+        maceText: function (score) {
+          if (score >= 3) return 'MACE estimado ~11%';
+          if (score === 2) return 'MACE estimado ~6,6%';
+          if (score === 1) return 'MACE estimado ~0,9%';
+          return 'MACE estimado ~0,4%';
+        }
+      },
+      aubhas2: {
+        title: 'AUB-HAS2',
+        subtitle: 'Cardiovascular Risk Index',
+        criteria: [
+          'História de doença cardíaca',
+          'Angina ou dispneia (sintomas de doença cardíaca)',
+          'Idade ≥ 75 anos',
+          'Hemoglobina < 12 g/dL (anemia)',
+          'Cirurgia vascular arterial',
+          'Cirurgia de emergência'
+        ],
+        elevatedIf: function (score) { return score >= 2; },
+        maceText: function (score) {
+          if (score >= 5) return 'Risco muito alto';
+          if (score >= 3) return 'Risco alto';
+          if (score === 2) return 'Risco moderado-alto';
+          if (score === 1) return 'Risco baixo';
+          return 'Risco muito baixo';
+        }
+      }
+    };
+
+    var riskModal = {
+      el: document.getElementById('risk-modal'),
+      back: document.getElementById('risk-modal-back'),
+      close: document.getElementById('risk-modal-close'),
+      title: document.getElementById('risk-modal-title'),
+      criteriaEl: document.getElementById('risk-criteria'),
+      scoreEl: document.getElementById('risk-score-value'),
+      badgeEl: document.getElementById('risk-class-badge'),
+      classTextEl: document.getElementById('risk-class-text'),
+      resultEl: document.getElementById('risk-result'),
+      footer: document.getElementById('risk-modal-footer'),
+      confirmBtn: document.getElementById('risk-modal-confirm'),
+      currentCalc: null,    // chave em RISK_CALCS
+      currentScore: 0
+    };
+
+    function openRiskModal() {
+      riskModal.currentCalc = null;
+      riskModal.currentScore = 0;
+      showRiskScreen('select');
+      riskModal.el.hidden = false;
+      // Próximo tick pra animação
+      requestAnimationFrame(function () { riskModal.el.classList.add('open'); });
+      document.body.style.overflow = 'hidden';
+    }
+    function closeRiskModal() {
+      riskModal.el.classList.remove('open');
+      setTimeout(function () {
+        riskModal.el.hidden = true;
+        document.body.style.overflow = '';
+      }, 220);
+    }
+    function showRiskScreen(name) {
+      riskModal.el.querySelectorAll('.risk-screen').forEach(function (s) {
+        s.hidden = s.getAttribute('data-screen') !== name;
+      });
+      if (name === 'select') {
+        riskModal.title.innerHTML = 'Calcular risco';
+        riskModal.back.hidden = true;
+        riskModal.footer.hidden = true;
+      } else {
+        var calc = RISK_CALCS[riskModal.currentCalc];
+        riskModal.title.innerHTML = escapeHtml(calc.title) + '<small>' + escapeHtml(calc.subtitle) + '</small>';
+        riskModal.back.hidden = false;
+        riskModal.footer.hidden = false;
+      }
+    }
+    function chooseCalc(key) {
+      if (!RISK_CALCS[key]) return;
+      riskModal.currentCalc = key;
+      var calc = RISK_CALCS[key];
+      var html = '';
+      calc.criteria.forEach(function (label, idx) {
+        var id = 'risk-c-' + idx;
+        html +=
+          '<label class="risk-criterion">' +
+            '<input type="checkbox" id="' + id + '" data-idx="' + idx + '">' +
+            '<span class="risk-criterion-label">' + escapeHtml(label) + '</span>' +
+          '</label>';
+      });
+      riskModal.criteriaEl.innerHTML = html;
+      riskModal.currentScore = 0;
+      updateRiskScore();
+      showRiskScreen('calc');
+
+      // Bind checkbox handlers
+      riskModal.criteriaEl.querySelectorAll('input[type="checkbox"]').forEach(function (cb) {
+        cb.addEventListener('change', updateRiskScore);
+      });
+    }
+    function updateRiskScore() {
+      var checked = riskModal.criteriaEl.querySelectorAll('input[type="checkbox"]:checked').length;
+      riskModal.currentScore = checked;
+      var calc = RISK_CALCS[riskModal.currentCalc];
+      var isElev = calc.elevatedIf(checked);
+      riskModal.scoreEl.textContent = checked;
+      riskModal.badgeEl.textContent = isElev ? 'Elevado' : 'Baixo';
+      riskModal.classTextEl.textContent = calc.maceText(checked);
+      riskModal.resultEl.classList.toggle('is-elevated', isElev);
+    }
+    function confirmRisk() {
+      if (!riskModal.currentCalc) return;
+      var calc = RISK_CALCS[riskModal.currentCalc];
+      var isElev = calc.elevatedIf(riskModal.currentScore);
+      var value = isElev ? 'elevado' : 'baixo';
+      // Aplica no pill de Risco do q_risk
+      var nodeId = currentId();
+      if (!state.multiSelections[nodeId]) state.multiSelections[nodeId] = {};
+      state.multiSelections[nodeId].risco = value;
+      closeRiskModal();
+      render();
+    }
+
+    // Handlers fixos
+    riskModal.close.addEventListener('click', closeRiskModal);
+    riskModal.back.addEventListener('click', function () {
+      showRiskScreen('select');
+    });
+    riskModal.confirmBtn.addEventListener('click', confirmRisk);
+    riskModal.el.addEventListener('click', function (e) {
+      if (e.target === riskModal.el) closeRiskModal();
+    });
+    riskModal.el.querySelectorAll('.risk-choice[data-calc]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        chooseCalc(btn.getAttribute('data-calc'));
+      });
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !riskModal.el.hidden) {
+        closeRiskModal();
+      }
+    });
+
+    // Bind do botão "Calcular" no pill — usa delegação no stage
+    document.getElementById('stage').addEventListener('click', function (e) {
+      var btn = e.target.closest('.pill-opt[data-action="open-risk-calc"]');
+      if (btn) {
+        e.preventDefault();
+        openRiskModal();
+      }
+    });
+
+    render();
+  </script>
+  <script src="analytics.js"></script>
+  <script src="js/site-footer.js"></script>
+</body>
+</html>

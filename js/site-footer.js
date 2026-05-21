@@ -280,6 +280,12 @@
         '</svg>' +
         '<span>Avaliação Perioperatória Integrada<span class="di-sub">Quadro completo · gases + hemo + histórico</span></span>' +
       '</a>' +
+      '<a class="drawer-item hero-cardio" href="avaliacao-pre-anestesica-interativa.html">' +
+        '<svg class="di-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+          '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>' +
+        '</svg>' +
+        '<span>Avaliação Pré-anestésica<span class="di-sub">AHA 2024 · fluxograma stepwise interativo</span></span>' +
+      '</a>' +
       '<div class="drawer-section-title">Favoritos</div>' +
       '<div class="drawer-favs"></div>' +
       '<div class="drawer-section-title">Conduta em emergência</div>' +

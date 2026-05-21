@@ -94,7 +94,10 @@
       max-width: 600px;
       width: 100%;
       height: auto;
-      margin-bottom: 0.75rem;
+      /* Crop 5% do bottom (espaco em branco da imagem) e puxa o conteudo
+         abaixo pra cima na mesma proporcao, mantendo um respiro de 0.75rem */
+      clip-path: inset(0 0 5% 0);
+      margin-bottom: calc(0.75rem - 5%);
       display: block;
       margin-left: auto;
       margin-right: auto;
@@ -346,6 +349,32 @@
       transition: transform 0.18s;
     }
     .hero-card:hover .hero-card-chevron { transform: translateX(3px); }
+
+    /* Variante cardio (Avaliação Pré-anestésica AHA) */
+    .hero-card.cardio {
+      background:
+        linear-gradient(135deg, rgba(248, 81, 73, 0.16) 0%, rgba(248, 81, 73, 0.04) 60%, transparent 100%),
+        linear-gradient(140deg, var(--bg-card) 0%, #121a23 100%);
+      border-color: rgba(248, 81, 73, 0.5);
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.04) inset,
+        0 12px 28px rgba(0, 0, 0, 0.35),
+        0 0 0 1px rgba(248, 81, 73, 0.12);
+    }
+    .hero-card.cardio:hover {
+      border-color: #ff8a82;
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.05) inset,
+        0 18px 36px rgba(0, 0, 0, 0.45),
+        0 0 0 1px rgba(248, 81, 73, 0.32);
+    }
+    .hero-card.cardio .hero-card-icon {
+      background: rgba(248, 81, 73, 0.18);
+      color: #ff8a82;
+      box-shadow: 0 0 18px rgba(248, 81, 73, 0.22);
+    }
+    .hero-card.cardio .hero-card-eyebrow { color: #ff8a82; }
+    .hero-card.cardio .hero-card-chevron { color: #ff8a82; }
 
     /* ===== TITULOS DE SECAO ===== */
     .section-title {
@@ -660,6 +689,21 @@
         <div class="hero-card-eyebrow">Recomendado</div>
         <div class="hero-card-title">Avaliação Perioperatória Integrada</div>
         <div class="hero-card-subtitle">Todos os parâmetros num único quadro — ácido-base, hemodinâmica, evolução e histórico do paciente</div>
+      </div>
+      <svg class="hero-card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+    </a>
+
+    <!-- HERO CARD: Avaliação Pré-anestésica interativa (AHA 2024) -->
+    <a href="avaliacao-pre-anestesica-interativa.html" class="hero-card cardio">
+      <div class="hero-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
+      </div>
+      <div class="hero-card-text">
+        <div class="hero-card-eyebrow">AHA 2024 · Interativo</div>
+        <div class="hero-card-title">Avaliação Pré-anestésica</div>
+        <div class="hero-card-subtitle">Fluxograma stepwise de risco cardiovascular percorrido clique a clique, com classes de recomendação acumuladas no final</div>
       </div>
       <svg class="hero-card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
     </a>
@@ -987,6 +1031,7 @@
 
       // Avaliação integrada
       { name: 'Avaliação Perioperatória Integrada', cat: 'Avaliação', kw: 'avaliacao perioperatoria integrada checklist pre operatorio', url: 'avaliacao-perioperatoria-integrada.html' },
+      { name: 'Avaliação Pré-anestésica (AHA 2024)', cat: 'Avaliação', kw: 'avaliacao pre anestesica aha 2024 fluxograma stepwise risco cardiovascular cardio rcri perioperatorio interativo', url: 'avaliacao-pre-anestesica-interativa.html' },
 
       // Diluições
       { name: 'Calculadora de Infusão', cat: 'Diluições', kw: 'diluicoes infusao concentracao taxa drogas vasoativas bomba seringa', url: 'calculadora-diluicoes.html' },

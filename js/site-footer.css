@@ -367,6 +367,12 @@ button:focus-visible {
 }
 .drawer-item.hero .di-icon { color: #3fb950; }
 
+.drawer-item.hero-cardio {
+  background: linear-gradient(135deg, rgba(248, 81, 73, 0.14), rgba(248, 81, 73, 0.04));
+  border-color: rgba(248, 81, 73, 0.5);
+}
+.drawer-item.hero-cardio .di-icon { color: #ff8a82; }
+
 .drawer-item.danger .di-icon { color: #ff9b91; }
 
 .drawer-item .di-sub {

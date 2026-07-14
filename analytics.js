@@ -37,7 +37,7 @@
     var a = e.target && e.target.closest ? e.target.closest('a[data-cta]') : null;
     if (!a) return;
     var href = a.getAttribute('href') || '';
-    var isInscricao = /anestreview-hemodinamica|\/medreview\/|inscricao\.html|selfcheckout/.test(href);
+    var isInscricao = /anestreview-hemodinamica|\/medreview\/|inscricao\.html|selfcheckout|wa\.me\/5531985518005/.test(href);
     gtag('event', isInscricao ? 'clique_inscricao' : 'clique_ferramentas', {
       posicao: a.getAttribute('data-cta') || 'desconhecido',
       destino: href,

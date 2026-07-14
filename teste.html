@@ -217,6 +217,7 @@
       var pHitsWrap = document.getElementById('p-hits-wrap');
 
       var phase = 'free';                 // 'free' | 'sim' | 'result'
+      var quizStarted = false;            // p/ contar "iniciou o quiz" uma vez
       var fstate = new Array(FREE.length), fcurrent = 0, modalShown = false;
       var sstate = new Array(SIM.length), scurrent = 0;
       var leadEmail = '';
@@ -280,6 +281,7 @@
           stage.querySelectorAll('.q-alt').forEach(function(btn){
             btn.addEventListener('click', function(){
               fstate[i] = { chosen: btn.getAttribute('data-letra') };
+              if (!quizStarted) { quizStarted = true; if (window.hemoHit) window.hemoHit('quiz','inicio'); }
               if (window.gtag) window.gtag('event','quiz_resposta',{ questao:i+1, prova:q.prova, acertou: fstate[i].chosen===q.gabarito });
               renderFree(i); setProgress(count(fstate), FREE.length, freeHits());
               if (i === FREE.length - 1) setTimeout(openModal, 1300);
@@ -323,6 +325,7 @@
       function startSimulado(){
         if (!SIM.length) { alert('Não foi possível carregar o simulado. Tente recarregar a página.'); return; }
         phase = 'sim'; scurrent = 0;
+        if (window.hemoHit) window.hemoHit('quiz','simulado_aberto');
         document.getElementById('intro-eyebrow').textContent = 'Mini Simulado TEMI';
         document.getElementById('intro-h1').textContent = 'Mini Simulado TEMI';
         document.getElementById('intro-p').innerHTML = '<strong>10 questões em modo prova.</strong> Responda todas — ao finalizar, sua nota aparece aqui e os <strong>gabaritos comentados</strong> vão para <strong>' + esc(leadEmail) + '</strong>.';

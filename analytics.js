@@ -16,6 +16,22 @@
     return; // Não envia dados se não estiver configurado
   }
 
+  // ===== Opt-out do dono — não contaminar as métricas com acessos próprios =====
+  // Abra o site com ?notrack=1 UMA vez em cada navegador/dispositivo seu → para de contar ali.
+  // Para voltar a contar naquele navegador: abra com ?notrack=0.
+  try {
+    var _qp = new URLSearchParams(location.search);
+    if (_qp.get('notrack') === '1') localStorage.setItem('hemo_notrack', '1');
+    if (_qp.get('notrack') === '0') localStorage.removeItem('hemo_notrack');
+  } catch (e) {}
+  var NOTRACK = false;
+  try { NOTRACK = localStorage.getItem('hemo_notrack') === '1'; } catch (e) {}
+  if (NOTRACK) {
+    window.hemoHit = function () {}; // no-op para os beacons do quiz
+    window.gtag = function () {};    // no-op para eventos GA4 (guardados por if(window.gtag))
+    return;                          // não inicializa GA4, não dispara pageview nem beacons
+  }
+
   var script = document.createElement('script');
   script.async = true;
   script.src = 'https://www.googletagmanager.com/gtag/js?id=' + MEASUREMENT_ID;

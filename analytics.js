@@ -19,11 +19,24 @@
   // ===== Opt-out do dono — não contaminar as métricas com acessos próprios =====
   // Abra o site com ?notrack=1 UMA vez em cada navegador/dispositivo seu → para de contar ali.
   // Para voltar a contar naquele navegador: abra com ?notrack=0.
+  var _ntMsg = '';
   try {
     var _qp = new URLSearchParams(location.search);
-    if (_qp.get('notrack') === '1') localStorage.setItem('hemo_notrack', '1');
-    if (_qp.get('notrack') === '0') localStorage.removeItem('hemo_notrack');
+    if (_qp.get('notrack') === '1') { localStorage.setItem('hemo_notrack', '1'); _ntMsg = '🚫 Pronto! Este aparelho NÃO será mais contado nas métricas.'; }
+    if (_qp.get('notrack') === '0') { localStorage.removeItem('hemo_notrack'); _ntMsg = '✓ Pronto! Este aparelho voltou a ser contado.'; }
   } catch (e) {}
+  if (_ntMsg) {
+    (function (m) {
+      function go() {
+        var d = document.createElement('div');
+        d.textContent = m;
+        d.style.cssText = 'position:fixed;left:50%;top:16px;transform:translateX(-50%);z-index:2147483647;background:#161e28;color:#e6edf3;border:1px solid #2ea043;border-radius:12px;padding:.85rem 1.15rem;font:600 14px/1.4 system-ui,-apple-system,sans-serif;box-shadow:0 10px 34px rgba(0,0,0,.55);max-width:92vw;text-align:center';
+        document.body.appendChild(d);
+        setTimeout(function () { d.style.transition = 'opacity .5s'; d.style.opacity = '0'; setTimeout(function () { d.remove(); }, 500); }, 4000);
+      }
+      if (document.body) go(); else document.addEventListener('DOMContentLoaded', go);
+    })(_ntMsg);
+  }
   var NOTRACK = false;
   try { NOTRACK = localStorage.getItem('hemo_notrack') === '1'; } catch (e) {}
   if (NOTRACK) {

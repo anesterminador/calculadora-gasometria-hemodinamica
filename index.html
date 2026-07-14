@@ -4,12 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Curso Hemodinâmica para Anestesia · Anest-Review</title>
-  <meta name="description" content="Curso Hemodinâmica da Anest-Review: para anestesistas, intensivistas e residentes que querem interpretar o monitor e conduzir o caso — do básico ao cateter de artéria pulmonar. E 39 calculadoras clínicas gratuitas.">
+  <meta name="description" content="Curso Hemodinâmica da Anest-Review: hemodinâmica para todo médico, do muito básico ao avançado — do monitor à melhor conduta. Videoaulas, apostilas e 39 calculadoras clínicas gratuitas.">
   <link rel="icon" href="icon-192.png" type="image/png">
   <link rel="apple-touch-icon" href="icon-512.png?v=2" sizes="512x512">
   <link rel="apple-touch-icon" href="icon-512.png?v=2" sizes="180x180">
-  <link rel="apple-touch-icon" href="icon-512.png?v=2" sizes="167x167">
-  <link rel="apple-touch-icon" href="icon-512.png?v=2" sizes="152x152">
   <link rel="apple-touch-icon" href="icon-512.png?v=2">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,7 +15,7 @@
   <link rel="manifest" href="/manifest.webmanifest">
   <meta name="theme-color" content="#0b1117">
   <meta property="og:title" content="Curso Hemodinâmica para Anestesia · Anest-Review">
-  <meta property="og:description" content="Do monitor à melhor conduta. Para anestesistas e residentes. + 39 calculadoras clínicas gratuitas.">
+  <meta property="og:description" content="Hemodinâmica para todo médico — do muito básico ao avançado. Do monitor à melhor conduta. + 39 calculadoras clínicas gratuitas.">
   <meta property="og:type" content="website">
   <meta property="og:image" content="icon-512.png">
   <style>
@@ -46,7 +44,6 @@
       --radius-sm: 8px;
       --radius-md: 12px;
       --radius-lg: 16px;
-      --radius-xl: 22px;
       --shadow-card: 0 1px 0 rgba(255,255,255,0.03) inset, 0 1px 3px rgba(0,0,0,0.3);
       --shadow-elev: 0 1px 0 rgba(255,255,255,0.04) inset, 0 8px 24px rgba(0,0,0,0.4);
       --maxw: 1120px;
@@ -54,350 +51,156 @@
 
     html, body { background: var(--bg); }
     html { scroll-behavior: smooth; }
-
     body {
       font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-      min-height: 100vh;
-      color: var(--text);
-      line-height: 1.5;
-      overflow-x: hidden;
-      position: relative;
+      min-height: 100vh; color: var(--text); line-height: 1.5;
+      overflow-x: hidden; position: relative;
     }
-
     body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: -1;
+      content: ""; position: fixed; inset: 0; pointer-events: none; z-index: -1;
       background:
         radial-gradient(ellipse 70% 45% at 15% -5%, rgba(88, 166, 255, 0.16), transparent 60%),
         radial-gradient(ellipse 50% 40% at 92% 4%, rgba(248, 81, 73, 0.10), transparent 60%),
         radial-gradient(ellipse 90% 55% at 50% 108%, rgba(46, 160, 67, 0.05), transparent 60%);
     }
-
     a { color: inherit; }
     img { max-width: 100%; }
+    .container { max-width: var(--maxw); margin: 0 auto; padding-inline: clamp(16px, 5vw, 40px); }
 
-    .container {
-      max-width: var(--maxw);
-      margin: 0 auto;
-      padding-inline: clamp(16px, 5vw, 40px);
-    }
-
-    /* ===================== BOTÕES ===================== */
+    /* ===== BOTÕES ===== */
     .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      min-height: 48px;
-      padding: 0.8rem 1.4rem;
-      border-radius: 999px;
-      font-family: inherit;
-      font-weight: 700;
-      font-size: 0.98rem;
-      text-decoration: none;
-      cursor: pointer;
-      border: 1px solid transparent;
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+      min-height: 48px; padding: 0.8rem 1.4rem; border-radius: 999px;
+      font-family: inherit; font-weight: 700; font-size: 0.98rem; text-decoration: none;
+      cursor: pointer; border: 1px solid transparent;
       transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease, background 0.16s ease, border-color 0.16s ease;
       white-space: nowrap;
     }
     .btn svg { width: 18px; height: 18px; }
-    .btn-primary {
-      background: linear-gradient(135deg, var(--accent-bright), var(--accent));
-      color: #08111b;
-      box-shadow: 0 6px 20px rgba(88, 166, 255, 0.28);
-    }
-    .btn-primary:hover {
-      filter: brightness(1.06);
-      transform: translateY(-2px);
-      box-shadow: 0 10px 28px rgba(88, 166, 255, 0.42);
-    }
+    .btn-primary { background: linear-gradient(135deg, var(--accent-bright), var(--accent)); color: #08111b; box-shadow: 0 6px 20px rgba(88, 166, 255, 0.28); }
+    .btn-primary:hover { filter: brightness(1.06); transform: translateY(-2px); box-shadow: 0 10px 28px rgba(88, 166, 255, 0.42); }
     .btn-primary:active { transform: translateY(0); }
-    .btn-secondary {
-      background: rgba(88, 166, 255, 0.06);
-      border-color: var(--border-strong);
-      color: var(--text);
-    }
-    .btn-secondary:hover {
-      border-color: var(--accent);
-      background: var(--accent-soft);
-      transform: translateY(-2px);
-    }
+    .btn-secondary { background: rgba(88, 166, 255, 0.06); border-color: var(--border-strong); color: var(--text); }
+    .btn-secondary:hover { border-color: var(--accent); background: var(--accent-soft); transform: translateY(-2px); }
     .btn-lg { min-height: 54px; padding: 0.95rem 1.8rem; font-size: 1.05rem; }
-
-    @keyframes beat {
-      0%, 100% { transform: scale(1); }
-      12% { transform: scale(1.03); }
-      24% { transform: scale(1); }
-      36% { transform: scale(1.015); }
-      48% { transform: scale(1); }
-    }
+    @keyframes beat { 0%,100%{transform:scale(1);} 12%{transform:scale(1.03);} 24%{transform:scale(1);} 36%{transform:scale(1.015);} 48%{transform:scale(1);} }
     .btn-primary:hover svg.pulse { animation: beat 1s ease-in-out; }
+    .cta-guar { display:block; margin-top:0.6rem; font-size:0.8rem; color:var(--text-faint); }
+    .cta-guar::before { content:"✓ "; color: var(--success-bright); }
 
-    /* ===================== NAV ===================== */
-    .topnav {
-      position: sticky;
-      top: 0;
-      z-index: 60;
-      background: rgba(11, 17, 23, 0.82);
-      backdrop-filter: saturate(160%) blur(12px);
-      -webkit-backdrop-filter: saturate(160%) blur(12px);
-      border-bottom: 1px solid var(--border);
-    }
-    .topnav-inner {
-      max-width: var(--maxw);
-      margin: 0 auto;
-      padding: 0 clamp(14px, 4vw, 32px);
-      height: 58px;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .nav-brand {
-      font-weight: 800;
-      font-size: 1.12rem;
-      letter-spacing: -0.01em;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      flex-shrink: 0;
-    }
+    /* ===== NAV ===== */
+    .topnav { position: sticky; top: 0; z-index: 60; background: rgba(11,17,23,0.82); backdrop-filter: saturate(160%) blur(12px); -webkit-backdrop-filter: saturate(160%) blur(12px); border-bottom: 1px solid var(--border); }
+    .topnav-inner { max-width: var(--maxw); margin: 0 auto; padding: 0 clamp(14px,4vw,32px); height: 58px; display: flex; align-items: center; gap: 1rem; }
+    .nav-brand { font-weight: 800; font-size: 1.12rem; letter-spacing: -0.01em; text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem; flex-shrink: 0; }
     .nav-brand .hemo { color: var(--danger-bright); }
     .nav-brand .dina { color: var(--accent-bright); }
-    .nav-links {
-      display: flex;
-      gap: 1.35rem;
-      margin-left: auto;
-      align-items: center;
-    }
-    .nav-links a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 600;
-      transition: color 0.15s;
-    }
+    .nav-links { display: flex; gap: 1.35rem; margin-left: auto; align-items: center; }
+    .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: color 0.15s; }
     .nav-links a:hover { color: var(--text); }
     .nav-cta { margin-left: auto; }
     .nav-links + .nav-cta { margin-left: 0; }
-    @media (max-width: 860px) {
-      .nav-links { display: none; }
-    }
+    @media (max-width: 900px) { .nav-links { display: none; } }
 
-    /* ===================== SEÇÕES ===================== */
+    /* ===== SEÇÕES ===== */
     section { position: relative; }
-    .sec {
-      padding: clamp(3.5rem, 9vw, 6rem) 0;
-      scroll-margin-top: 70px;
-    }
+    .sec { padding: clamp(3.5rem, 9vw, 6rem) 0; scroll-margin-top: 70px; }
     .sec-tight { padding: clamp(2.5rem, 6vw, 4rem) 0; }
-    .eyebrow {
-      display: inline-block;
-      font-size: 0.74rem;
-      font-weight: 800;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--accent-bright);
-      margin-bottom: 0.85rem;
-    }
+    .eyebrow { display: inline-block; font-size: 0.74rem; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent-bright); margin-bottom: 0.85rem; }
     .eyebrow.red { color: var(--danger-bright); }
     .eyebrow.green { color: var(--success-bright); }
-    h2.sec-title {
-      font-size: clamp(1.7rem, 5vw, 2.6rem);
-      font-weight: 800;
-      line-height: 1.12;
-      letter-spacing: -0.02em;
-      text-wrap: balance;
-      margin-bottom: 0.9rem;
-    }
-    .sec-lead {
-      color: var(--text-muted);
-      font-size: clamp(1rem, 2.4vw, 1.15rem);
-      max-width: 62ch;
-      text-wrap: pretty;
-    }
+    h2.sec-title { font-size: clamp(1.7rem, 5vw, 2.6rem); font-weight: 800; line-height: 1.12; letter-spacing: -0.02em; text-wrap: balance; margin-bottom: 0.9rem; }
+    h2.sec-title .accent { color: var(--accent-bright); }
+    .sec-lead { color: var(--text-muted); font-size: clamp(1rem, 2.4vw, 1.15rem); max-width: 62ch; text-wrap: pretty; }
     .sec-head { margin-bottom: 2.4rem; }
     .sec-head.center { text-align: center; }
     .sec-head.center .sec-lead { margin-inline: auto; }
 
-    .ecg-divider {
-      display: block;
-      width: 100%;
-      max-width: 640px;
-      height: 34px;
-      margin: 0 auto;
-      color: var(--accent);
-      opacity: 0.5;
-    }
-    .ecg-divider path {
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      filter: drop-shadow(0 0 5px var(--accent-glow));
-    }
+    .ecg-divider { display: block; width: 100%; max-width: 640px; height: 30px; margin: 0 auto; color: var(--accent); opacity: 0.4; }
+    .ecg-divider path { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 5px var(--accent-glow)); }
 
-    /* ===================== HERO ===================== */
+    /* ===== HERO ===== */
     .hero { padding: clamp(2.4rem, 6vw, 4rem) 0 clamp(2.6rem, 6vw, 4rem); text-align: center; }
-    .hero-logo {
-      width: min(430px, 78vw);
-      height: auto;
-      margin: 0 auto 1.6rem;
-      display: block;
-      filter: drop-shadow(0 10px 40px rgba(88, 166, 255, 0.16));
-      animation: fadeRise 0.6s ease both;
-    }
-    .hero h1 {
-      font-size: clamp(2rem, 6.4vw, 3.6rem);
-      font-weight: 800;
-      line-height: 1.08;
-      letter-spacing: -0.025em;
-      text-wrap: balance;
-      max-width: 18ch;
-      margin: 0 auto 1.1rem;
-      animation: fadeRise 0.6s 0.05s ease both;
-    }
+    .hero-logo { width: min(430px, 78vw); height: auto; margin: 0 auto 1.6rem; display: block; filter: drop-shadow(0 10px 40px rgba(88,166,255,0.16)); animation: fadeRise 0.6s ease both; }
+    .hero h1 { font-size: clamp(2rem, 6.4vw, 3.6rem); font-weight: 800; line-height: 1.08; letter-spacing: -0.025em; text-wrap: balance; max-width: 20ch; margin: 0 auto 1.1rem; animation: fadeRise 0.6s 0.05s ease both; }
     .hero h1 .accent { color: var(--accent-bright); }
-    .hero-sub {
-      color: var(--text-muted);
-      font-size: clamp(1.02rem, 2.6vw, 1.24rem);
-      max-width: 60ch;
-      margin: 0 auto 1.9rem;
-      text-wrap: pretty;
-      animation: fadeRise 0.6s 0.1s ease both;
-    }
-    .hero-cta-row {
-      display: flex;
-      gap: 0.8rem;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-bottom: 2rem;
-      animation: fadeRise 0.6s 0.15s ease both;
-    }
-    .hero-chips {
-      display: flex;
-      gap: 0.55rem;
-      justify-content: center;
-      flex-wrap: wrap;
-      animation: fadeRise 0.6s 0.2s ease both;
-    }
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.4rem 0.85rem;
-      border-radius: 999px;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      color: var(--text-muted);
-      font-size: 0.8rem;
-      font-weight: 600;
-    }
+    .hero-sub { color: var(--text-muted); font-size: clamp(1.02rem, 2.6vw, 1.24rem); max-width: 60ch; margin: 0 auto 1.9rem; text-wrap: pretty; animation: fadeRise 0.6s 0.1s ease both; }
+    .hero-cta-row { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.7rem; animation: fadeRise 0.6s 0.15s ease both; }
+    .hero-chips { display: flex; gap: 0.55rem; justify-content: center; flex-wrap: wrap; animation: fadeRise 0.6s 0.2s ease both; }
+    .chip { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.4rem 0.85rem; border-radius: 999px; background: var(--bg-card); border: 1px solid var(--border); color: var(--text-muted); font-size: 0.8rem; font-weight: 600; font-variant-numeric: tabular-nums; }
     .chip strong { color: var(--text); font-weight: 800; }
     .chip .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent-bright); box-shadow: 0 0 8px var(--accent-glow); }
     .chip .dot.green { background: var(--success-bright); box-shadow: 0 0 8px rgba(63,185,80,0.6); }
+    .hero-tie { margin-top: 1.3rem; font-size: 0.9rem; color: var(--text-faint); animation: fadeRise 0.6s 0.24s ease both; }
 
-    /* ===================== TEASER FERRAMENTAS ===================== */
-    .toolkit {
-      background:
-        linear-gradient(180deg, rgba(46,160,67,0.05), transparent 30%),
-        var(--bg-elev);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-    }
-    .toolkit-inner { text-align: center; max-width: 760px; margin: 0 auto; }
-    .free-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.3rem 0.8rem;
-      border-radius: 999px;
-      background: rgba(46, 160, 67, 0.14);
-      border: 1px solid rgba(46, 160, 67, 0.5);
-      color: var(--success-bright);
-      font-size: 0.74rem;
-      font-weight: 800;
-      letter-spacing: 0.08em;
-      margin-bottom: 0.9rem;
-    }
-    .tool-pills {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 0.5rem;
-      margin: 1.6rem 0 1.9rem;
-    }
-    .tool-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-      padding: 0.5rem 0.95rem;
-      border-radius: 999px;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-size: 0.86rem;
-      font-weight: 600;
-      transition: border-color 0.16s, transform 0.16s;
-    }
-    .tool-pill svg { width: 15px; height: 15px; color: var(--accent-bright); }
-    .tool-pill.danger svg { color: var(--danger-bright); }
-    .tool-pill:hover { border-color: var(--border-strong); transform: translateY(-1px); }
-    .toolkit-status {
-      display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; margin-top: 1.4rem;
-    }
-    .status-chip {
-      display: inline-flex; align-items: center; gap: 0.4rem;
-      padding: 0.28rem 0.7rem; border-radius: 999px;
-      background: rgba(46, 160, 67, 0.12); border: 1px solid rgba(46, 160, 67, 0.4);
-      color: #6cd97e; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.02em;
-    }
-    .status-chip::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #3fb950; box-shadow: 0 0 8px rgba(63, 185, 80, 0.6); }
-
-    /* ===================== BRIDGE ===================== */
+    /* ===== BRIDGE ===== */
     .bridge-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
-    .bridge-card {
-      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg);
-      padding: 1.5rem; box-shadow: var(--shadow-card);
-    }
-    .bridge-card .bc-icon {
-      width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center;
-      background: var(--accent-soft); color: var(--accent-bright); margin-bottom: 1rem;
-    }
+    .bridge-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; box-shadow: var(--shadow-card); }
+    .bridge-card .bc-icon { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent-bright); margin-bottom: 1rem; }
     .bridge-card .bc-icon svg { width: 22px; height: 22px; }
     .bridge-card h3 { font-size: 1.08rem; font-weight: 700; margin-bottom: 0.5rem; }
     .bridge-card p { color: var(--text-muted); font-size: 0.95rem; }
+    .bridge-note { text-align: center; color: var(--text-muted); font-size: 0.98rem; margin-top: 1.8rem; max-width: 60ch; margin-inline: auto; font-style: italic; }
 
-    /* ===================== MÓDULOS ===================== */
-    .modules-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
-    .module-card {
-      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg);
-      padding: 1.4rem; box-shadow: var(--shadow-card); position: relative; overflow: hidden;
-      transition: border-color 0.18s, transform 0.18s;
+    /* ===== AUDIÊNCIA ===== */
+    .audience { display: flex; flex-direction: column; gap: 1.4rem; }
+    .audience-banner { padding: 1rem 1.15rem; background: linear-gradient(180deg, rgba(88,166,255,.10), rgba(88,166,255,.04)); border: 1px solid var(--border-strong); border-left: 3px solid var(--accent); border-radius: var(--radius-md); font-size: clamp(1.05rem,2.6vw,1.28rem); font-weight: 600; line-height: 1.35; color: var(--text); display: flex; align-items: center; gap: 0.8rem; }
+    .ecg-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--danger); box-shadow: 0 0 0 4px rgba(248,81,73,.15); flex: none; }
+    .ladder { padding: 1.3rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); }
+    .ladder-track { list-style: none; display: grid; gap: 0.9rem; position: relative; }
+    .ladder-node { display: flex; align-items: center; gap: 0.75rem; font-weight: 600; color: var(--text); font-size: 0.98rem; }
+    .ladder-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--accent); flex: none; box-shadow: 0 0 0 4px rgba(88,166,255,.12); }
+    .ladder-caption { margin-top: 0.9rem; color: var(--text-muted); font-size: 0.9rem; }
+    @media (min-width: 720px) {
+      .ladder-track { grid-auto-flow: column; grid-auto-columns: 1fr; align-items: start; text-align: center; }
+      .ladder-node { flex-direction: column; gap: 0.6rem; }
+      .ladder-track::before { content: ""; position: absolute; top: 6px; left: 12%; right: 12%; height: 2px; background: linear-gradient(90deg, var(--accent), var(--accent-bright)); opacity: .5; }
     }
-    .module-card::before {
-      content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
-      background: linear-gradient(180deg, var(--accent-bright), var(--accent)); opacity: 0.85;
-    }
-    .module-card:hover { border-color: var(--border-strong); transform: translateY(-2px); }
-    .module-num {
-      font-size: 0.72rem; font-weight: 800; letter-spacing: 0.1em; color: var(--accent-bright);
-      text-transform: uppercase; margin-bottom: 0.5rem;
-    }
-    .module-card h3 { font-size: 1.08rem; font-weight: 700; line-height: 1.25; margin-bottom: 0.9rem; }
-    .module-meta { display: flex; gap: 1rem; color: var(--text-muted); font-size: 0.82rem; font-weight: 600; }
-    .module-meta span { display: inline-flex; align-items: center; gap: 0.35rem; }
-    .module-meta svg { width: 15px; height: 15px; color: var(--text-faint); }
+    .audience-kicker { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-faint); font-weight: 800; }
+    .profile-grid { list-style: none; display: grid; grid-template-columns: 1fr; gap: 0.8rem; }
+    @media (min-width: 600px) { .profile-grid { grid-template-columns: 1fr 1fr; } }
+    .profile-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.1rem 1.2rem; box-shadow: var(--shadow-card); transition: border-color .18s, transform .18s; }
+    .profile-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .profile-ic { display: inline-flex; width: 30px; height: 30px; margin-bottom: 0.6rem; color: var(--danger-bright); }
+    .profile-ic svg { width: 100%; height: 100%; }
+    .profile-name { font-size: 1.02rem; font-weight: 700; margin-bottom: 0.25rem; }
+    .profile-desc { font-size: 0.9rem; color: var(--text-muted); line-height: 1.45; }
+    .audience-include { font-size: 0.98rem; color: var(--text); line-height: 1.55; padding: 1rem 1.15rem; border: 1px dashed var(--border-strong); border-radius: var(--radius-md); background: rgba(88,166,255,.04); }
+    .audience-include strong { color: var(--accent-bright); }
+    .audience-note { font-size: 0.85rem; color: var(--text-muted); }
+    .audience-note a { color: var(--accent-bright); text-decoration: underline; text-underline-offset: 2px; }
 
-    .includes {
-      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg);
-      padding: clamp(1.4rem, 4vw, 2rem); box-shadow: var(--shadow-card);
-    }
-    .includes h3 { font-size: 1rem; font-weight: 700; margin-bottom: 1.2rem; color: var(--text); }
+    /* ===== PROFESSORES ===== */
+    .inst-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.2rem; }
+    .inst-card { display: flex; gap: 1.1rem; align-items: center; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.4rem; box-shadow: var(--shadow-card); }
+    .inst-photo { width: 92px; height: 92px; border-radius: 50%; flex-shrink: 0; object-fit: cover; border: 2px solid var(--border-strong); background: var(--bg-elev); box-shadow: 0 0 0 4px rgba(88,166,255,0.08); }
+    .inst-fallback { width: 92px; height: 92px; border-radius: 50%; flex-shrink: 0; display: grid; place-items: center; font-weight: 800; font-size: 1.6rem; color: var(--accent-bright); background: var(--accent-soft); border: 2px solid var(--border-strong); }
+    .inst-card h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: 0.15rem; }
+    .inst-role { color: var(--accent-bright); font-size: 0.82rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .inst-card p { color: var(--text-muted); font-size: 0.88rem; line-height: 1.45; }
+
+    /* ===== MÉTODO ===== */
+    .method-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
+    .method-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; }
+    .method-card .m-num { font-size: 0.8rem; font-weight: 800; color: var(--accent-bright); margin-bottom: 0.6rem; }
+    .method-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.45rem; }
+    .method-card p { color: var(--text-muted); font-size: 0.92rem; }
+
+    /* ===== MÓDULOS (cartas com capa) ===== */
+    .modules-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(148px, 1fr)); gap: 0.9rem; margin-bottom: 2rem; }
+    @media (min-width: 560px) { .modules-gallery { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); } }
+    .module-poster { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-card); display: flex; flex-direction: column; transition: transform .18s, border-color .18s, box-shadow .18s; }
+    .module-poster:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 12px 28px rgba(0,0,0,.45), 0 0 0 1px var(--accent-soft); }
+    .module-poster img { width: 100%; aspect-ratio: 520 / 720; object-fit: cover; display: block; background: var(--bg-elev); }
+    .mp-meta { display: flex; gap: 0.8rem; justify-content: center; align-items: center; padding: 0.65rem 0.5rem; font-size: 0.74rem; font-weight: 700; color: var(--text-muted); border-top: 1px solid var(--border); }
+    .mp-meta span { display: inline-flex; align-items: center; gap: 0.3rem; }
+    .mp-meta svg { width: 13px; height: 13px; color: var(--text-faint); }
+    .module-poster.soon { border-style: dashed; align-items: center; justify-content: center; text-align: center; padding: 1.2rem; gap: 0.5rem; background: linear-gradient(135deg, rgba(88,166,255,0.06), transparent); }
+    .module-poster.soon .soon-eye { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+    .module-poster.soon h3 { font-size: 1rem; font-weight: 700; }
+    .module-poster.soon p { font-size: 0.82rem; color: var(--text-muted); line-height: 1.4; }
+
+    .includes { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: clamp(1.4rem, 4vw, 2rem); box-shadow: var(--shadow-card); }
+    .includes h3 { font-size: 1rem; font-weight: 700; margin-bottom: 1.2rem; }
     .includes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.85rem 1.4rem; }
     .include-item { display: flex; gap: 0.7rem; align-items: flex-start; }
     .include-item .ck { flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; background: rgba(46,160,67,0.14); color: var(--success-bright); display: grid; place-items: center; margin-top: 1px; }
@@ -405,170 +208,146 @@
     .include-item .it-t { font-weight: 700; font-size: 0.95rem; }
     .include-item .it-d { color: var(--text-muted); font-size: 0.85rem; }
 
-    /* ===================== AUDIÊNCIA ===================== */
-    .aud-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
-    .aud-col { border-radius: var(--radius-lg); padding: 1.6rem; border: 1px solid var(--border); background: var(--bg-card); }
-    .aud-col.yes { border-color: rgba(88,166,255,0.4); background: linear-gradient(160deg, rgba(88,166,255,0.06), transparent); }
-    .aud-col h3 { display: flex; align-items: center; gap: 0.5rem; font-size: 1.05rem; margin-bottom: 1rem; }
-    .aud-col h3 svg { width: 20px; height: 20px; }
-    .aud-col.yes h3 { color: var(--accent-bright); }
-    .aud-col.no h3 { color: var(--text-muted); }
-    .aud-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
-    .aud-col li { display: flex; gap: 0.6rem; font-size: 0.94rem; color: var(--text); }
-    .aud-col li::before { content: "—"; color: var(--text-faint); }
-    .aud-col.no li { color: var(--text-muted); }
+    /* ===== ALGUMAS DAS NOSSAS AULAS (acordeão) ===== */
+    .lessons-flag { display: inline-flex; align-items: center; gap: 0.6rem; padding: 0.5rem 0.95rem; border-radius: 999px; background: rgba(46,160,67,.10); border: 1px solid rgba(46,160,67,.35); color: #7ee2a0; font-size: 0.84rem; font-weight: 600; margin-bottom: 1.6rem; }
+    .pulse-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success-bright); box-shadow: 0 0 0 0 rgba(46,160,67,.5); animation: pulsering 2.4s ease-out infinite; }
+    @keyframes pulsering { to { box-shadow: 0 0 0 10px rgba(46,160,67,0); } }
+    .accordion { display: flex; flex-direction: column; gap: 0.6rem; }
+    .module-acc { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; transition: border-color .18s; }
+    .module-acc[open] { border-color: var(--border-strong); }
+    .module-acc:hover { border-color: var(--accent); }
+    .module-head { list-style: none; cursor: pointer; user-select: none; display: grid; grid-template-columns: auto 1fr auto auto; align-items: center; gap: 0.8rem; padding: 1rem 1.1rem; }
+    .module-head::-webkit-details-marker { display: none; }
+    .module-index { font-variant-numeric: tabular-nums; font-weight: 800; color: var(--accent-bright); font-size: 0.95rem; }
+    .module-title-acc { font-weight: 600; color: var(--text); line-height: 1.3; font-size: 0.98rem; text-wrap: balance; }
+    .module-count { font-size: 0.74rem; color: var(--text-muted); white-space: nowrap; background: rgba(88,166,255,.08); border: 1px solid var(--border); padding: 0.2rem 0.55rem; border-radius: 999px; }
+    .chev2 { width: 10px; height: 10px; border-right: 2px solid var(--text-muted); border-bottom: 2px solid var(--text-muted); transform: rotate(-45deg); transition: transform .22s; }
+    .module-acc[open] .chev2 { transform: rotate(45deg); }
+    .module-body { padding: 0 1.1rem 1.1rem; }
+    .lesson-list { list-style: none; border-top: 1px solid var(--border); }
+    .lesson-row { display: flex; gap: 0.8rem; align-items: baseline; padding: 0.7rem 0.15rem; border-bottom: 1px solid var(--border); color: var(--text); font-size: 0.93rem; line-height: 1.4; }
+    .lesson-row:last-child { border-bottom: 0; }
+    .lesson-n { font-variant-numeric: tabular-nums; color: var(--text-faint); font-size: 0.8rem; min-width: 1.8em; }
+    .module-acc[open] .module-body { animation: reveal .22s ease both; }
+    @keyframes reveal { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+    .module-head:focus-visible { outline: 2px solid var(--accent-bright); outline-offset: 2px; border-radius: var(--radius-md); }
+    .lessons-total { font-size: 0.85rem; color: var(--text-muted); text-align: center; margin-top: 1.3rem; }
+    @media (max-width: 440px) {
+      .module-head { grid-template-columns: auto 1fr auto; grid-template-areas: "idx title chev" "count count count"; }
+      .module-index { grid-area: idx; } .module-title-acc { grid-area: title; } .chev2 { grid-area: chev; } .module-count { grid-area: count; justify-self: start; }
+    }
 
-    /* ===================== PROFESSORES ===================== */
-    .inst-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.2rem; }
-    .inst-card {
-      display: flex; gap: 1.1rem; align-items: center;
-      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg);
-      padding: 1.4rem; box-shadow: var(--shadow-card);
-    }
-    .inst-photo {
-      width: 92px; height: 92px; border-radius: 50%; flex-shrink: 0; object-fit: cover;
-      border: 2px solid var(--border-strong); background: var(--bg-elev);
-      box-shadow: 0 0 0 4px rgba(88,166,255,0.08);
-    }
-    .inst-fallback {
-      width: 92px; height: 92px; border-radius: 50%; flex-shrink: 0; display: grid; place-items: center;
-      font-weight: 800; font-size: 1.6rem; color: var(--accent-bright);
-      background: var(--accent-soft); border: 2px solid var(--border-strong);
-    }
-    .inst-card h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: 0.15rem; }
-    .inst-role { color: var(--accent-bright); font-size: 0.82rem; font-weight: 700; margin-bottom: 0.5rem; }
-    .inst-card p { color: var(--text-muted); font-size: 0.88rem; line-height: 1.45; }
+    /* ===== TEASER FERRAMENTAS ===== */
+    .toolkit { background: linear-gradient(180deg, rgba(46,160,67,0.05), transparent 30%), var(--bg-elev); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .toolkit-inner { text-align: center; max-width: 760px; margin: 0 auto; }
+    .free-badge { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.3rem 0.8rem; border-radius: 999px; background: rgba(46,160,67,0.14); border: 1px solid rgba(46,160,67,0.5); color: var(--success-bright); font-size: 0.74rem; font-weight: 800; letter-spacing: 0.08em; margin-bottom: 0.9rem; }
+    .tool-pills { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; margin: 1.6rem 0 1.9rem; }
+    .tool-pill { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.5rem 0.95rem; border-radius: 999px; background: var(--bg-card); border: 1px solid var(--border); color: var(--text); font-size: 0.86rem; font-weight: 600; }
+    .tool-pill svg { width: 15px; height: 15px; color: var(--accent-bright); }
+    .tool-pill.danger svg { color: var(--danger-bright); }
+    .toolkit-status { display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; margin-top: 1.4rem; }
+    .status-chip { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.28rem 0.7rem; border-radius: 999px; background: rgba(46,160,67,0.12); border: 1px solid rgba(46,160,67,0.4); color: #6cd97e; font-size: 0.72rem; font-weight: 600; }
+    .status-chip::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #3fb950; box-shadow: 0 0 8px rgba(63,185,80,0.6); }
 
-    /* ===================== MÉTODO ===================== */
-    .method-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
-    .method-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; }
-    .method-card .m-num { font-size: 0.8rem; font-weight: 800; color: var(--accent-bright); margin-bottom: 0.6rem; }
-    .method-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.45rem; }
-    .method-card p { color: var(--text-muted); font-size: 0.92rem; }
-
-    /* ===================== GARANTIA ===================== */
-    .guarantee {
-      display: flex; gap: 1.3rem; align-items: center; flex-wrap: wrap;
-      background: linear-gradient(135deg, rgba(46,160,67,0.08), rgba(88,166,255,0.04));
-      border: 1px solid rgba(46,160,67,0.4); border-radius: var(--radius-lg);
-      padding: clamp(1.4rem, 4vw, 2rem);
-    }
-    .guarantee .g-seal {
-      width: 66px; height: 66px; border-radius: 50%; flex-shrink: 0; display: grid; place-items: center;
-      background: rgba(46,160,67,0.16); color: var(--success-bright); border: 2px solid rgba(46,160,67,0.5);
-    }
+    /* ===== GARANTIA ===== */
+    .guarantee { display: flex; gap: 1.3rem; align-items: center; flex-wrap: wrap; background: linear-gradient(135deg, rgba(46,160,67,0.08), rgba(88,166,255,0.04)); border: 1px solid rgba(46,160,67,0.4); border-radius: var(--radius-lg); padding: clamp(1.4rem, 4vw, 2rem); }
+    .guarantee .g-seal { width: 66px; height: 66px; border-radius: 50%; flex-shrink: 0; display: grid; place-items: center; background: rgba(46,160,67,0.16); color: var(--success-bright); border: 2px solid rgba(46,160,67,0.5); }
     .guarantee .g-seal svg { width: 32px; height: 32px; }
-    .guarantee h3 { font-size: 1.15rem; font-weight: 800; margin-bottom: 0.3rem; }
+    .guarantee h3 { font-size: 1.2rem; font-weight: 800; margin-bottom: 0.3rem; }
     .guarantee p { color: var(--text-muted); font-size: 0.95rem; max-width: 60ch; }
     .guarantee .g-body { flex: 1; min-width: 220px; }
 
-    /* ===================== FAQ ===================== */
+    /* ===== FAQ ===== */
     .faq-list { max-width: 780px; margin: 0 auto; display: flex; flex-direction: column; gap: 0.7rem; }
     .faq-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; }
-    .faq-item summary {
-      list-style: none; cursor: pointer; padding: 1.15rem 1.3rem; font-weight: 700; font-size: 1rem;
-      display: flex; align-items: center; gap: 0.8rem; transition: color 0.15s;
-    }
+    .faq-item summary { list-style: none; cursor: pointer; padding: 1.15rem 1.3rem; font-weight: 700; font-size: 1rem; display: flex; align-items: center; gap: 0.8rem; transition: color 0.15s; }
     .faq-item summary::-webkit-details-marker { display: none; }
-    .faq-item summary::after {
-      content: ""; margin-left: auto; width: 11px; height: 11px; flex-shrink: 0;
-      border-right: 2px solid var(--text-faint); border-bottom: 2px solid var(--text-faint);
-      transform: rotate(45deg); transition: transform 0.2s;
-    }
+    .faq-item summary::after { content: ""; margin-left: auto; width: 11px; height: 11px; flex-shrink: 0; border-right: 2px solid var(--text-faint); border-bottom: 2px solid var(--text-faint); transform: rotate(45deg); transition: transform 0.2s; }
     .faq-item[open] summary::after { transform: rotate(-135deg); }
     .faq-item[open] summary { color: var(--accent-bright); }
     .faq-item .faq-a { padding: 0 1.3rem 1.2rem; color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; }
     .faq-item .faq-a::before { content: ""; display: block; height: 1px; background: var(--border); margin-bottom: 1rem; }
+    .faq-item .faq-a a { color: var(--accent-bright); text-decoration: none; }
 
-    /* ===================== CTA FINAL ===================== */
+    /* ===== CTA FINAL ===== */
     .final-cta { text-align: center; position: relative; overflow: hidden; }
-    .final-cta::before {
-      content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
-      background: radial-gradient(ellipse 60% 60% at 50% 40%, rgba(88,166,255,0.14), transparent 70%);
-    }
+    .final-cta::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(ellipse 60% 60% at 50% 40%, rgba(88,166,255,0.14), transparent 70%); }
     .final-cta h2 { font-size: clamp(1.8rem, 5.5vw, 3rem); font-weight: 800; letter-spacing: -0.02em; text-wrap: balance; max-width: 20ch; margin: 0 auto 1rem; }
-    .final-cta p { color: var(--text-muted); max-width: 54ch; margin: 0 auto 2rem; font-size: 1.05rem; }
-    .final-cta .micro { margin-top: 1.2rem; font-size: 0.85rem; color: var(--text-faint); }
+    .final-cta p { color: var(--text-muted); max-width: 56ch; margin: 0 auto 2rem; font-size: 1.05rem; }
 
-    /* ===================== FOOTER ===================== */
+    /* ===== FOOTER ===== */
     .site-footer { border-top: 1px solid var(--border); padding: 2.6rem 0 2rem; background: var(--bg-elev); }
     .footer-institutional { text-align: center; color: var(--text-faint); font-size: 0.82rem; line-height: 1.7; margin-top: 1.6rem; }
     .footer-institutional a { color: var(--text-muted); text-decoration: none; }
     .footer-institutional a:hover { color: var(--accent-bright); }
 
-    /* ===================== STICKY CTA (mobile) ===================== */
-    .sticky-cta {
-      position: fixed; left: 0; right: 0; bottom: 0; z-index: 70;
-      background: rgba(11,17,23,0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-      border-top: 1px solid var(--border-strong);
-      padding: 0.7rem clamp(12px, 4vw, 20px);
-      padding-bottom: calc(0.7rem + env(safe-area-inset-bottom));
-      display: flex; align-items: center; gap: 0.8rem;
-      transform: translateY(120%); transition: transform 0.3s ease;
-    }
+    /* ===== STICKY CTA ===== */
+    .sticky-cta { position: fixed; left: 0; right: 0; bottom: 0; z-index: 70; background: rgba(11,17,23,0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-top: 1px solid var(--border-strong); padding: 0.7rem clamp(12px,4vw,20px); padding-bottom: calc(0.7rem + env(safe-area-inset-bottom)); display: flex; align-items: center; gap: 0.8rem; transform: translateY(120%); transition: transform 0.3s ease; }
     .sticky-cta.show { transform: translateY(0); }
     .sticky-cta .sc-text { flex: 1; min-width: 0; }
     .sticky-cta .sc-title { font-weight: 800; font-size: 0.92rem; }
     .sticky-cta .sc-sub { color: var(--text-muted); font-size: 0.76rem; }
     .sticky-cta .btn { flex-shrink: 0; }
-    @media (min-width: 861px) {
-      .sticky-cta { max-width: 520px; left: auto; right: 20px; bottom: 20px; border-radius: var(--radius-lg); border: 1px solid var(--border-strong); box-shadow: var(--shadow-elev); }
-    }
+    @media (min-width: 901px) { .sticky-cta { max-width: 540px; left: auto; right: 20px; bottom: 20px; border-radius: var(--radius-lg); border: 1px solid var(--border-strong); box-shadow: var(--shadow-elev); } }
 
     @keyframes fadeRise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-
     .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.6s ease, transform 0.6s ease; }
     .reveal.in { opacity: 1; transform: none; }
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
       .reveal { opacity: 1; transform: none; transition: none; }
-      .hero-logo, .hero h1, .hero-sub, .hero-cta-row, .hero-chips { animation: none; }
+      .hero-logo, .hero h1, .hero-sub, .hero-cta-row, .hero-chips, .hero-tie { animation: none; }
+      .pulse-dot { animation: none; }
+      .module-acc[open] .module-body { animation: none; }
+      .chev2 { transition: none; }
     }
   </style>
   <link rel="stylesheet" href="js/site-footer.css">
 </head>
 <body>
 
-  <!-- ===================== NAV ===================== -->
+  <!-- ===== NAV ===== -->
   <nav class="topnav">
     <div class="topnav-inner">
       <a href="#topo" class="nav-brand"><span class="hemo">HEMO</span><span class="dina">DINÂMICA</span></a>
       <div class="nav-links">
-        <a href="#como-funciona">Como funciona</a>
+        <a href="#para-quem">Para quem é</a>
         <a href="#curso">O curso</a>
+        <a href="#aulas">Aulas</a>
         <a href="#professores">Professores</a>
         <a href="ferramentas.html">Ferramentas</a>
         <a href="#faq">FAQ</a>
       </div>
-      <a href="https://grupomedreview.com.br/medreview/anestreview-hemodinamica/?utm_source=hemodinamica.org&utm_medium=landing&utm_campaign=toolkit_to_course" target="_blank" rel="noopener noreferrer" class="btn btn-primary nav-cta" data-cta="nav">Conhecer o curso</a>
+      <a href="https://grupomedreview.com.br/medreview/anestreview-hemodinamica/?utm_source=hemodinamica.org&utm_medium=landing&utm_campaign=toolkit_to_course" target="_blank" rel="noopener noreferrer" class="btn btn-primary nav-cta" data-cta="nav">Ver o curso</a>
     </div>
   </nav>
 
-  <!-- ===================== HERO ===================== -->
+  <!-- ===== HERO ===== -->
   <header class="hero" id="topo">
     <div class="container">
       <img src="Logo Hemodinâmica_regular.png" alt="Hemodinâmica · Anest-Review" class="hero-logo" width="430" height="182">
       <span class="eyebrow">Formação em Hemodinâmica · Anest-Review</span>
       <h1>Domine a hemodinâmica do seu paciente — do <span class="accent">monitor</span> à melhor conduta.</h1>
-      <p class="hero-sub">Curso teórico-prático para anestesistas, intensivistas e residentes que querem sair da dúvida na hora de interpretar o monitor, ajustar drogas vasoativas e conduzir o paciente grave. Um passo a passo do básico ao avançado.</p>
+      <p class="hero-sub">Curso teórico-prático de monitorização e manejo hemodinâmico. Um passo a passo do muito básico ao avançado — da fisiologia cardiovascular ao cateter de artéria pulmonar.</p>
       <div class="hero-cta-row">
         <a href="https://grupomedreview.com.br/medreview/anestreview-hemodinamica/?utm_source=hemodinamica.org&utm_medium=landing&utm_campaign=toolkit_to_course" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-lg" data-cta="hero">
           <svg class="pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l2-5 4 12 2-7h6"/></svg>
-          Conhecer o curso
+          Ver o curso
         </a>
         <a href="ferramentas.html" class="btn btn-secondary btn-lg">Ferramentas grátis</a>
       </div>
       <div class="hero-chips">
         <span class="chip"><span class="dot"></span><strong>5</strong>&nbsp;módulos</span>
-        <span class="chip"><strong>32</strong>&nbsp;videoaulas</span>
+        <span class="chip"><strong>32</strong>&nbsp;videoaulas · e crescendo</span>
         <span class="chip"><strong>57</strong>&nbsp;apostilas</span>
         <span class="chip">Web&nbsp;+&nbsp;App</span>
         <span class="chip"><span class="dot green"></span>Garantia de 7 dias</span>
       </div>
+      <p class="hero-tie">Para todo médico — do estudante ao especialista. Começa do básico, chega ao avançado.</p>
     </div>
   </header>
 
-  <!-- ===================== BRIDGE ===================== -->
+  <!-- ===== PONTE ===== -->
   <section class="sec" id="como-funciona" style="border-top:1px solid var(--border);">
     <div class="container">
       <div class="sec-head center reveal">
@@ -593,127 +372,76 @@
           <p>Do primeiro contato com a monitorização até os monitores avançados: um caminho estruturado para entender qualquer cenário.</p>
         </div>
       </div>
+      <p class="bridge-note reveal">E o "e agora" começa do básico — serve tanto para quem está aprendendo quanto para quem já opera na UTI.</p>
     </div>
   </section>
 
-  <!-- ===================== O CURSO / MÓDULOS ===================== -->
-  <section class="sec" id="curso" style="background: var(--bg-elev); border-block: 1px solid var(--border);">
+  <!-- ===== PARA QUEM É ===== -->
+  <section class="sec" id="para-quem" style="background: var(--bg-elev); border-block: 1px solid var(--border);">
     <div class="container">
       <div class="sec-head reveal">
-        <span class="eyebrow">O curso Hemodinâmica</span>
-        <h2 class="sec-title">Do monitor básico à alta complexidade — em sequência.</h2>
-        <p class="sec-lead">Um passo a passo estruturado de monitorização e manejo hemodinâmico, do paciente estável ao crítico. Videoaulas, apostilas densas e fórum de dúvidas, na Web e no App.</p>
-      </div>
-
-      <div class="modules-grid">
-        <article class="module-card reveal">
-          <div class="module-num">Módulo 1</div>
-          <h3>Monitorização Básica: Fisiologia Cardiovascular e Pressão Arterial</h3>
-          <div class="module-meta"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg>8 aulas</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h13l3 3v13H4z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>15 apostilas</span></div>
-        </article>
-        <article class="module-card reveal">
-          <div class="module-num">Módulo 2</div>
-          <h3>Monitorização Básica: PVC e Retorno Venoso</h3>
-          <div class="module-meta"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg>10 aulas</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h13l3 3v13H4z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>22 apostilas</span></div>
-        </article>
-        <article class="module-card reveal">
-          <div class="module-num">Módulo 3</div>
-          <h3>Gasometria Arterial e Venosa</h3>
-          <div class="module-meta"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg>4 aulas</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h13l3 3v13H4z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>10 apostilas</span></div>
-        </article>
-        <article class="module-card reveal">
-          <div class="module-num">Módulo 4</div>
-          <h3>Distúrbios da Hemoglobina e Índices Pletismográficos</h3>
-          <div class="module-meta"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg>3 aulas</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h13l3 3v13H4z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>10 apostilas</span></div>
-        </article>
-        <article class="module-card reveal">
-          <div class="module-num">Módulo 5</div>
-          <h3>Cateter de Artéria Pulmonar</h3>
-          <div class="module-meta"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg>7 aulas</span></div>
-        </article>
-        <article class="module-card reveal" style="display:flex; flex-direction:column; justify-content:center; background:linear-gradient(135deg, rgba(88,166,255,0.08), transparent); border-color: rgba(88,166,255,0.35);">
-          <div class="module-num" style="color:var(--text-muted)">Em expansão</div>
-          <h3 style="margin-bottom:0.4rem;">Novos módulos e atualizações</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem;">Curso novo, em construção ativa. Novas aulas entram para os alunos conforme são lançadas.</p>
-        </article>
-      </div>
-
-      <div class="includes reveal">
-        <h3>O que está incluído</h3>
-        <div class="includes-grid">
-          <div class="include-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><div><div class="it-t">Videoaulas objetivas</div><div class="it-d">32 aulas em 5 módulos, do básico ao avançado.</div></div></div>
-          <div class="include-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><div><div class="it-t">57 apostilas</div><div class="it-d">Material de apoio denso para consulta e revisão.</div></div></div>
-          <div class="include-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><div><div class="it-t">Acesso Web e App</div><div class="it-d">Estude no computador ou no celular, onde estiver.</div></div></div>
-          <div class="include-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><div><div class="it-t">Fórum de dúvidas</div><div class="it-d">Tire dúvidas e acompanhe as discussões da turma.</div></div></div>
-          <div class="include-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><div><div class="it-t">Foco em casos reais</div><div class="it-d">Raciocínio e tomada de decisão à beira do leito.</div></div></div>
-          <div class="include-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><div><div class="it-t">Ferramentas clínicas</div><div class="it-d">As 39 calculadoras deste site, sempre à mão.</div></div></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===================== TEASER FERRAMENTAS ===================== -->
-  <section class="sec toolkit" id="toolkit">
-    <div class="container">
-      <div class="toolkit-inner reveal">
-        <span class="free-badge">● SEMPRE GRÁTIS</span>
-        <h2 class="sec-title">39 calculadoras clínicas. Grátis. Com rigor de beira de leito.</h2>
-        <p class="sec-lead" style="margin-inline:auto;">As mesmas ferramentas que você abre no plantão — gasometria, ΔPP, débito e resistências, escores de risco, POCUS e condutas de emergência. Sem cadastro, sem paywall e funcionam offline.</p>
-        <div class="tool-pills">
-          <span class="tool-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-9 4 18 3-9h4"/></svg>Gasometria</span>
-          <span class="tool-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h3l2-4 4 8 2-4h7"/></svg>ΔPP &amp; fluidos</span>
-          <span class="tool-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12c2 0 2-3 4-3s2 6 4 6 2-9 4-9 2 6 4 6 2-3 2-3"/></svg>POCUS</span>
-          <span class="tool-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6l-8-4Z"/></svg>Risco pré-op</span>
-          <span class="tool-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v8M12 11c-2 0-5 2-5 6M12 11c2 0 5 2 5 6"/></svg>Via aérea</span>
-          <span class="tool-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4h8l-1 16H9L8 4Z"/></svg>Ventilação</span>
-          <span class="tool-pill danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8Z"/></svg>Emergências</span>
-          <span class="tool-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3c-3 0-5 3-5 7 0 5 3 11 5 11 2 0 3-3 3-6 0-2 1-4 2-4 2 0 3 3 3 6 0 3 1 4 2 4 2 0 5-6 5-11 0-4-2-7-5-7"/></svg>Função renal</span>
-        </div>
-        <a href="ferramentas.html" class="btn btn-primary btn-lg" data-cta="toolkit">Abrir as ferramentas →</a>
-        <div class="toolkit-status">
-          <span class="status-chip">Funciona offline</span>
-          <span class="status-chip">Instalável como app</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===================== AUDIÊNCIA ===================== -->
-  <section class="sec" id="para-quem">
-    <div class="container">
-      <div class="sec-head center reveal">
         <span class="eyebrow">Para quem é</span>
-        <h2 class="sec-title">Feito para quem lida com o paciente — não para quem só precisa de uma conta.</h2>
+        <h2 class="sec-title">Hemodinâmica para todo médico — <span class="accent">do muito básico ao avançado</span>.</h2>
+        <p class="sec-lead">O curso começa pela fisiologia e sobe até o cateter de artéria pulmonar. Como parte do zero, serve tanto para quem está começando quanto para quem já monitoriza paciente grave todo dia.</p>
       </div>
-      <div class="aud-grid">
-        <div class="aud-col yes reveal">
-          <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>É para você se…</h3>
-          <ul>
-            <li>É anestesiologista e quer aprofundar o domínio prático de monitorização e manejo hemodinâmico.</li>
-            <li>Está recém-formado e quer conduzir pacientes críticos com segurança e método.</li>
-            <li>Atua em CTI e quer avançar no uso de monitores e drogas vasoativas.</li>
-            <li>É residente ou está em especialização (anestesia, terapia intensiva, clínica) consolidando a base.</li>
-            <li>Já usa as calculadoras e quer parar de decorar valores para começar a raciocinar.</li>
-          </ul>
+
+      <div class="audience">
+        <p class="audience-banner reveal">
+          <span class="ecg-dot" aria-hidden="true"></span>
+          Se você precisa interpretar qualquer monitor durante o atendimento aos seus pacientes, este curso é para você.
+        </p>
+
+        <div class="ladder reveal" role="img" aria-label="Progressão do curso: dos fundamentos à interpretação avançada">
+          <ol class="ladder-track">
+            <li class="ladder-node"><span class="ladder-dot"></span>Fundamentos</li>
+            <li class="ladder-node"><span class="ladder-dot"></span>Monitorização à beira-leito</li>
+            <li class="ladder-node"><span class="ladder-dot"></span>Interpretação avançada</li>
+          </ol>
+          <p class="ladder-caption">Todos começam pelo início. Você aprofunda até onde precisar.</p>
         </div>
-        <div class="aud-col no reveal">
-          <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg>Talvez não seja se…</h3>
-          <ul>
-            <li>Você só precisa de uma conta rápida no plantão. Nesse caso, use as <a href="ferramentas.html" style="color:var(--accent-bright);text-decoration:none;font-weight:600;">ferramentas gratuitas</a> à vontade — elas continuam abertas, com ou sem curso.</li>
-            <li>Procura um curso genérico de "decoreba" de fórmulas, sem raciocínio clínico por trás.</li>
-          </ul>
-        </div>
+
+        <p class="audience-kicker reveal">Especialmente relevante para</p>
+        <ul class="profile-grid">
+          <li class="profile-card reveal">
+            <span class="profile-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.6-9.5-9C1 9 2.6 5.5 6 5.5c2 0 3.2 1.2 4 2.4.8-1.2 2-2.4 4-2.4 3.4 0 5 3.5 3.5 6.5C19 16.4 12 21 12 21Z"/><path d="M3.5 12.5H8l1.4-3 2.1 5 1.5-3H17"/></svg></span>
+            <h3 class="profile-name">Cardiologia</h3>
+            <p class="profile-desc">Pressão, débito e pré-carga com o rigor que a especialidade cobra.</p>
+          </li>
+          <li class="profile-card reveal">
+            <span class="profile-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v8"/><path d="M12 11c-2 0-5 2-5 6 0 2 1 4 3 4 1 0 2-1 2-2v-3M12 11c2 0 5 2 5 6 0 2-1 4-3 4-1 0-2-1-2-2v-3"/></svg></span>
+            <h3 class="profile-name">Anestesiologia</h3>
+            <p class="profile-desc">Do intraoperatório ao pós: monitor, volemia e drogas vasoativas.</p>
+          </li>
+          <li class="profile-card reveal">
+            <span class="profile-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M6 11h3l1.5-3 2 5 1.5-2H18"/><path d="M9 21h6"/></svg></span>
+            <h3 class="profile-name">Medicina Intensiva</h3>
+            <p class="profile-desc">O paciente crítico do CTI, do PVC ao cateter de artéria pulmonar.</p>
+          </li>
+          <li class="profile-card reveal">
+            <span class="profile-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8Z"/></svg></span>
+            <h3 class="profile-name">Emergência / paciente grave</h3>
+            <p class="profile-desc">Decisão rápida com o que o monitor mostra agora.</p>
+          </li>
+        </ul>
+
+        <p class="audience-include reveal">
+          <strong>E não é exclusivo deles.</strong> Estudante de medicina se beneficia muito — justamente por começar do básico e chegar na frente por ter começado pelo começo. Clínicos, generalistas e residentes de qualquer área que cruzam com o paciente instável também.
+        </p>
+
+        <p class="audience-note reveal">
+          Talvez não seja o melhor momento se você procura só um resumo de véspera de prova, ou um protocolo pronto para aplicar sem passar pelo raciocínio por trás. E se você quer só a conta pronta: as <strong>39 calculadoras são gratuitas</strong> e ficam em <a href="ferramentas.html">/ferramentas</a> — o curso é o "e agora" por trás delas.
+        </p>
       </div>
     </div>
   </section>
 
-  <!-- ===================== PROFESSORES ===================== -->
-  <section class="sec" id="professores" style="background: var(--bg-elev); border-block: 1px solid var(--border);">
+  <!-- ===== PROFESSORES ===== -->
+  <section class="sec" id="professores">
     <div class="container">
       <div class="sec-head center reveal">
         <span class="eyebrow">Quem ensina</span>
-        <h2 class="sec-title">Anestesiologistas que ensinam o que aplicam todos os dias.</h2>
-        <p class="sec-lead">TSA/SBA, com atuação em transplantes e CTI. Você aprende com quem está na sala e na beira do leito.</p>
+        <h2 class="sec-title">Ensinado por quem vive a hemodinâmica todos os dias.</h2>
+        <p class="sec-lead">Anestesiologistas TSA/SBA, formados no HC-UFMG, com rotina em transplantes e CTI. Hemodinâmica à beira-leito não é teoria para eles — é o dia a dia.</p>
       </div>
       <div class="inst-grid">
         <div class="inst-card reveal">
@@ -736,35 +464,225 @@
     </div>
   </section>
 
-  <!-- ===================== MÉTODO ===================== -->
-  <section class="sec" id="metodo">
+  <!-- ===== COMO O CURSO ENSINA ===== -->
+  <section class="sec" id="metodo" style="background: var(--bg-elev); border-block: 1px solid var(--border);">
     <div class="container">
       <div class="sec-head center reveal">
         <span class="eyebrow">Como o curso ensina</span>
         <h2 class="sec-title">Raciocínio clínico, não decoreba.</h2>
       </div>
       <div class="method-grid">
-        <div class="method-card reveal"><div class="m-num">01</div><h3>Do básico ao avançado, em ordem</h3><p>Começa na fisiologia e na pressão, sobe até cateter de artéria pulmonar. Cada módulo assenta sobre o anterior — sem lacuna.</p></div>
+        <div class="method-card reveal"><div class="m-num">01</div><h3>Do básico ao avançado, em ordem</h3><p>Começa na fisiologia e na pressão, sobe até o cateter de artéria pulmonar. Cada módulo assenta sobre o anterior — sem lacuna, sem pré-requisito além da vontade de entender o monitor.</p></div>
         <div class="method-card reveal"><div class="m-num">02</div><h3>Casos reais e tomada de decisão</h3><p>Você treina interpretar o cenário e escolher a conduta, não apenas memorizar valores de referência.</p></div>
         <div class="method-card reveal"><div class="m-num">03</div><h3>Ferramenta integrada ao raciocínio</h3><p>As 39 calculadoras deixam de ser plug-and-play: você entende de onde vem cada número e o que ele muda na condução.</p></div>
       </div>
     </div>
   </section>
 
-  <!-- ===================== GARANTIA ===================== -->
-  <section class="sec-tight" id="garantia">
+  <!-- ===== O CURSO (cartas dos módulos) ===== -->
+  <section class="sec" id="curso">
     <div class="container">
-      <div class="guarantee reveal">
-        <div class="g-seal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6l-8-4Z"/><path d="m9 12 2 2 4-4"/></svg></div>
-        <div class="g-body">
-          <h3>Garantia de 7 dias</h3>
-          <p>Entrou, não era para você? Você tem 7 dias para pedir reembolso de 100% do valor, sem complicação. O risco é nosso.</p>
+      <div class="sec-head reveal">
+        <span class="eyebrow">O curso Hemodinâmica</span>
+        <h2 class="sec-title">Cinco módulos — do monitor básico à alta complexidade.</h2>
+        <p class="sec-lead">Um caminho estruturado de monitorização e manejo hemodinâmico, do paciente estável ao crítico. Videoaulas, apostilas densas e fórum de dúvidas, na Web e no App.</p>
+      </div>
+
+      <div class="modules-gallery">
+        <article class="module-poster reveal">
+          <img src="img/modulos/m1.jpg" alt="Módulo 1 — Monitorização Básica: Fisiologia Cardiovascular e Pressão Arterial" loading="lazy">
+          <div class="mp-meta"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="6 3 20 12 6 21 6 3"/></svg>8 aulas</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h13l3 3v13H4z"/><path d="M8 9h8M8 13h8"/></svg>15 apostilas</span></div>
+        </article>
+        <article class="module-poster reveal">
+          <img src="img/modulos/m2.jpg" alt="Módulo 2 — Monitorização Básica: PVC e Retorno Venoso" loading="lazy">
+          <div class="mp-meta"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="6 3 20 12 6 21 6 3"/></svg>10 aulas</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h13l3 3v13H4z"/><path d="M8 9h8M8 13h8"/></svg>22 apostilas</span></div>
+        </article>
+        <article class="module-poster reveal">
+          <img src="img/modulos/m3.jpg" alt="Módulo 3 — Gasometria Arterial e Venosa" loading="lazy">
+          <div class="mp-meta"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="6 3 20 12 6 21 6 3"/></svg>4 aulas</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h13l3 3v13H4z"/><path d="M8 9h8M8 13h8"/></svg>10 apostilas</span></div>
+        </article>
+        <article class="module-poster reveal">
+          <img src="img/modulos/m4.jpg" alt="Módulo 4 — Distúrbios da Hemoglobina e Índices Pletismográficos" loading="lazy">
+          <div class="mp-meta"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="6 3 20 12 6 21 6 3"/></svg>3 aulas</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h13l3 3v13H4z"/><path d="M8 9h8M8 13h8"/></svg>10 apostilas</span></div>
+        </article>
+        <article class="module-poster reveal">
+          <img src="img/modulos/m5.jpg" alt="Módulo 5 — Cateter de Artéria Pulmonar" loading="lazy">
+          <div class="mp-meta"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="6 3 20 12 6 21 6 3"/></svg>7 aulas</span></div>
+        </article>
+        <article class="module-poster soon reveal">
+          <span class="soon-eye">Em expansão</span>
+          <h3>Novos módulos a caminho</h3>
+          <p>Curso vivo: novas aulas entram para os alunos conforme são lançadas, sem custo adicional.</p>
+        </article>
+      </div>
+
+      <div class="includes reveal">
+        <h3>O que está incluído</h3>
+        <div class="includes-grid">
+          <div class="include-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><div><div class="it-t">Videoaulas objetivas</div><div class="it-d">32 aulas em 5 módulos — e crescendo.</div></div></div>
+          <div class="include-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><div><div class="it-t">57 apostilas</div><div class="it-d">Material de apoio denso para consulta e revisão.</div></div></div>
+          <div class="include-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><div><div class="it-t">Acesso Web e App</div><div class="it-d">Estude no computador ou no celular, onde estiver.</div></div></div>
+          <div class="include-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><div><div class="it-t">Fórum de dúvidas</div><div class="it-d">Tire dúvidas com a equipe e acompanhe a turma.</div></div></div>
+          <div class="include-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><div><div class="it-t">Foco em casos reais</div><div class="it-d">Raciocínio e tomada de decisão à beira do leito.</div></div></div>
+          <div class="include-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><div><div class="it-t">39 calculadoras clínicas</div><div class="it-d">As ferramentas deste site, sempre à mão.</div></div></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ===================== FAQ ===================== -->
+  <!-- ===== ALGUMAS DAS NOSSAS AULAS ===== -->
+  <section class="sec" id="aulas" style="background: var(--bg-elev); border-block: 1px solid var(--border);" aria-labelledby="lessons-title">
+    <div class="container">
+      <div class="sec-head reveal">
+        <span class="eyebrow">O conteúdo</span>
+        <h2 class="sec-title" id="lessons-title">Algumas das nossas aulas</h2>
+        <p class="sec-lead">Uma amostra do que já está no ar, organizada por módulo. Clique em cada módulo para ver as aulas.</p>
+      </div>
+
+      <p class="lessons-flag reveal"><span class="pulse-dot" aria-hidden="true"></span> Curso em expansão — novas aulas entram sempre, sem custo adicional.</p>
+
+      <div class="accordion reveal">
+        <details class="module-acc" name="modulos" open>
+          <summary class="module-head">
+            <span class="module-index">01</span>
+            <span class="module-title-acc">Monitorização Básica: Fisiologia Cardiovascular e Pressão Arterial</span>
+            <span class="module-count">8 aulas</span>
+            <span class="chev2" aria-hidden="true"></span>
+          </summary>
+          <div class="module-body">
+            <ol class="lesson-list">
+              <li class="lesson-row"><span class="lesson-n">1</span>Fisiologia cardiovascular — parte 1</li>
+              <li class="lesson-row"><span class="lesson-n">2</span>Fisiologia cardiovascular — parte 2</li>
+              <li class="lesson-row"><span class="lesson-n">3</span>PNI: princípios e armadilhas</li>
+              <li class="lesson-row"><span class="lesson-n">4</span>Pressão arterial invasiva — indicações e montagem do circuito</li>
+              <li class="lesson-row"><span class="lesson-n">5</span>Pressão arterial invasiva — teste do sistema e padrões de curvas</li>
+              <li class="lesson-row"><span class="lesson-n">6</span>Pressão arterial invasiva — análise da morfologia das curvas</li>
+              <li class="lesson-row"><span class="lesson-n">7</span>Pressão arterial invasiva — técnicas de punção</li>
+              <li class="lesson-row"><span class="lesson-n">8</span>Punções arteriais na prática</li>
+            </ol>
+          </div>
+        </details>
+
+        <details class="module-acc" name="modulos">
+          <summary class="module-head">
+            <span class="module-index">02</span>
+            <span class="module-title-acc">Monitorização Básica: PVC e Retorno Venoso</span>
+            <span class="module-count">10 aulas</span>
+            <span class="chev2" aria-hidden="true"></span>
+          </summary>
+          <div class="module-body">
+            <ol class="lesson-list">
+              <li class="lesson-row"><span class="lesson-n">1</span>Acesso venoso central — técnica de Seldinger</li>
+              <li class="lesson-row"><span class="lesson-n">2</span>Acesso venoso central — veia jugular</li>
+              <li class="lesson-row"><span class="lesson-n">3</span>Acesso venoso central — subclávia e femoral</li>
+              <li class="lesson-row"><span class="lesson-n">4</span>Pressão venosa central — como medir</li>
+              <li class="lesson-row"><span class="lesson-n">5</span>PVC × retorno venoso</li>
+              <li class="lesson-row"><span class="lesson-n">6</span>PVC × performance miocárdica</li>
+              <li class="lesson-row"><span class="lesson-n">7</span>PVC, veia cava e ultrassonografia</li>
+              <li class="lesson-row"><span class="lesson-n">8</span>Curva de PVC</li>
+              <li class="lesson-row"><span class="lesson-n">9</span>Análise gráfica da PVC</li>
+              <li class="lesson-row"><span class="lesson-n">10</span>Retorno venoso</li>
+            </ol>
+          </div>
+        </details>
+
+        <details class="module-acc" name="modulos">
+          <summary class="module-head">
+            <span class="module-index">03</span>
+            <span class="module-title-acc">Gasometria Arterial e Venosa</span>
+            <span class="module-count">4 aulas</span>
+            <span class="chev2" aria-hidden="true"></span>
+          </summary>
+          <div class="module-body">
+            <ol class="lesson-list">
+              <li class="lesson-row"><span class="lesson-n">1</span>A hemoglobina e o oxigênio</li>
+              <li class="lesson-row"><span class="lesson-n">2</span>CaO₂ e SvO₂</li>
+              <li class="lesson-row"><span class="lesson-n">3</span>Gap de CO₂</li>
+              <li class="lesson-row"><span class="lesson-n">4</span>Quociente respiratório</li>
+            </ol>
+          </div>
+        </details>
+
+        <details class="module-acc" name="modulos">
+          <summary class="module-head">
+            <span class="module-index">04</span>
+            <span class="module-title-acc">Distúrbios da Hemoglobina e Índices Pletismográficos</span>
+            <span class="module-count">3 aulas</span>
+            <span class="chev2" aria-hidden="true"></span>
+          </summary>
+          <div class="module-body">
+            <ol class="lesson-list">
+              <li class="lesson-row"><span class="lesson-n">1</span>Pletismografia e saturação (oxímetro de pulso)</li>
+              <li class="lesson-row"><span class="lesson-n">2</span>Interação coração-pulmão</li>
+              <li class="lesson-row"><span class="lesson-n">3</span>Coração-pulmão na ventilação mecânica e ΔPP</li>
+            </ol>
+          </div>
+        </details>
+
+        <details class="module-acc" name="modulos">
+          <summary class="module-head">
+            <span class="module-index">05</span>
+            <span class="module-title-acc">Cateter de Artéria Pulmonar</span>
+            <span class="module-count">7 aulas</span>
+            <span class="chev2" aria-hidden="true"></span>
+          </summary>
+          <div class="module-body">
+            <ol class="lesson-list">
+              <li class="lesson-row"><span class="lesson-n">1</span>O legado de Swan &amp; Ganz</li>
+              <li class="lesson-row"><span class="lesson-n">2</span>Conhecendo o cateter de artéria pulmonar</li>
+              <li class="lesson-row"><span class="lesson-n">3</span>Instalação do cateter de artéria pulmonar</li>
+              <li class="lesson-row"><span class="lesson-n">3.1</span>Guiando o CAP — meio alternativo</li>
+              <li class="lesson-row"><span class="lesson-n">4</span>Origem dos parâmetros e avaliação — parte 1</li>
+              <li class="lesson-row"><span class="lesson-n">4.1</span>Origem dos parâmetros e avaliação — parte 2</li>
+              <li class="lesson-row"><span class="lesson-n">5</span>Cateter de artéria pulmonar e termodiluição na prática</li>
+            </ol>
+          </div>
+        </details>
+      </div>
+
+      <p class="lessons-total">5 módulos · 32 videoaulas hoje — e crescendo. Quem entra agora acompanha a expansão desde o começo.</p>
+    </div>
+  </section>
+
+  <!-- ===== TEASER FERRAMENTAS ===== -->
+  <section class="sec toolkit" id="toolkit">
+    <div class="container">
+      <div class="toolkit-inner reveal">
+        <span class="free-badge">● DE GRAÇA, PARA SEMPRE</span>
+        <h2 class="sec-title">39 calculadoras clínicas — e elas são nossas.</h2>
+        <p class="sec-lead" style="margin-inline:auto;">Antes de decidir qualquer coisa, use e confira o nível: gasometria, ΔPP, débito e resistências, escores de risco, POCUS e condutas de emergência. Se a ferramenta gratuita já te ajuda à beira-leito, imagine o curso. Sem cadastro, sem paywall.</p>
+        <div class="tool-pills">
+          <span class="tool-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-9 4 18 3-9h4"/></svg>Gasometria</span>
+          <span class="tool-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h3l2-4 4 8 2-4h7"/></svg>ΔPP &amp; fluidos</span>
+          <span class="tool-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12c2 0 2-3 4-3s2 6 4 6 2-9 4-9 2 6 4 6 2-3 2-3"/></svg>POCUS</span>
+          <span class="tool-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6l-8-4Z"/></svg>Risco pré-op</span>
+          <span class="tool-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v8M12 11c-2 0-5 2-5 6M12 11c2 0 5 2 5 6"/></svg>Via aérea</span>
+          <span class="tool-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4h8l-1 16H9L8 4Z"/></svg>Ventilação</span>
+          <span class="tool-pill danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8Z"/></svg>Emergências</span>
+        </div>
+        <a href="ferramentas.html" class="btn btn-secondary btn-lg" data-cta="toolkit">Abrir as calculadoras →</a>
+        <div class="toolkit-status">
+          <span class="status-chip">Funciona offline</span>
+          <span class="status-chip">Instalável como app</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== GARANTIA ===== -->
+  <section class="sec-tight" id="garantia">
+    <div class="container">
+      <div class="guarantee reveal">
+        <div class="g-seal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6l-8-4Z"/><path d="m9 12 2 2 4-4"/></svg></div>
+        <div class="g-body">
+          <h3>Risco zero por 7 dias</h3>
+          <p>Entre, assista, use as ferramentas. Se em 7 dias não for para você, é só pedir reembolso — 100% do valor, sem justificativa e sem burocracia.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
   <section class="sec" id="faq" style="background: var(--bg-elev); border-block: 1px solid var(--border);">
     <div class="container">
       <div class="sec-head center reveal">
@@ -772,33 +690,34 @@
         <h2 class="sec-title">Tirando as dúvidas</h2>
       </div>
       <div class="faq-list">
-        <details class="faq-item"><summary>Para quem é o curso?</summary><div class="faq-a">Para anestesiologistas, intensivistas e residentes que querem sair da dúvida na hora de interpretar monitores, ajustar drogas vasoativas e conduzir pacientes graves — do estável ao crítico.</div></details>
-        <details class="faq-item"><summary>Qual é o formato e por quanto tempo tenho acesso?</summary><div class="faq-a">Curso 100% online, com videoaulas e apostilas, acessível pela Web e pelo App. O curso é novo e recebe novos módulos e atualizações ao longo do tempo. <em>(Confirme o prazo de acesso vigente no checkout.)</em></div></details>
-        <details class="faq-item"><summary>Como funciona o pagamento e há garantia?</summary><div class="faq-a">O valor e as formas de pagamento aparecem na página de inscrição. Há garantia de 7 dias: se não for para você, devolvemos 100% do valor.</div></details>
-        <details class="faq-item"><summary>Quem são os professores?</summary><div class="faq-a">Dr. Davi Brasil Khouri e Dr. Maurício Machado, anestesiologistas TSA/SBA formados pelo HC-UFMG, com atuação em transplantes e CTI.</div></details>
-        <details class="faq-item"><summary>As calculadoras são gratuitas mesmo?</summary><div class="faq-a">Sim. As 39 ferramentas são e seguem livres, sem cadastro e com uso offline. O curso é um caminho opcional para quem quer dominar a interpretação — não um paywall das calculadoras.</div></details>
-        <details class="faq-item"><summary>Preciso do curso para usar as ferramentas?</summary><div class="faq-a">Não. Nunca precisou e não vai precisar. Elas ficam em <a href="ferramentas.html" style="color:var(--accent-bright);text-decoration:none;">hemodinamica.org/ferramentas</a> e podem ser instaladas como app no celular.</div></details>
+        <details class="faq-item" name="faq"><summary>Sou estudante / não sou da área crítica. Vou conseguir acompanhar?</summary><div class="faq-a">Sim. O curso começa na fisiologia cardiovascular, do básico. Não há pré-requisito além da vontade de entender o monitor — e como parte do zero, você constrói a base certa desde cedo.</div></details>
+        <details class="faq-item" name="faq"><summary>O curso é novo. Vale entrar agora?</summary><div class="faq-a">Ele é novo e está em expansão contínua. Entrar agora significa acompanhar o crescimento desde o começo — e as aulas novas entram sem custo adicional.</div></details>
+        <details class="faq-item" name="faq"><summary>Para quem é o curso?</summary><div class="faq-a">Para todo médico que precisa interpretar um monitor: cardiologistas, anestesistas, intensivistas, emergencistas, clínicos, generalistas, residentes e estudantes. Vai do muito básico ao avançado.</div></details>
+        <details class="faq-item" name="faq"><summary>Preciso decorar fórmula?</summary><div class="faq-a">Não. O foco é raciocínio clínico. E as 39 calculadoras (gratuitas) fazem a conta por você à beira-leito.</div></details>
+        <details class="faq-item" name="faq"><summary>Qual é o formato e por quanto tempo tenho acesso?</summary><div class="faq-a">Curso 100% online, com videoaulas e apostilas, acessível pela Web e pelo App. Recebe novos módulos e atualizações ao longo do tempo. <em>(Confirme o prazo de acesso vigente na página de inscrição.)</em></div></details>
+        <details class="faq-item" name="faq"><summary>Como funciona o pagamento e há garantia?</summary><div class="faq-a">O valor e as formas de pagamento aparecem na página de inscrição. Há garantia de 7 dias: se não for para você, devolvemos 100% do valor.</div></details>
+        <details class="faq-item" name="faq"><summary>As calculadoras são gratuitas mesmo?</summary><div class="faq-a">Sim. As 39 ferramentas são e seguem livres, sem cadastro e com uso offline, em <a href="ferramentas.html">/ferramentas</a>. O curso é opcional — nunca um paywall das calculadoras.</div></details>
       </div>
     </div>
   </section>
 
-  <!-- ===================== CTA FINAL ===================== -->
+  <!-- ===== CTA FINAL ===== -->
   <section class="sec final-cta">
     <div class="container">
       <div class="reveal">
         <span class="eyebrow">Anest-Review · Hemodinâmica</span>
-        <h2>Do monitor à melhor conduta. Comece agora.</h2>
-        <p>Aprenda a interpretar a hemodinâmica do seu paciente e a decidir com segurança — do estável ao crítico.</p>
+        <h2>Pare de só ler o monitor. Comece a conduzir.</h2>
+        <p>Da fisiologia ao cateter de artéria pulmonar, no seu ritmo — do básico ao avançado.</p>
         <a href="https://grupomedreview.com.br/medreview/anestreview-hemodinamica/?utm_source=hemodinamica.org&utm_medium=landing&utm_campaign=toolkit_to_course" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-lg" data-cta="final">
           <svg class="pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l2-5 4 12 2-7h6"/></svg>
-          Conhecer o curso
+          Entrar no curso
         </a>
-        <p class="micro">Garantia de 7 dias · Só precisa calcular? As <a href="ferramentas.html" style="color:var(--text-muted);">ferramentas continuam aqui, grátis</a>.</p>
+        <span class="cta-guar">Garantia de 7 dias · risco zero</span>
       </div>
     </div>
   </section>
 
-  <!-- ===================== FOOTER ===================== -->
+  <!-- ===== FOOTER ===== -->
   <footer class="site-footer">
     <div class="container">
       <footer class="footer-buttons"></footer>
@@ -810,63 +729,45 @@
     </div>
   </footer>
 
-  <!-- ===================== STICKY CTA ===================== -->
+  <!-- ===== STICKY CTA ===== -->
   <div class="sticky-cta" id="sticky-cta">
     <div class="sc-text">
       <div class="sc-title">Curso Hemodinâmica</div>
-      <div class="sc-sub">Do monitor à conduta · garantia de 7 dias</div>
+      <div class="sc-sub">Do básico ao avançado · 7 dias de garantia</div>
     </div>
-    <a href="https://grupomedreview.com.br/medreview/anestreview-hemodinamica/?utm_source=hemodinamica.org&utm_medium=landing&utm_campaign=toolkit_to_course" target="_blank" rel="noopener noreferrer" class="btn btn-primary" data-cta="sticky">Inscreva-se</a>
+    <a href="https://grupomedreview.com.br/medreview/anestreview-hemodinamica/?utm_source=hemodinamica.org&utm_medium=landing&utm_campaign=toolkit_to_course" target="_blank" rel="noopener noreferrer" class="btn btn-primary" data-cta="sticky">Ver inscrição</a>
   </div>
 
   <script>
-    /* ============================================
-       LANDING — reveal, sticky CTA, PWA fast-lane
-       ============================================ */
+    /* Landing — reveal on scroll, sticky CTA, PWA fast-lane */
     (function () {
       var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-      // PWA instalado → abre direto nas ferramentas (fast-lane), não na venda
       var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-      if (isStandalone) {
-        location.replace('ferramentas.html');
-        return;
-      }
+      if (isStandalone) { location.replace('ferramentas.html'); return; }
 
-      // Reveal on scroll
       var reveals = document.querySelectorAll('.reveal');
       if ('IntersectionObserver' in window && !reduce) {
         var io = new IntersectionObserver(function (entries) {
-          entries.forEach(function (en) {
-            if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
-          });
+          entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
         }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
         reveals.forEach(function (el) { io.observe(el); });
-      } else {
-        reveals.forEach(function (el) { el.classList.add('in'); });
-      }
+      } else { reveals.forEach(function (el) { el.classList.add('in'); }); }
 
-      // Sticky CTA aparece depois que o herói sai da viewport
       var sticky = document.getElementById('sticky-cta');
       var hero = document.getElementById('topo');
       if (sticky && hero && 'IntersectionObserver' in window) {
         var so = new IntersectionObserver(function (entries) {
-          entries.forEach(function (en) {
-            sticky.classList.toggle('show', !en.isIntersecting);
-          });
+          entries.forEach(function (en) { sticky.classList.toggle('show', !en.isIntersecting); });
         }, { threshold: 0 });
         so.observe(hero);
       }
     })();
   </script>
 
-  <!-- Service worker: registrado pelas páginas do app; mantido aqui para consistência de escopo -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {
-        navigator.serviceWorker.register('/sw.js').catch(function (err) {
-          console.error('Falha ao registrar service worker:', err);
-        });
+        navigator.serviceWorker.register('/sw.js').catch(function (err) { console.error('SW:', err); });
       });
     }
   </script>

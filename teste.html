@@ -22,7 +22,7 @@
     }
     html,body{ background:var(--bg); }
     html{ scroll-behavior:smooth; }
-    body{ font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif; color:var(--text); line-height:1.5; min-height:100vh; overflow-x:hidden; position:relative; padding-bottom:3rem; }
+    body{ font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif; color:var(--text); line-height:1.5; min-height:100vh; overflow-x:hidden; position:relative; padding-bottom:6.5rem; }
     body::before{ content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
       background:
         radial-gradient(ellipse 70% 45% at 15% -5%, rgba(88,166,255,.16), transparent 60%),
@@ -89,8 +89,10 @@
     .q-comment p{ margin:.55rem 0; font-size:.92rem; line-height:1.65; color:var(--text); }
     .q-comment strong, .q-comment b{ color:var(--text); }
 
-    .quiz-nav{ display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-top:1.4rem; }
+    .quiz-nav{ position:fixed; left:0; right:0; bottom:0; z-index:70; background:rgba(11,17,23,.93); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border-top:1px solid var(--border); padding:.7rem 0 calc(.7rem + env(safe-area-inset-bottom)); }
+    .quiz-nav-inner{ max-width:var(--maxw); margin:0 auto; padding-inline:clamp(16px,5vw,32px); display:flex; align-items:center; justify-content:space-between; gap:1rem; }
     .quiz-nav .navcount{ font-size:.85rem; font-weight:700; color:var(--text-muted); white-space:nowrap; }
+    @media (max-width:560px){ .quiz-nav .navcount{ display:none; } .quiz-nav-inner{ gap:.6rem; } .quiz-nav-inner .btn{ flex:1; min-width:0; padding-inline:.7rem; font-size:.9rem; } }
 
     /* ===== ESTADO DE ENVIO / RESULTADO ===== */
     .spinner{ width:38px; height:38px; border-radius:50%; border:3px solid var(--border); border-top-color:var(--accent); animation:spin .8s linear infinite; margin:0 auto; }
@@ -166,9 +168,11 @@
   <div class="wrap">
     <div id="stage"></div>
     <div class="quiz-nav" id="nav">
-      <button id="prev" class="btn btn-secondary" type="button">← Anterior</button>
-      <span class="navcount" id="navcount">Questão 1 de 5</span>
-      <button id="next" class="btn btn-secondary" type="button">Próxima →</button>
+      <div class="quiz-nav-inner">
+        <button id="prev" class="btn btn-secondary" type="button">← Anterior</button>
+        <span class="navcount" id="navcount">Questão 1 de 5</span>
+        <button id="next" class="btn btn-secondary" type="button">Próxima →</button>
+      </div>
     </div>
     <p class="foot-note">Questões: banco TEMI · comentários da equipe Anest-Review. Material de estudo; não substitui julgamento clínico. · <a href="index.html">Voltar ao curso</a></p>
   </div>

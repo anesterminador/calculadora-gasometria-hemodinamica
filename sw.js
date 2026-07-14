@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hemodinamica-v112';
+const CACHE_NAME = 'hemodinamica-v113';
 
 const ASSETS = [
   '/',
@@ -124,6 +124,7 @@ self.addEventListener('fetch', event => {
       .catch(() => caches.match(request).then(cached => cached || fetch(request)))
   );
 });
+
 
 
 

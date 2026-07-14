@@ -98,6 +98,9 @@
     @keyframes rise{ from{opacity:0; transform:translateY(12px);} to{opacity:1; transform:none;} }
     .result .score{ font-size:clamp(2.4rem,8vw,3.4rem); font-weight:800; color:var(--accent-bright); line-height:1; }
     .result .score small{ font-size:1.1rem; color:var(--text-muted); font-weight:700; }
+    .result .r-label{ font-size:.72rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--text-faint); margin-bottom:.4rem; }
+    .result .r-pct{ margin-top:.35rem; font-size:.98rem; font-weight:700; color:var(--success-bright); }
+    .result .r-sub{ margin:.9rem auto 0; font-size:.8rem; color:var(--text-faint); }
     .result h2{ font-size:clamp(1.3rem,4vw,1.7rem); font-weight:800; margin:.8rem 0 .5rem; text-wrap:balance; }
     .result p{ color:var(--text-muted); max-width:50ch; margin:0 auto 1.4rem; }
 
@@ -136,10 +139,13 @@
     <div class="quiz-list" id="quiz"></div>
 
     <section class="result" id="result">
+      <div class="r-label">Sua nota final</div>
       <div class="score"><span id="r-score">0</span><small>/10</small></div>
+      <div class="r-pct" id="r-pct"></div>
       <h2 id="r-title">Resultado</h2>
       <p id="r-msg"></p>
-      <a href="https://grupomedreview.com.br/medreview/anestreview-hemodinamica/?utm_source=hemodinamica.org&utm_medium=quiz&utm_campaign=teste_conhecimentos" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-lg" data-cta="quiz-result">Conhecer o curso Hemodinâmica →</a>
+      <a href="https://grupomedreview.com.br/medreview/anestreview-hemodinamica/?utm_source=hemodinamica.org&utm_medium=quiz&utm_campaign=teste_conhecimentos" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-lg" data-cta="quiz-result">Quero me inscrever no curso →</a>
+      <p class="r-sub">Garantia de 7 dias · comece do básico, chegue ao avançado.</p>
     </section>
 
     <p class="foot-note">Questões: bancos TEME e TEMI · comentários da equipe Anest-Review. Material de estudo; não substitui julgamento clínico. · <a href="index.html">Voltar ao curso</a></p>
@@ -181,6 +187,7 @@
         if(pct >= 0.8){ title='Mandou muito bem! 👏'; msg='Você domina boa parte da hemodinâmica. No curso, a gente aprofunda do raciocínio à conduta — do básico ao cateter de artéria pulmonar.'; }
         else if(pct >= 0.5){ title='Bom começo!'; msg='Você tem a base — e dá pra ir muito além. O curso Hemodinâmica organiza o passo a passo, do monitor à melhor conduta.'; }
         else { title='Tem espaço pra crescer — e tudo bem.'; msg='Hemodinâmica se aprende com método. O curso começa do zero, na fisiologia, e te leva até a interpretação avançada.'; }
+        document.getElementById('r-pct').textContent = Math.round(pct*100) + '% de acerto';
         document.getElementById('r-title').textContent = title;
         document.getElementById('r-msg').textContent = msg;
         r.classList.add('show');

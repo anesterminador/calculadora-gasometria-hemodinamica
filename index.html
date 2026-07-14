@@ -297,6 +297,11 @@
       .module-acc[open] .module-body { animation: none; }
       .chev2 { transition: none; }
     }
+
+    /* Aula demonstrativa (embed YouTube) */
+    .video-embed { position: relative; width: 100%; max-width: 900px; margin: 0 auto; aspect-ratio: 16 / 9; border-radius: 16px; overflow: hidden; border: 1px solid var(--border-strong); background: #000; box-shadow: 0 16px 50px rgba(0,0,0,.45); }
+    .video-embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+    .demo-cta { text-align: center; margin-top: 1.8rem; }
   </style>
   <link rel="stylesheet" href="js/site-footer.css">
 </head>
@@ -339,7 +344,7 @@
       </div>
       <div class="hero-chips">
         <span class="chip"><span class="dot"></span><strong>32</strong>&nbsp;videoaulas · e crescendo</span>
-        <span class="chip"><strong>57</strong>&nbsp;apostilas</span>
+        <span class="chip">Apostilas de Revisão</span>
         <span class="chip">Web&nbsp;+&nbsp;App</span>
         <span class="chip"><span class="dot green"></span>Garantia de 7 dias</span>
       </div>
@@ -388,7 +393,7 @@
         <h3>O que está incluído</h3>
         <div class="includes-grid">
           <div class="include-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><div><div class="it-t">Videoaulas objetivas</div><div class="it-d">32 aulas em 5 módulos — e crescendo.</div></div></div>
-          <div class="include-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><div><div class="it-t">57 apostilas</div><div class="it-d">Material de apoio denso para consulta e revisão.</div></div></div>
+          <div class="include-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><div><div class="it-t">Apostilas de revisão</div><div class="it-d">Material de apoio denso para consulta e revisão.</div></div></div>
           <div class="include-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><div><div class="it-t">Acesso Web e App</div><div class="it-d">Estude no computador ou no celular, onde estiver.</div></div></div>
           <div class="include-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><div><div class="it-t">Fórum de dúvidas</div><div class="it-d">Tire dúvidas com a equipe e acompanhe a turma.</div></div></div>
           <div class="include-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><div><div class="it-t">Foco em casos reais</div><div class="it-d">Raciocínio e tomada de decisão à beira do leito.</div></div></div>
@@ -509,6 +514,23 @@
       </div>
 
       <p class="lessons-total">5 módulos · 32 videoaulas hoje — e crescendo. Quem entra agora acompanha a expansão desde o começo.</p>
+    </div>
+  </section>
+
+  <!-- ===== AULA DEMONSTRATIVA ===== -->
+  <section class="sec" id="aula-demo" style="border-block: 1px solid var(--border);">
+    <div class="container">
+      <div class="sec-head reveal">
+        <span class="eyebrow">Aula demonstrativa</span>
+        <h2 class="sec-title">Assista a uma aula <span class="accent">grátis, na íntegra</span>.</h2>
+        <p class="sec-lead">Uma amostra real do curso, direto do nosso canal. É esse o formato de todas as videoaulas — objetivo, prático e direto ao ponto.</p>
+      </div>
+      <div class="video-embed">
+        <iframe src="https://www.youtube-nocookie.com/embed/k9eFKvQbQb0" title="Aula demonstrativa — Curso Hemodinâmica" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      </div>
+      <div class="demo-cta">
+        <a href="inscricao.html" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-lg" data-cta="demo">Quero o curso completo →</a>
+      </div>
     </div>
   </section>
 

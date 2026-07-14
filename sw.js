@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hemodinamica-v116';
+const CACHE_NAME = 'hemodinamica-v117';
 
 const ASSETS = [
   '/',
@@ -63,6 +63,7 @@ const ASSETS = [
 ];
 
 self.addEventListener('install', event => {
+  self.skipWaiting(); // assume a nova versao imediatamente, sem esperar todas as janelas do app fecharem
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache =>
       // addAll falha de forma atômica: se UM asset falhar, a instalação inteira aborta.
@@ -85,7 +86,7 @@ self.addEventListener('activate', event => {
           .filter(key => key.startsWith('hemodinamica-') && key !== CACHE_NAME)
           .map(key => caches.delete(key))
       )
-    )
+    ).then(() => self.clients.claim()) // assume o controle das paginas ja abertas na hora
   );
 });
 

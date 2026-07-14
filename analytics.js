@@ -29,4 +29,18 @@
     page_path: window.location.pathname || '/',
     page_title: document.title
   });
+
+  // Conta cliques nos CTAs. Elementos marcados com data-cta.
+  // Inscrição (checkout) -> evento "clique_inscricao"; ferramentas -> "clique_ferramentas".
+  document.addEventListener('click', function (e) {
+    var a = e.target && e.target.closest ? e.target.closest('a[data-cta]') : null;
+    if (!a) return;
+    var href = a.getAttribute('href') || '';
+    var isInscricao = /anestreview-hemodinamica|\/medreview\//.test(href);
+    gtag('event', isInscricao ? 'clique_inscricao' : 'clique_ferramentas', {
+      posicao: a.getAttribute('data-cta') || 'desconhecido',
+      destino: href,
+      pagina: window.location.pathname || '/'
+    });
+  }, true);
 })();

@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Quiz grátis · Hemodinâmica</title>
-  <meta name="description" content="Quiz gratuito: questões comentadas de hemodinâmica (eco/POCUS) das provas TEME e TEMI. Uma amostra do banco de questões da Anest-Review.">
+  <title>Quiz TEMI grátis · Hemodinâmica</title>
+  <meta name="description" content="Amostra grátis: 5 questões comentadas do TEMI (eco/POCUS e hemodinâmica). Ao final, libere o Mini Simulado TEMI completo, de 10 questões.">
   <link rel="icon" href="icon-192.png" type="image/png">
   <link rel="apple-touch-icon" href="icon-512.png?v=2">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -38,6 +38,7 @@
     .btn-secondary{ background:rgba(88,166,255,.06); border-color:var(--border-strong); color:var(--text); }
     .btn-secondary:not(:disabled):hover{ border-color:var(--accent); background:var(--accent-soft); }
     .btn-lg{ min-height:54px; padding:.95rem 1.8rem; font-size:1.05rem; }
+    .btn-block{ width:100%; }
 
     .topnav{ position:sticky; top:0; z-index:60; background:rgba(11,17,23,.85); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border-bottom:1px solid var(--border); }
     .topnav-inner{ max-width:var(--maxw); margin:0 auto; padding:0 clamp(14px,4vw,28px); height:56px; display:flex; align-items:center; gap:1rem; }
@@ -51,16 +52,12 @@
     .intro h1{ font-size:clamp(1.7rem,5.2vw,2.6rem); font-weight:800; letter-spacing:-.02em; line-height:1.12; margin:.6rem 0 .7rem; text-wrap:balance; }
     .intro p{ color:var(--text-muted); max-width:58ch; margin:0 auto; font-size:1.02rem; }
     .intro .free{ display:inline-flex; align-items:center; gap:.4rem; margin-top:1rem; padding:.3rem .8rem; border-radius:999px; background:rgba(46,160,67,.14); border:1px solid rgba(46,160,67,.5); color:var(--success-bright); font-size:.74rem; font-weight:800; letter-spacing:.06em; }
-    .demo-note{ max-width:640px; margin:1.2rem auto 0; display:flex; gap:.7rem; align-items:flex-start; text-align:left; padding:.85rem 1.05rem; border:1px dashed var(--border-strong); border-radius:var(--radius-md); background:rgba(88,166,255,.05); color:var(--text-muted); font-size:.86rem; line-height:1.5; }
-    .demo-note svg{ flex-shrink:0; width:20px; height:20px; color:var(--accent-bright); margin-top:1px; }
-    .demo-note strong{ color:var(--text); }
 
     .progress{ position:sticky; top:56px; z-index:50; background:rgba(11,17,23,.92); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-bottom:1px solid var(--border); padding:.6rem 0; margin-bottom:1.4rem; }
     .progress-inner{ max-width:var(--maxw); margin:0 auto; padding-inline:clamp(16px,5vw,32px); display:flex; align-items:center; gap:1rem; font-size:.82rem; font-weight:700; }
     .progress .bar{ flex:1; height:8px; border-radius:999px; background:var(--bg-card); overflow:hidden; border:1px solid var(--border); }
     .progress .fill{ height:100%; width:0; background:linear-gradient(90deg,var(--accent),var(--accent-bright)); transition:width .3s ease; }
-    .progress .stat{ color:var(--text-muted); white-space:nowrap; }
-    .progress .stat b{ color:var(--text); } .progress .hits b{ color:var(--success-bright); }
+    .progress .stat{ color:var(--text-muted); white-space:nowrap; } .progress .stat b{ color:var(--text); } .progress .hits b{ color:var(--success-bright); }
 
     .quiz-card{ background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-lg); padding:clamp(1.1rem,3.5vw,1.7rem); box-shadow:0 1px 3px rgba(0,0,0,.3); }
     .q-top{ display:flex; align-items:center; gap:.7rem; margin-bottom:1rem; }
@@ -84,27 +81,39 @@
     .q-comment{ margin-top:1.1rem; padding:1rem 1.15rem; background:var(--bg-elev); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:var(--radius-md); text-align:justify; }
     .qc-verdict{ font-weight:800; font-size:.98rem; margin-bottom:.7rem; text-align:left; }
     .qc-verdict.ok{ color:var(--success-bright); } .qc-verdict.no{ color:var(--danger-bright); }
-    .q-comment p{ margin:.55rem 0; font-size:.92rem; line-height:1.65; color:var(--text-muted); }
+    .q-comment p{ margin:.55rem 0; font-size:.92rem; line-height:1.65; color:var(--text); }
     .q-comment strong, .q-comment b{ color:var(--text); }
 
     .quiz-nav{ display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-top:1.4rem; }
     .quiz-nav .navcount{ font-size:.85rem; font-weight:700; color:var(--text-muted); white-space:nowrap; }
 
-    .result{ display:none; text-align:center; margin-top:1.4rem; padding:clamp(1.6rem,5vw,2.4rem); border-radius:var(--radius-lg); border:1px solid rgba(88,166,255,.4); background:linear-gradient(160deg, rgba(88,166,255,.1), rgba(46,160,67,.05)); }
-    .result.show{ display:block; animation:rise .4s ease both; }
-    @keyframes rise{ from{opacity:0; transform:translateY(12px);} to{opacity:1; transform:none;} }
-    .result .r-label{ font-size:.72rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--text-faint); margin-bottom:.4rem; }
-    .result .score{ font-size:clamp(2.4rem,8vw,3.4rem); font-weight:800; color:var(--accent-bright); line-height:1; }
-    .result .score small{ font-size:1.1rem; color:var(--text-muted); font-weight:700; }
-    .result .r-pct{ margin-top:.35rem; font-size:.98rem; font-weight:700; color:var(--success-bright); }
-    .result h2{ font-size:clamp(1.3rem,4vw,1.7rem); font-weight:800; margin:.8rem 0 .5rem; text-wrap:balance; }
-    .result p{ color:var(--text-muted); max-width:52ch; margin:0 auto 1.4rem; }
-    .result .r-sub{ margin:.9rem auto 0; font-size:.8rem; color:var(--text-faint); }
+    /* ===== MODAL OFERTA ===== */
+    .modal-overlay{ position:fixed; inset:0; z-index:200; background:rgba(6,9,13,.78); backdrop-filter:blur(5px); -webkit-backdrop-filter:blur(5px); display:none; align-items:center; justify-content:center; padding:1rem; }
+    .modal-overlay.show{ display:flex; animation:ovfade .2s ease both; }
+    @keyframes ovfade{ from{opacity:0} to{opacity:1} }
+    .modal-card{ position:relative; width:100%; max-width:470px; background:var(--bg-card); border:1px solid var(--border-strong); border-radius:var(--radius-lg); padding:clamp(1.5rem,5vw,2.3rem); text-align:center; box-shadow:0 24px 70px rgba(0,0,0,.6); animation:mrise .3s ease both; }
+    @keyframes mrise{ from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:none} }
+    .modal-close{ position:absolute; top:.6rem; right:.8rem; background:none; border:none; color:var(--text-faint); font-size:1.6rem; line-height:1; cursor:pointer; padding:.2rem; }
+    .modal-close:hover{ color:var(--text); }
+    .modal-badge{ display:inline-flex; align-items:center; gap:.4rem; padding:.28rem .8rem; border-radius:999px; background:var(--accent-soft); border:1px solid rgba(88,166,255,.4); color:var(--accent-bright); font-size:.72rem; font-weight:800; letter-spacing:.06em; margin-bottom:.9rem; }
+    .modal-score{ font-size:.85rem; font-weight:700; color:var(--text-muted); margin-bottom:.7rem; }
+    .modal-score b{ color:var(--success-bright); }
+    .modal-card h2{ font-size:clamp(1.3rem,4.6vw,1.75rem); font-weight:800; line-height:1.15; margin-bottom:.6rem; text-wrap:balance; }
+    .modal-card .lead{ color:var(--text-muted); font-size:.96rem; margin-bottom:1.2rem; }
+    .modal-card .lead strong{ color:var(--text); }
+    .modal-form{ display:flex; flex-direction:column; gap:.7rem; }
+    .modal-form input[type=email]{ width:100%; padding:.9rem 1rem; border-radius:var(--radius-md); border:1px solid var(--border-strong); background:var(--bg-elev); color:var(--text); font-family:inherit; font-size:1rem; }
+    .modal-form input[type=email]:focus{ outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft); }
+    .modal-consent{ font-size:.72rem; color:var(--text-faint); line-height:1.45; margin-top:.4rem; }
+    .modal-alt{ display:inline-block; margin-top:1.1rem; font-size:.85rem; color:var(--accent-bright); text-decoration:none; font-weight:600; }
+    .modal-alt:hover{ text-decoration:underline; }
+    .modal-done .big{ font-size:2.6rem; }
+    .modal-done h2{ margin-top:.4rem; }
 
     .foot-note{ text-align:center; color:var(--text-faint); font-size:.8rem; margin-top:2rem; }
     .foot-note a{ color:var(--text-muted); }
 
-    @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto;} .result.show{animation:none;} }
+    @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto;} .modal-overlay.show,.modal-card{animation:none;} }
   </style>
 </head>
 <body>
@@ -119,18 +128,14 @@
     <header class="intro">
       <span class="eyebrow">Quiz TEMI grátis</span>
       <h1>Teste seus conhecimentos em hemodinâmica</h1>
-      <p>Questões comentadas do <strong>TEMI</strong> (Título de Especialista em Medicina Intensiva), com foco em ecocardiografia/POCUS e hemodinâmica. Escolha uma alternativa e veja o comentário na hora.</p>
-      <div class="demo-note">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-        <span>Esta é uma <strong>amostra do nosso banco de questões comentadas</strong>, ainda <strong>em desenvolvimento</strong>. Em breve, o banco completo estará disponível para os alunos.</span>
-      </div>
-      <span class="free">● 100% GRÁTIS · SEM CADASTRO</span>
+      <p>Uma amostra grátis: <strong>5 questões comentadas do TEMI</strong>, com foco em ecocardiografia/POCUS. Responda e veja o comentário na hora — sem cadastro.</p>
+      <span class="free">● 5 QUESTÕES GRÁTIS · SEM CADASTRO</span>
     </header>
   </div>
 
   <div class="progress">
     <div class="progress-inner">
-      <span class="stat">Respondidas <b id="p-count">0</b>/<span id="p-total">10</span></span>
+      <span class="stat">Respondidas <b id="p-count">0</b>/<span id="p-total">5</span></span>
       <div class="bar"><div class="fill" id="p-fill"></div></div>
       <span class="stat hits">Acertos <b id="p-hits">0</b></span>
     </div>
@@ -138,38 +143,59 @@
 
   <div class="wrap">
     <div id="stage"></div>
-
     <div class="quiz-nav" id="nav">
       <button id="prev" class="btn btn-secondary" type="button">← Anterior</button>
-      <span class="navcount" id="navcount">Questão 1 de 10</span>
+      <span class="navcount" id="navcount">Questão 1 de 5</span>
       <button id="next" class="btn btn-secondary" type="button">Próxima →</button>
     </div>
-
-    <section class="result" id="result">
-      <div class="r-label">Sua nota final</div>
-      <div class="score"><span id="r-score">0</span><small>/10</small></div>
-      <div class="r-pct" id="r-pct"></div>
-      <h2 id="r-title">Resultado</h2>
-      <p id="r-msg"></p>
-      <a href="https://grupomedreview.com.br/medreview/anestreview-hemodinamica/?utm_source=hemodinamica.org&utm_medium=quiz&utm_campaign=teste_conhecimentos" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-lg" data-cta="quiz-result">Quero me inscrever no curso →</a>
-      <p class="r-sub">Garantia de 7 dias · comece do básico, chegue ao avançado.</p>
-    </section>
-
-    <p class="foot-note">Questões: bancos TEME e TEMI · comentários da equipe Anest-Review. Material de estudo; não substitui julgamento clínico. · <a href="index.html">Voltar ao curso</a></p>
+    <p class="foot-note">Questões: banco TEMI · comentários da equipe Anest-Review. Material de estudo; não substitui julgamento clínico. · <a href="index.html">Voltar ao curso</a></p>
   </div>
 
-  <script src="quiz-data.js?v=3"></script>
+  <!-- ===== MODAL: oferta do Mini Simulado TEMI ===== -->
+  <div class="modal-overlay" id="offer-modal" role="dialog" aria-modal="true" aria-labelledby="offer-title">
+    <div class="modal-card">
+      <button class="modal-close" id="offer-close" type="button" aria-label="Fechar">&times;</button>
+      <div id="offer-main">
+        <span class="modal-badge">● MINI SIMULADO TEMI</span>
+        <div class="modal-score">Você concluiu as 5 questões grátis · acertou <b id="offer-score">0 de 5</b></div>
+        <h2 id="offer-title">Bora pro Mini Simulado TEMI completo?</h2>
+        <p class="lead"><strong>10 questões</strong> de terapia intensiva, comentadas. Deixe seu e-mail e receba o <strong>resultado e os comentários</strong> na sua caixa de entrada.</p>
+        <form class="modal-form" id="offer-form" novalidate>
+          <input type="email" id="offer-email" placeholder="Seu melhor e-mail" required autocomplete="email" inputmode="email">
+          <button type="submit" class="btn btn-primary btn-lg btn-block">Quero fazer o mini simulado →</button>
+        </form>
+        <p class="modal-consent">Ao enviar, você concorda em receber o mini simulado e novidades da Anest-Review por e-mail. Sem spam — cancele quando quiser.</p>
+        <a class="modal-alt" href="https://grupomedreview.com.br/medreview/anestreview-hemodinamica/?utm_source=hemodinamica.org&utm_medium=quiz&utm_campaign=teste_conhecimentos" target="_blank" rel="noopener noreferrer" data-cta="modal-curso">Ou conheça o curso completo →</a>
+      </div>
+      <div id="offer-done" class="modal-done" style="display:none">
+        <div class="big">✅</div>
+        <h2>Pronto!</h2>
+        <p class="lead" id="offer-done-msg">Seu Mini Simulado TEMI está a caminho — fique de olho no seu e-mail (confira também o spam).</p>
+        <a class="btn btn-primary btn-lg btn-block" href="https://grupomedreview.com.br/medreview/anestreview-hemodinamica/?utm_source=hemodinamica.org&utm_medium=quiz&utm_campaign=teste_conhecimentos" target="_blank" rel="noopener noreferrer" data-cta="modal-done-curso">Conhecer o curso Hemodinâmica →</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="quiz-data.js?v=4"></script>
   <script>
     (function () {
-      var QUIZ = (window.QUIZ || []).slice(0, 10);
+      /* ===== CONFIG ===== */
+      // Amanhã: cole aqui o link do Google Forms do Mini Simulado (viewform).
+      // Se preenchido, ao enviar o e-mail o usuário é levado ao formulário (com o e-mail pré-preenchido, se FORM_EMAIL_ENTRY for definido).
+      var FORM_URL = '';            // ex.: 'https://docs.google.com/forms/d/e/XXXX/viewform' — ao preencher, assume no lugar do FormSubmit
+      var FORM_EMAIL_ENTRY = '';    // ex.: 'entry.1234567890'  (campo de e-mail do Form, p/ pré-preencher)
+      // TEMPORÁRIO: enquanto o Google Forms não fica pronto, os leads vão pro e-mail via FormSubmit.
+      var LEAD_EMAIL = ['davi.khouri','grupomedreview.com.br'].join('@'); // ofuscado p/ reduzir scraping
+
+      var QUIZ = (window.QUIZ || []).slice(0, 5);
       var stage = document.getElementById('stage');
       var prevBtn = document.getElementById('prev');
       var nextBtn = document.getElementById('next');
       var navcount = document.getElementById('navcount');
       var navWrap = document.getElementById('nav');
-      var result = document.getElementById('result');
-      var state = new Array(QUIZ.length); // state[i] = { chosen }
-      var current = 0;
+      var modal = document.getElementById('offer-modal');
+      var state = new Array(QUIZ.length);
+      var current = 0, modalShown = false;
       document.getElementById('p-total').textContent = QUIZ.length;
 
       function esc(s){ return (s||'').replace(/[&<>"']/g, function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]; }); }
@@ -181,99 +207,99 @@
         document.getElementById('p-hits').textContent = countHits();
         document.getElementById('p-fill').style.width = (countAnswered()/QUIZ.length*100)+'%';
       }
-
       function updateNav(){
         prevBtn.disabled = current === 0;
         var last = current === QUIZ.length - 1;
         navcount.textContent = 'Questão ' + (current+1) + ' de ' + QUIZ.length;
         if (last) {
-          var all = countAnswered() === QUIZ.length;
-          nextBtn.textContent = 'Ver minha nota';
+          nextBtn.textContent = 'Ver o mini simulado →';
           nextBtn.classList.remove('btn-secondary'); nextBtn.classList.add('btn-primary');
-          nextBtn.disabled = !all;
-          nextBtn.title = all ? '' : 'Responda todas as questões para ver sua nota';
         } else {
           nextBtn.textContent = 'Próxima →';
           nextBtn.classList.remove('btn-primary'); nextBtn.classList.add('btn-secondary');
-          nextBtn.disabled = false; nextBtn.title = '';
         }
       }
 
       function renderQuestion(i){
-        var q = QUIZ[i];
-        var a = state[i];
-        var answered = !!a;
+        var q = QUIZ[i], a = state[i], answered = !!a;
         var alts = q.alternativas.map(function(alt){
           var cls = 'q-alt';
-          if (answered) {
-            if (alt.letra === q.gabarito) cls += ' correct';
-            else if (alt.letra === a.chosen) cls += ' wrong';
-          }
+          if (answered) { if (alt.letra===q.gabarito) cls+=' correct'; else if (alt.letra===a.chosen) cls+=' wrong'; }
           return '<button class="'+cls+'" type="button" data-letra="'+esc(alt.letra)+'"'+(answered?' disabled':'')+'>'+
                  '<span class="q-letra">'+esc(alt.letra)+'</span><span>'+esc(alt.texto)+'</span></button>';
         }).join('');
         var comment = '';
         if (answered) {
-          var ok = a.chosen === q.gabarito;
+          var ok = a.chosen===q.gabarito;
           comment = '<div class="q-comment"><div class="qc-verdict '+(ok?'ok':'no')+'">'+
-                    (ok ? '✓ Você acertou!' : '✗ Resposta correta: ' + esc(q.gabarito)) + '</div>' +
-                    (q.comentario_html || '') + '</div>';
+                    (ok ? '✓ Você acertou!' : '✗ Resposta correta: ' + esc(q.gabarito)) + '</div>' + (q.comentario_html||'') + '</div>';
         }
         stage.innerHTML =
-          '<article class="quiz-card">' +
-            '<div class="q-top"><span class="q-badge '+esc(q.prova)+'">'+esc(q.prova)+' · '+esc(q.ano)+'</span>' +
-            '<span class="q-num">Questão '+(i+1)+'/'+QUIZ.length+'</span></div>' +
-            '<div class="q-enun">'+(q.enunciado_html || '')+'</div>' +
-            '<div class="q-alts">'+alts+'</div>' +
-            comment +
-          '</article>';
-
+          '<article class="quiz-card"><div class="q-top"><span class="q-badge '+esc(q.prova)+'">'+esc(q.prova)+' · '+esc(q.ano)+'</span>'+
+          '<span class="q-num">Questão '+(i+1)+'/'+QUIZ.length+'</span></div>'+
+          '<div class="q-enun">'+(q.enunciado_html||'')+'</div><div class="q-alts">'+alts+'</div>'+comment+'</article>';
         if (!answered) {
           stage.querySelectorAll('.q-alt').forEach(function(btn){
             btn.addEventListener('click', function(){
               state[i] = { chosen: btn.getAttribute('data-letra') };
               if (window.gtag) window.gtag('event','quiz_resposta',{ questao:i+1, prova:q.prova, acertou: state[i].chosen===q.gabarito });
-              renderQuestion(i);
-              updateProgress();
-              updateNav();
+              renderQuestion(i); updateProgress(); updateNav();
+              if (i === QUIZ.length - 1) setTimeout(openModal, 1300); // após a 5ª questão
             });
           });
         }
         updateNav();
       }
+      function scrollTop(){ var y = stage.getBoundingClientRect().top + window.pageYOffset - 110; window.scrollTo({ top:Math.max(0,y), behavior:'smooth' }); }
 
-      function scrollTop(){
-        var y = stage.getBoundingClientRect().top + window.pageYOffset - 110;
-        window.scrollTo({ top: Math.max(0,y), behavior: 'smooth' });
+      function openModal(){
+        document.getElementById('offer-score').textContent = countHits() + ' de ' + QUIZ.length;
+        modal.classList.add('show');
+        if (!modalShown && window.gtag) window.gtag('event','mini_simulado_oferta',{ acertos: countHits() });
+        modalShown = true;
       }
+      function closeModal(){ modal.classList.remove('show'); }
 
-      function showResult(){
-        var hits = countHits();
-        var pct = hits / QUIZ.length;
-        document.getElementById('r-score').textContent = hits;
-        document.getElementById('r-pct').textContent = Math.round(pct*100) + '% de acerto';
-        var title, msg;
-        if (pct >= 0.8) { title = 'Mandou muito bem! 👏'; msg = 'Você domina boa parte da hemodinâmica. No curso, a gente aprofunda do raciocínio à conduta — do básico ao cateter de artéria pulmonar.'; }
-        else if (pct >= 0.5) { title = 'Bom começo!'; msg = 'Você tem a base — e dá pra ir muito além. O curso Hemodinâmica organiza o passo a passo, do monitor à melhor conduta.'; }
-        else { title = 'Tem espaço pra crescer — e tudo bem.'; msg = 'Hemodinâmica se aprende com método. O curso começa do zero, na fisiologia, e te leva até a interpretação avançada.'; }
-        document.getElementById('r-title').textContent = title;
-        document.getElementById('r-msg').textContent = msg;
-        stage.style.display = 'none';
-        navWrap.style.display = 'none';
-        result.classList.add('show');
-        if (window.gtag) window.gtag('event','quiz_completo',{ acertos: hits, total: QUIZ.length });
-        result.scrollIntoView({ behavior:'smooth', block:'center' });
-      }
-
-      prevBtn.addEventListener('click', function(){ if (current > 0) { current--; renderQuestion(current); scrollTop(); } });
-      nextBtn.addEventListener('click', function(){
-        if (current < QUIZ.length - 1) { current++; renderQuestion(current); scrollTop(); }
-        else { showResult(); }
+      // Envio do e-mail (lead do mini simulado)
+      document.getElementById('offer-form').addEventListener('submit', function(e){
+        e.preventDefault();
+        var email = (document.getElementById('offer-email').value || '').trim();
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { document.getElementById('offer-email').focus(); return; }
+        try { localStorage.setItem('hemo_lead_email', email); } catch(_){}
+        if (window.gtag) window.gtag('event','mini_simulado_lead',{ acertos: countHits() });
+        if (FORM_URL) {
+          var sep = FORM_URL.indexOf('?') >= 0 ? '&' : '?';
+          var url = FORM_URL + (FORM_EMAIL_ENTRY ? (sep + 'usp=pp_url&' + FORM_EMAIL_ENTRY + '=' + encodeURIComponent(email)) : '');
+          window.location.href = url;
+          return;
+        }
+        // TEMPORÁRIO: envia o lead pro e-mail via FormSubmit (AJAX). Mostra "Pronto!" de qualquer forma.
+        var submitBtn = this.querySelector('button[type=submit]');
+        if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Enviando…'; }
+        function showDone(){ document.getElementById('offer-main').style.display='none'; document.getElementById('offer-done').style.display='block'; }
+        fetch('https://formsubmit.co/ajax/' + encodeURIComponent(LEAD_EMAIL), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({
+            email: email,
+            acertos_amostra: countHits() + '/' + QUIZ.length,
+            origem: 'hemodinamica.org/teste.html',
+            _subject: 'Novo lead — Mini Simulado TEMI (hemodinamica.org)',
+            _template: 'table',
+            _captcha: 'false'
+          })
+        }).then(function(){ showDone(); }, function(){ showDone(); });
       });
 
+      document.getElementById('offer-close').addEventListener('click', closeModal);
+      modal.addEventListener('click', function(e){ if (e.target === modal) closeModal(); });
+      document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeModal(); });
+
+      prevBtn.addEventListener('click', function(){ if (current>0){ current--; renderQuestion(current); scrollTop(); } });
+      nextBtn.addEventListener('click', function(){ if (current < QUIZ.length-1){ current++; renderQuestion(current); scrollTop(); } else { openModal(); } });
+
       if (!QUIZ.length) { stage.innerHTML = '<p style="color:var(--text-muted);text-align:center">Não foi possível carregar as questões.</p>'; navWrap.style.display='none'; return; }
-      renderQuestion(0);
-      updateProgress();
+      renderQuestion(0); updateProgress();
     })();
   </script>
   <script src="analytics.js"></script>

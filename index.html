@@ -115,9 +115,6 @@
     .sec-head.center { text-align: center; }
     .sec-head.center .sec-lead { margin-inline: auto; }
 
-    .ecg-divider { display: block; width: 100%; max-width: 640px; height: 30px; margin: 0 auto; color: var(--accent); opacity: 0.4; }
-    .ecg-divider path { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 5px var(--accent-glow)); }
-
     /* ===== HERO ===== */
     .hero { padding: clamp(2.4rem, 6vw, 4rem) 0 clamp(2.6rem, 6vw, 4rem); text-align: center; }
     .hero-logo { width: min(430px, 78vw); height: auto; margin: 0 auto 1.6rem; display: block; filter: drop-shadow(0 10px 40px rgba(88,166,255,0.16)); animation: fadeRise 0.6s ease both; }
@@ -131,59 +128,6 @@
     .chip .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent-bright); box-shadow: 0 0 8px var(--accent-glow); }
     .chip .dot.green { background: var(--success-bright); box-shadow: 0 0 8px rgba(63,185,80,0.6); }
     .hero-tie { margin-top: 1.3rem; font-size: 0.9rem; color: var(--text-faint); animation: fadeRise 0.6s 0.24s ease both; }
-
-    /* ===== BRIDGE ===== */
-    .bridge-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
-    .bridge-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; box-shadow: var(--shadow-card); }
-    .bridge-card .bc-icon { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent-bright); margin-bottom: 1rem; }
-    .bridge-card .bc-icon svg { width: 22px; height: 22px; }
-    .bridge-card h3 { font-size: 1.08rem; font-weight: 700; margin-bottom: 0.5rem; }
-    .bridge-card p { color: var(--text-muted); font-size: 0.95rem; }
-    .bridge-note { text-align: center; color: var(--text-muted); font-size: 0.98rem; margin-top: 1.8rem; max-width: 60ch; margin-inline: auto; font-style: italic; }
-
-    /* ===== AUDIÊNCIA ===== */
-    .audience { display: flex; flex-direction: column; gap: 1.4rem; }
-    .audience-banner { padding: 1rem 1.15rem; background: linear-gradient(180deg, rgba(88,166,255,.10), rgba(88,166,255,.04)); border: 1px solid var(--border-strong); border-left: 3px solid var(--accent); border-radius: var(--radius-md); font-size: clamp(1.05rem,2.6vw,1.28rem); font-weight: 600; line-height: 1.35; color: var(--text); display: flex; align-items: center; gap: 0.8rem; }
-    .ecg-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--danger); box-shadow: 0 0 0 4px rgba(248,81,73,.15); flex: none; }
-    .ladder { padding: 1.3rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); }
-    .ladder-track { list-style: none; display: grid; gap: 0.9rem; position: relative; }
-    .ladder-node { display: flex; align-items: center; gap: 0.75rem; font-weight: 600; color: var(--text); font-size: 0.98rem; }
-    .ladder-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--accent); flex: none; box-shadow: 0 0 0 4px rgba(88,166,255,.12); }
-    .ladder-caption { margin-top: 0.9rem; color: var(--text-muted); font-size: 0.9rem; }
-    @media (min-width: 720px) {
-      .ladder-track { grid-auto-flow: column; grid-auto-columns: 1fr; align-items: start; text-align: center; }
-      .ladder-node { flex-direction: column; gap: 0.6rem; }
-      .ladder-track::before { content: ""; position: absolute; top: 6px; left: 12%; right: 12%; height: 2px; background: linear-gradient(90deg, var(--accent), var(--accent-bright)); opacity: .5; }
-    }
-    .audience-kicker { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-faint); font-weight: 800; }
-    .profile-grid { list-style: none; display: grid; grid-template-columns: 1fr; gap: 0.8rem; }
-    @media (min-width: 600px) { .profile-grid { grid-template-columns: 1fr 1fr; } }
-    .profile-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.1rem 1.2rem; box-shadow: var(--shadow-card); transition: border-color .18s, transform .18s; }
-    .profile-card:hover { border-color: var(--accent); transform: translateY(-2px); }
-    .profile-ic { display: inline-flex; width: 30px; height: 30px; margin-bottom: 0.6rem; color: var(--danger-bright); }
-    .profile-ic svg { width: 100%; height: 100%; }
-    .profile-name { font-size: 1.02rem; font-weight: 700; margin-bottom: 0.25rem; }
-    .profile-desc { font-size: 0.9rem; color: var(--text-muted); line-height: 1.45; }
-    .audience-include { font-size: 0.98rem; color: var(--text); line-height: 1.55; padding: 1rem 1.15rem; border: 1px dashed var(--border-strong); border-radius: var(--radius-md); background: rgba(88,166,255,.04); }
-    .audience-include strong { color: var(--accent-bright); }
-    .audience-note { font-size: 0.85rem; color: var(--text-muted); }
-    .audience-note a { color: var(--accent-bright); text-decoration: underline; text-underline-offset: 2px; }
-
-    /* ===== PROFESSORES ===== */
-    .inst-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.2rem; }
-    .inst-card { display: flex; gap: 1.1rem; align-items: center; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.4rem; box-shadow: var(--shadow-card); }
-    .inst-photo { width: 92px; height: 92px; border-radius: 50%; flex-shrink: 0; object-fit: cover; border: 2px solid var(--border-strong); background: var(--bg-elev); box-shadow: 0 0 0 4px rgba(88,166,255,0.08); }
-    .inst-fallback { width: 92px; height: 92px; border-radius: 50%; flex-shrink: 0; display: grid; place-items: center; font-weight: 800; font-size: 1.6rem; color: var(--accent-bright); background: var(--accent-soft); border: 2px solid var(--border-strong); }
-    .inst-card h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: 0.15rem; }
-    .inst-role { color: var(--accent-bright); font-size: 0.82rem; font-weight: 700; margin-bottom: 0.5rem; }
-    .inst-card p { color: var(--text-muted); font-size: 0.88rem; line-height: 1.45; }
-
-    /* ===== MÉTODO ===== */
-    .method-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
-    .method-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; }
-    .method-card .m-num { font-size: 0.8rem; font-weight: 800; color: var(--accent-bright); margin-bottom: 0.6rem; }
-    .method-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.45rem; }
-    .method-card p { color: var(--text-muted); font-size: 0.92rem; }
 
     /* ===== MÓDULOS (cartas com capa) ===== */
     .modules-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(148px, 1fr)); gap: 0.9rem; margin-bottom: 2rem; }
@@ -236,6 +180,50 @@
       .module-head { grid-template-columns: auto 1fr auto; grid-template-areas: "idx title chev" "count count count"; }
       .module-index { grid-area: idx; } .module-title-acc { grid-area: title; } .chev2 { grid-area: chev; } .module-count { grid-area: count; justify-self: start; }
     }
+
+    /* ===== AUDIÊNCIA ===== */
+    .audience { display: flex; flex-direction: column; gap: 1.4rem; }
+    .audience-banner { padding: 1rem 1.15rem; background: linear-gradient(180deg, rgba(88,166,255,.10), rgba(88,166,255,.04)); border: 1px solid var(--border-strong); border-left: 3px solid var(--accent); border-radius: var(--radius-md); font-size: clamp(1.05rem,2.6vw,1.28rem); font-weight: 600; line-height: 1.35; color: var(--text); display: flex; align-items: center; gap: 0.8rem; }
+    .ecg-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--danger); box-shadow: 0 0 0 4px rgba(248,81,73,.15); flex: none; }
+    .ladder { padding: 1.3rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); }
+    .ladder-track { list-style: none; display: grid; gap: 0.9rem; position: relative; }
+    .ladder-node { display: flex; align-items: center; gap: 0.75rem; font-weight: 600; color: var(--text); font-size: 0.98rem; }
+    .ladder-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--accent); flex: none; box-shadow: 0 0 0 4px rgba(88,166,255,.12); }
+    .ladder-caption { margin-top: 0.9rem; color: var(--text-muted); font-size: 0.9rem; }
+    @media (min-width: 720px) {
+      .ladder-track { grid-auto-flow: column; grid-auto-columns: 1fr; align-items: start; text-align: center; }
+      .ladder-node { flex-direction: column; gap: 0.6rem; }
+      .ladder-track::before { content: ""; position: absolute; top: 6px; left: 12%; right: 12%; height: 2px; background: linear-gradient(90deg, var(--accent), var(--accent-bright)); opacity: .5; }
+    }
+    .audience-kicker { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-faint); font-weight: 800; }
+    .profile-grid { list-style: none; display: grid; grid-template-columns: 1fr; gap: 0.8rem; }
+    @media (min-width: 600px) { .profile-grid { grid-template-columns: 1fr 1fr; } }
+    .profile-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.1rem 1.2rem; box-shadow: var(--shadow-card); transition: border-color .18s, transform .18s; }
+    .profile-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .profile-ic { display: inline-flex; width: 30px; height: 30px; margin-bottom: 0.6rem; color: var(--danger-bright); }
+    .profile-ic svg { width: 100%; height: 100%; }
+    .profile-name { font-size: 1.02rem; font-weight: 700; margin-bottom: 0.25rem; }
+    .profile-desc { font-size: 0.9rem; color: var(--text-muted); line-height: 1.45; }
+    .audience-include { font-size: 0.98rem; color: var(--text); line-height: 1.55; padding: 1rem 1.15rem; border: 1px dashed var(--border-strong); border-radius: var(--radius-md); background: rgba(88,166,255,.04); }
+    .audience-include strong { color: var(--accent-bright); }
+    .audience-note { font-size: 0.85rem; color: var(--text-muted); }
+    .audience-note a { color: var(--accent-bright); text-decoration: underline; text-underline-offset: 2px; }
+
+    /* ===== PROFESSORES ===== */
+    .inst-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.2rem; }
+    .inst-card { display: flex; gap: 1.1rem; align-items: center; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.4rem; box-shadow: var(--shadow-card); }
+    .inst-photo { width: 92px; height: 92px; border-radius: 50%; flex-shrink: 0; object-fit: cover; border: 2px solid var(--border-strong); background: var(--bg-elev); box-shadow: 0 0 0 4px rgba(88,166,255,0.08); }
+    .inst-fallback { width: 92px; height: 92px; border-radius: 50%; flex-shrink: 0; display: grid; place-items: center; font-weight: 800; font-size: 1.6rem; color: var(--accent-bright); background: var(--accent-soft); border: 2px solid var(--border-strong); }
+    .inst-card h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: 0.15rem; }
+    .inst-role { color: var(--accent-bright); font-size: 0.82rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .inst-card p { color: var(--text-muted); font-size: 0.88rem; line-height: 1.45; }
+
+    /* ===== MÉTODO ===== */
+    .method-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
+    .method-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; }
+    .method-card .m-num { font-size: 0.8rem; font-weight: 800; color: var(--accent-bright); margin-bottom: 0.6rem; }
+    .method-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.45rem; }
+    .method-card p { color: var(--text-muted); font-size: 0.92rem; }
 
     /* ===== TEASER FERRAMENTAS ===== */
     .toolkit { background: linear-gradient(180deg, rgba(46,160,67,0.05), transparent 30%), var(--bg-elev); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
@@ -311,9 +299,9 @@
     <div class="topnav-inner">
       <a href="#topo" class="nav-brand"><span class="hemo">HEMO</span><span class="dina">DINÂMICA</span></a>
       <div class="nav-links">
-        <a href="#para-quem">Para quem é</a>
         <a href="#curso">O curso</a>
         <a href="#aulas">Aulas</a>
+        <a href="#para-quem">Para quem é</a>
         <a href="#professores">Professores</a>
         <a href="ferramentas.html">Ferramentas</a>
         <a href="#faq">FAQ</a>
@@ -347,140 +335,8 @@
     </div>
   </header>
 
-  <!-- ===== PONTE ===== -->
-  <section class="sec" id="como-funciona" style="border-top:1px solid var(--border);">
-    <div class="container">
-      <div class="sec-head center reveal">
-        <span class="eyebrow red">O número não decide sozinho</span>
-        <h2 class="sec-title">A calculadora te dá o "quanto". O curso te dá o "e agora".</h2>
-        <p class="sec-lead">O valor aparece na tela em segundos. A conduta certa depende do paciente à sua frente — e é exatamente aí que a formação começa.</p>
-      </div>
-      <div class="bridge-grid">
-        <div class="bridge-card reveal">
-          <div class="bc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l6-6 4 4 6-8"/></svg></div>
-          <h3>O resultado é o começo, não o fim</h3>
-          <p>Um número na tela não conduz o caso. Você precisa saber se ele é alto, baixo ou irrelevante para aquele paciente, naquele momento.</p>
-        </div>
-        <div class="bridge-card reveal">
-          <div class="bc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 7v5l3 3"/></svg></div>
-          <h3>Decorar fórmula não é entender hemodinâmica</h3>
-          <p>Interpretar é. O mesmo ΔPP, a mesma SvO₂, a mesma pressão pedem condutas opostas em contextos diferentes.</p>
-        </div>
-        <div class="bridge-card reveal">
-          <div class="bc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-5 4 12 2-5h6"/></svg></div>
-          <h3>Do estável ao crítico, com método</h3>
-          <p>Do primeiro contato com a monitorização até os monitores avançados: um caminho estruturado para entender qualquer cenário.</p>
-        </div>
-      </div>
-      <p class="bridge-note reveal">E o "e agora" começa do básico — serve tanto para quem está aprendendo quanto para quem já opera na UTI.</p>
-    </div>
-  </section>
-
-  <!-- ===== PARA QUEM É ===== -->
-  <section class="sec" id="para-quem" style="background: var(--bg-elev); border-block: 1px solid var(--border);">
-    <div class="container">
-      <div class="sec-head reveal">
-        <span class="eyebrow">Para quem é</span>
-        <h2 class="sec-title">Hemodinâmica para todo médico — <span class="accent">do muito básico ao avançado</span>.</h2>
-        <p class="sec-lead">O curso começa pela fisiologia e sobe até o cateter de artéria pulmonar. Como parte do zero, serve tanto para quem está começando quanto para quem já monitoriza paciente grave todo dia.</p>
-      </div>
-
-      <div class="audience">
-        <p class="audience-banner reveal">
-          <span class="ecg-dot" aria-hidden="true"></span>
-          Se você precisa interpretar qualquer monitor durante o atendimento aos seus pacientes, este curso é para você.
-        </p>
-
-        <div class="ladder reveal" role="img" aria-label="Progressão do curso: dos fundamentos à interpretação avançada">
-          <ol class="ladder-track">
-            <li class="ladder-node"><span class="ladder-dot"></span>Fundamentos</li>
-            <li class="ladder-node"><span class="ladder-dot"></span>Monitorização à beira-leito</li>
-            <li class="ladder-node"><span class="ladder-dot"></span>Interpretação avançada</li>
-          </ol>
-          <p class="ladder-caption">Todos começam pelo início. Você aprofunda até onde precisar.</p>
-        </div>
-
-        <p class="audience-kicker reveal">Especialmente relevante para</p>
-        <ul class="profile-grid">
-          <li class="profile-card reveal">
-            <span class="profile-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.6-9.5-9C1 9 2.6 5.5 6 5.5c2 0 3.2 1.2 4 2.4.8-1.2 2-2.4 4-2.4 3.4 0 5 3.5 3.5 6.5C19 16.4 12 21 12 21Z"/><path d="M3.5 12.5H8l1.4-3 2.1 5 1.5-3H17"/></svg></span>
-            <h3 class="profile-name">Cardiologia</h3>
-            <p class="profile-desc">Pressão, débito e pré-carga com o rigor que a especialidade cobra.</p>
-          </li>
-          <li class="profile-card reveal">
-            <span class="profile-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v8"/><path d="M12 11c-2 0-5 2-5 6 0 2 1 4 3 4 1 0 2-1 2-2v-3M12 11c2 0 5 2 5 6 0 2-1 4-3 4-1 0-2-1-2-2v-3"/></svg></span>
-            <h3 class="profile-name">Anestesiologia</h3>
-            <p class="profile-desc">Do intraoperatório ao pós: monitor, volemia e drogas vasoativas.</p>
-          </li>
-          <li class="profile-card reveal">
-            <span class="profile-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M6 11h3l1.5-3 2 5 1.5-2H18"/><path d="M9 21h6"/></svg></span>
-            <h3 class="profile-name">Medicina Intensiva</h3>
-            <p class="profile-desc">O paciente crítico do CTI, do PVC ao cateter de artéria pulmonar.</p>
-          </li>
-          <li class="profile-card reveal">
-            <span class="profile-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8Z"/></svg></span>
-            <h3 class="profile-name">Emergência / paciente grave</h3>
-            <p class="profile-desc">Decisão rápida com o que o monitor mostra agora.</p>
-          </li>
-        </ul>
-
-        <p class="audience-include reveal">
-          <strong>E não é exclusivo deles.</strong> Estudante de medicina se beneficia muito — justamente por começar do básico e chegar na frente por ter começado pelo começo. Clínicos, generalistas e residentes de qualquer área que cruzam com o paciente instável também.
-        </p>
-
-        <p class="audience-note reveal">
-          Talvez não seja o melhor momento se você procura só um resumo de véspera de prova, ou um protocolo pronto para aplicar sem passar pelo raciocínio por trás. E se você quer só a conta pronta: as <strong>39 calculadoras são gratuitas</strong> e ficam em <a href="ferramentas.html">/ferramentas</a> — o curso é o "e agora" por trás delas.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== PROFESSORES ===== -->
-  <section class="sec" id="professores">
-    <div class="container">
-      <div class="sec-head center reveal">
-        <span class="eyebrow">Quem ensina</span>
-        <h2 class="sec-title">Ensinado por quem vive a hemodinâmica todos os dias.</h2>
-        <p class="sec-lead">Anestesiologistas TSA/SBA, formados no HC-UFMG, com rotina em transplantes e CTI. Hemodinâmica à beira-leito não é teoria para eles — é o dia a dia.</p>
-      </div>
-      <div class="inst-grid">
-        <div class="inst-card reveal">
-          <img class="inst-photo" src="https://grupomedreview.com.br/wp-content/uploads/2025/11/Property-1Dr.-Davi-Brasil-Khouri-300x300.png" alt="Dr. Davi Brasil Khouri" width="92" height="92" loading="lazy" onerror="this.outerHTML='&lt;div class=&quot;inst-fallback&quot;&gt;DK&lt;/div&gt;'">
-          <div>
-            <h3>Dr. Davi Brasil Khouri</h3>
-            <div class="inst-role">Anestesiologista · TSA/SBA</div>
-            <p>Médico pela UESB e anestesiologista pelo Hospital das Clínicas da UFMG, com Título Superior em Anestesiologia (TSA/SBA). Atua na interseção entre a prática clínica hospitalar e o ensino, com foco em monitorização hemodinâmica perioperatória e fisiologia cardiovascular aplicada — e experiência preparando médicos para as provas de título (TEA/TSA).</p>
-          </div>
-        </div>
-        <div class="inst-card reveal">
-          <img class="inst-photo" src="https://grupomedreview.com.br/wp-content/uploads/2025/12/656bebd4-8204-4147-8c13-7094350cdf86-300x300.png" alt="Dr. Maurício Machado" width="92" height="92" loading="lazy" onerror="this.outerHTML='&lt;div class=&quot;inst-fallback&quot;&gt;MM&lt;/div&gt;'">
-          <div>
-            <h3>Dr. Maurício Machado</h3>
-            <div class="inst-role">Anestesiologista · TSA/SBA</div>
-            <p>Médico pela UFMG. Anestesiologista pelo HC-UFMG. Integra as equipes de transplante hepático, cardíaco e pulmonar do HC-UFMG.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== COMO O CURSO ENSINA ===== -->
-  <section class="sec" id="metodo" style="background: var(--bg-elev); border-block: 1px solid var(--border);">
-    <div class="container">
-      <div class="sec-head center reveal">
-        <span class="eyebrow">Como o curso ensina</span>
-        <h2 class="sec-title">Raciocínio clínico, não decoreba.</h2>
-      </div>
-      <div class="method-grid">
-        <div class="method-card reveal"><div class="m-num">01</div><h3>Do básico ao avançado, em ordem</h3><p>Começa na fisiologia e na pressão, sobe até o cateter de artéria pulmonar. Cada módulo assenta sobre o anterior — sem lacuna, sem pré-requisito além da vontade de entender o monitor.</p></div>
-        <div class="method-card reveal"><div class="m-num">02</div><h3>Casos reais e tomada de decisão</h3><p>Você treina interpretar o cenário e escolher a conduta, não apenas memorizar valores de referência.</p></div>
-        <div class="method-card reveal"><div class="m-num">03</div><h3>Ferramenta integrada ao raciocínio</h3><p>As 39 calculadoras deixam de ser plug-and-play: você entende de onde vem cada número e o que ele muda na condução.</p></div>
-      </div>
-    </div>
-  </section>
-
   <!-- ===== O CURSO (cartas dos módulos) ===== -->
-  <section class="sec" id="curso">
+  <section class="sec" id="curso" style="border-top: 1px solid var(--border);">
     <div class="container">
       <div class="sec-head reveal">
         <span class="eyebrow">O curso Hemodinâmica</span>
@@ -641,6 +497,109 @@
       </div>
 
       <p class="lessons-total">5 módulos · 32 videoaulas hoje — e crescendo. Quem entra agora acompanha a expansão desde o começo.</p>
+    </div>
+  </section>
+
+  <!-- ===== PARA QUEM É ===== -->
+  <section class="sec" id="para-quem">
+    <div class="container">
+      <div class="sec-head reveal">
+        <span class="eyebrow">Para quem é</span>
+        <h2 class="sec-title">Hemodinâmica para todo médico — <span class="accent">do muito básico ao avançado</span>.</h2>
+        <p class="sec-lead">O curso começa pela fisiologia e sobe até o cateter de artéria pulmonar. Como parte do zero, serve tanto para quem está começando quanto para quem já monitoriza paciente grave todo dia.</p>
+      </div>
+
+      <div class="audience">
+        <p class="audience-banner reveal">
+          <span class="ecg-dot" aria-hidden="true"></span>
+          Se você precisa interpretar qualquer monitor durante o atendimento aos seus pacientes, este curso é para você.
+        </p>
+
+        <div class="ladder reveal" role="img" aria-label="Progressão do curso: dos fundamentos à interpretação avançada">
+          <ol class="ladder-track">
+            <li class="ladder-node"><span class="ladder-dot"></span>Fundamentos</li>
+            <li class="ladder-node"><span class="ladder-dot"></span>Monitorização à beira-leito</li>
+            <li class="ladder-node"><span class="ladder-dot"></span>Interpretação avançada</li>
+          </ol>
+          <p class="ladder-caption">Todos começam pelo início. Você aprofunda até onde precisar.</p>
+        </div>
+
+        <p class="audience-kicker reveal">Especialmente relevante para</p>
+        <ul class="profile-grid">
+          <li class="profile-card reveal">
+            <span class="profile-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.6-9.5-9C1 9 2.6 5.5 6 5.5c2 0 3.2 1.2 4 2.4.8-1.2 2-2.4 4-2.4 3.4 0 5 3.5 3.5 6.5C19 16.4 12 21 12 21Z"/><path d="M3.5 12.5H8l1.4-3 2.1 5 1.5-3H17"/></svg></span>
+            <h3 class="profile-name">Cardiologia</h3>
+            <p class="profile-desc">Pressão, débito e pré-carga com o rigor que a especialidade cobra.</p>
+          </li>
+          <li class="profile-card reveal">
+            <span class="profile-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v8"/><path d="M12 11c-2 0-5 2-5 6 0 2 1 4 3 4 1 0 2-1 2-2v-3M12 11c2 0 5 2 5 6 0 2-1 4-3 4-1 0-2-1-2-2v-3"/></svg></span>
+            <h3 class="profile-name">Anestesiologia</h3>
+            <p class="profile-desc">Do intraoperatório ao pós: monitor, volemia e drogas vasoativas.</p>
+          </li>
+          <li class="profile-card reveal">
+            <span class="profile-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M6 11h3l1.5-3 2 5 1.5-2H18"/><path d="M9 21h6"/></svg></span>
+            <h3 class="profile-name">Medicina Intensiva</h3>
+            <p class="profile-desc">O paciente crítico do CTI, do PVC ao cateter de artéria pulmonar.</p>
+          </li>
+          <li class="profile-card reveal">
+            <span class="profile-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8Z"/></svg></span>
+            <h3 class="profile-name">Emergência / paciente grave</h3>
+            <p class="profile-desc">Decisão rápida com o que o monitor mostra agora.</p>
+          </li>
+        </ul>
+
+        <p class="audience-include reveal">
+          <strong>E não é exclusivo deles.</strong> Estudante de medicina se beneficia muito — justamente por começar do básico e chegar na frente por ter começado pelo começo. Clínicos, generalistas e residentes de qualquer área que cruzam com o paciente instável também.
+        </p>
+
+        <p class="audience-note reveal">
+          Talvez não seja o melhor momento se você procura só um resumo de véspera de prova, ou um protocolo pronto para aplicar sem passar pelo raciocínio por trás. E se você quer só a conta pronta: as <strong>39 calculadoras são gratuitas</strong> e ficam em <a href="ferramentas.html">/ferramentas</a> — o curso é o "e agora" por trás delas.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PROFESSORES ===== -->
+  <section class="sec" id="professores" style="background: var(--bg-elev); border-block: 1px solid var(--border);">
+    <div class="container">
+      <div class="sec-head center reveal">
+        <span class="eyebrow">Quem ensina</span>
+        <h2 class="sec-title">Ensinado por quem vive a hemodinâmica todos os dias.</h2>
+        <p class="sec-lead">Anestesiologistas TSA/SBA, formados no HC-UFMG, com rotina em transplantes e CTI. Hemodinâmica à beira-leito não é teoria para eles — é o dia a dia.</p>
+      </div>
+      <div class="inst-grid">
+        <div class="inst-card reveal">
+          <img class="inst-photo" src="https://grupomedreview.com.br/wp-content/uploads/2025/11/Property-1Dr.-Davi-Brasil-Khouri-300x300.png" alt="Dr. Davi Brasil Khouri" width="92" height="92" loading="lazy" onerror="this.outerHTML='&lt;div class=&quot;inst-fallback&quot;&gt;DK&lt;/div&gt;'">
+          <div>
+            <h3>Dr. Davi Brasil Khouri</h3>
+            <div class="inst-role">Anestesiologista · TSA/SBA</div>
+            <p>Médico pela UESB e anestesiologista pelo Hospital das Clínicas da UFMG, com Título Superior em Anestesiologia (TSA/SBA). Atua na interseção entre a prática clínica hospitalar e o ensino, com foco em monitorização hemodinâmica perioperatória e fisiologia cardiovascular aplicada — e experiência preparando médicos para as provas de título (TEA/TSA).</p>
+          </div>
+        </div>
+        <div class="inst-card reveal">
+          <img class="inst-photo" src="https://grupomedreview.com.br/wp-content/uploads/2025/12/656bebd4-8204-4147-8c13-7094350cdf86-300x300.png" alt="Dr. Maurício Machado" width="92" height="92" loading="lazy" onerror="this.outerHTML='&lt;div class=&quot;inst-fallback&quot;&gt;MM&lt;/div&gt;'">
+          <div>
+            <h3>Dr. Maurício Machado</h3>
+            <div class="inst-role">Anestesiologista · TSA/SBA</div>
+            <p>Médico pela UFMG. Anestesiologista pelo HC-UFMG. Integra as equipes de transplante hepático, cardíaco e pulmonar do HC-UFMG.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== COMO O CURSO ENSINA ===== -->
+  <section class="sec" id="metodo">
+    <div class="container">
+      <div class="sec-head center reveal">
+        <span class="eyebrow">Como o curso ensina</span>
+        <h2 class="sec-title">Raciocínio clínico, não decoreba.</h2>
+      </div>
+      <div class="method-grid">
+        <div class="method-card reveal"><div class="m-num">01</div><h3>Do básico ao avançado, em ordem</h3><p>Começa na fisiologia e na pressão, sobe até o cateter de artéria pulmonar. Cada módulo assenta sobre o anterior — sem lacuna, sem pré-requisito além da vontade de entender o monitor.</p></div>
+        <div class="method-card reveal"><div class="m-num">02</div><h3>Casos reais e tomada de decisão</h3><p>Você treina interpretar o cenário e escolher a conduta, não apenas memorizar valores de referência.</p></div>
+        <div class="method-card reveal"><div class="m-num">03</div><h3>Ferramenta integrada ao raciocínio</h3><p>As 39 calculadoras deixam de ser plug-and-play: você entende de onde vem cada número e o que ele muda na condução.</p></div>
+      </div>
     </div>
   </section>
 

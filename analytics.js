@@ -23,6 +23,7 @@
 
   window.dataLayer = window.dataLayer || [];
   function gtag() { dataLayer.push(arguments); }
+  window.gtag = gtag; // expõe para eventos em outras páginas (ex.: quiz)
   gtag('js', new Date());
   gtag('config', MEASUREMENT_ID, {
     anonymize_ip: true,

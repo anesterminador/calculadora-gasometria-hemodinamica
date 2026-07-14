@@ -1,7 +1,7 @@
 {
   "name": "Hemodinâmica – Calculadoras",
   "short_name": "Hemodinâmica",
-  "start_url": "/",
+  "start_url": "/ferramentas.html",
   "scope": "/",
   "display": "standalone",
   "background_color": "#0f1419",

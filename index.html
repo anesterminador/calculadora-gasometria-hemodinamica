@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Hemodinâmica · Calculadoras</title>
-  <meta name="description" content="Calculadoras e escores de Anestesiologia e Hemodinâmica · Anest-Review">
+  <title>Curso Hemodinâmica para Anestesia · Anest-Review</title>
+  <meta name="description" content="Curso Hemodinâmica da Anest-Review: para anestesistas, intensivistas e residentes que querem interpretar o monitor e conduzir o caso — do básico ao cateter de artéria pulmonar. E 39 calculadoras clínicas gratuitas.">
   <link rel="icon" href="icon-192.png" type="image/png">
   <link rel="apple-touch-icon" href="icon-512.png?v=2" sizes="512x512">
   <link rel="apple-touch-icon" href="icon-512.png?v=2" sizes="180x180">
@@ -16,6 +16,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="manifest" href="/manifest.webmanifest">
   <meta name="theme-color" content="#0b1117">
+  <meta property="og:title" content="Curso Hemodinâmica para Anestesia · Anest-Review">
+  <meta property="og:description" content="Do monitor à melhor conduta. Para anestesistas e residentes. + 39 calculadoras clínicas gratuitas.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="icon-512.png">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -24,7 +28,6 @@
       --bg-elev: #121922;
       --bg-card: #161e28;
       --bg-card-hover: #1a232e;
-      --bg-input: #0e151d;
       --border: #233140;
       --border-strong: #2f4054;
       --text: #e6edf3;
@@ -39,28 +42,28 @@
       --warning: #e6a700;
       --warning-bright: #f0b429;
       --danger: #f85149;
+      --danger-bright: #ff6b63;
       --radius-sm: 8px;
       --radius-md: 12px;
       --radius-lg: 16px;
+      --radius-xl: 22px;
       --shadow-card: 0 1px 0 rgba(255,255,255,0.03) inset, 0 1px 3px rgba(0,0,0,0.3);
       --shadow-elev: 0 1px 0 rgba(255,255,255,0.04) inset, 0 8px 24px rgba(0,0,0,0.4);
+      --maxw: 1120px;
     }
 
-    html, body {
-      background: var(--bg);
-    }
+    html, body { background: var(--bg); }
+    html { scroll-behavior: smooth; }
 
     body {
       font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
       min-height: 100vh;
       color: var(--text);
       line-height: 1.5;
-      padding: 1.5rem 1rem 3rem;
       overflow-x: hidden;
       position: relative;
     }
 
-    /* Gradient mesh no fundo — três fontes radiais sobrepostas */
     body::before {
       content: "";
       position: fixed;
@@ -68,1282 +71,797 @@
       pointer-events: none;
       z-index: -1;
       background:
-        radial-gradient(ellipse 60% 40% at 20% 0%, rgba(88, 166, 255, 0.12), transparent 60%),
-        radial-gradient(ellipse 50% 35% at 80% 5%, rgba(120, 90, 220, 0.08), transparent 60%),
-        radial-gradient(ellipse 80% 50% at 50% 100%, rgba(46, 160, 67, 0.04), transparent 60%);
+        radial-gradient(ellipse 70% 45% at 15% -5%, rgba(88, 166, 255, 0.16), transparent 60%),
+        radial-gradient(ellipse 50% 40% at 92% 4%, rgba(248, 81, 73, 0.10), transparent 60%),
+        radial-gradient(ellipse 90% 55% at 50% 108%, rgba(46, 160, 67, 0.05), transparent 60%);
     }
 
-    .wrap {
-      max-width: 560px;
+    a { color: inherit; }
+    img { max-width: 100%; }
+
+    .container {
+      max-width: var(--maxw);
       margin: 0 auto;
+      padding-inline: clamp(16px, 5vw, 40px);
     }
 
-    /* ===== HEADER ===== */
-    header {
-      text-align: center;
-      margin-bottom: 1.5rem;
-      animation: fadeRise 0.5s ease both;
-    }
-
-    .logo-link {
-      display: block;
-      text-decoration: none;
-    }
-
-    .logo {
-      max-width: 600px;
-      width: 100%;
-      height: auto;
-      /* Crop 5% do bottom (espaco em branco da imagem) e puxa o conteudo
-         abaixo pra cima na mesma proporcao, mantendo um respiro de 0.75rem */
-      clip-path: inset(0 0 5% 0);
-      margin-bottom: calc(0.75rem - 5%);
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-      background: transparent;
-      filter: drop-shadow(0 8px 24px rgba(88, 166, 255, 0.1));
-    }
-
-    @media (max-width: 768px) {
-      .logo {
-        min-width: 240px;
-        max-width: min(600px, calc(100vw - 2rem));
-      }
-    }
-
-    .subtitle {
-      color: var(--text-muted);
-      font-size: 0.92rem;
-      font-weight: 500;
-      letter-spacing: 0.01em;
-    }
-
-    /* Chip indicador de PWA / offline */
-    .status-row {
-      display: flex;
-      justify-content: center;
-      gap: 0.5rem;
-      margin-top: 0.75rem;
-      flex-wrap: wrap;
-    }
-
-    .status-chip {
+    /* ===================== BOTÕES ===================== */
+    .btn {
       display: inline-flex;
       align-items: center;
-      gap: 0.4rem;
-      padding: 0.28rem 0.7rem;
+      justify-content: center;
+      gap: 0.5rem;
+      min-height: 48px;
+      padding: 0.8rem 1.4rem;
       border-radius: 999px;
-      background: rgba(46, 160, 67, 0.12);
-      border: 1px solid rgba(46, 160, 67, 0.4);
-      color: #6cd97e;
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-    }
-
-    .status-chip::before {
-      content: "";
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #3fb950;
-      box-shadow: 0 0 8px rgba(63, 185, 80, 0.6);
-    }
-
-    /* ===== BUSCA ===== */
-    .search-wrap {
-      margin-bottom: 1.75rem;
-      position: relative;
-      z-index: 30;
-      animation: fadeRise 0.5s 0.05s ease both;
-    }
-
-    .search-input {
-      width: 100%;
-      padding: 0.95rem 1rem 0.95rem 2.85rem;
-      background: var(--bg-input);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      color: var(--text);
-      font-size: 0.95rem;
       font-family: inherit;
-      transition: border-color 0.18s, box-shadow 0.18s, background 0.18s;
-      -webkit-appearance: none;
-      appearance: none;
-    }
-
-    .search-input::placeholder {
-      color: var(--text-faint);
-    }
-
-    .search-input::-webkit-search-cancel-button {
-      -webkit-appearance: none;
-      appearance: none;
-    }
-
-    .search-input:focus {
-      outline: none;
-      border-color: var(--accent);
-      background: #101822;
-      box-shadow: 0 0 0 3px var(--accent-soft);
-    }
-
-    .search-icon {
-      position: absolute;
-      left: 1rem;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 18px;
-      height: 18px;
-      color: var(--text-faint);
-      pointer-events: none;
-      transition: color 0.18s;
-    }
-
-    .search-input:focus ~ .search-icon {
-      color: var(--accent);
-    }
-
-    .search-kbd {
-      position: absolute;
-      right: 0.7rem;
-      top: 50%;
-      transform: translateY(-50%);
-      padding: 0.15rem 0.5rem;
-      font-size: 0.7rem;
-      font-weight: 600;
-      color: var(--text-faint);
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--border);
-      border-radius: 5px;
-      pointer-events: none;
-      font-family: ui-monospace, 'SF Mono', monospace;
-    }
-
-    .search-input:focus ~ .search-kbd,
-    .search-input:not(:placeholder-shown) ~ .search-kbd {
-      opacity: 0;
-    }
-
-    .search-results {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: calc(100% + 0.4rem);
-      background: var(--bg-elev);
-      border: 1px solid var(--border-strong);
-      border-radius: var(--radius-md);
-      max-height: 340px;
-      overflow-y: auto;
-      z-index: 20;
-      box-shadow: var(--shadow-elev);
-      padding: 0.35rem;
-    }
-
-    .search-results[hidden] { display: none; }
-
-    .search-result {
-      display: flex;
-      align-items: center;
-      gap: 0.7rem;
-      padding: 0.6rem 0.7rem;
-      color: var(--text);
+      font-weight: 700;
+      font-size: 0.98rem;
       text-decoration: none;
-      font-size: 0.92rem;
-      border-radius: var(--radius-sm);
-      transition: background 0.12s;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease, background 0.16s ease, border-color 0.16s ease;
+      white-space: nowrap;
     }
-
-    .search-result:hover,
-    .search-result.active {
+    .btn svg { width: 18px; height: 18px; }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-bright), var(--accent));
+      color: #08111b;
+      box-shadow: 0 6px 20px rgba(88, 166, 255, 0.28);
+    }
+    .btn-primary:hover {
+      filter: brightness(1.06);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(88, 166, 255, 0.42);
+    }
+    .btn-primary:active { transform: translateY(0); }
+    .btn-secondary {
+      background: rgba(88, 166, 255, 0.06);
+      border-color: var(--border-strong);
+      color: var(--text);
+    }
+    .btn-secondary:hover {
+      border-color: var(--accent);
       background: var(--accent-soft);
+      transform: translateY(-2px);
     }
+    .btn-lg { min-height: 54px; padding: 0.95rem 1.8rem; font-size: 1.05rem; }
 
-    .search-result .sr-cat {
-      margin-left: auto;
-      color: var(--text-faint);
-      font-size: 0.75rem;
-      font-weight: 500;
+    @keyframes beat {
+      0%, 100% { transform: scale(1); }
+      12% { transform: scale(1.03); }
+      24% { transform: scale(1); }
+      36% { transform: scale(1.015); }
+      48% { transform: scale(1); }
     }
+    .btn-primary:hover svg.pulse { animation: beat 1s ease-in-out; }
 
-    .search-empty {
-      padding: 1rem;
-      text-align: center;
-      color: var(--text-faint);
-      font-size: 0.9rem;
+    /* ===================== NAV ===================== */
+    .topnav {
+      position: sticky;
+      top: 0;
+      z-index: 60;
+      background: rgba(11, 17, 23, 0.82);
+      backdrop-filter: saturate(160%) blur(12px);
+      -webkit-backdrop-filter: saturate(160%) blur(12px);
+      border-bottom: 1px solid var(--border);
     }
-
-    /* ===== HERO CARD (Avaliação Perioperatória Integrada) ===== */
-    .hero-card {
+    .topnav-inner {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: 0 clamp(14px, 4vw, 32px);
+      height: 58px;
       display: flex;
       align-items: center;
       gap: 1rem;
-      padding: 1.2rem 1.25rem;
-      margin-bottom: 1.25rem;
-      background:
-        linear-gradient(135deg, rgba(46, 160, 67, 0.18) 0%, rgba(46, 160, 67, 0.04) 60%, transparent 100%),
-        linear-gradient(140deg, var(--bg-card) 0%, #121a23 100%);
-      border: 1px solid rgba(46, 160, 67, 0.55);
-      border-radius: var(--radius-lg);
-      color: var(--text);
+    }
+    .nav-brand {
+      font-weight: 800;
+      font-size: 1.12rem;
+      letter-spacing: -0.01em;
       text-decoration: none;
-      position: relative;
-      overflow: hidden;
-      box-shadow:
-        0 1px 0 rgba(255, 255, 255, 0.04) inset,
-        0 12px 28px rgba(0, 0, 0, 0.35),
-        0 0 0 1px rgba(46, 160, 67, 0.15);
-      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s;
-      animation: fadeRise 0.4s ease both;
-    }
-    .hero-card:hover {
-      transform: translateY(-2px);
-      border-color: var(--success-bright);
-      box-shadow:
-        0 1px 0 rgba(255, 255, 255, 0.05) inset,
-        0 18px 36px rgba(0, 0, 0, 0.45),
-        0 0 0 1px rgba(63, 185, 80, 0.35);
-    }
-    .hero-card:active { transform: translateY(0); }
-    .hero-card-icon {
-      width: 52px;
-      height: 52px;
-      flex-shrink: 0;
-      border-radius: 14px;
-      background: rgba(63, 185, 80, 0.18);
-      color: var(--success-bright);
       display: inline-flex;
       align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 18px rgba(63, 185, 80, 0.2);
-    }
-    .hero-card-icon svg { width: 28px; height: 28px; }
-    .hero-card-text { flex: 1; min-width: 0; }
-    .hero-card-eyebrow {
-      font-size: 0.66rem;
-      font-weight: 800;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--success-bright);
-      margin-bottom: 0.2rem;
-    }
-    .hero-card-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      line-height: 1.2;
-      letter-spacing: -0.01em;
-      color: var(--text);
-    }
-    .hero-card-subtitle {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      margin-top: 0.3rem;
-      line-height: 1.45;
-    }
-    .hero-card-chevron {
-      width: 22px;
-      height: 22px;
+      gap: 0.35rem;
       flex-shrink: 0;
-      color: var(--success-bright);
-      transition: transform 0.18s;
     }
-    .hero-card:hover .hero-card-chevron { transform: translateX(3px); }
-
-    /* Variante cardio (Avaliação Pré-anestésica AHA) */
-    .hero-card.cardio {
-      background:
-        linear-gradient(135deg, rgba(248, 81, 73, 0.16) 0%, rgba(248, 81, 73, 0.04) 60%, transparent 100%),
-        linear-gradient(140deg, var(--bg-card) 0%, #121a23 100%);
-      border-color: rgba(248, 81, 73, 0.5);
-      box-shadow:
-        0 1px 0 rgba(255, 255, 255, 0.04) inset,
-        0 12px 28px rgba(0, 0, 0, 0.35),
-        0 0 0 1px rgba(248, 81, 73, 0.12);
-    }
-    .hero-card.cardio:hover {
-      border-color: #ff8a82;
-      box-shadow:
-        0 1px 0 rgba(255, 255, 255, 0.05) inset,
-        0 18px 36px rgba(0, 0, 0, 0.45),
-        0 0 0 1px rgba(248, 81, 73, 0.32);
-    }
-    .hero-card.cardio .hero-card-icon {
-      background: rgba(248, 81, 73, 0.18);
-      color: #ff8a82;
-      box-shadow: 0 0 18px rgba(248, 81, 73, 0.22);
-    }
-    .hero-card.cardio .hero-card-eyebrow { color: #ff8a82; }
-    .hero-card.cardio .hero-card-chevron { color: #ff8a82; }
-
-    /* ===== TITULOS DE SECAO ===== */
-    .section-title {
+    .nav-brand .hemo { color: var(--danger-bright); }
+    .nav-brand .dina { color: var(--accent-bright); }
+    .nav-links {
       display: flex;
+      gap: 1.35rem;
+      margin-left: auto;
       align-items: center;
-      gap: 0.45rem;
-      font-size: 0.72rem;
-      font-weight: 800;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
+    }
+    .nav-links a {
       color: var(--text-muted);
-      margin: 1.25rem 0.25rem 0.5rem;
-    }
-    .section-title .section-icon {
-      width: 14px;
-      height: 14px;
-      color: #f1c40f;
-    }
-    #favoritos-section[hidden] { display: none; }
-
-    /* ===== LISTA DE CATEGORIAS ===== */
-    .card-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      margin-bottom: 2rem;
-    }
-
-    .card-link {
-      display: flex;
-      align-items: center;
-      gap: 0.85rem;
-      padding: 1.05rem 1.25rem;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      color: var(--text);
       text-decoration: none;
+      font-size: 0.9rem;
       font-weight: 600;
-      font-size: 1.02rem;
-      box-shadow: var(--shadow-card);
-      transition: border-color 0.18s, background 0.18s, transform 0.18s, box-shadow 0.18s;
-      position: relative;
-      overflow: hidden;
+      transition: color 0.15s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta { margin-left: auto; }
+    .nav-links + .nav-cta { margin-left: 0; }
+    @media (max-width: 860px) {
+      .nav-links { display: none; }
     }
 
-    .card-link::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, var(--accent-glow) 0%, transparent 60%);
-      opacity: 0;
-      transition: opacity 0.25s;
-      pointer-events: none;
+    /* ===================== SEÇÕES ===================== */
+    section { position: relative; }
+    .sec {
+      padding: clamp(3.5rem, 9vw, 6rem) 0;
+      scroll-margin-top: 70px;
     }
-
-    .card-link:hover {
-      border-color: var(--accent);
-      background: var(--bg-card-hover);
-      transform: translateY(-1px);
-      box-shadow:
-        0 1px 0 rgba(255,255,255,0.04) inset,
-        0 6px 18px rgba(0,0,0,0.4),
-        0 0 0 1px var(--accent-soft);
+    .sec-tight { padding: clamp(2.5rem, 6vw, 4rem) 0; }
+    .eyebrow {
+      display: inline-block;
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent-bright);
+      margin-bottom: 0.85rem;
     }
+    .eyebrow.red { color: var(--danger-bright); }
+    .eyebrow.green { color: var(--success-bright); }
+    h2.sec-title {
+      font-size: clamp(1.7rem, 5vw, 2.6rem);
+      font-weight: 800;
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+      text-wrap: balance;
+      margin-bottom: 0.9rem;
+    }
+    .sec-lead {
+      color: var(--text-muted);
+      font-size: clamp(1rem, 2.4vw, 1.15rem);
+      max-width: 62ch;
+      text-wrap: pretty;
+    }
+    .sec-head { margin-bottom: 2.4rem; }
+    .sec-head.center { text-align: center; }
+    .sec-head.center .sec-lead { margin-inline: auto; }
 
-    .card-link:hover::after {
+    .ecg-divider {
+      display: block;
+      width: 100%;
+      max-width: 640px;
+      height: 34px;
+      margin: 0 auto;
+      color: var(--accent);
       opacity: 0.5;
     }
-
-    .card-link:active {
-      transform: translateY(0);
+    .ecg-divider path {
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      filter: drop-shadow(0 0 5px var(--accent-glow));
     }
 
-    /* Ícone da categoria */
-    .card-icon {
-      width: 28px;
-      height: 28px;
-      flex-shrink: 0;
-      color: var(--accent-bright);
-      stroke-width: 1.7;
-      filter: drop-shadow(0 0 6px rgba(88, 166, 255, 0.2));
-    }
-
-    .card-label {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .card-link .card-subtitle {
+    /* ===================== HERO ===================== */
+    .hero { padding: clamp(2.4rem, 6vw, 4rem) 0 clamp(2.6rem, 6vw, 4rem); text-align: center; }
+    .hero-logo {
+      width: min(430px, 78vw);
+      height: auto;
+      margin: 0 auto 1.6rem;
       display: block;
-      font-size: 0.78rem;
-      font-weight: 400;
+      filter: drop-shadow(0 10px 40px rgba(88, 166, 255, 0.16));
+      animation: fadeRise 0.6s ease both;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 6.4vw, 3.6rem);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -0.025em;
+      text-wrap: balance;
+      max-width: 18ch;
+      margin: 0 auto 1.1rem;
+      animation: fadeRise 0.6s 0.05s ease both;
+    }
+    .hero h1 .accent { color: var(--accent-bright); }
+    .hero-sub {
       color: var(--text-muted);
-      margin-top: 0.2rem;
+      font-size: clamp(1.02rem, 2.6vw, 1.24rem);
+      max-width: 60ch;
+      margin: 0 auto 1.9rem;
+      text-wrap: pretty;
+      animation: fadeRise 0.6s 0.1s ease both;
     }
-
-    /* Chevron à direita */
-    .card-chevron {
-      width: 18px;
-      height: 18px;
-      color: var(--text-faint);
-      flex-shrink: 0;
-      transition: transform 0.18s, color 0.18s;
-    }
-
-    .card-link:hover .card-chevron {
-      color: var(--accent);
-      transform: translateX(2px);
-    }
-
-    /* Detalhes/Dropdown */
-    details.pocus-menu {
-      margin: 0;
-      border-radius: var(--radius-md);
-      animation: fadeRise 0.5s ease both;
-    }
-
-    details.pocus-menu summary {
-      list-style: none;
-      cursor: pointer;
-    }
-    details.pocus-menu summary::-webkit-details-marker { display: none; }
-
-    /* Chevron rotaciona quando o details abre */
-    details.pocus-menu[open] > summary .card-chevron {
-      transform: rotate(90deg);
-      color: var(--accent);
-    }
-
-    .pocus-sub {
-      margin-top: 0.5rem;
-      margin-left: 1rem;
-      padding-left: 0.85rem;
-      border-left: 2px solid var(--accent-soft);
+    .hero-cta-row {
       display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      animation: fadeRise 0.25s ease both;
+      gap: 0.8rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+      animation: fadeRise 0.6s 0.15s ease both;
     }
-
-    .card-link.sub {
-      padding: 0.78rem 1.05rem;
-      font-size: 0.92rem;
-      font-weight: 500;
-    }
-
-    .card-link.sub .card-icon {
-      width: 20px;
-      height: 20px;
-      stroke-width: 1.6;
-    }
-
-    /* Variações de cor (contorno colorido para destaques) */
-    details.pocus-menu > summary.card-link.outline-blue,
-    .card-link.outline-blue {
-      border-color: rgba(88, 166, 255, 0.6);
-    }
-
-    .card-link.highlight-green {
-      border-color: rgba(46, 160, 67, 0.6);
-      background: linear-gradient(135deg, rgba(46, 160, 67, 0.06), transparent);
-    }
-    .card-link.highlight-green .card-icon { color: var(--success-bright); }
-    .card-link.highlight-green:hover {
-      border-color: var(--success-bright);
-      box-shadow:
-        0 1px 0 rgba(255,255,255,0.04) inset,
-        0 6px 18px rgba(0,0,0,0.4),
-        0 0 0 1px rgba(46, 160, 67, 0.3);
-    }
-
-    .card-link.outline-yellow,
-    details.pocus-menu > summary.card-link.outline-yellow {
-      border-color: rgba(230, 167, 0, 0.55);
-    }
-    .card-link.outline-yellow .card-icon { color: var(--warning-bright); }
-    .card-link.outline-yellow:hover,
-    details.pocus-menu > summary.card-link.outline-yellow:hover {
-      border-color: var(--warning-bright);
-      box-shadow:
-        0 1px 0 rgba(255,255,255,0.04) inset,
-        0 6px 18px rgba(0,0,0,0.4),
-        0 0 0 1px rgba(230, 167, 0, 0.3);
-    }
-
-    /* Badge "EXPERIMENTAL" */
-    .badge-exp {
-      display: inline-block;
-      vertical-align: middle;
-      margin-left: 0.45rem;
-      padding: 0.1rem 0.4rem;
-      border-radius: 999px;
-      background: rgba(230, 167, 0, 0.18);
-      border: 1px solid rgba(230, 167, 0, 0.5);
-      color: #fde68a;
-      font-size: 0.6rem;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-    }
-
-    /* Stagger nas categorias */
-    .card-list > * { animation: fadeRise 0.4s ease both; }
-    .card-list > *:nth-child(1) { animation-delay: 0.05s; }
-    .card-list > *:nth-child(2) { animation-delay: 0.08s; }
-    .card-list > *:nth-child(3) { animation-delay: 0.11s; }
-    .card-list > *:nth-child(4) { animation-delay: 0.14s; }
-    .card-list > *:nth-child(5) { animation-delay: 0.17s; }
-    .card-list > *:nth-child(6) { animation-delay: 0.20s; }
-    .card-list > *:nth-child(7) { animation-delay: 0.23s; }
-    .card-list > *:nth-child(8) { animation-delay: 0.26s; }
-    .card-list > *:nth-child(9) { animation-delay: 0.29s; }
-    .card-list > *:nth-child(10) { animation-delay: 0.32s; }
-    .card-list > *:nth-child(11) { animation-delay: 0.35s; }
-    .card-list > *:nth-child(12) { animation-delay: 0.38s; }
-
-    /* ===== INSTALL BANNER ===== */
-    .install-banner {
-      display: none;
-      margin: 0 auto 1.25rem;
-      padding: 0.75rem 1rem;
-      max-width: 560px;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border-strong);
-      background: linear-gradient(135deg, rgba(88, 166, 255, 0.06), rgba(46, 160, 67, 0.03));
-      color: var(--text-muted);
-      font-size: 0.85rem;
-      box-shadow: var(--shadow-card);
-    }
-
-    .install-banner.visible {
+    .hero-chips {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.75rem;
-      animation: fadeRise 0.4s ease both;
+      gap: 0.55rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: fadeRise 0.6s 0.2s ease both;
     }
-
-    .install-text { text-align: left; flex: 1; }
-
-    .install-title {
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 0.1rem;
-      font-size: 0.92rem;
-      display: flex;
+    .chip {
+      display: inline-flex;
       align-items: center;
       gap: 0.4rem;
-    }
-
-    .install-btn {
-      border: none;
+      padding: 0.4rem 0.85rem;
       border-radius: 999px;
-      padding: 0.5rem 1rem;
-      background: linear-gradient(135deg, var(--accent-bright), var(--accent));
-      color: #0b1117;
-      font-weight: 700;
-      font-size: 0.82rem;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: filter 0.15s, transform 0.15s, box-shadow 0.15s;
-      box-shadow: 0 4px 12px rgba(88, 166, 255, 0.25);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      font-weight: 600;
     }
-    .install-btn:hover {
-      filter: brightness(1.08);
-      transform: translateY(-1px);
-      box-shadow: 0 6px 18px rgba(88, 166, 255, 0.35);
-    }
-    .install-btn:active { transform: translateY(0); }
+    .chip strong { color: var(--text); font-weight: 800; }
+    .chip .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent-bright); box-shadow: 0 0 8px var(--accent-glow); }
+    .chip .dot.green { background: var(--success-bright); box-shadow: 0 0 8px rgba(63,185,80,0.6); }
 
-    @media (min-width: 769px) {
-      .install-banner { display: none !important; }
+    /* ===================== TEASER FERRAMENTAS ===================== */
+    .toolkit {
+      background:
+        linear-gradient(180deg, rgba(46,160,67,0.05), transparent 30%),
+        var(--bg-elev);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .toolkit-inner { text-align: center; max-width: 760px; margin: 0 auto; }
+    .free-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0.8rem;
+      border-radius: 999px;
+      background: rgba(46, 160, 67, 0.14);
+      border: 1px solid rgba(46, 160, 67, 0.5);
+      color: var(--success-bright);
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.9rem;
+    }
+    .tool-pills {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+      margin: 1.6rem 0 1.9rem;
+    }
+    .tool-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.5rem 0.95rem;
+      border-radius: 999px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.86rem;
+      font-weight: 600;
+      transition: border-color 0.16s, transform 0.16s;
+    }
+    .tool-pill svg { width: 15px; height: 15px; color: var(--accent-bright); }
+    .tool-pill.danger svg { color: var(--danger-bright); }
+    .tool-pill:hover { border-color: var(--border-strong); transform: translateY(-1px); }
+    .toolkit-status {
+      display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; margin-top: 1.4rem;
+    }
+    .status-chip {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.28rem 0.7rem; border-radius: 999px;
+      background: rgba(46, 160, 67, 0.12); border: 1px solid rgba(46, 160, 67, 0.4);
+      color: #6cd97e; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.02em;
+    }
+    .status-chip::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #3fb950; box-shadow: 0 0 8px rgba(63, 185, 80, 0.6); }
+
+    /* ===================== BRIDGE ===================== */
+    .bridge-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
+    .bridge-card {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg);
+      padding: 1.5rem; box-shadow: var(--shadow-card);
+    }
+    .bridge-card .bc-icon {
+      width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center;
+      background: var(--accent-soft); color: var(--accent-bright); margin-bottom: 1rem;
+    }
+    .bridge-card .bc-icon svg { width: 22px; height: 22px; }
+    .bridge-card h3 { font-size: 1.08rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .bridge-card p { color: var(--text-muted); font-size: 0.95rem; }
+
+    /* ===================== MÓDULOS ===================== */
+    .modules-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+    .module-card {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg);
+      padding: 1.4rem; box-shadow: var(--shadow-card); position: relative; overflow: hidden;
+      transition: border-color 0.18s, transform 0.18s;
+    }
+    .module-card::before {
+      content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+      background: linear-gradient(180deg, var(--accent-bright), var(--accent)); opacity: 0.85;
+    }
+    .module-card:hover { border-color: var(--border-strong); transform: translateY(-2px); }
+    .module-num {
+      font-size: 0.72rem; font-weight: 800; letter-spacing: 0.1em; color: var(--accent-bright);
+      text-transform: uppercase; margin-bottom: 0.5rem;
+    }
+    .module-card h3 { font-size: 1.08rem; font-weight: 700; line-height: 1.25; margin-bottom: 0.9rem; }
+    .module-meta { display: flex; gap: 1rem; color: var(--text-muted); font-size: 0.82rem; font-weight: 600; }
+    .module-meta span { display: inline-flex; align-items: center; gap: 0.35rem; }
+    .module-meta svg { width: 15px; height: 15px; color: var(--text-faint); }
+
+    .includes {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg);
+      padding: clamp(1.4rem, 4vw, 2rem); box-shadow: var(--shadow-card);
+    }
+    .includes h3 { font-size: 1rem; font-weight: 700; margin-bottom: 1.2rem; color: var(--text); }
+    .includes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.85rem 1.4rem; }
+    .include-item { display: flex; gap: 0.7rem; align-items: flex-start; }
+    .include-item .ck { flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; background: rgba(46,160,67,0.14); color: var(--success-bright); display: grid; place-items: center; margin-top: 1px; }
+    .include-item .ck svg { width: 13px; height: 13px; }
+    .include-item .it-t { font-weight: 700; font-size: 0.95rem; }
+    .include-item .it-d { color: var(--text-muted); font-size: 0.85rem; }
+
+    /* ===================== AUDIÊNCIA ===================== */
+    .aud-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+    .aud-col { border-radius: var(--radius-lg); padding: 1.6rem; border: 1px solid var(--border); background: var(--bg-card); }
+    .aud-col.yes { border-color: rgba(88,166,255,0.4); background: linear-gradient(160deg, rgba(88,166,255,0.06), transparent); }
+    .aud-col h3 { display: flex; align-items: center; gap: 0.5rem; font-size: 1.05rem; margin-bottom: 1rem; }
+    .aud-col h3 svg { width: 20px; height: 20px; }
+    .aud-col.yes h3 { color: var(--accent-bright); }
+    .aud-col.no h3 { color: var(--text-muted); }
+    .aud-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+    .aud-col li { display: flex; gap: 0.6rem; font-size: 0.94rem; color: var(--text); }
+    .aud-col li::before { content: "—"; color: var(--text-faint); }
+    .aud-col.no li { color: var(--text-muted); }
+
+    /* ===================== PROFESSORES ===================== */
+    .inst-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.2rem; }
+    .inst-card {
+      display: flex; gap: 1.1rem; align-items: center;
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg);
+      padding: 1.4rem; box-shadow: var(--shadow-card);
+    }
+    .inst-photo {
+      width: 92px; height: 92px; border-radius: 50%; flex-shrink: 0; object-fit: cover;
+      border: 2px solid var(--border-strong); background: var(--bg-elev);
+      box-shadow: 0 0 0 4px rgba(88,166,255,0.08);
+    }
+    .inst-fallback {
+      width: 92px; height: 92px; border-radius: 50%; flex-shrink: 0; display: grid; place-items: center;
+      font-weight: 800; font-size: 1.6rem; color: var(--accent-bright);
+      background: var(--accent-soft); border: 2px solid var(--border-strong);
+    }
+    .inst-card h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: 0.15rem; }
+    .inst-role { color: var(--accent-bright); font-size: 0.82rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .inst-card p { color: var(--text-muted); font-size: 0.88rem; line-height: 1.45; }
+
+    /* ===================== MÉTODO ===================== */
+    .method-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
+    .method-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; }
+    .method-card .m-num { font-size: 0.8rem; font-weight: 800; color: var(--accent-bright); margin-bottom: 0.6rem; }
+    .method-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.45rem; }
+    .method-card p { color: var(--text-muted); font-size: 0.92rem; }
+
+    /* ===================== GARANTIA ===================== */
+    .guarantee {
+      display: flex; gap: 1.3rem; align-items: center; flex-wrap: wrap;
+      background: linear-gradient(135deg, rgba(46,160,67,0.08), rgba(88,166,255,0.04));
+      border: 1px solid rgba(46,160,67,0.4); border-radius: var(--radius-lg);
+      padding: clamp(1.4rem, 4vw, 2rem);
+    }
+    .guarantee .g-seal {
+      width: 66px; height: 66px; border-radius: 50%; flex-shrink: 0; display: grid; place-items: center;
+      background: rgba(46,160,67,0.16); color: var(--success-bright); border: 2px solid rgba(46,160,67,0.5);
+    }
+    .guarantee .g-seal svg { width: 32px; height: 32px; }
+    .guarantee h3 { font-size: 1.15rem; font-weight: 800; margin-bottom: 0.3rem; }
+    .guarantee p { color: var(--text-muted); font-size: 0.95rem; max-width: 60ch; }
+    .guarantee .g-body { flex: 1; min-width: 220px; }
+
+    /* ===================== FAQ ===================== */
+    .faq-list { max-width: 780px; margin: 0 auto; display: flex; flex-direction: column; gap: 0.7rem; }
+    .faq-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; }
+    .faq-item summary {
+      list-style: none; cursor: pointer; padding: 1.15rem 1.3rem; font-weight: 700; font-size: 1rem;
+      display: flex; align-items: center; gap: 0.8rem; transition: color 0.15s;
+    }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-item summary::after {
+      content: ""; margin-left: auto; width: 11px; height: 11px; flex-shrink: 0;
+      border-right: 2px solid var(--text-faint); border-bottom: 2px solid var(--text-faint);
+      transform: rotate(45deg); transition: transform 0.2s;
+    }
+    .faq-item[open] summary::after { transform: rotate(-135deg); }
+    .faq-item[open] summary { color: var(--accent-bright); }
+    .faq-item .faq-a { padding: 0 1.3rem 1.2rem; color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; }
+    .faq-item .faq-a::before { content: ""; display: block; height: 1px; background: var(--border); margin-bottom: 1rem; }
+
+    /* ===================== CTA FINAL ===================== */
+    .final-cta { text-align: center; position: relative; overflow: hidden; }
+    .final-cta::before {
+      content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+      background: radial-gradient(ellipse 60% 60% at 50% 40%, rgba(88,166,255,0.14), transparent 70%);
+    }
+    .final-cta h2 { font-size: clamp(1.8rem, 5.5vw, 3rem); font-weight: 800; letter-spacing: -0.02em; text-wrap: balance; max-width: 20ch; margin: 0 auto 1rem; }
+    .final-cta p { color: var(--text-muted); max-width: 54ch; margin: 0 auto 2rem; font-size: 1.05rem; }
+    .final-cta .micro { margin-top: 1.2rem; font-size: 0.85rem; color: var(--text-faint); }
+
+    /* ===================== FOOTER ===================== */
+    .site-footer { border-top: 1px solid var(--border); padding: 2.6rem 0 2rem; background: var(--bg-elev); }
+    .footer-institutional { text-align: center; color: var(--text-faint); font-size: 0.82rem; line-height: 1.7; margin-top: 1.6rem; }
+    .footer-institutional a { color: var(--text-muted); text-decoration: none; }
+    .footer-institutional a:hover { color: var(--accent-bright); }
+
+    /* ===================== STICKY CTA (mobile) ===================== */
+    .sticky-cta {
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 70;
+      background: rgba(11,17,23,0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-top: 1px solid var(--border-strong);
+      padding: 0.7rem clamp(12px, 4vw, 20px);
+      padding-bottom: calc(0.7rem + env(safe-area-inset-bottom));
+      display: flex; align-items: center; gap: 0.8rem;
+      transform: translateY(120%); transition: transform 0.3s ease;
+    }
+    .sticky-cta.show { transform: translateY(0); }
+    .sticky-cta .sc-text { flex: 1; min-width: 0; }
+    .sticky-cta .sc-title { font-weight: 800; font-size: 0.92rem; }
+    .sticky-cta .sc-sub { color: var(--text-muted); font-size: 0.76rem; }
+    .sticky-cta .btn { flex-shrink: 0; }
+    @media (min-width: 861px) {
+      .sticky-cta { max-width: 520px; left: auto; right: 20px; bottom: 20px; border-radius: var(--radius-lg); border: 1px solid var(--border-strong); box-shadow: var(--shadow-elev); }
+    }
+
+    @keyframes fadeRise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .reveal { opacity: 1; transform: none; transition: none; }
+      .hero-logo, .hero h1, .hero-sub, .hero-cta-row, .hero-chips { animation: none; }
     }
   </style>
   <link rel="stylesheet" href="js/site-footer.css">
 </head>
 <body>
-  <div class="install-banner" id="install-banner">
-    <div class="install-text">
-      <div class="install-title">Salvar como app</div>
-      <div>Adicione à tela inicial e use offline.</div>
+
+  <!-- ===================== NAV ===================== -->
+  <nav class="topnav">
+    <div class="topnav-inner">
+      <a href="#topo" class="nav-brand"><span class="hemo">HEMO</span><span class="dina">DINÂMICA</span></a>
+      <div class="nav-links">
+        <a href="#como-funciona">Como funciona</a>
+        <a href="#curso">O curso</a>
+        <a href="#professores">Professores</a>
+        <a href="ferramentas.html">Ferramentas</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <a href="https://grupomedreview.com.br/medreview/anestreview-hemodinamica/?utm_source=hemodinamica.org&utm_medium=landing&utm_campaign=toolkit_to_course" target="_blank" rel="noopener noreferrer" class="btn btn-primary nav-cta" data-cta="nav">Conhecer o curso</a>
     </div>
-    <button class="install-btn" id="install-button">Instalar</button>
-  </div>
-  <div class="wrap">
-    <header>
-      <a href="https://grupomedreview.com.br/anestreview/hemodinamica/?utm_source=instagram&utm_medium=social&utm_campaign=anestreview_hemodinamica_ongoing&utm_term=linkbio&utm_content" target="_blank" rel="noopener noreferrer" class="logo-link">
-        <img src="Logo Hemodinâmica_regular.png" alt="Hemodinâmica" class="logo">
-      </a>
-      <p class="subtitle">Ferramentas do curso Hemodinâmica · Anest-Review</p>
-    </header>
+  </nav>
 
-    <div class="search-wrap">
-      <input type="search" class="search-input" id="home-search" placeholder="Buscar calculadora ou escore (KDIGO, ASA, gasometria, ΔPP…)" autocomplete="off" aria-label="Buscar calculadora">
-      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <circle cx="11" cy="11" r="7"></circle>
-        <path d="m20 20-3-3"></path>
-      </svg>
-      <span class="search-kbd" aria-hidden="true">/</span>
-      <div class="search-results" id="search-results" hidden role="listbox"></div>
+  <!-- ===================== HERO ===================== -->
+  <header class="hero" id="topo">
+    <div class="container">
+      <img src="Logo Hemodinâmica_regular.png" alt="Hemodinâmica · Anest-Review" class="hero-logo" width="430" height="182">
+      <span class="eyebrow">Formação em Hemodinâmica · Anest-Review</span>
+      <h1>Domine a hemodinâmica do seu paciente — do <span class="accent">monitor</span> à melhor conduta.</h1>
+      <p class="hero-sub">Curso teórico-prático para anestesistas, intensivistas e residentes que querem sair da dúvida na hora de interpretar o monitor, ajustar drogas vasoativas e conduzir o paciente grave. Um passo a passo do básico ao avançado.</p>
+      <div class="hero-cta-row">
+        <a href="https://grupomedreview.com.br/medreview/anestreview-hemodinamica/?utm_source=hemodinamica.org&utm_medium=landing&utm_campaign=toolkit_to_course" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-lg" data-cta="hero">
+          <svg class="pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l2-5 4 12 2-7h6"/></svg>
+          Conhecer o curso
+        </a>
+        <a href="ferramentas.html" class="btn btn-secondary btn-lg">Ferramentas grátis</a>
+      </div>
+      <div class="hero-chips">
+        <span class="chip"><span class="dot"></span><strong>5</strong>&nbsp;módulos</span>
+        <span class="chip"><strong>32</strong>&nbsp;videoaulas</span>
+        <span class="chip"><strong>57</strong>&nbsp;apostilas</span>
+        <span class="chip">Web&nbsp;+&nbsp;App</span>
+        <span class="chip"><span class="dot green"></span>Garantia de 7 dias</span>
+      </div>
     </div>
+  </header>
 
-    <!-- HERO CARD: Avaliação Perioperatória Integrada -->
-    <a href="avaliacao-perioperatoria-integrada.html" class="hero-card">
-      <div class="hero-card-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M12 2 4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6l-8-4Z"/>
-          <path d="m9 12 2 2 4-4"/>
-        </svg>
+  <!-- ===================== BRIDGE ===================== -->
+  <section class="sec" id="como-funciona" style="border-top:1px solid var(--border);">
+    <div class="container">
+      <div class="sec-head center reveal">
+        <span class="eyebrow red">O número não decide sozinho</span>
+        <h2 class="sec-title">A calculadora te dá o "quanto". O curso te dá o "e agora".</h2>
+        <p class="sec-lead">O valor aparece na tela em segundos. A conduta certa depende do paciente à sua frente — e é exatamente aí que a formação começa.</p>
       </div>
-      <div class="hero-card-text">
-        <div class="hero-card-eyebrow">Recomendado</div>
-        <div class="hero-card-title">Avaliação Perioperatória Integrada</div>
-        <div class="hero-card-subtitle">Todos os parâmetros num único quadro — ácido-base, hemodinâmica, evolução e histórico do paciente</div>
+      <div class="bridge-grid">
+        <div class="bridge-card reveal">
+          <div class="bc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l6-6 4 4 6-8"/></svg></div>
+          <h3>O resultado é o começo, não o fim</h3>
+          <p>Um número na tela não conduz o caso. Você precisa saber se ele é alto, baixo ou irrelevante para aquele paciente, naquele momento.</p>
+        </div>
+        <div class="bridge-card reveal">
+          <div class="bc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 7v5l3 3"/></svg></div>
+          <h3>Decorar fórmula não é entender hemodinâmica</h3>
+          <p>Interpretar é. O mesmo ΔPP, a mesma SvO₂, a mesma pressão pedem condutas opostas em contextos diferentes.</p>
+        </div>
+        <div class="bridge-card reveal">
+          <div class="bc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-5 4 12 2-5h6"/></svg></div>
+          <h3>Do estável ao crítico, com método</h3>
+          <p>Do primeiro contato com a monitorização até os monitores avançados: um caminho estruturado para entender qualquer cenário.</p>
+        </div>
       </div>
-      <svg class="hero-card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-    </a>
+    </div>
+  </section>
 
-    <!-- HERO CARD: Avaliação Pré-anestésica interativa (AHA 2024) -->
-    <a href="avaliacao-pre-anestesica-interativa.html" class="hero-card cardio">
-      <div class="hero-card-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-        </svg>
+  <!-- ===================== O CURSO / MÓDULOS ===================== -->
+  <section class="sec" id="curso" style="background: var(--bg-elev); border-block: 1px solid var(--border);">
+    <div class="container">
+      <div class="sec-head reveal">
+        <span class="eyebrow">O curso Hemodinâmica</span>
+        <h2 class="sec-title">Do monitor básico à alta complexidade — em sequência.</h2>
+        <p class="sec-lead">Um passo a passo estruturado de monitorização e manejo hemodinâmico, do paciente estável ao crítico. Videoaulas, apostilas densas e fórum de dúvidas, na Web e no App.</p>
       </div>
-      <div class="hero-card-text">
-        <div class="hero-card-eyebrow">AHA 2024 · Interativo</div>
-        <div class="hero-card-title">Avaliação Pré-anestésica</div>
-        <div class="hero-card-subtitle">Fluxograma stepwise de risco cardiovascular percorrido clique a clique, com classes de recomendação acumuladas no final</div>
+
+      <div class="modules-grid">
+        <article class="module-card reveal">
+          <div class="module-num">Módulo 1</div>
+          <h3>Monitorização Básica: Fisiologia Cardiovascular e Pressão Arterial</h3>
+          <div class="module-meta"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg>8 aulas</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h13l3 3v13H4z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>15 apostilas</span></div>
+        </article>
+        <article class="module-card reveal">
+          <div class="module-num">Módulo 2</div>
+          <h3>Monitorização Básica: PVC e Retorno Venoso</h3>
+          <div class="module-meta"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg>10 aulas</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h13l3 3v13H4z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>22 apostilas</span></div>
+        </article>
+        <article class="module-card reveal">
+          <div class="module-num">Módulo 3</div>
+          <h3>Gasometria Arterial e Venosa</h3>
+          <div class="module-meta"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg>4 aulas</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h13l3 3v13H4z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>10 apostilas</span></div>
+        </article>
+        <article class="module-card reveal">
+          <div class="module-num">Módulo 4</div>
+          <h3>Distúrbios da Hemoglobina e Índices Pletismográficos</h3>
+          <div class="module-meta"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg>3 aulas</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h13l3 3v13H4z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>10 apostilas</span></div>
+        </article>
+        <article class="module-card reveal">
+          <div class="module-num">Módulo 5</div>
+          <h3>Cateter de Artéria Pulmonar</h3>
+          <div class="module-meta"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg>7 aulas</span></div>
+        </article>
+        <article class="module-card reveal" style="display:flex; flex-direction:column; justify-content:center; background:linear-gradient(135deg, rgba(88,166,255,0.08), transparent); border-color: rgba(88,166,255,0.35);">
+          <div class="module-num" style="color:var(--text-muted)">Em expansão</div>
+          <h3 style="margin-bottom:0.4rem;">Novos módulos e atualizações</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem;">Curso novo, em construção ativa. Novas aulas entram para os alunos conforme são lançadas.</p>
+        </article>
       </div>
-      <svg class="hero-card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-    </a>
 
-    <!-- FAVORITOS (preenchido via JS apenas se houver) -->
-    <section id="favoritos-section" hidden>
-      <h2 class="section-title">
-        <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.95 6.02 6.64.97-4.8 4.68 1.13 6.6L12 17.65l-5.92 3.12 1.13-6.6-4.8-4.68 6.64-.97L12 2.5z"/></svg>
-        Seus favoritos
-      </h2>
-      <div class="card-list" id="favoritos-list" style="margin-bottom: 1.25rem;"></div>
-    </section>
-
-    <nav class="card-list">
-      <!-- GASOMETRIA -->
-      <details class="pocus-menu">
-        <summary class="card-link">
-          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M9 3h6v5l4 9a2 2 0 0 1-2 3H7a2 2 0 0 1-2-3l4-9V3Z"/>
-            <path d="M7.5 14h9"/>
-          </svg>
-          <span class="card-label">Gasometria</span>
-          <svg class="card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-        </summary>
-        <div class="pocus-sub">
-          <a href="gasometria-acido-base.html" class="card-link sub">
-            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l3-9 4 18 3-9h4"/></svg>
-            <span class="card-label">Avaliação Ácido-Básica</span>
-          </a>
-          <a href="calculadora.html" class="card-link sub">
-            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 14 3-3 3 3 5-5"/></svg>
-            <span class="card-label">Parâmetros Hemodinâmicos</span>
-          </a>
+      <div class="includes reveal">
+        <h3>O que está incluído</h3>
+        <div class="includes-grid">
+          <div class="include-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><div><div class="it-t">Videoaulas objetivas</div><div class="it-d">32 aulas em 5 módulos, do básico ao avançado.</div></div></div>
+          <div class="include-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><div><div class="it-t">57 apostilas</div><div class="it-d">Material de apoio denso para consulta e revisão.</div></div></div>
+          <div class="include-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><div><div class="it-t">Acesso Web e App</div><div class="it-d">Estude no computador ou no celular, onde estiver.</div></div></div>
+          <div class="include-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><div><div class="it-t">Fórum de dúvidas</div><div class="it-d">Tire dúvidas e acompanhe as discussões da turma.</div></div></div>
+          <div class="include-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><div><div class="it-t">Foco em casos reais</div><div class="it-d">Raciocínio e tomada de decisão à beira do leito.</div></div></div>
+          <div class="include-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><div><div class="it-t">Ferramentas clínicas</div><div class="it-d">As 39 calculadoras deste site, sempre à mão.</div></div></div>
         </div>
-      </details>
+      </div>
+    </div>
+  </section>
 
-      <!-- ALTA DA RPA -->
-      <details class="pocus-menu">
-        <summary class="card-link">
-          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M9 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-3"/>
-            <rect x="9" y="3" width="6" height="4" rx="1"/>
-            <path d="m9 14 2 2 4-4"/>
-          </svg>
-          <span class="card-label">Alta da RPA</span>
-          <svg class="card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-        </summary>
-        <div class="pocus-sub">
-          <a href="alta-rpa-aldrete.html" class="card-link sub">
-            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11h6m-6 4h6M9 7h6M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16l-3-2-2 2-2-2-2 2-2-2-3 2Z"/></svg>
-            <span class="card-label">Aldrete e Kroulik</span>
-          </a>
-          <a href="alta-rpa-padss.html" class="card-link sub">
-            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11h6m-6 4h6M9 7h6M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16l-3-2-2 2-2-2-2 2-2-2-3 2Z"/></svg>
-            <span class="card-label">PADSS (Escore de Chung)<span class="card-subtitle">Postanesthetic Discharge Scoring System</span></span>
-          </a>
+  <!-- ===================== TEASER FERRAMENTAS ===================== -->
+  <section class="sec toolkit" id="toolkit">
+    <div class="container">
+      <div class="toolkit-inner reveal">
+        <span class="free-badge">● SEMPRE GRÁTIS</span>
+        <h2 class="sec-title">39 calculadoras clínicas. Grátis. Com rigor de beira de leito.</h2>
+        <p class="sec-lead" style="margin-inline:auto;">As mesmas ferramentas que você abre no plantão — gasometria, ΔPP, débito e resistências, escores de risco, POCUS e condutas de emergência. Sem cadastro, sem paywall e funcionam offline.</p>
+        <div class="tool-pills">
+          <span class="tool-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-9 4 18 3-9h4"/></svg>Gasometria</span>
+          <span class="tool-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h3l2-4 4 8 2-4h7"/></svg>ΔPP &amp; fluidos</span>
+          <span class="tool-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12c2 0 2-3 4-3s2 6 4 6 2-9 4-9 2 6 4 6 2-3 2-3"/></svg>POCUS</span>
+          <span class="tool-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6l-8-4Z"/></svg>Risco pré-op</span>
+          <span class="tool-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v8M12 11c-2 0-5 2-5 6M12 11c2 0 5 2 5 6"/></svg>Via aérea</span>
+          <span class="tool-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4h8l-1 16H9L8 4Z"/></svg>Ventilação</span>
+          <span class="tool-pill danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8Z"/></svg>Emergências</span>
+          <span class="tool-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3c-3 0-5 3-5 7 0 5 3 11 5 11 2 0 3-3 3-6 0-2 1-4 2-4 2 0 3 3 3 6 0 3 1 4 2 4 2 0 5-6 5-11 0-4-2-7-5-7"/></svg>Função renal</span>
         </div>
-      </details>
-
-      <!-- DILUIÇÕES -->
-      <details class="pocus-menu">
-        <summary class="card-link outline-blue">
-          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M12 2.7c3.5 5 6 8.3 6 11.3a6 6 0 0 1-12 0c0-3 2.5-6.3 6-11.3Z"/>
-          </svg>
-          <span class="card-label">Diluições</span>
-          <svg class="card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-        </summary>
-        <div class="pocus-sub">
-          <a href="calculadora-diluicoes.html" class="card-link sub">
-            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.7c3.5 5 6 8.3 6 11.3a6 6 0 0 1-12 0c0-3 2.5-6.3 6-11.3Z"/></svg>
-            <span class="card-label">Calculadora de Infusão</span>
-          </a>
-          <a href="salina-hiper-hipotonica.html" class="card-link sub">
-            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.7c3.5 5 6 8.3 6 11.3a6 6 0 0 1-12 0c0-3 2.5-6.3 6-11.3Z"/><path d="M8 14h8"/></svg>
-            <span class="card-label">Salina Hipertônica</span>
-          </a>
+        <a href="ferramentas.html" class="btn btn-primary btn-lg" data-cta="toolkit">Abrir as ferramentas →</a>
+        <div class="toolkit-status">
+          <span class="status-chip">Funciona offline</span>
+          <span class="status-chip">Instalável como app</span>
         </div>
-      </details>
+      </div>
+    </div>
+  </section>
 
-      <!-- POCUS -->
-      <details class="pocus-menu">
-        <summary class="card-link">
-          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M3 12c2 0 2-3 4-3s2 6 4 6 2-9 4-9 2 6 4 6 2-3 2-3"/>
-          </svg>
-          <span class="card-label">POCUS</span>
-          <svg class="card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-        </summary>
-        <div class="pocus-sub">
-          <a href="pocus-diafragma.html" class="card-link sub">
-            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 14c3-6 7-6 9 0M12 14c2-6 6-6 9 0"/></svg>
-            <span class="card-label">Diafragma</span>
-          </a>
-          <a href="pocus-veia-cava-inferior.html" class="card-link sub">
-            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v20"/><path d="M8 6c2 0 2 3 4 3s2-3 4-3M8 18c2 0 2-3 4-3s2 3 4 3"/></svg>
-            <span class="card-label">Veia Cava Inferior</span>
-          </a>
-          <a href="pocus-gastrico.html" class="card-link sub">
-            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4c-3 1-5 4-5 8 0 5 4 8 8 8 3 0 6-2 7-5 1-3-1-5-3-5-2 0-3 2-3 3"/></svg>
-            <span class="card-label">Volume Gástrico</span>
-          </a>
-          <a href="pocus-vesical.html" class="card-link sub">
-            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 10c0-3 3-6 7-6s7 3 7 6c0 5-3 10-7 10s-7-5-7-10Z"/></svg>
-            <span class="card-label">Volume Vesical</span>
-          </a>
+  <!-- ===================== AUDIÊNCIA ===================== -->
+  <section class="sec" id="para-quem">
+    <div class="container">
+      <div class="sec-head center reveal">
+        <span class="eyebrow">Para quem é</span>
+        <h2 class="sec-title">Feito para quem lida com o paciente — não para quem só precisa de uma conta.</h2>
+      </div>
+      <div class="aud-grid">
+        <div class="aud-col yes reveal">
+          <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>É para você se…</h3>
+          <ul>
+            <li>É anestesiologista e quer aprofundar o domínio prático de monitorização e manejo hemodinâmico.</li>
+            <li>Está recém-formado e quer conduzir pacientes críticos com segurança e método.</li>
+            <li>Atua em CTI e quer avançar no uso de monitores e drogas vasoativas.</li>
+            <li>É residente ou está em especialização (anestesia, terapia intensiva, clínica) consolidando a base.</li>
+            <li>Já usa as calculadoras e quer parar de decorar valores para começar a raciocinar.</li>
+          </ul>
         </div>
-      </details>
-
-      <!-- CHECKLISTS -->
-      <details class="pocus-menu">
-        <summary class="card-link outline-yellow">
-          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M12 9v4"/><path d="M12 17h.01"/>
-            <path d="M10.3 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/>
-          </svg>
-          <span class="card-label">Checklists de Conduta</span>
-          <svg class="card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-        </summary>
-        <div class="pocus-sub">
-          <a href="anafilaxia.html" class="card-link sub">
-            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8Z"/></svg>
-            <span class="card-label">Anafilaxia</span>
-          </a>
-          <a href="intoxicacao-anestesico-local.html" class="card-link sub">
-            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m13 2-2 5h4l-2 5"/><path d="M11 13c-2 0-4 1-4 4 0 3 3 5 5 5s5-2 5-5c0-3-2-4-4-4"/></svg>
-            <span class="card-label">Intoxicação por Anestésico Local</span>
-          </a>
+        <div class="aud-col no reveal">
+          <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg>Talvez não seja se…</h3>
+          <ul>
+            <li>Você só precisa de uma conta rápida no plantão. Nesse caso, use as <a href="ferramentas.html" style="color:var(--accent-bright);text-decoration:none;font-weight:600;">ferramentas gratuitas</a> à vontade — elas continuam abertas, com ou sem curso.</li>
+            <li>Procura um curso genérico de "decoreba" de fórmulas, sem raciocínio clínico por trás.</li>
+          </ul>
         </div>
-      </details>
+      </div>
+    </div>
+  </section>
 
-      <!-- FLUIDOS / CHOQUE -->
-      <details class="pocus-menu">
-        <summary class="card-link">
-          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M3 12h3l2-4 4 8 2-4h7"/>
-          </svg>
-          <span class="card-label">Fluidos, Choque e Hemorragia</span>
-          <svg class="card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-        </summary>
-        <div class="pocus-sub">
-          <a href="choque-acoplamento-chen.html" class="card-link sub">
-            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h3l2-4 4 8 2-4h7"/></svg>
-            <span class="card-label">Acoplamento<span class="card-subtitle">Método de Chen (Single Beat)</span></span>
-          </a>
-          <a href="fluidos-abc-score.html" class="card-link sub">
-            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z"/></svg>
-            <span class="card-label">Escore ABC</span>
-          </a>
-          <a href="choque-maximal-allowable-blood-loss.html" class="card-link sub">
-            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.7c3.5 5 6 8.3 6 11.3a6 6 0 0 1-12 0c0-3 2.5-6.3 6-11.3Z"/></svg>
-            <span class="card-label">Maximal Allowable Blood Loss<span class="card-subtitle">Perda sanguínea máxima permitida</span></span>
-          </a>
-          <a href="fluidos-holliday-segar.html" class="card-link sub">
-            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h18"/><circle cx="6" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="18" cy="12" r="2"/></svg>
-            <span class="card-label">Regra "4-2-1" de Holliday-Segar</span>
-          </a>
-          <a href="choque-delta-pp.html" class="card-link sub">
-            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h3l2-4 4 8 2-4h7"/></svg>
-            <span class="card-label">Variação da Pressão de Pulso<span class="card-subtitle">ΔPP (Delta PP)</span></span>
-          </a>
-          <a href="delta-pp-foto.html" class="card-link sub">
-            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="4"/><path d="M9 6V4h6v2"/></svg>
-            <span class="card-label">ΔPP por Foto<span class="badge-exp">EXPERIMENTAL</span><span class="card-subtitle">Detecção automática a partir do monitor</span></span>
-          </a>
+  <!-- ===================== PROFESSORES ===================== -->
+  <section class="sec" id="professores" style="background: var(--bg-elev); border-block: 1px solid var(--border);">
+    <div class="container">
+      <div class="sec-head center reveal">
+        <span class="eyebrow">Quem ensina</span>
+        <h2 class="sec-title">Anestesiologistas que ensinam o que aplicam todos os dias.</h2>
+        <p class="sec-lead">TSA/SBA, com atuação em transplantes e CTI. Você aprende com quem está na sala e na beira do leito.</p>
+      </div>
+      <div class="inst-grid">
+        <div class="inst-card reveal">
+          <img class="inst-photo" src="https://grupomedreview.com.br/wp-content/uploads/2025/11/Property-1Dr.-Davi-Brasil-Khouri-300x300.png" alt="Dr. Davi Brasil Khouri" width="92" height="92" loading="lazy" onerror="this.outerHTML='&lt;div class=&quot;inst-fallback&quot;&gt;DK&lt;/div&gt;'">
+          <div>
+            <h3>Dr. Davi Brasil Khouri</h3>
+            <div class="inst-role">Anestesiologista · TSA/SBA</div>
+            <p>Médico pela UESB. Residência em Anestesiologia pelo Hospital das Clínicas da UFMG. Título Superior em Anestesiologia (SBA).</p>
+          </div>
         </div>
-      </details>
-
-      <!-- FUNÇÃO RENAL -->
-      <details class="pocus-menu">
-        <summary class="card-link">
-          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M8 3c-3 0-5 3-5 7 0 5 3 11 5 11 2 0 3-3 3-6 0-2 1-4 2-4 2 0 3 3 3 6 0 3 1 4 2 4 2 0 5-6 5-11 0-4-2-7-5-7-2 0-3 2-3 3 0 1-1 2-2 2s-2-1-2-2c0-1-1-3-3-3Z"/>
-          </svg>
-          <span class="card-label">Função Renal</span>
-          <svg class="card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-        </summary>
-        <div class="pocus-sub">
-          <a href="funcao-renal-aguda.html" class="card-link sub">
-            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3c-3 0-5 3-5 7 0 5 3 11 5 11 2 0 3-3 3-6 0-2 1-4 2-4 2 0 3 3 3 6 0 3 1 4 2 4 2 0 5-6 5-11 0-4-2-7-5-7-2 0-3 2-3 3 0 1-1 2-2 2s-2-1-2-2c0-1-1-3-3-3Z"/></svg>
-            <span class="card-label">Doença Renal Aguda</span>
-          </a>
-          <a href="funcao-renal.html" class="card-link sub">
-            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3c-3 0-5 3-5 7 0 5 3 11 5 11 2 0 3-3 3-6 0-2 1-4 2-4 2 0 3 3 3 6 0 3 1 4 2 4 2 0 5-6 5-11 0-4-2-7-5-7-2 0-3 2-3 3 0 1-1 2-2 2s-2-1-2-2c0-1-1-3-3-3Z"/></svg>
-            <span class="card-label">Doença Renal Crônica</span>
-          </a>
+        <div class="inst-card reveal">
+          <img class="inst-photo" src="https://grupomedreview.com.br/wp-content/uploads/2025/12/656bebd4-8204-4147-8c13-7094350cdf86-300x300.png" alt="Dr. Maurício Machado" width="92" height="92" loading="lazy" onerror="this.outerHTML='&lt;div class=&quot;inst-fallback&quot;&gt;MM&lt;/div&gt;'">
+          <div>
+            <h3>Dr. Maurício Machado</h3>
+            <div class="inst-role">Anestesiologista · TSA/SBA</div>
+            <p>Médico pela UFMG. Anestesiologista pelo HC-UFMG. Integra as equipes de transplante hepático, cardíaco e pulmonar do HC-UFMG.</p>
+          </div>
         </div>
-      </details>
+      </div>
+    </div>
+  </section>
 
-      <!-- OBESIDADE -->
-      <a href="obesidade.html" class="card-link outline-blue">
-        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M6 4h12l2 7H4l2-7Z"/>
-          <path d="M4 11h16v2c0 1-1 2-2 2H6c-1 0-2-1-2-2v-2Z"/>
-          <path d="M9 15v5M15 15v5"/>
-        </svg>
-        <span class="card-label">Obesidade</span>
-        <svg class="card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-      </a>
+  <!-- ===================== MÉTODO ===================== -->
+  <section class="sec" id="metodo">
+    <div class="container">
+      <div class="sec-head center reveal">
+        <span class="eyebrow">Como o curso ensina</span>
+        <h2 class="sec-title">Raciocínio clínico, não decoreba.</h2>
+      </div>
+      <div class="method-grid">
+        <div class="method-card reveal"><div class="m-num">01</div><h3>Do básico ao avançado, em ordem</h3><p>Começa na fisiologia e na pressão, sobe até cateter de artéria pulmonar. Cada módulo assenta sobre o anterior — sem lacuna.</p></div>
+        <div class="method-card reveal"><div class="m-num">02</div><h3>Casos reais e tomada de decisão</h3><p>Você treina interpretar o cenário e escolher a conduta, não apenas memorizar valores de referência.</p></div>
+        <div class="method-card reveal"><div class="m-num">03</div><h3>Ferramenta integrada ao raciocínio</h3><p>As 39 calculadoras deixam de ser plug-and-play: você entende de onde vem cada número e o que ele muda na condução.</p></div>
+      </div>
+    </div>
+  </section>
 
-      <!-- RISCO PRÉ-OP -->
-      <details class="pocus-menu">
-        <summary class="card-link">
-          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M12 2 4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6l-8-4Z"/>
-          </svg>
-          <span class="card-label">Risco Pré-operatório</span>
-          <svg class="card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-        </summary>
-        <div class="pocus-sub">
-          <a href="apfel.html" class="card-link sub">
-            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6l-8-4Z"/></svg>
-            <span class="card-label">Apfel (internado)</span>
-          </a>
-          <a href="apfel-alta.html" class="card-link sub">
-            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6l-8-4Z"/></svg>
-            <span class="card-label">Apfel (Náuseas após a alta)</span>
-          </a>
-          <a href="risco-ariscat.html" class="card-link sub">
-            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6l-8-4Z"/></svg>
-            <span class="card-label">ARISCAT<span class="card-subtitle">Complicações respiratórias</span></span>
-          </a>
-          <a href="risco-asa.html" class="card-link sub">
-            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6l-8-4Z"/></svg>
-            <span class="card-label">ASA</span>
-          </a>
-          <a href="risco-aub-has2.html" class="card-link sub">
-            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6l-8-4Z"/></svg>
-            <span class="card-label">AUB-HAS2<span class="card-subtitle">Cardiovascular Risk Index</span></span>
-          </a>
-          <a href="risco-caprini.html" class="card-link sub">
-            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6l-8-4Z"/></svg>
-            <span class="card-label">Caprini<span class="card-subtitle">Tromboembolismo venoso</span></span>
-          </a>
-          <a href="risco-dasi.html" class="card-link sub">
-            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6l-8-4Z"/></svg>
-            <span class="card-label">DASI<span class="card-subtitle">Duke Activity Status Index</span></span>
-          </a>
-          <a href="risco-fragilidade.html" class="card-link sub">
-            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6l-8-4Z"/></svg>
-            <span class="card-label">Fragilidade<span class="card-subtitle">Fenótipo de Fried</span></span>
-          </a>
-          <a href="risco-rcri.html" class="card-link sub">
-            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6l-8-4Z"/></svg>
-            <span class="card-label">Revised Cardiac Risk Index<span class="card-subtitle">RCRI / Índice de Lee</span></span>
-          </a>
+  <!-- ===================== GARANTIA ===================== -->
+  <section class="sec-tight" id="garantia">
+    <div class="container">
+      <div class="guarantee reveal">
+        <div class="g-seal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6l-8-4Z"/><path d="m9 12 2 2 4-4"/></svg></div>
+        <div class="g-body">
+          <h3>Garantia de 7 dias</h3>
+          <p>Entrou, não era para você? Você tem 7 dias para pedir reembolso de 100% do valor, sem complicação. O risco é nosso.</p>
         </div>
-      </details>
+      </div>
+    </div>
+  </section>
 
-      <!-- VIA AÉREA -->
-      <details class="pocus-menu">
-        <summary class="card-link">
-          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M12 3v8"/>
-            <path d="M12 11c-2 0-5 2-5 6 0 2 1 4 3 4 1 0 2-1 2-2v-3M12 11c2 0 5 2 5 6 0 2-1 4-3 4-1 0-2-1-2-2v-3"/>
-          </svg>
-          <span class="card-label">Via Aérea</span>
-          <svg class="card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-        </summary>
-        <div class="pocus-sub">
-          <a href="via-aerea-diffmask.html" class="card-link sub">
-            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v8"/><path d="M12 11c-2 0-5 2-5 6 0 2 1 4 3 4 1 0 2-1 2-2v-3M12 11c2 0 5 2 5 6 0 2-1 4-3 4-1 0-2-1-2-2v-3"/></svg>
-            <span class="card-label">DIFFMASK<span class="card-subtitle">Ventilação sob máscara difícil</span></span>
-          </a>
-          <a href="via-aerea-el-ganzouri.html" class="card-link sub">
-            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v8"/><path d="M12 11c-2 0-5 2-5 6 0 2 1 4 3 4 1 0 2-1 2-2v-3M12 11c2 0 5 2 5 6 0 2-1 4-3 4-1 0-2-1-2-2v-3"/></svg>
-            <span class="card-label">El-Ganzouri<span class="card-subtitle">Intubação difícil</span></span>
-          </a>
-          <a href="via-aerea-lemon.html" class="card-link sub">
-            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v8"/><path d="M12 11c-2 0-5 2-5 6 0 2 1 4 3 4 1 0 2-1 2-2v-3M12 11c2 0 5 2 5 6 0 2-1 4-3 4-1 0-2-1-2-2v-3"/></svg>
-            <span class="card-label">LEMON<span class="card-subtitle">Intubação difícil</span></span>
-          </a>
-          <a href="via-aerea-morbido.html" class="card-link sub">
-            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v8"/><path d="M12 11c-2 0-5 2-5 6 0 2 1 4 3 4 1 0 2-1 2-2v-3M12 11c2 0 5 2 5 6 0 2-1 4-3 4-1 0-2-1-2-2v-3"/></svg>
-            <span class="card-label">Mórbido<span class="card-subtitle">Mnemônico de ventilação difícil</span></span>
-          </a>
-        </div>
-      </details>
+  <!-- ===================== FAQ ===================== -->
+  <section class="sec" id="faq" style="background: var(--bg-elev); border-block: 1px solid var(--border);">
+    <div class="container">
+      <div class="sec-head center reveal">
+        <span class="eyebrow">Perguntas frequentes</span>
+        <h2 class="sec-title">Tirando as dúvidas</h2>
+      </div>
+      <div class="faq-list">
+        <details class="faq-item"><summary>Para quem é o curso?</summary><div class="faq-a">Para anestesiologistas, intensivistas e residentes que querem sair da dúvida na hora de interpretar monitores, ajustar drogas vasoativas e conduzir pacientes graves — do estável ao crítico.</div></details>
+        <details class="faq-item"><summary>Qual é o formato e por quanto tempo tenho acesso?</summary><div class="faq-a">Curso 100% online, com videoaulas e apostilas, acessível pela Web e pelo App. O curso é novo e recebe novos módulos e atualizações ao longo do tempo. <em>(Confirme o prazo de acesso vigente no checkout.)</em></div></details>
+        <details class="faq-item"><summary>Como funciona o pagamento e há garantia?</summary><div class="faq-a">O valor e as formas de pagamento aparecem na página de inscrição. Há garantia de 7 dias: se não for para você, devolvemos 100% do valor.</div></details>
+        <details class="faq-item"><summary>Quem são os professores?</summary><div class="faq-a">Dr. Davi Brasil Khouri e Dr. Maurício Machado, anestesiologistas TSA/SBA formados pelo HC-UFMG, com atuação em transplantes e CTI.</div></details>
+        <details class="faq-item"><summary>As calculadoras são gratuitas mesmo?</summary><div class="faq-a">Sim. As 39 ferramentas são e seguem livres, sem cadastro e com uso offline. O curso é um caminho opcional para quem quer dominar a interpretação — não um paywall das calculadoras.</div></details>
+        <details class="faq-item"><summary>Preciso do curso para usar as ferramentas?</summary><div class="faq-a">Não. Nunca precisou e não vai precisar. Elas ficam em <a href="ferramentas.html" style="color:var(--accent-bright);text-decoration:none;">hemodinamica.org/ferramentas</a> e podem ser instaladas como app no celular.</div></details>
+      </div>
+    </div>
+  </section>
 
-      <!-- VENTILAÇÃO MECÂNICA -->
-      <details class="pocus-menu">
-        <summary class="card-link">
-          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M3 8h2l1 4-1 4H3z"/>
-            <path d="M21 8h-2l-1 4 1 4h2z"/>
-            <path d="M8 4h8l-1 16H9L8 4Z"/>
-          </svg>
-          <span class="card-label">Ventilação Mecânica</span>
-          <svg class="card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-        </summary>
-        <div class="pocus-sub">
-          <a href="ventilacao-mp-pcv.html" class="card-link sub">
-            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4v-6h6v12h4v-6h4"/></svg>
-            <span class="card-label">Mechanical Power (PCV)</span>
-          </a>
-          <a href="ventilacao-mp-vcv.html" class="card-link sub">
-            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18l4-12 4 12 4-12 4 12 4-12"/></svg>
-            <span class="card-label">Mechanical Power (VCV)</span>
-          </a>
-          <a href="ventilacao-peso-predito.html" class="card-link sub">
-            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M6 7l6-4 6 4M8 21h8"/></svg>
-            <span class="card-label">Peso Predito pela Altura</span>
-          </a>
-        </div>
-      </details>
-    </nav>
+  <!-- ===================== CTA FINAL ===================== -->
+  <section class="sec final-cta">
+    <div class="container">
+      <div class="reveal">
+        <span class="eyebrow">Anest-Review · Hemodinâmica</span>
+        <h2>Do monitor à melhor conduta. Comece agora.</h2>
+        <p>Aprenda a interpretar a hemodinâmica do seu paciente e a decidir com segurança — do estável ao crítico.</p>
+        <a href="https://grupomedreview.com.br/medreview/anestreview-hemodinamica/?utm_source=hemodinamica.org&utm_medium=landing&utm_campaign=toolkit_to_course" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-lg" data-cta="final">
+          <svg class="pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l2-5 4 12 2-7h6"/></svg>
+          Conhecer o curso
+        </a>
+        <p class="micro">Garantia de 7 dias · Só precisa calcular? As <a href="ferramentas.html" style="color:var(--text-muted);">ferramentas continuam aqui, grátis</a>.</p>
+      </div>
+    </div>
+  </section>
 
-    <footer class="footer-buttons"></footer>
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="site-footer">
+    <div class="container">
+      <footer class="footer-buttons"></footer>
+      <div class="footer-institutional">
+        Hemodinâmica · Anest-Review — parte do Grupo MED Review.<br>
+        Calculadoras de apoio à decisão clínica; não substituem julgamento médico. ·
+        <a href="https://www.instagram.com/hemodinamicareview/" target="_blank" rel="noopener noreferrer">@hemodinamicareview</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===================== STICKY CTA ===================== -->
+  <div class="sticky-cta" id="sticky-cta">
+    <div class="sc-text">
+      <div class="sc-title">Curso Hemodinâmica</div>
+      <div class="sc-sub">Do monitor à conduta · garantia de 7 dias</div>
+    </div>
+    <a href="https://grupomedreview.com.br/medreview/anestreview-hemodinamica/?utm_source=hemodinamica.org&utm_medium=landing&utm_campaign=toolkit_to_course" target="_blank" rel="noopener noreferrer" class="btn btn-primary" data-cta="sticky">Inscreva-se</a>
   </div>
 
   <script>
     /* ============================================
-       ÍNDICE DE CALCULADORAS — alimenta a busca.
-       Cada item tem o texto exibido, a categoria,
-       e termos alternativos (sigla, sinônimos, etc).
-       ============================================ */
-    var CALCULATORS = [
-      // Gasometria
-      { name: 'Avaliação Ácido-Básica', cat: 'Gasometria', kw: 'gasometria ph acidose alcalose henderson hco3 paco2 bicarbonato anion gap delta', url: 'gasometria-acido-base.html' },
-      { name: 'Parâmetros Hemodinâmicos', cat: 'Gasometria', kw: 'do2 vo2 cao2 cvo2 hemodinamicos calculadora gases extracao oxigenio gap co2', url: 'calculadora.html' },
-
-      // Alta da RPA
-      { name: 'Aldrete e Kroulik', cat: 'Alta da RPA', kw: 'aldrete kroulik rpa recuperacao anestesica alta atividade respiracao circulacao consciencia saturacao', url: 'alta-rpa-aldrete.html' },
-      { name: 'PADSS (Chung)', cat: 'Alta da RPA', kw: 'padss chung alta ambulatorial discharge scoring system sinais vitais nausea sangramento', url: 'alta-rpa-padss.html' },
-
-      // Avaliação integrada
-      { name: 'Avaliação Perioperatória Integrada', cat: 'Avaliação', kw: 'avaliacao perioperatoria integrada checklist pre operatorio', url: 'avaliacao-perioperatoria-integrada.html' },
-      { name: 'Avaliação Pré-anestésica (AHA 2024)', cat: 'Avaliação', kw: 'avaliacao pre anestesica aha 2024 fluxograma stepwise risco cardiovascular cardio rcri perioperatorio interativo', url: 'avaliacao-pre-anestesica-interativa.html' },
-
-      // Diluições
-      { name: 'Calculadora de Infusão', cat: 'Diluições', kw: 'diluicoes infusao concentracao taxa drogas vasoativas bomba seringa', url: 'calculadora-diluicoes.html' },
-      { name: 'Salina Hipertônica', cat: 'Diluições', kw: 'salina hipertonica nacl 3 7.5 20 sodio hiponatremia', url: 'salina-hiper-hipotonica.html' },
-
-      // POCUS
-      { name: 'Diafragma', cat: 'POCUS', kw: 'pocus diafragma ecografia ultrassom respiracao espessura excursao', url: 'pocus-diafragma.html' },
-      { name: 'Veia Cava Inferior', cat: 'POCUS', kw: 'pocus vci veia cava inferior estimativa pvc colapso volemia', url: 'pocus-veia-cava-inferior.html' },
-      { name: 'Volume Gástrico', cat: 'POCUS', kw: 'pocus gastrico volume antro perlas jejum aspiracao', url: 'pocus-gastrico.html' },
-      { name: 'Volume Vesical', cat: 'POCUS', kw: 'pocus vesical bexiga volume retencao urinaria', url: 'pocus-vesical.html' },
-
-      // Checklists
-      { name: 'Anafilaxia', cat: 'Checklists', kw: 'anafilaxia choque alergico adrenalina epinefrina hipersensibilidade', url: 'anafilaxia.html' },
-      { name: 'Intoxicação por Anestésico Local', cat: 'Checklists', kw: 'last intoxicacao anestesico local intralipid lipidio bupivacaina lidocaina', url: 'intoxicacao-anestesico-local.html' },
-
-      // Fluidos / Choque
-      { name: 'Acoplamento (Chen)', cat: 'Fluidos/Choque', kw: 'acoplamento chen single beat ventricular arterial ees ea coupling', url: 'choque-acoplamento-chen.html' },
-      { name: 'Escore ABC', cat: 'Fluidos/Choque', kw: 'abc score transfusao massiva trauma assessment of blood consumption', url: 'fluidos-abc-score.html' },
-      { name: 'Maximal Allowable Blood Loss', cat: 'Fluidos/Choque', kw: 'mabl perda sanguinea maxima hematocrito sangramento permitido', url: 'choque-maximal-allowable-blood-loss.html' },
-      { name: 'Holliday-Segar (4-2-1)', cat: 'Fluidos/Choque', kw: 'holliday segar 4 2 1 manutencao hidrica fluidos pediatria reposicao', url: 'fluidos-holliday-segar.html' },
-      { name: 'ΔPP (Delta PP)', cat: 'Fluidos/Choque', kw: 'delta pp ppv variacao pressao pulso responsividade fluidos volemia', url: 'choque-delta-pp.html' },
-      { name: 'ΔPP por Foto', cat: 'Fluidos/Choque', kw: 'delta pp foto monitor experimental imagem automatica', url: 'delta-pp-foto.html' },
-
-      // Renal
-      { name: 'Doença Renal Aguda', cat: 'Função Renal', kw: 'kdigo renal aguda lra creatinina diurese aki', url: 'funcao-renal-aguda.html' },
-      { name: 'Doença Renal Crônica', cat: 'Função Renal', kw: 'drc renal cronica cockcroft gault ckd epi mdrd tfg clearance', url: 'funcao-renal.html' },
-
-      // Obesidade
-      { name: 'Obesidade', cat: 'Antropometria', kw: 'imc obesidade peso ideal devine bariatrica corporal massa altura indice', url: 'obesidade.html' },
-
-      // Risco pré-op
-      { name: 'Apfel (internado)', cat: 'Risco pré-op', kw: 'apfel nausea vomito ponv pos operatorio internado', url: 'apfel.html' },
-      { name: 'Apfel (alta)', cat: 'Risco pré-op', kw: 'apfel alta pondv ambulatorial nausea vomito apos', url: 'apfel-alta.html' },
-      { name: 'ARISCAT', cat: 'Risco pré-op', kw: 'ariscat respiratorio complicacao pulmonar pos operatoria', url: 'risco-ariscat.html' },
-      { name: 'ASA', cat: 'Risco pré-op', kw: 'asa american society anesthesiologists physical status estado fisico', url: 'risco-asa.html' },
-      { name: 'AUB-HAS2', cat: 'Risco pré-op', kw: 'aub has2 cardiovascular risk index risco cardiaco', url: 'risco-aub-has2.html' },
-      { name: 'Caprini', cat: 'Risco pré-op', kw: 'caprini tev tromboembolismo venoso trombose profilaxia', url: 'risco-caprini.html' },
-      { name: 'DASI', cat: 'Risco pré-op', kw: 'dasi duke activity status index capacidade funcional mets', url: 'risco-dasi.html' },
-      { name: 'Fragilidade (Fried)', cat: 'Risco pré-op', kw: 'fried fragilidade frailty idoso fenotipo', url: 'risco-fragilidade.html' },
-      { name: 'Revised Cardiac Risk Index (Lee)', cat: 'Risco pré-op', kw: 'rcri lee cardiaco revised index risco', url: 'risco-rcri.html' },
-
-      // Via aérea
-      { name: 'DIFFMASK', cat: 'Via Aérea', kw: 'diffmask mascara ventilacao dificil', url: 'via-aerea-diffmask.html' },
-      { name: 'El-Ganzouri', cat: 'Via Aérea', kw: 'el ganzouri intubacao dificil egri', url: 'via-aerea-el-ganzouri.html' },
-      { name: 'LEMON', cat: 'Via Aérea', kw: 'lemon intubacao dificil mallampati look', url: 'via-aerea-lemon.html' },
-      { name: 'Mórbido', cat: 'Via Aérea', kw: 'morbido ventilacao mascara dificil mnemonico mascara', url: 'via-aerea-morbido.html' },
-
-      // Ventilação
-      { name: 'Mechanical Power (PCV)', cat: 'Ventilação', kw: 'mechanical power pcv pressao controlada potencia mecanica vili', url: 'ventilacao-mp-pcv.html' },
-      { name: 'Mechanical Power (VCV)', cat: 'Ventilação', kw: 'mechanical power vcv volume controlado potencia mecanica vili', url: 'ventilacao-mp-vcv.html' },
-      { name: 'Peso Predito pela Altura', cat: 'Ventilação', kw: 'peso predito altura devine ibw volume corrente 6ml kg', url: 'ventilacao-peso-predito.html' }
-    ];
-
-    /* ============================================
-       FAVORITOS — popula a seção "Seus favoritos"
-       lendo a API window.HemoFav (definida em
-       js/site-footer.js). Renderiza o que existe;
-       esconde tudo se não houver nenhum.
+       LANDING — reveal, sticky CTA, PWA fast-lane
        ============================================ */
     (function () {
-      function renderFavoritos() {
-        var section = document.getElementById('favoritos-section');
-        var list = document.getElementById('favoritos-list');
-        if (!section || !list) return;
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-        var favs = (window.HemoFav && typeof window.HemoFav.get === 'function')
-          ? window.HemoFav.get()
-          : [];
-
-        if (!favs.length) {
-          section.hidden = true;
-          list.innerHTML = '';
-          return;
-        }
-
-        // Tenta enriquecer com info do índice de calculadoras
-        var byUrl = {};
-        CALCULATORS.forEach(function (c) { byUrl[c.url] = c; });
-
-        var html = '';
-        favs.forEach(function (f) {
-          var info = byUrl[f.url];
-          var cat = info ? info.cat : '';
-          html +=
-            '<a href="' + encodeURI(f.url) + '" class="card-link" style="padding: 0.85rem 1rem;">' +
-              '<svg class="card-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="color:#f1c40f;">' +
-                '<path d="M12 2.5l2.95 6.02 6.64.97-4.8 4.68 1.13 6.6L12 17.65l-5.92 3.12 1.13-6.6-4.8-4.68 6.64-.97L12 2.5z"/>' +
-              '</svg>' +
-              '<span class="card-label">' + escapeHtml(f.label) +
-                (cat ? '<span class="card-subtitle">' + escapeHtml(cat) + '</span>' : '') +
-              '</span>' +
-              '<svg class="card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>' +
-            '</a>';
-        });
-        list.innerHTML = html;
-        section.hidden = false;
-      }
-
-      function escapeHtml(s) {
-        return (s == null ? '' : String(s)).replace(/[&<>"']/g, function (c) {
-          return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c];
-        });
-      }
-
-      function start() {
-        renderFavoritos();
-        if (window.HemoFav && typeof window.HemoFav.onChange === 'function') {
-          window.HemoFav.onChange(renderFavoritos);
-        }
-      }
-
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', start);
-      } else {
-        start();
-      }
-    })();
-
-    /* ============================================
-       BUSCA — normalização (remove acentos), match
-       em prefixo ou substring, highlight do resultado.
-       ============================================ */
-    (function () {
-      var input = document.getElementById('home-search');
-      var results = document.getElementById('search-results');
-      if (!input || !results) return;
-
-      function norm(s) {
-        return (s || '')
-          .toString()
-          .toLowerCase()
-          .normalize('NFD')
-          .replace(/[̀-ͯ]/g, '')
-          .replace(/[^a-z0-9\s]/g, ' ')
-          .replace(/\s+/g, ' ')
-          .trim();
-      }
-
-      function escapeHtml(s) {
-        return (s || '').replace(/[&<>"']/g, function (c) {
-          return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c];
-        });
-      }
-
-      var INDEX = CALCULATORS.map(function (c) {
-        return {
-          name: c.name,
-          cat: c.cat,
-          url: c.url,
-          haystack: norm(c.name + ' ' + c.cat + ' ' + (c.kw || ''))
-        };
-      });
-
-      function scoreMatch(item, terms) {
-        var score = 0;
-        for (var i = 0; i < terms.length; i++) {
-          var t = terms[i];
-          var idx = item.haystack.indexOf(t);
-          if (idx < 0) return -1;
-          // Boost para match no início, ou prefixo de palavra
-          if (idx === 0) score += 10;
-          else if (item.haystack[idx - 1] === ' ') score += 5;
-          else score += 1;
-          // Boost para match curto vs total
-          score += Math.max(0, 5 - (item.haystack.length / Math.max(1, t.length) / 10));
-        }
-        return score;
-      }
-
-      var activeIndex = -1;
-
-      function render(query) {
-        var q = norm(query);
-        if (!q) {
-          results.hidden = true;
-          results.innerHTML = '';
-          activeIndex = -1;
-          return;
-        }
-        var terms = q.split(' ').filter(Boolean);
-        var matches = [];
-        for (var i = 0; i < INDEX.length; i++) {
-          var sc = scoreMatch(INDEX[i], terms);
-          if (sc >= 0) matches.push({ item: INDEX[i], score: sc });
-        }
-        matches.sort(function (a, b) { return b.score - a.score; });
-
-        if (!matches.length) {
-          results.innerHTML = '<div class="search-empty">Nada encontrado para “' + escapeHtml(query) + '”.</div>';
-          results.hidden = false;
-          activeIndex = -1;
-          return;
-        }
-
-        var html = '';
-        var max = Math.min(matches.length, 12);
-        for (var j = 0; j < max; j++) {
-          var it = matches[j].item;
-          html +=
-            '<a class="search-result" role="option" href="' + it.url + '">' +
-              '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent-bright); flex-shrink: 0;"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>' +
-              '<span>' + escapeHtml(it.name) + '</span>' +
-              '<span class="sr-cat">' + escapeHtml(it.cat) + '</span>' +
-            '</a>';
-        }
-        results.innerHTML = html;
-        results.hidden = false;
-        activeIndex = -1;
-      }
-
-      function setActive(delta) {
-        var items = results.querySelectorAll('.search-result');
-        if (!items.length) return;
-        activeIndex = (activeIndex + delta + items.length) % items.length;
-        items.forEach(function (el, i) { el.classList.toggle('active', i === activeIndex); });
-        items[activeIndex].scrollIntoView({ block: 'nearest' });
-      }
-
-      input.addEventListener('input', function () { render(input.value); });
-      input.addEventListener('focus', function () { if (input.value) render(input.value); });
-
-      input.addEventListener('keydown', function (e) {
-        if (e.key === 'ArrowDown') { e.preventDefault(); setActive(+1); }
-        else if (e.key === 'ArrowUp') { e.preventDefault(); setActive(-1); }
-        else if (e.key === 'Enter') {
-          var items = results.querySelectorAll('.search-result');
-          if (activeIndex >= 0 && items[activeIndex]) {
-            e.preventDefault();
-            window.location.href = items[activeIndex].getAttribute('href');
-          } else if (items[0]) {
-            e.preventDefault();
-            window.location.href = items[0].getAttribute('href');
-          }
-        } else if (e.key === 'Escape') {
-          input.value = '';
-          results.hidden = true;
-          input.blur();
-        }
-      });
-
-      document.addEventListener('click', function (e) {
-        if (!e.target.closest('.search-wrap')) {
-          results.hidden = true;
-        }
-      });
-
-      // Atalho "/" para focar a busca (similar a GitHub, Vercel)
-      document.addEventListener('keydown', function (e) {
-        if (e.key === '/' && document.activeElement !== input &&
-            !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) {
-          e.preventDefault();
-          input.focus();
-        }
-      });
-    })();
-  </script>
-
-  <script>
-    /* ============================================
-       BANNER DE INSTALAÇÃO PWA
-       ============================================ */
-    (function () {
-      if (!('serviceWorker' in navigator)) return;
-
-      var deferredPrompt = null;
-      var banner = document.getElementById('install-banner');
-      var button = document.getElementById('install-button');
-      if (!banner || !button) return;
-
-      var ua = navigator.userAgent || '';
+      // PWA instalado → abre direto nas ferramentas (fast-lane), não na venda
       var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-      var isAndroid = /Android/i.test(ua);
-      var isIOS = /iPhone|iPad|iPod/i.test(ua);
-
-      if (isStandalone || (!isAndroid && !isIOS)) {
+      if (isStandalone) {
+        location.replace('ferramentas.html');
         return;
       }
 
-      if (isAndroid) {
-        window.addEventListener('beforeinstallprompt', function (e) {
-          e.preventDefault();
-          deferredPrompt = e;
-          banner.classList.add('visible');
-        });
-
-        button.addEventListener('click', function () {
-          if (!deferredPrompt) return;
-          deferredPrompt.prompt();
-          deferredPrompt.userChoice.finally(function () {
-            banner.classList.remove('visible');
-            deferredPrompt = null;
+      // Reveal on scroll
+      var reveals = document.querySelectorAll('.reveal');
+      if ('IntersectionObserver' in window && !reduce) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (en) {
+            if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
           });
-        });
-      } else if (isIOS) {
-        banner.classList.add('visible');
-        button.addEventListener('click', function () {
-          alert(
-            'Como salvar no iPhone:\n\n' +
-            '1) Abra este site no Safari.\n' +
-            '2) Toque no botão Compartilhar.\n' +
-            '3) Toque em "Adicionar à Tela de Início".\n\n' +
-            'Depois de abrir pelo ícone, as calculadoras funcionarão mesmo sem internet.'
-          );
-        });
+        }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+        reveals.forEach(function (el) { io.observe(el); });
+      } else {
+        reveals.forEach(function (el) { el.classList.add('in'); });
+      }
+
+      // Sticky CTA aparece depois que o herói sai da viewport
+      var sticky = document.getElementById('sticky-cta');
+      var hero = document.getElementById('topo');
+      if (sticky && hero && 'IntersectionObserver' in window) {
+        var so = new IntersectionObserver(function (entries) {
+          entries.forEach(function (en) {
+            sticky.classList.toggle('show', !en.isIntersecting);
+          });
+        }, { threshold: 0 });
+        so.observe(hero);
       }
     })();
   </script>
 
+  <!-- Service worker: registrado pelas páginas do app; mantido aqui para consistência de escopo -->
   <script>
-    /* ============================================
-       REGISTRO DO SERVICE WORKER
-       ============================================ */
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {
         navigator.serviceWorker.register('/sw.js').catch(function (err) {

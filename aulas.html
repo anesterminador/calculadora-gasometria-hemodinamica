@@ -61,6 +61,8 @@
     .t-mod{white-space:nowrap}
     .chip{display:inline-flex;align-items:center;gap:.45rem;font-size:.8rem;font-weight:700;color:var(--text-muted)}
     .chip .dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+    .t-modline{margin-top:.28rem;font-size:.78rem;font-weight:600;color:var(--text-muted);display:flex;align-items:center;gap:.45rem}
+    .t-modline .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
     .t-data{text-align:right;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--accent-bright);font-size:.9rem}
     .t-data .new{display:inline-block;margin-left:.5rem;font-size:.6rem;font-weight:800;letter-spacing:.06em;color:var(--success);background:rgba(46,160,67,.14);border:1px solid rgba(46,160,67,.5);border-radius:999px;padding:.1rem .4rem;vertical-align:middle}
 
@@ -109,8 +111,7 @@
       <table>
         <thead>
           <tr>
-            <th>Aula</th>
-            <th class="md">Módulo</th>
+            <th>Conteúdo</th>
             <th class="dt">Liberação</th>
           </tr>
         </thead>
@@ -143,7 +144,7 @@
 
       function render(){
         if(tab==='apostilas'){
-          tbody.innerHTML = '<tr><td colspan="3" class="empty">📄 Em breve listaremos aqui as apostilas de revisão, com a data de cada uma.</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="2" class="empty">📄 Em breve listaremos aqui as apostilas de revisão, com a data de cada uma.</td></tr>';
           count.innerHTML = '';
           return;
         }
@@ -152,14 +153,13 @@
         var lib = AULAS.filter(function(x){ return x.d <= hoje; })
           .slice().sort(function(a,b){ return a.d < b.d ? 1 : (a.d > b.d ? -1 : (a.m - b.m)); });
         count.innerHTML = '<b>'+lib.length+'</b> aulas liberadas';
-        if(!lib.length){ tbody.innerHTML = '<tr><td colspan="3" class="empty">Nenhuma aula liberada ainda.</td></tr>'; return; }
+        if(!lib.length){ tbody.innerHTML = '<tr><td colspan="2" class="empty">Nenhuma aula liberada ainda.</td></tr>'; return; }
         var maisRecente = lib.length ? lib[0].d : '';
         tbody.innerHTML = lib.map(function(x){
           var novo = x.d === maisRecente ? ' <span class="new">NOVA</span>' : '';
           var mnome = MODS[x.m] || ('Módulo '+x.m);
           return '<tr>'+
-            '<td class="t-aula">'+esc(x.a)+'</td>'+
-            '<td class="md t-mod"><span class="chip"><span class="dot" style="background:var(--m'+x.m+')"></span>'+esc(mnome)+'</span></td>'+
+            '<td><div class="t-aula">'+esc(x.a)+'</div><div class="t-modline"><span class="dot" style="background:var(--m'+x.m+')"></span>Módulo '+x.m+' · '+esc(mnome)+'</div></td>'+
             '<td class="t-data">'+fmt(x.d)+novo+'</td>'+
           '</tr>';
         }).join('');

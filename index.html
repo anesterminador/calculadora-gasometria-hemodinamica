@@ -372,7 +372,7 @@
         <a href="ferramentas.html" class="btn btn-secondary btn-lg">Calculadora gratuita</a>
       </div>
       <div class="hero-chips">
-        <span class="chip"><span class="dot"></span><strong>33</strong>&nbsp;videoaulas · e crescendo</span>
+        <span class="chip"><span class="dot"></span><strong class="js-aula-count">33</strong>&nbsp;videoaulas · e crescendo</span>
         <span class="chip">Apostilas de Revisão</span>
         <span class="chip">Web&nbsp;+&nbsp;App</span>
         <span class="chip"><span class="dot green"></span>Garantia de 7 dias</span>
@@ -421,7 +421,7 @@
       <div class="includes reveal">
         <h3>O que está incluído</h3>
         <div class="includes-grid">
-          <div class="include-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><div><div class="it-t">Videoaulas objetivas</div><div class="it-d">33 aulas em 5 módulos — e crescendo.</div></div></div>
+          <div class="include-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><div><div class="it-t">Videoaulas objetivas</div><div class="it-d"><span class="js-aula-count">33</span> aulas em 5 módulos — e crescendo.</div></div></div>
           <div class="include-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><div><div class="it-t">Apostilas de revisão</div><div class="it-d">Material de apoio denso para consulta e revisão.</div></div></div>
           <div class="include-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><div><div class="it-t">Acesso Web e App</div><div class="it-d">Estude no computador ou no celular, onde estiver.</div></div></div>
           <div class="include-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><div><div class="it-t">Fórum de dúvidas</div><div class="it-d">Tire dúvidas com a equipe e acompanhe a turma.</div></div></div>
@@ -543,7 +543,7 @@
         </details>
       </div>
 
-      <p class="lessons-total">5 módulos · 33 videoaulas hoje — e crescendo. Quem entra agora acompanha a expansão desde o começo.</p>
+      <p class="lessons-total">5 módulos · <span class="js-aula-count">33</span> videoaulas hoje — e crescendo. Quem entra agora acompanha a expansão desde o começo.</p>
     </div>
   </section>
 
@@ -793,6 +793,24 @@
         navigator.serviceWorker.register('/sw.js').catch(function (err) { console.error('SW:', err); });
       });
     }
+  </script>
+
+  <!-- Contagem de aulas: puxa do mesmo dado da /aulas.html (nunca diverge do total real) -->
+  <script src="aulas-data.js?v=1"></script>
+  <script>
+    (function(){
+      function hojeISO(){ var d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+      function setN(n){ [].forEach.call(document.querySelectorAll('.js-aula-count'), function(e){ e.textContent = n; }); }
+      var h = hojeISO();
+      var base = (window.AULAS || []).filter(function(x){ return x.d <= h; }).length;
+      if (base) setN(base);
+      fetch('https://hemodinamica-simulado-api.vercel.app/api/aulas')
+        .then(function(r){ return r.json(); })
+        .then(function(j){
+          var ex = (j.aulas || []).filter(function(x){ return x.d && x.d <= h && x.m >= 1 && x.m <= 5; }).length;
+          if (base + ex > 0) setN(base + ex);
+        }).catch(function(){});
+    })();
   </script>
 
   <script src="analytics.js"></script>

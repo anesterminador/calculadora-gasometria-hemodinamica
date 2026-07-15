@@ -244,6 +244,10 @@
  * Aparece em TODAS as páginas, lê favoritos da API HemoFav.
  * ───────────────────────────────────────────────────────────── */
 (function () {
+  // Não cria o FAB/drawer na landing (index/raiz) — só nas páginas de calculadora/ferramentas.
+  var _fabFile = ((window.location.pathname || '').toLowerCase().match(/[^\/]+$/) || [''])[0];
+  if (!_fabFile || _fabFile === 'index.html') return;
+
   // Calculadoras de uso crítico que aparecem como atalho fixo no drawer.
   // Nao duplica o index inteiro — só os atalhos mais quentes.
   var CRITICAL = [

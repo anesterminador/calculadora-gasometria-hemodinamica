@@ -173,6 +173,18 @@
         render();
       });
       render();
+
+      // mescla aulas adicionadas pelo painel admin (/api/aulas) com as 33 fixas
+      fetch('https://hemodinamica-simulado-api.vercel.app/api/aulas')
+        .then(function(r){ return r.json(); })
+        .then(function(j){
+          var extras = (j.aulas||[]).map(function(x){ return {a:x.a, m:parseInt(x.m,10), d:x.d}; })
+            .filter(function(x){ return x.a && x.d && x.m>=1 && x.m<=5; });
+          if(!extras.length) return;
+          var seen={}; AULAS.forEach(function(x){ seen[x.m+'|'+(x.a||'').toLowerCase().trim()]=1; });
+          extras.forEach(function(x){ var k=x.m+'|'+(x.a||'').toLowerCase().trim(); if(!seen[k]){ seen[k]=1; AULAS.push(x); } });
+          render();
+        }).catch(function(){});
     })();
   </script>
   <script src="analytics.js"></script>

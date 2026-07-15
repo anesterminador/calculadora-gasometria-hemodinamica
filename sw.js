@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hemodinamica-v121';
+const CACHE_NAME = 'hemodinamica-v122';
 
 const ASSETS = [
   '/',

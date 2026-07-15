@@ -260,6 +260,18 @@
     .guarantee p { color: var(--text-muted); font-size: 0.95rem; max-width: 60ch; }
     .guarantee .g-body { flex: 1; min-width: 220px; }
 
+    /* ===== PROVA SOCIAL ===== */
+    .proof-band { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 1rem; align-items: stretch; }
+    @media (max-width: 640px) { .proof-band { grid-template-columns: 1fr; } }
+    .proof-stat { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.4rem 1.5rem; box-shadow: var(--shadow-card); display: flex; flex-direction: column; gap: 0.5rem; }
+    .proof-stat.hl { border-color: rgba(46,160,67,0.4); background: linear-gradient(135deg, rgba(46,160,67,0.09), rgba(88,166,255,0.03)); }
+    .proof-num { font-size: clamp(2.4rem, 7vw, 3.4rem); font-weight: 800; line-height: 1; letter-spacing: -0.02em; color: var(--success-bright); font-variant-numeric: tabular-nums; }
+    .proof-stat:not(.hl) .proof-num { color: var(--accent-bright); font-size: clamp(2rem, 6vw, 2.6rem); }
+    .proof-cap { color: var(--text-muted); font-size: 0.95rem; line-height: 1.4; }
+    .proof-cap strong { color: var(--text); }
+    .proof-sub { color: var(--text-faint); font-size: 0.85rem; }
+    .proof-foot { text-align: center; color: var(--text-faint); font-size: 0.85rem; max-width: 68ch; margin: 1.4rem auto 0; line-height: 1.5; }
+
     /* ===== FAQ ===== */
     .faq-list { max-width: 780px; margin: 0 auto; display: flex; flex-direction: column; gap: 0.7rem; }
     .faq-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; }
@@ -652,6 +664,32 @@
     </div>
   </section>
 
+  <!-- ===== PROVA SOCIAL ===== -->
+  <section class="sec" id="prova" style="border-top: 1px solid var(--border);">
+    <div class="container">
+      <div class="sec-head center reveal">
+        <span class="eyebrow green">Prova social</span>
+        <h2 class="sec-title">O curso é novo. A <span class="accent">Anest-Review</span>, não.</h2>
+        <p class="sec-lead">O Hemodinâmica é da Anest-Review — líder em aprovação nas provas de título de anestesia (TEA/TSA) no Brasil. A metodologia e os professores que aprovam ano após ano são os mesmos por trás deste curso.</p>
+      </div>
+      <div class="proof-band reveal">
+        <div class="proof-stat hl">
+          <span class="proof-num">97%</span>
+          <span class="proof-cap">dos aprovados no <strong>TSA Oral 2026</strong> se prepararam na Anest-Review <span class="proof-sub">(29 de 30)</span></span>
+        </div>
+        <div class="proof-stat">
+          <span class="proof-num">93%</span>
+          <span class="proof-cap">dos aprovados no <strong>TSA 2025</strong></span>
+        </div>
+        <div class="proof-stat">
+          <span class="proof-num">85%</span>
+          <span class="proof-cap">dos aprovados no <strong>TEA 2024</strong></span>
+        </div>
+      </div>
+      <p class="proof-foot reveal">Números da Anest-Review nas provas de título de anestesiologia (TEA/TSA). O Hemodinâmica é um curso novo da mesma escola — você estuda com a metodologia de quem mais aprova no país.</p>
+    </div>
+  </section>
+
   <!-- ===== COMO O CURSO ENSINA ===== -->
   <section class="sec" id="metodo">
     <div class="container">
@@ -714,7 +752,7 @@
       </div>
       <div class="faq-list">
         <details class="faq-item" name="faq"><summary>Sou estudante / não sou da área crítica. Vou conseguir acompanhar?</summary><div class="faq-a">Sim. O curso começa na fisiologia cardiovascular, do básico. Não há pré-requisito além da vontade de entender o monitor — e como parte do zero, você constrói a base certa desde cedo.</div></details>
-        <details class="faq-item" name="faq"><summary>O curso é novo. Vale entrar agora?</summary><div class="faq-a">Ele é novo e está em expansão contínua. Entrar agora significa acompanhar o crescimento desde o começo — e as aulas novas entram sem custo adicional.</div></details>
+        <details class="faq-item" name="faq"><summary>O curso é novo. Vale entrar agora?</summary><div class="faq-a">Ele é novo e está em expansão contínua — mas quem o produz, não: a Anest-Review é líder em aprovação nas provas de título de anestesia (97% dos aprovados no TSA Oral 2026 se prepararam conosco). Entrar agora significa acompanhar o crescimento desde o começo, com as aulas novas entrando sem custo adicional.</div></details>
         <details class="faq-item" name="faq"><summary>Para quem é o curso?</summary><div class="faq-a">Para todo médico que precisa interpretar um monitor: cardiologistas, anestesistas, intensivistas, emergencistas, clínicos, generalistas, residentes e estudantes. Vai do muito básico ao avançado.</div></details>
         <details class="faq-item" name="faq"><summary>Preciso decorar fórmula?</summary><div class="faq-a">Não. O foco é raciocínio clínico. E as 39 calculadoras (gratuitas) fazem a conta por você à beira-leito.</div></details>
         <details class="faq-item" name="faq"><summary>Qual é o formato e por quanto tempo tenho acesso?</summary><div class="faq-a">Curso 100% online, com videoaulas e apostilas, acessível pela Web e pelo App. Recebe novos módulos e atualizações ao longo do tempo. <em>(Confirme o prazo de acesso vigente na página de inscrição.)</em></div></details>

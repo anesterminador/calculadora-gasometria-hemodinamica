@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hemodinamica-v120';
+const CACHE_NAME = 'hemodinamica-v121';
 
 const ASSETS = [
   '/',
@@ -6,6 +6,8 @@ const ASSETS = [
   '/ferramentas.html',
   '/teste.html',
   '/inscricao.html',
+  '/aulas.html',
+  '/aulas-data.js',
   '/quiz-data.js',
   '/simulado-data.js',
   '/img/hero-monitors.jpg',

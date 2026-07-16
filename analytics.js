@@ -72,7 +72,7 @@
     var a = e.target && e.target.closest ? e.target.closest('a[data-cta]') : null;
     if (!a) return;
     var href = a.getAttribute('href') || '';
-    var isInscricao = /anestreview-hemodinamica|\/medreview\/|inscricao\.html|selfcheckout|wa\.me\/5531985518005/.test(href);
+    var isInscricao = /anestreview-hemodinamica|anestreview\/hemodinamica|anest-review|\/medreview\/|inscricao\.html|selfcheckout|wa\.me\/5531985518005/.test(href);
     var cta = a.getAttribute('data-cta') || 'desconhecido';
     gtag('event', isInscricao ? 'clique_inscricao' : 'clique_ferramentas', {
       posicao: cta,

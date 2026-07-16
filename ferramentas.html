@@ -648,6 +648,27 @@
     @media (min-width: 769px) {
       .install-banner { display: none !important; }
     }
+
+    /* ===== DESKTOP (≥1000px): coluna larga, categorias em grid, tudo à vista =====
+       Gated por media query: mobile e PWA ficam intactos. Reversível removendo este bloco. */
+    @media (min-width: 1000px) {
+      .wrap { max-width: 1100px; }
+      /* Busca continua em largura confortável, centrada */
+      .search-wrap { max-width: 640px; margin-left: auto; margin-right: auto; }
+      /* Hero cards lado a lado */
+      .hero-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem; }
+      .hero-row .hero-card { margin-bottom: 0; }
+      /* Categorias e favoritos em grid de 3 colunas */
+      nav.card-list, #favoritos-list { display: grid; grid-template-columns: repeat(3, minmax(280px, 1fr)); gap: 1rem 1.25rem; align-items: start; }
+      /* Acordeões sempre abertos no desktop.
+         Navegadores modernos escondem o conteúdo do details fechado via
+         ::details-content { content-visibility: hidden } — display no filho NÃO
+         sobrescreve; tem que ser no próprio pseudo-elemento. O JS no fim da
+         página também seta [open] no load (cobre navegador antigo). */
+      details.pocus-menu::details-content { content-visibility: visible; }
+      details.pocus-menu > summary { cursor: default; pointer-events: none; }
+      details.pocus-menu > summary .card-chevron { display: none; }
+    }
   </style>
   <link rel="stylesheet" href="js/site-footer.css">
 </head>
@@ -667,7 +688,7 @@
       <p class="subtitle">Ferramentas clínicas gratuitas · Anest-Review</p>
       <div class="status-row">
         <a href="aulas.html" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.28rem 0.8rem;border-radius:999px;background:rgba(46,160,67,0.12);border:1px solid rgba(46,160,67,0.4);color:#6cd97e;font-size:0.72rem;font-weight:700;letter-spacing:0.02em;text-decoration:none;"><span style="width:6px;height:6px;border-radius:50%;background:#3fb950;display:inline-block"></span>Novidades</a>
-        <a href="index.html" style="display:inline-flex;align-items:center;gap:0.35rem;padding:0.28rem 0.8rem;border-radius:999px;background:rgba(88,166,255,0.12);border:1px solid rgba(88,166,255,0.4);color:#79b8ff;font-size:0.72rem;font-weight:700;letter-spacing:0.02em;text-decoration:none;">Conhecer o curso →</a>
+        <a href="https://l.instagram.com/?u=https%3A%2F%2Ftinyurl.com%2Fanest-review%3Futm_source%3Dig%26utm_medium%3Dsocial%26utm_content%3Dlink_in_bio%26fbclid%3DPAZXh0bgNhZW0CMTEAc3J0YwZhcHBfaWQPOTM2NjE5NzQzMzkyNDU5AAGn0_o4cgnIjZggKy2vAXDj9_w3TQA_7FiYgLBoieq0PDUOw3TI4u0Zo4QO7F8_aem_-6zJu1qcZhgRDj5D2uDuxA&e=AUAaA-Q7ct0iuijkubAc9ryB-aZdBdt15anG01cHWdCs4kOhU6TsYR5A4xYYizw3hCXgk2CJKYL-4aW34FTpeY4VzOE0zlnb49qcPOH3FF0onUpIwqirriQD6XZdTMbxsdRkj1imhKqgzoX9j2PFQII" target="_blank" rel="noopener noreferrer" data-cta="hub-curso" style="display:inline-flex;align-items:center;gap:0.35rem;padding:0.28rem 0.8rem;border-radius:999px;background:rgba(88,166,255,0.12);border:1px solid rgba(88,166,255,0.4);color:#79b8ff;font-size:0.72rem;font-weight:700;letter-spacing:0.02em;text-decoration:none;">Conhecer o curso →</a>
       </div>
     </header>
 
@@ -681,6 +702,7 @@
       <div class="search-results" id="search-results" hidden role="listbox"></div>
     </div>
 
+    <div class="hero-row">
     <!-- HERO CARD: Avaliação Perioperatória Integrada -->
     <a href="avaliacao-perioperatoria-integrada.html" class="hero-card">
       <div class="hero-card-icon">
@@ -711,6 +733,7 @@
       </div>
       <svg class="hero-card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
     </a>
+    </div>
 
     <!-- FAVORITOS (preenchido via JS apenas se houver) -->
     <section id="favoritos-section" hidden>
@@ -1355,6 +1378,15 @@
         });
       });
     }
+  </script>
+
+  <!-- Desktop: abre todas as categorias no load (par do bloco @media min-width:1000px no CSS) -->
+  <script>
+    (function () {
+      if (window.matchMedia && matchMedia('(min-width: 1000px)').matches) {
+        document.querySelectorAll('details.pocus-menu').forEach(function (d) { d.open = true; });
+      }
+    })();
   </script>
 
   <script src="analytics.js"></script>

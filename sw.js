@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hemodinamica-v127';
+const CACHE_NAME = 'hemodinamica-v128';
 
 const ASSETS = [
   '/',
@@ -23,6 +23,7 @@ const ASSETS = [
   '/mallampati-classes.png',
   '/js/site-footer.css',
   '/js/site-footer.js',
+  '/js/gaso-ocr.js',
   '/calculadora.html',
   '/gasometria-acido-base.html',
   '/obesidade.html',

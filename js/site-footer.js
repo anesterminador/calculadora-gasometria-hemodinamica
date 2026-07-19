@@ -62,6 +62,8 @@
     shareLink.dataset.shareBound = 'true';
     shareLink.addEventListener('click', function(event) {
       event.preventDefault();
+      // mede o compartilhamento (baseline de boca-a-boca). No-op em aparelho com notrack.
+      if (window.hemoHit) { try { window.hemoHit('share', window.location.pathname || '/'); } catch (e) {} }
       var shareUrl = window.location.href;
       var shareTitle = document.title || 'Hemodinamica - Anest Review';
       if (navigator.share) {

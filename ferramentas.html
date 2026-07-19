@@ -575,6 +575,18 @@
       font-weight: 700;
       letter-spacing: 0.06em;
     }
+    /* Badge "NOVO" (verde) — destaca recurso recém-lançado */
+    .badge-novo {
+      display: inline-block; vertical-align: middle; margin-left: 0.45rem;
+      padding: 0.1rem 0.4rem; border-radius: 999px;
+      background: rgba(46, 160, 67, 0.18); border: 1px solid rgba(46, 160, 67, 0.5);
+      color: #7ee2a0; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.06em;
+    }
+    .install-dismiss {
+      background: none; border: none; color: var(--text-faint); font-size: 1rem;
+      line-height: 1; cursor: pointer; padding: 0.3rem 0.4rem; margin-left: 0.1rem; flex-shrink: 0;
+    }
+    .install-dismiss:hover { color: var(--text); }
 
     /* Stagger nas categorias */
     .card-list > * { animation: fadeRise 0.4s ease both; }
@@ -679,6 +691,7 @@
       <div>Adicione à tela inicial e use offline.</div>
     </div>
     <button class="install-btn" id="install-button">Instalar</button>
+    <button class="install-dismiss" id="install-dismiss" type="button" aria-label="Dispensar">✕</button>
   </div>
   <div class="wrap">
     <header>
@@ -744,6 +757,15 @@
       <div class="card-list" id="favoritos-list" style="margin-bottom: 1.25rem;"></div>
     </section>
 
+    <!-- USADAS RECENTEMENTE (automático, preenchido via JS apenas se houver) -->
+    <section id="recentes-section" hidden>
+      <h2 class="section-title">
+        <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--accent-bright)"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        Usadas recentemente
+      </h2>
+      <div class="card-list" id="recentes-list" style="margin-bottom: 1.25rem;"></div>
+    </section>
+
     <nav class="card-list">
       <!-- GASOMETRIA -->
       <details class="pocus-menu">
@@ -758,7 +780,7 @@
         <div class="pocus-sub">
           <a href="gasometria-acido-base.html" class="card-link sub">
             <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l3-9 4 18 3-9h4"/></svg>
-            <span class="card-label">Avaliação Ácido-Básica</span>
+            <span class="card-label">Avaliação Ácido-Básica<span class="badge-novo">NOVO · FOTO</span></span>
           </a>
           <a href="calculadora.html" class="card-link sub">
             <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 14 3-3 3 3 5-5"/></svg>
@@ -1178,6 +1200,46 @@
     })();
 
     /* ============================================
+       USADAS RECENTEMENTE — histórico automático
+       (window.HemoRecent, definido em js/site-footer.js).
+       Sem exigir favoritar; some se não houver histórico.
+       ============================================ */
+    (function () {
+      function esc(s) {
+        return (s == null ? '' : String(s)).replace(/[&<>"']/g, function (c) {
+          return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c];
+        });
+      }
+      function render() {
+        var section = document.getElementById('recentes-section');
+        var list = document.getElementById('recentes-list');
+        if (!section || !list) return;
+        var itens = (window.HemoRecent && typeof window.HemoRecent.get === 'function') ? window.HemoRecent.get() : [];
+        if (!itens.length) { section.hidden = true; list.innerHTML = ''; return; }
+        var byUrl = {};
+        CALCULATORS.forEach(function (c) { byUrl[c.url] = c; });
+        list.innerHTML = itens.map(function (f) {
+          var info = byUrl[f.url];
+          var cat = info ? info.cat : '';
+          return '<a href="' + encodeURI(f.url) + '" class="card-link" data-recent="' + esc(f.url) + '" style="padding: 0.85rem 1rem;">' +
+            '<svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--accent-bright)"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>' +
+            '<span class="card-label">' + esc(f.label) + (cat ? '<span class="card-subtitle">' + esc(cat) + '</span>' : '') + '</span>' +
+            '<svg class="card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>' +
+          '</a>';
+        }).join('');
+        section.hidden = false;
+      }
+      // mede o clique num item recente (baseline de retenção). No-op se notrack.
+      var listEl = document.getElementById('recentes-list');
+      if (listEl) listEl.addEventListener('click', function (e) {
+        var a = e.target && e.target.closest ? e.target.closest('a[data-recent]') : null;
+        if (a && window.hemoHit) { try { window.hemoHit('recente_click', a.getAttribute('data-recent')); } catch (err) {} }
+      });
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', render);
+      else render();
+    })();
+
+    /* ============================================
        BUSCA — normalização (remove acentos), match
        em prefixo ou substring, highlight do resultado.
        ============================================ */
@@ -1328,6 +1390,18 @@
       var button = document.getElementById('install-button');
       if (!banner || !button) return;
 
+      var DISMISS_KEY = 'hemodinamica.install_dismissed';
+      function dismissed() { try { return localStorage.getItem(DISMISS_KEY) === '1'; } catch (e) { return false; } }
+      if (dismissed()) return;                       // já dispensou antes → nunca mais insiste
+      // Sinal de valor: já abriu pelo menos 1 calculadora (histórico automático)
+      function usouAlgo() { try { return !!(window.HemoRecent && window.HemoRecent.get().length); } catch (e) { return false; } }
+
+      var dismiss = document.getElementById('install-dismiss');
+      if (dismiss) dismiss.addEventListener('click', function () {
+        banner.classList.remove('visible');
+        try { localStorage.setItem(DISMISS_KEY, '1'); } catch (e) {}
+      });
+
       var ua = navigator.userAgent || '';
       var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
       var isAndroid = /Android/i.test(ua);
@@ -1341,7 +1415,7 @@
         window.addEventListener('beforeinstallprompt', function (e) {
           e.preventDefault();
           deferredPrompt = e;
-          banner.classList.add('visible');
+          if (!dismissed()) banner.classList.add('visible');
         });
 
         button.addEventListener('click', function () {
@@ -1353,7 +1427,7 @@
           });
         });
       } else if (isIOS) {
-        banner.classList.add('visible');
+        if (usouAlgo()) banner.classList.add('visible');   // só após sinal de valor, não na 1ª tela
         button.addEventListener('click', function () {
           alert(
             'Como salvar no iPhone:\n\n' +

@@ -233,10 +233,40 @@
   // Expõe a API e inicializa o botão
   window.HemoFav = HemoFav;
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', injectFavButton);
-  } else {
+  /* ---- Recentes: histórico automático das últimas calculadoras abertas ----
+     Mesmo padrão do HemoFav, mas sem exigir ação do usuário — casa com o uso
+     real à beira-leito (reativo, no meio de um caso). Só localStorage. */
+  var RECENT_KEY = 'hemodinamica.recentes.v1';
+  var RECENT_CAP = 8;
+  var RECENT_SKIP = { 'index.html': 1, 'ferramentas.html': 1, 'inscricao.html': 1, 'aulas.html': 1, 'teste.html': 1 };
+  function recentRead() {
+    try {
+      var r = JSON.parse(localStorage.getItem(RECENT_KEY));
+      return Array.isArray(r) ? r.filter(function (it) { return it && it.url && it.label; }) : [];
+    } catch (e) { return []; }
+  }
+  var HemoRecent = {
+    get: function () { return recentRead(); },
+    record: function (url, label) {
+      if (!url || RECENT_SKIP[String(url).toLowerCase()]) return;
+      var l = recentRead().filter(function (it) { return it.url !== url; });
+      l.unshift({ url: url, label: label, ts: new Date().toISOString() });
+      if (l.length > RECENT_CAP) l = l.slice(0, RECENT_CAP);
+      try { localStorage.setItem(RECENT_KEY, JSON.stringify(l)); } catch (e) {}
+    }
+  };
+  window.HemoRecent = HemoRecent;
+
+  function initFooterExtras() {
     injectFavButton();
+    var info = getPageInfo();          // null em index/hub/páginas sem h1
+    if (info) HemoRecent.record(info.url, info.label);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initFooterExtras);
+  } else {
+    initFooterExtras();
   }
 })();
 

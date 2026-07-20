@@ -50,6 +50,18 @@
     .rcri-legend { font-size: 0.85rem; color: var(--text-muted); margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); text-align: justify; line-height: 1.5; }
     footer { text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 0; opacity: 0.8; }
 @media (max-width: 768px) { .logo { min-width: 240px; max-width: min(600px, calc(100vw - 2rem)); transform: translateX(0); } }
+    /* Bloco explicativo (SEO + apoio) */
+    .sobre { text-align: left; }
+    .sobre h2 { text-align: center; }
+    .sobre h3 { font-size: 0.98rem; font-weight: 700; color: #c3aef2; margin: 1.1rem 0 0.35rem; }
+    .sobre p { font-size: 0.9rem; color: #c9d4de; margin-bottom: 0.7rem; line-height: 1.6; text-align: justify; }
+    .sobre strong { color: #e4dcc4; font-weight: 700; }
+    .sobre .tab { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin: 0.2rem 0 0.7rem; }
+    .sobre .tab td, .sobre .tab th { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--border); text-align: left; }
+    .sobre .tab th { color: var(--text); font-weight: 700; }
+    .sobre .tab td:last-child, .sobre .tab th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+    .sobre .ref { font-size: 0.8rem; color: #c9d4de; border-top: 1px solid var(--border); padding-top: 0.7rem; margin-top: 0.3rem; }
+    .sobre .ref em { font-style: italic; }
   </style>
   <link rel="stylesheet" href="js/site-footer.css">
 </head>
@@ -109,6 +121,29 @@
       }
       inputs.forEach(function(cb) { cb.addEventListener('change', update); });
     </script>
+    <section class="sobre">
+      <h2>Sobre o RCRI (Índice de Lee)</h2>
+      <p>O <strong>Revised Cardiac Risk Index (RCRI)</strong>, ou Índice de Lee, estima o risco de <strong>eventos cardíacos maiores</strong> — infarto do miocárdio, edema agudo de pulmão, fibrilação ventricular ou parada cardíaca e bloqueio atrioventricular total — nos 30 dias após uma <strong>cirurgia não cardíaca</strong>. É uma das ferramentas mais usadas na avaliação pré-operatória por ser simples, validada e baseada em seis fatores objetivos.</p>
+
+      <h3>Como calcular</h3>
+      <p>Cada um dos seis critérios presentes vale <strong>1 ponto</strong>; a soma (0 a 6) define a classe de risco. Os critérios são: cirurgia de alto risco (intraperitoneal, intratorácica ou vascular suprainguinal), doença isquêmica do coração, insuficiência cardíaca, doença cerebrovascular, diabetes em uso de insulina e creatinina &gt; 2,0 mg/dL.</p>
+
+      <h3>Como interpretar a pontuação</h3>
+      <table class="tab">
+        <tr><th>Pontos</th><th>Risco de evento cardíaco maior (30 dias)</th></tr>
+        <tr><td>0</td><td>~1,6%</td></tr>
+        <tr><td>1</td><td>~4,0%</td></tr>
+        <tr><td>2</td><td>~7,9%</td></tr>
+        <tr><td>≥ 3</td><td>≥ 12,9%</td></tr>
+      </table>
+      <p>Pela diretriz ACC/AHA de 2024 de avaliação cardiovascular perioperatória, a presença de <strong>dois ou mais fatores</strong> já caracteriza risco elevado.</p>
+
+      <h3>Quando usar e limitações</h3>
+      <p>O RCRI foi desenvolvido para <strong>cirurgia não cardíaca eletiva</strong> e é um ponto de partida, não a resposta final. Não substitui o julgamento clínico nem dispensa avaliar a <strong>capacidade funcional</strong> (METs) e, quando indicado, <strong>biomarcadores</strong> (BNP/NT-proBNP, troponina). Tem desempenho mais limitado em cirurgia vascular e em contextos de emergência.</p>
+
+      <p class="ref">Referência: Lee TH et al. <em>Derivation and prospective validation of a simple index for prediction of cardiac risk of major noncardiac surgery.</em> Circulation. 1999;100(10):1043–1049. · Diretriz ACC/AHA 2024 de avaliação cardiovascular perioperatória para cirurgia não cardíaca.</p>
+    </section>
+
     <footer class="footer-buttons"></footer>
   </div>
   <script src="analytics.js"></script>

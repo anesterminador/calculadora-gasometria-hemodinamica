@@ -347,6 +347,16 @@
         transform: translateX(-6%);
       }
     }
+    /* Bloco explicativo (SEO + apoio) — molde sobre-template.md */
+    .sobre { text-align: left; }
+    .sobre h2 { text-align: center; }
+    .sobre h3 { font-size: 0.98rem; font-weight: 700; color: #c3aef2; margin: 1.1rem 0 0.35rem; }
+    .sobre p { font-size: 0.9rem; color: #c9d4de; margin-bottom: 0.7rem; line-height: 1.6; text-align: justify; }
+    .sobre strong { color: #e4dcc4; font-weight: 700; }
+    .sobre ul { margin: 0.1rem 0 0.7rem 1.15rem; }
+    .sobre li { font-size: 0.9rem; color: #c9d4de; line-height: 1.6; margin-bottom: 0.4rem; }
+    .sobre .ref { font-size: 0.8rem; color: #c9d4de; border-top: 1px solid var(--border); padding-top: 0.7rem; margin-top: 0.3rem; }
+    .sobre .ref em { font-style: italic; }
   </style>
   <link rel="stylesheet" href="js/site-footer.css">
 </head>
@@ -450,6 +460,29 @@
         </div>
         <span class="result-box" id="QR">—</span>
       </div>
+    </section>
+
+    <section class="sobre">
+      <h2>Sobre os parâmetros hemodinâmicos de oxigênio</h2>
+      <p>Esta calculadora reúne, à beira-leito, os parâmetros do <strong>transporte de oxigênio</strong>: quanto O₂ o sangue carrega, quanto o coração entrega aos tecidos (<strong>DO₂</strong>) e quanto eles consomem (<strong>VO₂</strong>), além de marcadores de perfusão como a taxa de extração de O₂, o gap de CO₂ e o quociente respiratório modificado. A partir da gasometria arterial e venosa, da hemoglobina e do <strong>débito cardíaco</strong>, tudo é calculado em tempo real.</p>
+
+      <h3>O que cada parâmetro mostra (e a faixa normal)</h3>
+      <ul>
+        <li><strong>CaO₂</strong> — conteúdo arterial de O₂ = (Hb × 1,34 × SaO₂) + (0,0031 × PaO₂). Normal ≥ 17 mL/dL.</li>
+        <li><strong>DO₂ / DO₂i</strong> — oferta de O₂ = CaO₂ × DC × 10. DO₂i normal &gt; 500 mL/min/m².</li>
+        <li><strong>VO₂ / VO₂i</strong> — consumo de O₂ = (CaO₂ − CvO₂) × DC × 10. VO₂i normal 110–160 mL/min/m².</li>
+        <li><strong>Taxa de extração</strong> de O₂ (VO₂/DO₂) — normal 20–30%.</li>
+        <li><strong>Gap de CO₂</strong> (PvCO₂ − PaCO₂) — normal ≤ 6 mmHg.</li>
+        <li><strong>QR modificado</strong> (Pv-aCO₂ / Ca-vO₂) — sugere metabolismo anaeróbio quando &gt; 1,4.</li>
+      </ul>
+
+      <h3>Como interpretar em conjunto</h3>
+      <p>Os números se leem juntos, não isolados. Taxa de extração alta, gap de CO₂ alargado ou QR modificado &gt; 1,4 apontam que a oferta de O₂ não está acompanhando a demanda — típico de baixo débito ou hipoperfusão. DO₂ e VO₂ dependem do débito cardíaco: sem informá-lo, a calculadora mostra apenas os parâmetros que não precisam dele.</p>
+
+      <h3>Quando usar e limitações</h3>
+      <p>Útil na monitorização do paciente crítico e no intraoperatório de grande porte. Exige uma amostra <strong>venosa mista ou venosa central</strong> (idealmente por cateter de artéria pulmonar) e o débito cardíaco para DO₂/VO₂. É apoio ao raciocínio de perfusão — interprete sempre com o lactato, o exame clínico e a tendência ao longo do tempo, nunca um valor isolado.</p>
+
+      <p class="ref">Referência: Vincent JL, De Backer D. <em>Circulatory shock.</em> N Engl J Med. 2013;369(18):1726–1734. · Princípio de Fick aplicado ao transporte de oxigênio.</p>
     </section>
 
     <footer class="footer-buttons"></footer>

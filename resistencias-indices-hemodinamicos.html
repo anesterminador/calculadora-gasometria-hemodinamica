@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Resistências e Índices Hemodinâmicos – SVR, PVR, IC, VS</title>
+  <!-- og:auto -->
+  <meta name="description" content="Calcule SVR, PVR, índice cardíaco, volume sistólico e trabalho sistólico (RVSWI/LVSWI) a partir do débito cardíaco e das pressões. Grátis, sem cadastro.">
+  <link rel="canonical" href="https://hemodinamica.org/resistencias-indices-hemodinamicos.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Hemodinâmica · Anest-Review">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:url" content="https://hemodinamica.org/resistencias-indices-hemodinamicos.html">
+  <meta property="og:title" content="Resistências e índices hemodinâmicos — SVR, PVR, IC, VS">
+  <meta property="og:description" content="Calcule SVR, PVR, índice cardíaco, volume sistólico e trabalho sistólico a partir do débito cardíaco e das pressões. Grátis, sem cadastro.">
+  <meta property="og:image" content="https://hemodinamica.org/og-hemodinamica.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Hemodinâmica — calculadoras clínicas grátis">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Resistências e índices hemodinâmicos — SVR, PVR, IC, VS">
+  <meta name="twitter:description" content="Calcule SVR, PVR, índice cardíaco, volume sistólico e trabalho sistólico. Grátis, sem cadastro.">
+  <meta name="twitter:image" content="https://hemodinamica.org/og-hemodinamica.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f1419; --bg-card: #1a2129; --bg-input: #252d36; --border: #2d3843;
+      --text: #e6edf3; --text-muted: #8b9cad; --accent: #58a6ff; --accent-soft: rgba(88, 166, 255, 0.15);
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif; min-height: 100vh; background: var(--bg);
+      background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(88, 166, 255, 0.08), transparent);
+      color: var(--text); line-height: 1.5; padding: 0rem 1rem 3rem;
+    }
+    .wrap { max-width: 520px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 0.75rem; }
+    .logo-link { display: block; text-decoration: none; }
+    .logo { max-width: min(600px, 100%); height: auto; margin-bottom: -2.5rem; display: block; margin-left: auto; margin-right: auto; background: transparent; }
+    h1 { font-size: 1.5rem; font-weight: 700; color: var(--text); margin-bottom: 0.35rem; }
+    .subtitle { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+    section { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.35rem 1.5rem; margin-bottom: 1.25rem; }
+    section h2 { font-size: 1.2rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #ffd139; margin-bottom: 0.4rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--border); text-align: center; }
+    .row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 0.75rem; }
+    .row:last-of-type { margin-bottom: 0; }
+    label { flex: 1; font-size: 0.9rem; color: var(--text); font-weight: 500; min-width: 0; }
+    input[type="number"] { padding: 0.5rem 0.65rem; background: var(--bg-input); border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; font-family: inherit; color: var(--text); width: 108px; text-align: right; transition: border-color 0.2s, box-shadow 0.2s; }
+    input[type="number"]:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+    .group-title { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--accent); margin: 0.6rem 0 0.5rem; padding-top: 0.6rem; border-top: 1px dashed var(--border); }
+    .group-title:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+    .result-block { display: flex; align-items: center; gap: 1rem; margin-top: 0.9rem; padding-top: 0.75rem; border-top: 1px solid var(--border); }
+    .result-block:first-of-type { margin-top: 0; padding-top: 0; border-top: none; }
+    .result-block-content { flex: 1; min-width: 0; }
+    .result-row .name { color: var(--text); font-weight: 700; font-size: 0.95rem; }
+    .formula { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem; }
+    .formula-eq { color: #fef9c3; }
+    .faixa { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.15rem; }
+    .result-box { flex-shrink: 0; width: 116px; padding: 0.5rem 0.5rem; background: var(--bg-input); border: 1px solid var(--border); border-radius: 8px; font-size: 0.92rem; font-weight: 700; color: var(--accent); text-align: center; font-variant-numeric: tabular-nums; }
+    .hint { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.75rem; text-align: justify; }
+    /* Bloco explicativo (Sobre) */
+    .sobre { text-align: left; }
+    .sobre h2 { text-align: center; }
+    .sobre h3 { font-size: 0.98rem; font-weight: 700; color: #c3aef2; margin: 1.1rem 0 0.35rem; }
+    .sobre p { font-size: 0.9rem; color: #c9d4de; margin-bottom: 0.7rem; line-height: 1.6; text-align: justify; }
+    .sobre strong { color: #e4dcc4; font-weight: 700; }
+    .sobre ul { margin: 0.1rem 0 0.7rem 1.2rem; }
+    .sobre li { font-size: 0.9rem; color: #c9d4de; line-height: 1.6; margin-bottom: 0.4rem; }
+    .sobre .ref { font-size: 0.8rem; color: #c9d4de; border-top: 1px solid var(--border); padding-top: 0.7rem; margin-top: 0.3rem; }
+    .sobre .ref em { font-style: italic; }
+    footer { text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 0; opacity: 0.8; }
+    @media (max-width: 768px) { .logo { min-width: 240px; max-width: min(600px, calc(100vw - 2rem)); transform: translateX(0); } }
+  </style>
+  <link rel="stylesheet" href="js/site-footer.css">
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a href="ferramentas.html" class="logo-link"><img src="Logo Hemodinâmica_regular.png" alt="Hemodinâmica" class="logo"></a>
+      <h1>Resistências e Índices Hemodinâmicos</h1>
+      <p class="subtitle">Parâmetros Hemodinâmicos · SVR, PVR, IC, VS/IS e trabalho sistólico</p>
+    </header>
+
+    <section>
+      <h2>Dados de entrada</h2>
+      <div class="group-title">Débito e frequência</div>
+      <div class="row"><label for="dc">Débito cardíaco — DC (L/min)</label><input type="number" id="dc" step="0.1" min="0" placeholder="L/min"></div>
+      <div class="row"><label for="fc">Frequência cardíaca — FC (bpm)</label><input type="number" id="fc" step="1" min="0" placeholder="bpm"></div>
+
+      <div class="group-title">Pressões (mmHg)</div>
+      <div class="row"><label for="pam">Pressão arterial média — PAM</label><input type="number" id="pam" step="1" min="0" placeholder="mmHg"></div>
+      <div class="row"><label for="pvc">Pressão venosa central — PVC</label><input type="number" id="pvc" step="1" placeholder="mmHg"></div>
+      <div class="row"><label for="papm">Pressão de artéria pulmonar média — PAPm</label><input type="number" id="papm" step="1" min="0" placeholder="mmHg"></div>
+      <div class="row"><label for="pcp">Pressão de capilar pulmonar — PCP</label><input type="number" id="pcp" step="1" placeholder="mmHg"></div>
+
+      <div class="group-title">Superfície corporal</div>
+      <div class="row"><label for="peso">Peso (kg)</label><input type="number" id="peso" step="0.1" min="0" placeholder="kg"></div>
+      <div class="row"><label for="altura">Altura (cm)</label><input type="number" id="altura" step="1" min="0" placeholder="cm"></div>
+
+      <p class="hint">Preencha o que tiver — cada parâmetro é calculado assim que suas entradas estão completas. PVC e PCP podem ser negativas. A superfície corporal (SC) é calculada por <strong>DuBois &amp; DuBois</strong> e é necessária para os índices (IC, IS, RVSWI, LVSWI).</p>
+    </section>
+
+    <section>
+      <h2>Resultados</h2>
+
+      <div class="result-block">
+        <div class="result-block-content">
+          <div class="result-row"><span class="name">Superfície corporal (SC)</span></div>
+          <div class="formula formula-eq">SC = 0,007184 × peso<sup>0,425</sup> × altura<sup>0,725</sup></div>
+        </div>
+        <div class="result-box" id="r-sc">—</div>
+      </div>
+
+      <div class="result-block">
+        <div class="result-block-content">
+          <div class="result-row"><span class="name">Volume sistólico (VS)</span></div>
+          <div class="formula formula-eq">VS = DC × 1000 / FC</div>
+          <div class="faixa">Normal: 60–100 mL</div>
+        </div>
+        <div class="result-box" id="r-vs">—</div>
+      </div>
+
+      <div class="result-block">
+        <div class="result-block-content">
+          <div class="result-row"><span class="name">Índice cardíaco (IC)</span></div>
+          <div class="formula formula-eq">IC = DC / SC</div>
+          <div class="faixa">Normal: 2,5–4,0 L/min/m²</div>
+        </div>
+        <div class="result-box" id="r-ic">—</div>
+      </div>
+
+      <div class="result-block">
+        <div class="result-block-content">
+          <div class="result-row"><span class="name">Índice sistólico (IS)</span></div>
+          <div class="formula formula-eq">IS = VS / SC</div>
+          <div class="faixa">Normal: 33–47 mL/m²</div>
+        </div>
+        <div class="result-box" id="r-is">—</div>
+      </div>
+
+      <div class="result-block">
+        <div class="result-block-content">
+          <div class="result-row"><span class="name">Resistência vascular sistêmica (SVR)</span></div>
+          <div class="formula formula-eq">SVR = (PAM − PVC) / DC × 79,9</div>
+          <div class="faixa">Normal: 800–1.200 dyne·s·cm⁻⁵</div>
+        </div>
+        <div class="result-box" id="r-svr">—</div>
+      </div>
+
+      <div class="result-block">
+        <div class="result-block-content">
+          <div class="result-row"><span class="name">Resistência vascular pulmonar (PVR)</span></div>
+          <div class="formula formula-eq">PVR = (PAPm − PCP) / DC × 79,9</div>
+          <div class="faixa">Normal: &lt; 250 dyne·s·cm⁻⁵</div>
+        </div>
+        <div class="result-box" id="r-pvr">—</div>
+      </div>
+
+      <div class="result-block">
+        <div class="result-block-content">
+          <div class="result-row"><span class="name">Índice de trabalho sistólico do VD (RVSWI)</span></div>
+          <div class="formula formula-eq">RVSWI = 0,0136 × (PAPm − PVC) × IS</div>
+          <div class="faixa">Normal: 5–10 g·m/m²</div>
+        </div>
+        <div class="result-box" id="r-rvswi">—</div>
+      </div>
+
+      <div class="result-block">
+        <div class="result-block-content">
+          <div class="result-row"><span class="name">Índice de trabalho sistólico do VE (LVSWI)</span></div>
+          <div class="formula formula-eq">LVSWI = 0,0136 × (PAM − PCP) × IS</div>
+          <div class="faixa">Normal: 45–60 g·m/m²</div>
+        </div>
+        <div class="result-box" id="r-lvswi">—</div>
+      </div>
+    </section>
+
+    <section class="sobre">
+      <h2>Sobre as resistências e índices</h2>
+      <p>A partir do <strong>débito cardíaco</strong> e das pressões (arterial, venosa central e pulmonares), derivam-se os parâmetros que descrevem a mecânica circulatória — os mesmos que o <strong>cateter de artéria pulmonar</strong> fornece à beira-leito. Indexá-los pela superfície corporal (IC, IS) permite comparar pacientes de tamanhos diferentes.</p>
+      <h3>O que cada um informa</h3>
+      <ul>
+        <li><strong>IC e VS/IS</strong> — desempenho da bomba: quanto sangue o coração ejeta (por minuto e por batimento).</li>
+        <li><strong>SVR</strong> — a <strong>pós-carga do ventrículo esquerdo</strong>; sobe na vasoconstrição (ex.: choque cardiogênico, drogas α) e cai na vasoplegia (ex.: choque séptico).</li>
+        <li><strong>PVR</strong> — a <strong>pós-carga do ventrículo direito</strong>; elevada na hipertensão pulmonar, SDRA e hipoxemia.</li>
+        <li><strong>RVSWI / LVSWI</strong> — o <strong>trabalho sistólico</strong> de cada ventrículo, útil para caracterizar disfunção de VD ou VE.</li>
+      </ul>
+      <h3>Quando usar e limitações</h3>
+      <p>Os números se leem <strong>em conjunto e junto do quadro clínico</strong>, não isolados. Dependem da acurácia do débito cardíaco (termodiluição) e da correta calibração e nivelamento dos transdutores de pressão. As faixas de referência acima são de adultos; use-as como orientação, não como corte rígido.</p>
+      <p class="ref">Referência: Marino PL. <em>The ICU Book.</em> 4ª ed. Wolters Kluwer, 2014 — capítulo de monitorização hemodinâmica.</p>
+    </section>
+
+    <footer class="footer-buttons"></footer>
+  </div>
+
+  <script>
+    (function () {
+      var ids = ['dc', 'fc', 'pam', 'pvc', 'papm', 'pcp', 'peso', 'altura'];
+      function num(id) {
+        var el = document.getElementById(id);
+        var v = parseFloat((el.value || '').replace(',', '.'));
+        return isNaN(v) ? null : v;
+      }
+      function put(id, val, digits, unit) {
+        var el = document.getElementById(id);
+        el.textContent = (val === null || !isFinite(val)) ? '—' : (val.toFixed(digits) + (unit ? (' ' + unit) : ''));
+      }
+      function update() {
+        var dc = num('dc'), fc = num('fc'), pam = num('pam'), pvc = num('pvc'),
+            papm = num('papm'), pcp = num('pcp'), peso = num('peso'), altura = num('altura');
+
+        var sc = (peso !== null && peso > 0 && altura !== null && altura > 0)
+          ? 0.007184 * Math.pow(peso, 0.425) * Math.pow(altura, 0.725) : null;
+        var vs = (dc !== null && fc !== null && fc > 0) ? dc * 1000 / fc : null;
+        var ic = (dc !== null && sc !== null && sc > 0) ? dc / sc : null;
+        var is = (vs !== null && sc !== null && sc > 0) ? vs / sc : null;
+        var svr = (pam !== null && pvc !== null && dc !== null && dc > 0) ? (pam - pvc) / dc * 79.9 : null;
+        var pvr = (papm !== null && pcp !== null && dc !== null && dc > 0) ? (papm - pcp) / dc * 79.9 : null;
+        var rvswi = (papm !== null && pvc !== null && is !== null) ? 0.0136 * (papm - pvc) * is : null;
+        var lvswi = (pam !== null && pcp !== null && is !== null) ? 0.0136 * (pam - pcp) * is : null;
+
+        put('r-sc', sc, 2, 'm²');
+        put('r-vs', vs, 0, 'mL');
+        put('r-ic', ic, 2, 'L/min/m²');
+        put('r-is', is, 0, 'mL/m²');
+        put('r-svr', svr, 0, 'dyn·s·cm⁻⁵');
+        put('r-pvr', pvr, 0, 'dyn·s·cm⁻⁵');
+        put('r-rvswi', rvswi, 1, 'g·m/m²');
+        put('r-lvswi', lvswi, 1, 'g·m/m²');
+      }
+      ids.forEach(function (id) { document.getElementById(id).addEventListener('input', update); });
+      update();
+    })();
+  </script>
+  <script src="analytics.js"></script>
+  <script src="js/site-footer.js"></script>
+</body>
+</html>

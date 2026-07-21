@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hemodinamica-v135';
+const CACHE_NAME = 'hemodinamica-v136';
 
 const ASSETS = [
   '/',
@@ -25,6 +25,7 @@ const ASSETS = [
   '/js/site-footer.js',
   '/js/gaso-ocr.js',
   '/calculadora.html',
+  '/resistencias-indices-hemodinamicos.html',
   '/gasometria-acido-base.html',
   '/obesidade.html',
   '/apfel.html',

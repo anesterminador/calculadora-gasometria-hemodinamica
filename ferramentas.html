@@ -800,7 +800,26 @@
           </a>
           <a href="calculadora.html" class="card-link sub">
             <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 14 3-3 3 3 5-5"/></svg>
-            <span class="card-label">Parâmetros Hemodinâmicos</span>
+            <span class="card-label">Gasometria aplicada à hemodinâmica<span class="card-subtitle">transporte de O₂ · gap de CO₂ · quociente respiratório</span></span>
+          </a>
+        </div>
+      </details>
+
+      <!-- PARÂMETROS HEMODINÂMICOS -->
+      <details class="pocus-menu">
+        <summary class="card-link">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          <span class="card-label">Parâmetros Hemodinâmicos</span>
+          <svg class="card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+        </summary>
+        <div class="pocus-sub">
+          <a href="resistencias-indices-hemodinamicos.html" class="card-link sub">
+            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 12l4-2.5"/></svg>
+            <span class="card-label">Resistências e índices<span class="card-subtitle">SVR, PVR, IC, VS, IS e trabalho sistólico</span></span>
+          </a>
+          <a href="calculadora.html" class="card-link sub">
+            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 14 3-3 3 3 5-5"/></svg>
+            <span class="card-label">Gasometria aplicada à hemodinâmica<span class="card-subtitle">transporte de O₂ · gap de CO₂ · quociente respiratório</span></span>
           </a>
         </div>
       </details>
@@ -1088,7 +1107,8 @@
     var CALCULATORS = [
       // Gasometria
       { name: 'Avaliação Ácido-Básica', cat: 'Gasometria', kw: 'gasometria ph acidose alcalose henderson hco3 paco2 bicarbonato anion gap delta', url: 'gasometria-acido-base.html' },
-      { name: 'Parâmetros Hemodinâmicos', cat: 'Gasometria', kw: 'do2 vo2 cao2 cvo2 hemodinamicos calculadora gases extracao oxigenio gap co2', url: 'calculadora.html' },
+      { name: 'Gasometria aplicada à hemodinâmica', cat: 'Parâmetros Hemodinâmicos', kw: 'do2 vo2 cao2 cvo2 hemodinamicos calculadora gases extracao oxigenio transporte gap co2 quociente respiratorio', url: 'calculadora.html' },
+      { name: 'Resistências e índices hemodinâmicos', cat: 'Parâmetros Hemodinâmicos', kw: 'svr rvs pvr rvp resistencia vascular sistemica pulmonar indice cardiaco volume sistolico stroke work rvswi lvswi trabalho sistolico afterload pos-carga', url: 'resistencias-indices-hemodinamicos.html' },
 
       // Alta da RPA
       { name: 'Aldrete e Kroulik', cat: 'Alta da RPA', kw: 'aldrete kroulik rpa recuperacao anestesica alta atividade respiracao circulacao consciencia saturacao', url: 'alta-rpa-aldrete.html' },

@@ -7,7 +7,8 @@ window.AULAS_MODULOS = {
   2: "PVC e Retorno Venoso",
   3: "Gasometria",
   4: "Índices Pletismográficos",
-  5: "Cateter de Artéria Pulmonar"
+  5: "Cateter de Artéria Pulmonar",
+  bonus: "Bônus : POCUS"
 };
 window.AULAS = [
   { a: "Fisiologia cardiovascular parte 1", m: 1, d: "2026-02-01" },
@@ -46,5 +47,7 @@ window.AULAS = [
   { a: "Guiando o CAP — meio alternativo", m: 5, d: "2026-06-17" },
   { a: "Origem dos parâmetros e avaliação — parte 1", m: 5, d: "2026-06-17" },
   { a: "Origem dos parâmetros e avaliação — parte 2", m: 5, d: "2026-06-17" },
-  { a: "Instalação do CAP e Termodiluição na prática", m: 5, d: "2026-07-06" }
+  { a: "Instalação do CAP e Termodiluição na prática", m: 5, d: "2026-07-06" },
+
+  { a: "POCUS - USG do Diafragma", m: "bonus", d: "2026-07-21" }
 ];

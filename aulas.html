@@ -34,7 +34,7 @@
       --text:#e6edf3;--text-muted:#8b9cad;--text-faint:#5a6878;
       --accent:#58a6ff;--accent-bright:#79b8ff;--accent-soft:rgba(88,166,255,.14);
       --success:#3fb950;--danger:#ff6b63;--radius-md:12px;--radius-lg:16px;--maxw:920px;
-      --m1:#58a6ff;--m2:#3fb950;--m3:#f0883e;--m4:#a371f7;--m5:#ff6b63;
+      --m1:#58a6ff;--m2:#3fb950;--m3:#f0883e;--m4:#a371f7;--m5:#ff6b63;--mbonus:#f0b429;
     }
     html,body{background:var(--bg)}
     html{scroll-behavior:smooth}
@@ -174,8 +174,10 @@
         tbody.innerHTML = lib.map(function(x){
           var novo = x.d === maisRecente ? ' <span class="new">NOVA</span>' : '';
           var mnome = MODS[x.m] || ('Módulo '+x.m);
+          var isNum = /^[0-9]+$/.test(String(x.m));
+          var modText = isNum ? ('Módulo '+x.m+' · '+esc(mnome)) : ('Módulo '+esc(mnome));
           return '<tr>'+
-            '<td><div class="t-aula">'+esc(x.a)+'</div><div class="t-modline"><span class="dot" style="background:var(--m'+x.m+')"></span>Módulo '+x.m+' · '+esc(mnome)+'</div></td>'+
+            '<td><div class="t-aula">'+esc(x.a)+'</div><div class="t-modline"><span class="dot" style="background:var(--m'+x.m+')"></span>'+modText+'</div></td>'+
             '<td class="t-data">'+fmt(x.d)+novo+'</td>'+
           '</tr>';
         }).join('');

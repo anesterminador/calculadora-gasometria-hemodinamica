@@ -79,8 +79,10 @@
       destino: href,
       pagina: window.location.pathname || '/'
     });
-    // contador first-party: ofertas (oferta-*) separadas dos demais CTAs
+    // contador first-party: ofertas (oferta-*), "conhecer o curso" (hub-curso)
+    // e os demais CTAs, cada um no seu balde
     if (cta.indexOf('oferta-') === 0) hit('oferta', cta.slice(7));
+    else if (cta === 'hub-curso' || cta.indexOf('curso-') === 0) hit('curso', cta);
     else hit('cta', cta);
   }, true);
 })();

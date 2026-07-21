@@ -64,10 +64,16 @@
       event.preventDefault();
       // mede o compartilhamento (baseline de boca-a-boca). No-op em aparelho com notrack.
       if (window.hemoHit) { try { window.hemoHit('share', window.location.pathname || '/'); } catch (e) {} }
-      var shareUrl = window.location.href;
+      // URL canonica da pagina + UTM: faz o boca-a-boca (WhatsApp/grupo de plantao) aparecer
+      // no GA4 em vez de chegar como "direto"/invisivel.
+      var shareUrl = window.location.origin + window.location.pathname + '?utm_source=share&utm_medium=social';
       var shareTitle = document.title || 'Hemodinamica - Anest Review';
+      // Texto-gancho: no preview do WhatsApp/grupo aparece o valor especifico, nao so a URL crua.
+      var ogt = document.querySelector('meta[property="og:title"]');
+      var pageName = (ogt && ogt.content) ? ogt.content : shareTitle;
+      var shareText = pageName + ' — ferramenta clinica gratis, sem cadastro, funciona offline.';
       if (navigator.share) {
-        navigator.share({ title: shareTitle, url: shareUrl }).catch(function() {});
+        navigator.share({ title: shareTitle, text: shareText, url: shareUrl }).catch(function() {});
         return;
       }
       if (navigator.clipboard && navigator.clipboard.writeText) {

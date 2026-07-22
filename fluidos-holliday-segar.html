@@ -114,6 +114,40 @@
       </div>
     </section>
 
+    <section class="sobre">
+  <style>
+    .sobre { text-align: left; margin-top: 1.5rem; }
+    .sobre h2 { text-align: center; }
+    .sobre h3 { font-size: 0.98rem; font-weight: 700; color: #c3aef2; margin: 1.1rem 0 0.35rem; }
+    .sobre p { font-size: 0.9rem; color: #c9d4de; margin-bottom: 0.7rem; line-height: 1.6; text-align: justify; }
+    .sobre strong { color: #e4dcc4; font-weight: 700; }
+    .sobre .tab { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin: 0.2rem 0 0.7rem; }
+    .sobre .tab td, .sobre .tab th { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--border,#2d3843); text-align: left; }
+    .sobre .tab th { color: var(--text,#e6edf3); font-weight: 700; }
+    .sobre .tab td:last-child, .sobre .tab th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+    .sobre .ref { font-size: 0.8rem; color: #c9d4de; border-top: 1px solid var(--border,#2d3843); padding-top: 0.7rem; margin-top: 0.3rem; }
+    .sobre .ref em { font-style: italic; }
+  </style>
+  <h2>Sobre a regra 4-2-1 de Holliday-Segar</h2>
+  <p>A <strong>regra 4-2-1 de Holliday-Segar</strong> estima a taxa de <strong>líquido de manutenção</strong> — o volume que repõe as perdas basais (urina, perdas insensíveis e fezes) em um paciente que não está em jejum prolongado, hipovolêmico ou perdendo fluido de forma anormal. Descrita para a pediatria, é aplicada como ponto de partida para prescrever a velocidade da hidratação venosa e é a referência ensinada em anestesia e em terapia intensiva pediátrica.</p>
+  <h3>Como calcular</h3>
+  <p>A calculadora soma três faixas de peso e devolve a taxa horária: <strong>4 mL/kg/h</strong> para os primeiros 10 kg, <strong>2 mL/kg/h</strong> dos 11 aos 20 kg e <strong>1 mL/kg/h</strong> para cada quilo acima de 20 kg. O volume diário é simplesmente essa taxa multiplicada por 24 horas. A escala escalonada não é arbitrária: Holliday e Segar vincularam a necessidade de água ao gasto energético (cerca de 100 mL de água por 100 kcal metabolizadas), que cai proporcionalmente à medida que a massa corporal aumenta — daí a taxa por quilo diminuir nas faixas superiores.</p>
+  <h3>Como interpretar</h3>
+  <p>O resultado é a velocidade de infusão de manutenção. Como a fórmula é contínua, cada faixa apenas acrescenta sobre a anterior; alguns exemplos ajudam a fixar a magnitude:</p>
+  <table class="tab">
+    <tr><th>Peso</th><th>Manutenção (mL/h)</th></tr>
+    <tr><td>10 kg</td><td>40 mL/h</td></tr>
+    <tr><td>15 kg</td><td>50 mL/h</td></tr>
+    <tr><td>20 kg</td><td>60 mL/h</td></tr>
+    <tr><td>30 kg</td><td>70 mL/h</td></tr>
+    <tr><td>70 kg</td><td>110 mL/h</td></tr>
+  </table>
+  <p>Note que a taxa cresce devagar acima de 20 kg: um adulto de 70 kg chega a apenas 110 mL/h (cerca de 2,6 L/dia), coerente com a manutenção basal. A regra fornece <strong>volume</strong>, não a composição do fluido — a escolha da solução, do potássio e da glicose depende de eletrólitos, glicemia e do contexto clínico.</p>
+  <h3>Quando usar e limitações</h3>
+  <p>A estimativa cobre apenas as perdas basais: não inclui déficits prévios, reposição de perdas contínuas (febre, drenos, diarreia, terceiro espaço) nem a reanimação volêmica no choque, que seguem lógica própria. Em crianças hospitalizadas e no perioperatório há liberação não osmótica de ADH, e fluidos hipotônicos nesse cenário associam-se a hiponatremia; por isso as diretrizes atuais recomendam <strong>soluções isotônicas</strong> para a manutenção venosa. A regra é um ponto de partida, não uma prescrição: confira sempre o protocolo do seu serviço e reavalie o balanço, o peso e os eletrólitos ao longo da internação.</p>
+  <p class="ref">Referência: Holliday MA, Segar WE. <em>The maintenance need for water in parenteral fluid therapy.</em> Pediatrics. 1957;19(5):823-832. · Diretriz AAP (Feld LG et al.), <em>Maintenance Intravenous Fluids in Children</em>. Pediatrics 2018;142(6):e20183083.</p>
+</section>
+
     <footer class="footer-buttons"></footer>
   </div>
   <script>

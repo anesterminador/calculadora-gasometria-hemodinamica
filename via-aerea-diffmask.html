@@ -197,6 +197,35 @@
       document.querySelectorAll('input[name^="dm-"], #dm-male, #dm-intub, #dm-beard, #dm-snoring, #dm-apnea, #dm-radiation').forEach(function(el) { el.addEventListener('change', dmUpdate); });
       dmUpdate();
     </script>
+    <section class="sobre">
+      <style>
+.sobre { text-align: left; margin-top: 1.5rem; }
+.sobre h2 { text-align: center; }
+.sobre h3 { font-size: 0.98rem; font-weight: 700; color: #c3aef2; margin: 1.1rem 0 0.35rem; }
+.sobre p { font-size: 0.9rem; color: #c9d4de; margin-bottom: 0.7rem; line-height: 1.6; text-align: justify; }
+.sobre strong { color: #e4dcc4; font-weight: 700; }
+.sobre .tab { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin: 0.2rem 0 0.7rem; }
+.sobre .tab td, .sobre .tab th { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--border,#2d3843); text-align: left; }
+.sobre .tab th { color: var(--text,#e6edf3); font-weight: 700; }
+.sobre .tab td:last-child, .sobre .tab th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+.sobre .ref { font-size: 0.8rem; color: #c9d4de; border-top: 1px solid var(--border,#2d3843); padding-top: 0.7rem; margin-top: 0.3rem; }
+.sobre .ref em { font-style: italic; }
+      </style>
+      <h2>Sobre o DIFFMASK</h2>
+      <p>O <strong>DIFFMASK</strong> é um escore pré-operatório que estima o risco de <strong>ventilação difícil sob máscara</strong> (difficult facemask ventilation) no adulto, antes da indução anestésica. Reúne fatores demográficos, antropométricos e de exame da via aérea em uma pontuação única, ajudando a antecipar o cenário em que a oxigenação sob máscara facial pode falhar — informação central para planejar o manejo da via aérea e ter o material de resgate à mão.</p>
+      <h3>Como calcular</h3>
+      <p>Some os pontos de dez itens: idade (0, 2 ou 3), sexo masculino (1), IMC (0, 2 ou 3), intubação difícil prévia (1), distância tireomentoniana (0 a 2), Mallampati (0 a 2), barba completa (<strong>2 pontos</strong>), ronco (1), apneia do sono (1) e alterações de pele por radiação cervical (2). Nos itens graduados marque a faixa correspondente; nos dicotômicos, assinale os presentes. O total vai de <strong>0 a 18</strong> e é atualizado automaticamente.</p>
+      <h3>Como interpretar</h3>
+      <table class="tab">
+        <tr><th>Escore</th><th>Interpretação</th></tr>
+        <tr><td>0 a 4</td><td>Risco baixo</td></tr>
+        <tr><td>&ge; 5</td><td>Risco elevado</td></tr>
+      </table>
+      <p>O ponto de corte de <strong>&ge; 5</strong> identifica ventilação difícil sob máscara com <strong>sensibilidade de 85%</strong> e especificidade de 59%. Na prática, o escore é sensível — deixa poucos casos de risco passarem —, mas gera parcela relevante de falso-positivos: um resultado elevado justifica preparo, não é sinônimo de dificuldade garantida.</p>
+      <h3>Quando usar e limitações</h3>
+      <p>Aplica-se na avaliação pré-anestésica de adultos, complementando — não substituindo — a avaliação global da via aérea (abertura bucal, mobilidade cervical, protrusão mandibular) e o julgamento clínico. Como todo preditor, o desempenho é imperfeito e alguns fatores são reversíveis (a barba, por exemplo). Um escore elevado deve orientar o preparo — posicionamento otimizado, cânula orofaríngea, ventilação a quatro mãos, dispositivo supraglótico e plano de resgate disponíveis; confira sempre o protocolo de via aérea difícil do seu serviço.</p>
+      <p class="ref">Referência: Lundstrøm LH, et al. <em>The DIFFMASK score for predicting difficult facemask ventilation: a cohort study of 46,804 patients.</em> Anaesthesia. 2019;74(10):1267-1276. · Diretriz ASA de manejo da via aérea difícil (2022).</p>
+    </section>
     <footer class="footer-buttons"></footer>
   </div>
   <script src="analytics.js"></script>

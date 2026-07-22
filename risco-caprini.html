@@ -205,6 +205,39 @@
       })();
     </script>
 
+    <section class="sobre">
+      <style>
+        .sobre { text-align: left; margin-top: 1.5rem; }
+        .sobre h2 { text-align: center; }
+        .sobre h3 { font-size: 0.98rem; font-weight: 700; color: #c3aef2; margin: 1.1rem 0 0.35rem; }
+        .sobre p { font-size: 0.9rem; color: #c9d4de; margin-bottom: 0.7rem; line-height: 1.6; text-align: justify; }
+        .sobre strong { color: #e4dcc4; font-weight: 700; }
+        .sobre .tab { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin: 0.2rem 0 0.7rem; }
+        .sobre .tab td, .sobre .tab th { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--border,#2d3843); text-align: left; }
+        .sobre .tab th { color: var(--text,#e6edf3); font-weight: 700; }
+        .sobre .tab td:last-child, .sobre .tab th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+        .sobre .ref { font-size: 0.8rem; color: #c9d4de; border-top: 1px solid var(--border,#2d3843); padding-top: 0.7rem; margin-top: 0.3rem; }
+        .sobre .ref em { font-style: italic; }
+      </style>
+      <h2>Sobre o escore de Caprini</h2>
+      <p>O <strong>escore de Caprini</strong> é um modelo de avaliação de risco que estima a probabilidade de <strong>tromboembolismo venoso (TEV)</strong> — trombose venosa profunda e embolia pulmonar — no período perioperatório, somando fatores clínicos, cirúrgicos e de história pessoal e familiar. Serve para graduar a intensidade da <strong>profilaxia</strong> em pacientes cirúrgicos. Esta calculadora aplica o modelo Caprini modificado, adotado nas diretrizes de tromboprofilaxia em cirurgia.</p>
+      <h3>Como calcular</h3>
+      <p>Some os pontos de cada domínio, sem limite superior fixo. A idade contribui com 0 a 3 pontos (&lt;41, 41–60, 61–74 e ≥75 anos) e o porte cirúrgico previsto adiciona de 1 a 5 pontos (pequeno porte; artroscópica ou aberta/laparoscópica &gt;45 min; até artroplastia eletiva, que vale 5). Os demais fatores valem 1, 2, 3 ou 5 pontos conforme o peso trombótico: varizes e IMC &gt;25 kg/m² somam 1 ponto; malignidade e acesso venoso central, 2 pontos; história pessoal ou familiar de TEV, trombofilia e HIT, 3 pontos; AVC recente e fratura de quadril, pelve ou perna, 5 pontos.</p>
+      <h3>Como interpretar</h3>
+      <p>O total define uma de quatro categorias, cujos percentuais refletem o risco estimado de TEV <strong>na ausência de profilaxia</strong>:</p>
+      <table class="tab">
+        <tr><th>Pontuação</th><th>Categoria</th><th>Risco de TEV</th></tr>
+        <tr><td>0</td><td>Muito baixo</td><td>&lt;0,5%</td></tr>
+        <tr><td>1–2</td><td>Baixo</td><td>1,5%</td></tr>
+        <tr><td>3–4</td><td>Moderado</td><td>3,0%</td></tr>
+        <tr><td>≥5</td><td>Alto</td><td>6,0%</td></tr>
+      </table>
+      <p>Na estratificação da diretriz ACCP/CHEST, o risco muito baixo (0 ponto) costuma ser conduzido apenas com deambulação precoce e o baixo risco com medidas mecânicas, enquanto a partir de <strong>≥5 pontos</strong> (alto risco, ~<strong>6,0%</strong>) indica-se profilaxia farmacológica. Na faixa moderada, a escolha entre profilaxia mecânica e farmacológica pondera o risco hemorrágico individual.</p>
+      <h3>Quando usar e limitações</h3>
+      <p>O escore foi desenvolvido e validado sobretudo em pacientes de cirurgia geral e abdominopélvica, contexto em que embasa a decisão de tromboprofilaxia; sua acurácia é menor em populações não avaliadas na derivação, como certos cenários ortopédicos e clínicos, que dispõem de modelos próprios. É uma ferramenta de estratificação e não substitui o julgamento clínico nem a avaliação do risco de sangramento — a indicação, o agente e a duração da profilaxia devem seguir o protocolo do seu serviço.</p>
+      <p class="ref">Referência: Caprini JA. <em>Thrombosis risk assessment as a guide to quality patient care.</em> Dis Mon. 2005;51(2-3):70-78. · Gould MK et al. <em>Prevention of VTE in Nonorthopedic Surgical Patients (ACCP/CHEST, 9ª ed.).</em> Chest. 2012;141(2 Suppl):e227S-e277S.</p>
+    </section>
+
     <footer class="footer-buttons"></footer>
   </div>
   <script src="analytics.js"></script>

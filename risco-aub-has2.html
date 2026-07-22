@@ -109,6 +109,40 @@
       }
       inputs.forEach(function(cb) { cb.addEventListener('change', update); });
     </script>
+    <section class="sobre">
+      <style>
+      .sobre { text-align: left; margin-top: 1.5rem; }
+      .sobre h2 { text-align: center; }
+      .sobre h3 { font-size: 0.98rem; font-weight: 700; color: #c3aef2; margin: 1.1rem 0 0.35rem; }
+      .sobre p { font-size: 0.9rem; color: #c9d4de; margin-bottom: 0.7rem; line-height: 1.6; text-align: justify; }
+      .sobre strong { color: #e4dcc4; font-weight: 700; }
+      .sobre .tab { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin: 0.2rem 0 0.7rem; }
+      .sobre .tab td, .sobre .tab th { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--border,#2d3843); text-align: left; }
+      .sobre .tab th { color: var(--text,#e6edf3); font-weight: 700; }
+      .sobre .tab td:last-child, .sobre .tab th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+      .sobre .ref { font-size: 0.8rem; color: #c9d4de; border-top: 1px solid var(--border,#2d3843); padding-top: 0.7rem; margin-top: 0.3rem; }
+      .sobre .ref em { font-style: italic; }
+      </style>
+      <h2>Sobre o AUB-HAS2 Cardiovascular Risk Index</h2>
+      <p>O <strong>AUB-HAS2 Cardiovascular Risk Index</strong> foi desenvolvido na American University of Beirut para estimar o risco de <strong>eventos cardiovasculares maiores</strong> — óbito, infarto do miocárdio ou acidente vascular cerebral nos 30 dias após <strong>cirurgia não cardíaca</strong>. Derivado de uma grande base cirúrgica (ACS-NSQIP), reúne seis variáveis objetivas já disponíveis na avaliação pré-operatória de rotina, o que o torna rápido de aplicar à beira do leito.</p>
+
+      <h3>Como calcular</h3>
+      <p>Cada um dos seis critérios presentes vale <strong>1 ponto</strong> e a soma varia de 0 a 6, sem ponderação — todos os fatores pesam igual. A sigla HAS2 resume os itens: história de doença cardíaca, idade ≥75 anos, sintomas (angina ou dispneia), hemoglobina &lt;12 g/dL (anemia), cirurgia vascular arterial e cirurgia de emergência.</p>
+
+      <h3>Como interpretar</h3>
+      <table class="tab">
+        <tr><th>Pontuação</th><th>Risco cardiovascular</th></tr>
+        <tr><td>0–1</td><td>Baixo</td></tr>
+        <tr><td>2–3</td><td>Intermediário</td></tr>
+        <tr><td>≥ 4</td><td>Alto</td></tr>
+      </table>
+      <p>A pontuação distribui o paciente em três faixas de risco crescente. Diferentemente do RCRI, o AUB-HAS2 incorpora anemia e cirurgia de emergência, fatores de peso reconhecido no desfecho perioperatório. Pela diretriz americana de 2024 de avaliação cardiovascular, uma pontuação a partir de <strong>2 pontos</strong> já sinaliza risco aumentado e motiva investigação adicional antes de cirurgia eletiva.</p>
+
+      <h3>Quando usar e limitações</h3>
+      <p>O escore foi construído e validado para <strong>cirurgia não cardíaca</strong> e serve como triagem inicial, não como decisão final. Não dispensa avaliar a <strong>capacidade funcional</strong> (METs) e, quando indicado, <strong>biomarcadores</strong> (BNP/NT-proBNP, troponina), nem substitui o julgamento clínico. Por derivar de base retrospectiva, estima probabilidade populacional e não garante o desfecho individual; seu desempenho segue sendo comparado ao do RCRI em diferentes subgrupos cirúrgicos.</p>
+
+      <p class="ref">Referência: Dakik HA, Chehab O, Eldirani M, et al. <em>A New Index for Pre-Operative Cardiovascular Evaluation.</em> J Am Coll Cardiol. 2019;73(24):3067–3078. · Diretriz ACC/AHA 2024 de avaliação cardiovascular perioperatória para cirurgia não cardíaca.</p>
+    </section>
     <footer class="footer-buttons"></footer>
   </div>
   <script src="analytics.js"></script>

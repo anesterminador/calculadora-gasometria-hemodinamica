@@ -175,6 +175,42 @@
       });
     </script>
 
+    <section class="sobre">
+      <style>
+        .sobre { text-align: left; margin-top: 1.5rem; }
+        .sobre h2 { text-align: center; }
+        .sobre h3 { font-size: 0.98rem; font-weight: 700; color: #c3aef2; margin: 1.1rem 0 0.35rem; }
+        .sobre p { font-size: 0.9rem; color: #c9d4de; margin-bottom: 0.7rem; line-height: 1.6; text-align: justify; }
+        .sobre strong { color: #e4dcc4; font-weight: 700; }
+        .sobre .tab { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin: 0.2rem 0 0.7rem; }
+        .sobre .tab td, .sobre .tab th { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--border,#2d3843); text-align: left; }
+        .sobre .tab th { color: var(--text,#e6edf3); font-weight: 700; }
+        .sobre .tab td:last-child, .sobre .tab th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+        .sobre .ref { font-size: 0.8rem; color: #c9d4de; border-top: 1px solid var(--border,#2d3843); padding-top: 0.7rem; margin-top: 0.3rem; }
+        .sobre .ref em { font-style: italic; }
+      </style>
+
+      <h2>Sobre o escore de Aldrete e Kroulik</h2>
+      <p>O <strong>escore de Aldrete e Kroulik</strong> é um instrumento objetivo para avaliar a recuperação da anestesia e apoiar a decisão de alta da <strong>sala de recuperação pós-anestésica (SRPA/RPA)</strong>. Descrito originalmente por Aldrete e Kroulik em 1970 como Post-Anesthetic Recovery Score, foi revisado em 1995 para substituir a avaliação da cor da pele pela <strong>oximetria de pulso (SpO₂)</strong> — é essa versão modificada que a calculadora reproduz.</p>
+
+      <h3>Como calcular</h3>
+      <p>São avaliados <strong>cinco domínios</strong> — atividade motora, respiração, circulação, consciência e saturação de oxigênio —, cada um pontuado em <strong>0, 1 ou 2</strong>. A soma varia de 0 a um <strong>máximo de 10</strong>. A circulação é ancorada à pressão arterial pré-anestésica (variação de até 20% pontua 2; entre 20% e 50%, pontua 1; igual ou acima de 50%, pontua 0), e a saturação é aferida por oximetria (acima de 92% em ar ambiente pontua 2).</p>
+
+      <h3>Como interpretar</h3>
+      <p>Quanto maior o escore, mais completa a recuperação. A calculadora sinaliza a pontuação para leitura rápida:</p>
+      <table class="tab">
+        <tr><th>Escore</th><th>Sinalização</th></tr>
+        <tr><td>8 a 10</td><td>azul (padrão)</td></tr>
+        <tr><td>0 a 7</td><td>vermelho</td></tr>
+      </table>
+      <p>A literatura costuma recomendar um escore mínimo para considerar a liberação — frequentemente <strong>≥ 9</strong> —, mas não há ponto de corte universal: o valor aceito varia entre serviços, e muitos protocolos exigem ainda que nenhum domínio esteja pontuado com zero.</p>
+
+      <h3>Quando usar e limitações</h3>
+      <p>O escore é aplicado na admissão à SRPA e repetido de forma seriada até que o paciente atinja os critérios de alta. É uma ferramenta de recuperação geral e <strong>não substitui o julgamento clínico</strong>: não avalia dor, náusea e vômito pós-operatórios, sangramento, temperatura, diurese ou regressão de bloqueio neuraxial, motivo pelo qual muitos serviços o complementam com critérios adicionais (por exemplo, o PADSS em cirurgia ambulatorial). Confira sempre o protocolo do seu serviço.</p>
+
+      <p class="ref">Referência: Aldrete JA, Kroulik D. <em>A postanesthetic recovery score.</em> Anesth Analg. 1970;49(6):924-934. · Aldrete JA. <em>The post-anesthesia recovery score revisited.</em> J Clin Anesth. 1995;7(1):89-91.</p>
+    </section>
+
     <footer class="footer-buttons"></footer>
   </div>
   <script src="analytics.js"></script>

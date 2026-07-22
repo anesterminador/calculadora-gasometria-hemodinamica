@@ -138,6 +138,39 @@
       </div>
     </section>
 
+    <section class="sobre">
+      <style>
+    .sobre { text-align: left; margin-top: 1.5rem; }
+    .sobre h2 { text-align: center; }
+    .sobre h3 { font-size: 0.98rem; font-weight: 700; color: #c3aef2; margin: 1.1rem 0 0.35rem; }
+    .sobre p { font-size: 0.9rem; color: #c9d4de; margin-bottom: 0.7rem; line-height: 1.6; text-align: justify; }
+    .sobre strong { color: #e4dcc4; font-weight: 700; }
+    .sobre .tab { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin: 0.2rem 0 0.7rem; }
+    .sobre .tab td, .sobre .tab th { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--border,#2d3843); text-align: left; }
+    .sobre .tab th { color: var(--text,#e6edf3); font-weight: 700; }
+    .sobre .tab td:last-child, .sobre .tab th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+    .sobre .ref { font-size: 0.8rem; color: #c9d4de; border-top: 1px solid var(--border,#2d3843); padding-top: 0.7rem; margin-top: 0.3rem; }
+    .sobre .ref em { font-style: italic; }
+      </style>
+      <h2>Sobre a Perda Sanguínea Máxima Permitida (MABL)</h2>
+      <p>A <strong>perda sanguínea máxima permitida (MABL)</strong>, também chamada de perda sanguínea aceitável (ABL), estima o volume de sangue que o paciente pode perder no intraoperatório antes que o hematócrito caia abaixo de um limite previamente escolhido — ponto a partir do qual se passa a considerar a transfusão de concentrado de hemácias. É uma ferramenta de planejamento pré e intraoperatório, particularmente útil em <strong>pediatria</strong>, onde o volume sanguíneo absoluto é pequeno e uma perda modesta em mililitros já representa fração relevante da volemia.</p>
+      <h3>Como calcular</h3>
+      <p>O cálculo parte do <strong>volume sanguíneo estimado (EBV)</strong>, que varia com a idade e é multiplicado pelo peso para obter a volemia. Sobre esse valor aplica-se a queda relativa de hematócrito tolerada: MABL = (peso × EBV) × (Hct inicial − Hct desejado) / Hct inicial. O resultado é o volume de perda que leva o hematócrito do valor inicial ao valor desejado, assumindo reposição volêmica isovolêmica. A calculadora também estima a reposição com <strong>3 mL de Ringer lactato por mL de perda sanguínea</strong> (3 × MABL), refletindo a distribuição do cristaloide entre os compartimentos intra e extravascular.</p>
+      <table class="tab">
+        <tr><th>Faixa etária</th><th>EBV (mL/kg)</th></tr>
+        <tr><td>Pré-termo</td><td>110</td></tr>
+        <tr><td>Recém-nascido a termo</td><td>90</td></tr>
+        <tr><td>3–12 meses</td><td>75</td></tr>
+        <tr><td>&gt;1 ano</td><td>70</td></tr>
+      </table>
+      <p>Exemplo: para uma criança de 15 kg com EBV de 70 mL/kg cujo hematócrito de 38% não se deseja deixar cair abaixo de 25%, a MABL fica em torno de <strong>359 mL</strong>, com reposição estimada de cerca de 1078 mL de Ringer lactato.</p>
+      <h3>Como interpretar</h3>
+      <p>O número em si não é um gatilho de transfusão, e sim o teto de perda compatível com o hematócrito mínimo escolhido. Enquanto a perda medida permanece abaixo da MABL, a normovolemia costuma ser mantida apenas com cristaloide ou coloide, sem hemácias. Quanto mais baixo o hematócrito aceitável, maior a MABL calculada — por isso a definição desse piso é decisiva. Na criança previamente hígida, admite-se com frequência um hematócrito de <strong>20% a 25%</strong> como limite inferior, mas a conduta deve ser individualizada e acompanhada pela evolução clínica, não apenas pelo volume estimado.</p>
+      <h3>Quando usar e limitacoes</h3>
+      <p>A MABL é útil no planejamento de procedimentos com sangramento significativo esperado, orientando quando antecipar reserva e reposição de hemácias. Os volumes por quilograma são <strong>estimativas</strong>: a volemia real varia com composição corporal, prematuridade e cardiopatia, e a fórmula pressupõe diluição linear e reposição isovolêmica, simplificação que se afasta da cinética real do hematócrito em grandes volumes. O cálculo também não contempla coagulopatia dilucional nem consumo de plaquetas e fatores durante transfusão maciça. Serve como referência quantitativa, não substitui a medida seriada de hematócrito/hemoglobina nem o julgamento clínico à beira do leito; confira sempre o protocolo de transfusão do seu serviço.</p>
+      <p class="ref">Referência: Gross JB. <em>Estimating allowable blood loss: corrected for dilution.</em> Anesthesiology. 1983;58(3):277-280. · Coté CJ, Lerman J, Anderson BJ. <em>A Practice of Anesthesia for Infants and Children.</em> 6ª ed. Elsevier; 2019.</p>
+    </section>
+
     <footer class="footer-buttons"></footer>
   </div>
   <script>

@@ -105,6 +105,31 @@
       }
       inputs.forEach(function(cb) { cb.addEventListener('change', update); });
     </script>
+    <section class="sobre">
+      <style>
+        .sobre { text-align: left; margin-top: 1.5rem; }
+        .sobre h2 { text-align: center; }
+        .sobre h3 { font-size: 0.98rem; font-weight: 700; color: #c3aef2; margin: 1.1rem 0 0.35rem; }
+        .sobre p { font-size: 0.9rem; color: #c9d4de; margin-bottom: 0.7rem; line-height: 1.6; text-align: justify; }
+        .sobre strong { color: #e4dcc4; font-weight: 700; }
+        .sobre .tab { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin: 0.2rem 0 0.7rem; }
+        .sobre .tab td, .sobre .tab th { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--border,#2d3843); text-align: left; }
+        .sobre .tab th { color: var(--text,#e6edf3); font-weight: 700; }
+        .sobre .tab td:last-child, .sobre .tab th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+        .sobre .ref { font-size: 0.8rem; color: #c9d4de; border-top: 1px solid var(--border,#2d3843); padding-top: 0.7rem; margin-top: 0.3rem; }
+        .sobre .ref em { font-style: italic; }
+      </style>
+      <h2>Sobre o Escore de Apfel (NVPO)</h2>
+      <p>O <strong>Escore de Apfel</strong> é uma ferramenta simplificada para estimar o risco de <strong>náusea e vômito pós-operatório (NVPO</strong>, também referido pela sigla inglesa PONV) em adultos submetidos a anestesia geral. Derivado em 1999 do cruzamento de coortes cirúrgicas, reduz a predição a quatro fatores independentes obtidos à beira-leito, o que o consolidou como o escore mais usado na prática anestésica e como base das diretrizes de manejo de NVPO.</p>
+      <h3>Como calcular</h3>
+      <p>Cada um dos <strong>quatro fatores</strong> presentes vale <strong>1 ponto</strong> — sexo feminino, condição de não fumante, história prévia de NVPO e previsão de uso pós-operatório de opioides —, gerando uma pontuação de <strong>0 a 4</strong>. Na descrição original o critério de antecedente engloba também a cinetose (enjoo de movimento). Os itens são características do paciente e da técnica anestésica, não do tipo de cirurgia.</p>
+      <h3>Como interpretar</h3>
+      <table class="tab"><tr><th>Pontuação</th><th>Risco de NVPO (sem profilaxia)</th></tr><tr><td>0</td><td>10%</td></tr><tr><td>1</td><td>21%</td></tr><tr><td>2</td><td>39%</td></tr><tr><td>3</td><td>61%</td></tr><tr><td>4</td><td>79%</td></tr></table>
+      <p>Cada fator adicional eleva de forma expressiva a probabilidade, que vai de 10% sem nenhum fator a <strong>79%</strong> com os quatro. Na prática, a estratégia é escalonar a profilaxia antiemética conforme o risco: pontuações baixas podem dispensar profilaxia de rotina, enquanto <strong>2 ou mais</strong> pontos habitualmente motivam profilaxia multimodal (antieméticos de classes diferentes), conforme as diretrizes de consenso. Reduzir fatores modificáveis — como optar por anestesia venosa total e poupar opioides — também diminui o risco basal.</p>
+      <h3>Quando usar e limitações</h3>
+      <p>Aplica-se a adultos sob anestesia geral; para a população pediátrica emprega-se o escore de Eberhart (POVOC), com fatores distintos. O Apfel foi concebido para estratificar risco e orientar a profilaxia, não para prever a resposta individual — um paciente de baixo escore ainda pode apresentar NVPO. A predição não incorpora o tipo de cirurgia nem o agente anestésico, e pode superestimar ou subestimar em subgrupos específicos. Use o valor como apoio à decisão, articulado ao julgamento clínico e ao protocolo antiemético do seu serviço.</p>
+      <p class="ref">Referência: Apfel CC, Läärä E, Koivuranta M, et al. <em>A simplified risk score for predicting postoperative nausea and vomiting: conclusions from cross-validations between two centers.</em> Anesthesiology. 1999;91(3):693-700. · Diretriz: Gan TJ et al. <em>Fourth Consensus Guidelines for the Management of Postoperative Nausea and Vomiting.</em> Anesth Analg. 2020;131(2):411-448.</p>
+    </section>
     <footer class="footer-buttons"></footer>
   </div>
   <script src="analytics.js"></script>

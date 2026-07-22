@@ -327,6 +327,45 @@
       </div>
     </section>
 
+    <section class="sobre">
+      <style>
+        .sobre { text-align: left; margin-top: 1.5rem; }
+        .sobre h2 { text-align: center; }
+        .sobre h3 { font-size: 0.98rem; font-weight: 700; color: #c3aef2; margin: 1.1rem 0 0.35rem; }
+        .sobre p { font-size: 0.9rem; color: #c9d4de; margin-bottom: 0.7rem; line-height: 1.6; text-align: justify; }
+        .sobre strong { color: #e4dcc4; font-weight: 700; }
+        .sobre .tab { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin: 0.2rem 0 0.7rem; }
+        .sobre .tab td, .sobre .tab th { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--border,#2d3843); text-align: left; }
+        .sobre .tab th { color: var(--text,#e6edf3); font-weight: 700; }
+        .sobre .tab td:last-child, .sobre .tab th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+        .sobre .ref { font-size: 0.8rem; color: #c9d4de; border-top: 1px solid var(--border,#2d3843); padding-top: 0.7rem; margin-top: 0.3rem; }
+        .sobre .ref em { font-style: italic; }
+      </style>
+
+      <h2>Sobre o acoplamento ventrículo-arterial (VAC)</h2>
+
+      <p>O <strong>acoplamento ventrículo-arterial (VAC)</strong> expressa, em um único número adimensional, o equilíbrio entre a carga que a árvore arterial impõe ao ventrículo esquerdo e a contratilidade desse ventrículo. É definido pela razão <strong>Ea/Ees</strong>, na qual a elastância arterial efetiva (Ea) traduz a pós-carga e a elastância ventricular ao final da sístole (Ees) traduz a contratilidade independente da carga. Historicamente a Ees exigia cateter de condutância e família de alças pressão-volume; o <strong>método single-beat de Chen</strong> estima esses valores a partir de dados não invasivos (pressões, volume sistólico e intervalos sistólicos), motivo pelo qual esta ferramenta é assumidamente <strong>experimental</strong> e reproduz passo a passo o algoritmo publicado por Chen et al. (JACC, 2001).</p>
+
+      <h3>Como calcular</h3>
+      <p>A calculadora recebe pressão sistólica e diastólica, volume sistólico, fração de ejeção, período de pré-ejeção (PPE) e período sistólico total (PST). A partir daí estima a pressão ao final da sístole como <strong>Pes ≈ 0,9 × PAS</strong> e o tempo normalizado tNd = PPE / PST (limitado ao intervalo 0–1). Esse tNd alimenta um polinômio de 7ª ordem (coeficientes originais de Chen) para obter a elastância normalizada média, que combinada à EF em fração e à razão Pd/Pes gera ENd_est. Com isso, <strong>Ees = [Pd − ENd_est × Pes] / (VS × ENd_est)</strong> e <strong>Ea = Pes / VS</strong>, ambas em mmHg/mL, e o VAC é a razão Ea/Ees. Os três resultados aparecem com duas casas decimais; se o PPE não for menor que o PST, ou se algum valor for inválido, a página não retorna número.</p>
+
+      <h3>Como interpretar</h3>
+      <p>A página devolve apenas os valores numéricos de Ees, Ea e Ea/Ees — não aplica faixas nem classifica o resultado. Os valores abaixo são orientações da literatura para leitura à beira-leito, não limiares embutidos na calculadora.</p>
+      <table class="tab">
+        <tr><th>Leitura</th><th>Ea/Ees</th></tr>
+        <tr><td>acoplamento preservado, repouso</td><td>≈ 0,7–1,0</td></tr>
+        <tr><td>máximo trabalho sistólico</td><td>≈ 1,0</td></tr>
+        <tr><td>máxima eficiência mecânica</td><td>≈ 0,5–0,7</td></tr>
+        <tr><td>desacoplamento V-A (Ea alto e/ou Ees baixo)</td><td>↑ progressivo (&gt; ~1,0)</td></tr>
+      </table>
+      <p>Na prática interessa a direção do desequilíbrio: um Ea/Ees crescente sugere <strong>desacoplamento</strong> por queda de contratilidade, por excesso de pós-carga, ou por ambos — padrão comum na insuficiência cardíaca e no choque. Discriminar se o problema é predominantemente ventricular (Ees baixa) ou arterial (Ea alta) orienta a escolha entre suporte inotrópico e manejo da pós-carga, raciocínio central da abordagem BEAT.</p>
+
+      <h3>Quando usar e limitações</h3>
+      <p>É uma estimativa de batimento único, útil para acompanhar tendência do acoplamento sem cateterismo, e não uma medida invasiva de referência. A acurácia depende de volume sistólico e intervalos sistólicos bem medidos por ecocardiografia (operador-dependente) e tende a degradar em extremos de fração de ejeção, pressão ou frequência, além de partir da premissa fixa Pes ≈ 0,9 × PAS. Fibrilação atrial, valvopatias significativas e taquiarritmias comprometem a leitura. Trate o número como apoio ao raciocínio, sempre integrado ao quadro clínico, ao ecocardiograma e ao protocolo do seu serviço.</p>
+
+      <p class="ref">Referência: Chen CH, Fetics B, Nevo E, et al., <em>Noninvasive single-beat determination of left ventricular end-systolic elastance in humans</em>, J Am Coll Cardiol 2001;38:2028–2034. Interpretação adaptada de Guarracino F, Bertini P, Pinsky MR, <em>Management of cardiovascular insufficiency in ICU: the BEAT approach</em>, Minerva Anestesiol 2021;87:476–480.</p>
+    </section>
+
     <footer class="footer-buttons"></footer>
   </div>
   <script>

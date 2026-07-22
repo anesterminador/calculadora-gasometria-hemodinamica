@@ -197,6 +197,42 @@
       </table>
     </section>
 
+    <section class="sobre">
+  <style>
+  .sobre { text-align: left; margin-top: 1.5rem; }
+  .sobre h2 { text-align: center; }
+  .sobre h3 { font-size: 0.98rem; font-weight: 700; color: #c3aef2; margin: 1.1rem 0 0.35rem; }
+  .sobre p { font-size: 0.9rem; color: #c9d4de; margin-bottom: 0.7rem; line-height: 1.6; text-align: justify; }
+  .sobre strong { color: #e4dcc4; font-weight: 700; }
+  .sobre .tab { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin: 0.2rem 0 0.7rem; }
+  .sobre .tab td, .sobre .tab th { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--border,#2d3843); text-align: left; }
+  .sobre .tab th { color: var(--text,#e6edf3); font-weight: 700; }
+  .sobre .tab td:last-child, .sobre .tab th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+  .sobre .ref { font-size: 0.8rem; color: #c9d4de; border-top: 1px solid var(--border,#2d3843); padding-top: 0.7rem; margin-top: 0.3rem; }
+  .sobre .ref em { font-style: italic; }
+  </style>
+
+  <h2>Sobre o Mechanical Power (MP) em VCV</h2>
+  <p>A <strong>potência mecânica</strong> (mechanical power, MP) expressa a energia total que o ventilador transfere ao sistema respiratório a cada minuto, em joules por minuto (J/min). Ela reúne em um único número os principais determinantes da <strong>lesão pulmonar induzida pela ventilação (VILI)</strong> — volume corrente, driving pressure, pressão de pico e frequência respiratória —, funcionando como marcador de agressão mecânica acumulada na ventilação controlada a volume (VCV). Diferente de olhar cada parâmetro isolado, a MP mostra o efeito combinado deles ao longo do tempo.</p>
+
+  <h3>Como calcular</h3>
+  <p>A página usa a equação simplificada para VCV com fluxo constante: <strong>MP = 0,098 × FR × VT × (P_pico − ΔP/2)</strong>. O fator <strong>0,098</strong> converte L·cmH₂O em joules; FR é a frequência respiratória (ciclos/min), VT o volume corrente (L), P_pico a pressão de pico e ΔP a <strong>driving pressure</strong> (P. platô − PEEP), ambas em cmH₂O. Preenchidos os quatro campos, o resultado surge diretamente em J/min. Essa forma reduzida aproxima a equação completa de Gattinoni sem exigir medida de fluxo ou tempo inspiratório.</p>
+
+  <h3>Como interpretar</h3>
+  <table class="tab">
+    <tr><th>MP (J/min)</th><th>Nível de risco</th></tr>
+    <tr><td>&lt; 12</td><td>Baixo (meta protetora)</td></tr>
+    <tr><td>12 – 17</td><td>Moderado</td></tr>
+    <tr><td>&gt; 17</td><td>Alto</td></tr>
+  </table>
+  <p>Valores <strong>abaixo de 12 J/min</strong> alinham-se ao objetivo de ventilação protetora. Entre 12 e 17 J/min convém revisar os componentes que mais elevam a potência (volume corrente, driving pressure e frequência). Acima de <strong>17 J/min</strong> a MP passou a ser associada, em coortes de pacientes críticos, a maior mortalidade hospitalar. Como a energia entregue distribui-se apenas pelo parênquima aerado, um mesmo valor de MP tende a ser mais lesivo quanto menor o pulmão ventilável (baby lung).</p>
+
+  <h3>Quando usar e limitações</h3>
+  <p>A MP é uma ferramenta de vigilância à beira do leito, útil para acompanhar a agressão ventilatória ao longo da internação e comparar ajustes de parâmetros. Ela não é diagnóstica isoladamente e não substitui a avaliação de complacência, troca gasosa e do quadro clínico. A equação vale para <strong>VCV com fluxo constante</strong> (onda quadrada); em fluxo desacelerado ou modos pressóricos os valores divergem e exigem fórmulas próprias. Os cortes são orientadores, não gatilhos automáticos de conduta. Confira sempre o protocolo do seu serviço.</p>
+
+  <p class="ref">Referência: Gattinoni L, Tonetti T, Cressoni M, et al. <em>Ventilator-related causes of lung injury: the mechanical power.</em> Intensive Care Med. 2016;42(10):1567-1575. · Giosa L, Busana M, Pasticci I, et al. <em>Mechanical power at a glance: a simple surrogate for volume-controlled ventilation.</em> Intensive Care Med Exp. 2019;7(1):61. · Serpa Neto A, et al. <em>Mechanical power of ventilation is associated with mortality in critically ill patients.</em> Intensive Care Med. 2018;44(11):1914-1922.</p>
+</section>
+
     <footer class="footer-buttons"></footer>
   </div>
 

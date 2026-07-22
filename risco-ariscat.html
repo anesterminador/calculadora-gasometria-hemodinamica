@@ -91,8 +91,8 @@
         <label for="ar-spo2-8">91% a 95% (8 pontos)</label>
       </div>
       <div class="check-item">
-        <input type="radio" name="ar-spo2" id="ar-spo2-24" value="24" aria-label="≤94%">
-        <label for="ar-spo2-24">≤94% (24 pontos)</label>
+        <input type="radio" name="ar-spo2" id="ar-spo2-24" value="24" aria-label="≤90%">
+        <label for="ar-spo2-24">≤90% (24 pontos)</label>
       </div>
       <hr class="ar-divider">
 
@@ -184,6 +184,37 @@
       });
       update();
     </script>
+    <section class="sobre">
+  <style>
+  .sobre { text-align: left; margin-top: 1.5rem; }
+  .sobre h2 { text-align: center; }
+  .sobre h3 { font-size: 0.98rem; font-weight: 700; color: #c3aef2; margin: 1.1rem 0 0.35rem; }
+  .sobre p { font-size: 0.9rem; color: #c9d4de; margin-bottom: 0.7rem; line-height: 1.6; text-align: justify; }
+  .sobre strong { color: #e4dcc4; font-weight: 700; }
+  .sobre .tab { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin: 0.2rem 0 0.7rem; }
+  .sobre .tab td, .sobre .tab th { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--border,#2d3843); text-align: left; }
+  .sobre .tab th { color: var(--text,#e6edf3); font-weight: 700; }
+  .sobre .tab td:last-child, .sobre .tab th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+  .sobre .ref { font-size: 0.8rem; color: #c9d4de; border-top: 1px solid var(--border,#2d3843); padding-top: 0.7rem; margin-top: 0.3rem; }
+  .sobre .ref em { font-style: italic; }
+  </style>
+  <h2>Sobre o escore ARISCAT</h2>
+  <p>O <strong>ARISCAT</strong> (Assess Respiratory Risk in Surgical Patients in Catalonia) é um escore que estima o risco de <strong>complicações pulmonares pós-operatórias</strong> em cirurgia sob anestesia geral, regional ou local. Foi derivado e validado em uma coorte cirúrgica de base populacional na Catalunha por Canet e colaboradores, reunindo <strong>sete preditores</strong> pré-operatórios e cirúrgicos em uma pontuação única para orientar a avaliação pré-anestésica.</p>
+  <h3>Como calcular</h3>
+  <p>Diferente de índices em que cada fator vale um ponto, o ARISCAT é um <strong>escore ponderado</strong>: cada variável contribui com um peso próprio e a soma total define a faixa de risco. Pontuam a idade (3 pontos entre 51 e 80 anos; 16 pontos acima de 80), a saturação pré-operatória de oxigênio (8 pontos na faixa de 91–95% e 24 pontos quando ≤90%), a infecção respiratória no mês anterior (17 pontos), a anemia pré-operatória com hemoglobina &lt;100 g/L (11 pontos), o local da incisão (15 pontos se abdominal superior; 24 pontos se intratorácica), a duração da cirurgia (16 pontos de 2 a 3 horas; 23 pontos acima de 3 horas) e a cirurgia de emergência (8 pontos). Os itens de maior peso — incisão intratorácica e a saturação mais baixa, ambos com 24 pontos — sinalizam sozinhos risco relevante.</p>
+  <h3>Como interpretar</h3>
+  <p>A pontuação total distribui o paciente em três faixas, com incidência crescente de complicações pulmonares no pós-operatório:</p>
+  <table class="tab">
+    <tr><th>Pontuação</th><th>Risco — incidência</th></tr>
+    <tr><td>&lt;26</td><td>baixo — 1,6%</td></tr>
+    <tr><td>26–44</td><td>intermediário — 13,3%</td></tr>
+    <tr><td>≥45</td><td>alto — ≥ 42,1%</td></tr>
+  </table>
+  <p>A partir de <strong>26 pontos</strong> o risco passa de baixo a intermediário e, a partir de <strong>45 pontos</strong>, torna-se alto, com incidência que ultrapassa 40%. O salto entre as faixas é acentuado, o que ajuda a identificar quem se beneficia de estratégias protetoras — ventilação protetora, analgesia otimizada, mobilização precoce, fisioterapia respiratória — e de vigilância pós-operatória mais próxima.</p>
+  <h3>Quando usar e limitações</h3>
+  <p>Use o ARISCAT na avaliação pré-anestésica para estratificar o risco pulmonar e calibrar a intensidade das medidas preventivas e o nível de cuidado no pós-operatório. O escore foi construído em população cirúrgica geral não cardíaca e não substitui o julgamento clínico nem a avaliação individualizada: comorbidades pulmonares específicas, estado funcional e fatores intraoperatórios não capturados podem modificar o risco. Reavalie sempre à luz do contexto do paciente e da cirurgia.</p>
+  <p class="ref">Referência: Canet J, Gallart L, Gomar C, et al. <em>Prediction of postoperative pulmonary complications in a population-based surgical cohort.</em> Anesthesiology. 2010;113(6):1338-1350. · Validação externa: Mazo V, Sabaté S, Canet J, et al. Anesthesiology. 2014;121(2):219-231 (estudo PERISCOPE).</p>
+</section>
     <footer class="footer-buttons"></footer>
   </div>
   <script src="analytics.js"></script>

@@ -375,6 +375,42 @@
       <p class="hint">Esta ferramenta é <strong>experimental</strong> e foi criada exclusivamente para <strong>fins de estudo e aprendizado</strong>. A detecção automática a partir de uma foto está sujeita a erros de iluminação, ângulo, resolução, presença de linhas de referência e outros fatores. <strong>Não substitui o valor de ΔPP/PPV exibido pelo monitor multiparamétrico do paciente</strong> nem qualquer julgamento clínico. Sempre confirme a decisão de manejo volêmico com o número do monitor e com avaliação clínica integrada.</p>
     </section>
 
+<section class="sobre">
+<style>
+.sobre { text-align: left; margin-top: 1.5rem; }
+.sobre h2 { text-align: center; }
+.sobre h3 { font-size: 0.98rem; font-weight: 700; color: #c3aef2; margin: 1.1rem 0 0.35rem; }
+.sobre p { font-size: 0.9rem; color: #c9d4de; margin-bottom: 0.7rem; line-height: 1.6; text-align: justify; }
+.sobre strong { color: #e4dcc4; font-weight: 700; }
+.sobre .tab { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin: 0.2rem 0 0.7rem; }
+.sobre .tab td, .sobre .tab th { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--border,#2d3843); text-align: left; }
+.sobre .tab th { color: var(--text,#e6edf3); font-weight: 700; }
+.sobre .tab td:last-child, .sobre .tab th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+.sobre .ref { font-size: 0.8rem; color: #c9d4de; border-top: 1px solid var(--border,#2d3843); padding-top: 0.7rem; margin-top: 0.3rem; }
+.sobre .ref em { font-style: italic; }
+</style>
+<h2>Sobre a variação da pressão de pulso por foto (ΔPP)</h2>
+<p>Esta ferramenta estima o <strong>ΔPP</strong> a partir de uma <strong>foto do traçado da pressão arterial invasiva</strong> no monitor, sem digitar PAS e PAD. É a mesma variável da versão com entrada manual, obtida por outro caminho: em vez de ler os valores no visor, o programa detecta a curva na imagem e mede a amplitude de cada batimento. Serve para revisar um traçado já fotografado ou para estudo — não para substituir o número que o próprio monitor exibe.</p>
+
+<h3>Como calcular</h3>
+<p>Fotografe um trecho contínuo do traçado com vários ciclos cardíacos (5–10 segundos). A marcação tem três passos: ajuste opcional da inclinação da tela, seleção da área do traçado e amostragem da cor da curva (com lupa para acertar pixel a pixel). O programa então isola a curva, identifica os picos sistólicos e os vales diastólicos de cada batimento — ignorando o entalhe dicrótico — e mede a pressão de pulso (PP) de cada ciclo como a amplitude vertical entre pico e vale. Identifica o batimento de maior amplitude (PP<sub>máx</sub>) e o de menor (PP<sub>mín</sub>) e aplica ΔPP (%) = 100 × (PP<sub>máx</sub> − PP<sub>mín</sub>) ÷ [(PP<sub>máx</sub> + PP<sub>mín</sub>) ÷ 2]. Como o ΔPP é uma <strong>razão entre amplitudes</strong>, o fator pixel→mmHg se cancela: por isso PP<sub>máx</sub> e PP<sub>mín</sub> aparecem em pixels e não é preciso calibrar a escala em mmHg. Os pontos detectados ficam sobre a foto e podem ser arrastados um a um para correção manual, recalculando o ΔPP ao soltar.</p>
+
+<h3>Como interpretar</h3>
+<p>Os cortes são os mesmos da versão manual e do valor exibido pelo monitor:</p>
+<table class="tab">
+<tr><th>ΔPP</th><th>Interpretação</th></tr>
+<tr><td>≥ 13%</td><td>Provável respondedor a fluidos</td></tr>
+<tr><td>&gt; 9% e &lt; 13%</td><td>Zona cinzenta — resposta incerta</td></tr>
+<tr><td>≤ 9%</td><td>Provável não-respondedor</td></tr>
+</table>
+<p>ΔPP <strong>≥ 13%</strong> sugere aumento ≥ 15% do volume sistólico após expansão volêmica, quando os pré-requisitos clínicos estão atendidos; ΔPP <strong>≤ 9%</strong> torna pouco provável o ganho hemodinâmico com volume. Na <strong>zona cinzenta (9–13%)</strong>, a ferramenta sugere manobras complementares — tidal volume challenge, elevação passiva dos membros ou mini-bólus. A confiança exibida acompanha o número de ciclos medidos: baixa com menos de 4, média a partir de 4 e alta a partir de 6 batimentos; capture pelo menos 4–6 ciclos para uma leitura estável.</p>
+
+<h3>Quando usar e limitações</h3>
+<p>O ΔPP só é válido em <strong>ventilação mecânica controlada</strong> sem esforço espontâneo, com volume corrente ≥ 8 mL/kg, ritmo sinusal e tórax/abdome fechados; SDRA grave, hipertensão intra-abdominal e disfunção ventricular direita reduzem a confiabilidade. A leitura por foto acrescenta fontes de erro próprias — iluminação, ângulo, resolução e linhas de referência do monitor — e é <strong>experimental</strong>: não substitui o valor de ΔPP/PPV do monitor multiparamétrico nem a avaliação clínica. A ferramenta apenas estima a variável; a decisão de expandir volume e a quantidade de fluido dependem do contexto e do julgamento à beira-leito — confira sempre o protocolo do seu serviço.</p>
+
+<p class="ref">Referência: Michard F, et al. <em>Relation between respiratory changes in arterial pulse pressure and fluid responsiveness in septic patients with acute circulatory failure</em>. Am J Respir Crit Care Med. 2000;162:134–138. · Cannesson M, et al. <em>Assessing the diagnostic accuracy of pulse pressure variations for the prediction of fluid responsiveness: a "gray zone" approach</em>. Anesthesiology. 2011;115:231–241. · Surviving Sepsis Campaign 2021 recomenda parâmetros dinâmicos (como a variação da pressão de pulso) para guiar a ressuscitação volêmica.</p>
+</section>
+
     <footer class="footer-buttons"></footer>
   </div>
 

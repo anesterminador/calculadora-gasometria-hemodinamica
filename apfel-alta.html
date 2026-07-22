@@ -109,6 +109,39 @@
       }
       inputs.forEach(function(cb) { cb.addEventListener('change', update); });
     </script>
+    <section class="sobre">
+      <style>
+        .sobre { text-align: left; margin-top: 1.5rem; }
+        .sobre h2 { text-align: center; }
+        .sobre h3 { font-size: 0.98rem; font-weight: 700; color: #c3aef2; margin: 1.1rem 0 0.35rem; }
+        .sobre p { font-size: 0.9rem; color: #c9d4de; margin-bottom: 0.7rem; line-height: 1.6; text-align: justify; }
+        .sobre strong { color: #e4dcc4; font-weight: 700; }
+        .sobre .tab { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin: 0.2rem 0 0.7rem; }
+        .sobre .tab td, .sobre .tab th { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--border,#2d3843); text-align: left; }
+        .sobre .tab th { color: var(--text,#e6edf3); font-weight: 700; }
+        .sobre .tab td:last-child, .sobre .tab th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+        .sobre .ref { font-size: 0.8rem; color: #c9d4de; border-top: 1px solid var(--border,#2d3843); padding-top: 0.7rem; margin-top: 0.3rem; }
+        .sobre .ref em { font-style: italic; }
+      </style>
+      <h2>Sobre o escore de Apfel pós-alta (PDNV)</h2>
+      <p>O escore de Apfel para <strong>náusea e vômito após a alta</strong> (PDNV, <em>postdischarge nausea and vomiting</em>) estima a probabilidade de o paciente apresentar náusea ou vômito depois de deixar o hospital após uma <strong>cirurgia ambulatorial</strong> — sintomas que costumam se manifestar nas primeiras 48 horas em casa, com frequência já resolvido o quadro na sala de recuperação. Difere do escore de Apfel clássico para <strong>PONV</strong> (náusea e vômito ainda no pós-operatório imediato), que emprega outro conjunto de fatores e prevê o evento dentro do ambiente hospitalar.</p>
+      <h3>Como calcular</h3>
+      <p>São cinco fatores independentes, cada um valendo <strong>1 ponto</strong>, com soma de 0 a 5: sexo feminino, idade abaixo de 50 anos, história de PONV, uso pós-operatório de opioides e náusea na sala de recuperação (SRPA/PACU). Repare que idade jovem e a náusea observada na recuperação — e não o tabagismo ou a cinetose — são os elementos que distinguem este modelo do Apfel clássico de PONV.</p>
+      <h3>Como interpretar</h3>
+      <table class="tab">
+        <tr><th>Fatores presentes</th><th>Risco de PDNV</th></tr>
+        <tr><td>0</td><td>10,9%</td></tr>
+        <tr><td>1</td><td>18,3%</td></tr>
+        <tr><td>2</td><td>30,5%</td></tr>
+        <tr><td>3</td><td>48,7%</td></tr>
+        <tr><td>4</td><td>58,5%</td></tr>
+        <tr><td>5</td><td>79,7%</td></tr>
+      </table>
+      <p>O risco cresce de forma progressiva: sem nenhum fator, em torno de <strong>10,9%</strong>; com os cinco presentes, aproximadamente <strong>79,7%</strong>. Reconhecer os pacientes com múltiplos fatores ajuda a planejar profilaxia antiemética que se estenda além da SRPA, incluindo agentes de ação prolongada e orientação ou prescrição para uso domiciliar.</p>
+      <h3>Quando usar e limitações</h3>
+      <p>O escore foi derivado e validado especificamente em <strong>cirurgia ambulatorial</strong> sob anestesia geral. Não se destina a prever PONV intra-hospitalar — para isso, use o Apfel clássico — nem foi concebido para pacientes internados. Como todo instrumento de estratificação, informa a decisão sem substituir o julgamento clínico à beira-leito e a avaliação individual do paciente.</p>
+      <p class="ref">Referência: Apfel CC, Philip BK, Cakmakkaya OS, et al. <em>Who is at risk for postdischarge nausea and vomiting after ambulatory surgery?</em> Anesthesiology. 2012;117(3):475–486. · Diretriz: Gan TJ et al. <em>Fourth Consensus Guidelines for the Management of Postoperative Nausea and Vomiting.</em> Anesth Analg. 2020;131(2):411-448.</p>
+    </section>
     <footer class="footer-buttons"></footer>
   </div>
   <script src="analytics.js"></script>

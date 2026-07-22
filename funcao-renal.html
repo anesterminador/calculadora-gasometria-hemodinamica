@@ -231,6 +231,41 @@
       </div>
     </section>
 
+    <section class="sobre">
+      <style>
+        .sobre { text-align: left; margin-top: 1.5rem; }
+        .sobre h2 { text-align: center; }
+        .sobre h3 { font-size: 0.98rem; font-weight: 700; color: #c3aef2; margin: 1.1rem 0 0.35rem; }
+        .sobre p { font-size: 0.9rem; color: #c9d4de; margin-bottom: 0.7rem; line-height: 1.6; text-align: justify; }
+        .sobre strong { color: #e4dcc4; font-weight: 700; }
+        .sobre .tab { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin: 0.2rem 0 0.7rem; }
+        .sobre .tab td, .sobre .tab th { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--border,#2d3843); text-align: left; }
+        .sobre .tab th { color: var(--text,#e6edf3); font-weight: 700; }
+        .sobre .tab td:last-child, .sobre .tab th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+        .sobre .ref { font-size: 0.8rem; color: #c9d4de; border-top: 1px solid var(--border,#2d3843); padding-top: 0.7rem; margin-top: 0.3rem; }
+        .sobre .ref em { font-style: italic; }
+      </style>
+      <h2>Sobre o clearance de creatinina (ClCr) e a TFG estimada</h2>
+      <p>Esta ferramenta estima a função renal por dois caminhos distintos: o <strong>clearance de creatinina</strong> (Cockcroft-Gault) e a <strong>taxa de filtração glomerular</strong> estimada (MDRD e CKD-EPI 2021). Ambos aproximam, a partir da creatinina sérica, a capacidade de filtração dos rins, mas diferem no método, na unidade e na finalidade. A creatinina, por depender da massa muscular e da dieta, é apenas um marcador indireto dessa filtração.</p>
+      <h3>Como calcular</h3>
+      <p>As três equações partem da <strong>creatinina sérica</strong> e da idade; peso e sexo entram na Cockcroft-Gault, e a etnia entra apenas na MDRD. A Cockcroft-Gault devolve um clearance em mL/min, não corrigido para superfície corporal, enquanto MDRD e CKD-EPI já normalizam a TFG para <strong>1,73 m²</strong> — por isso um valor não é diretamente intercambiável com o outro. Na CKD-EPI 2021, os fatores k e α variam com o sexo: k = 0,7 e α = −0,241 na mulher; k = 0,9 e α = −0,302 no homem. A versão de 2021 abandonou o coeficiente de raça/etnia, mantido apenas na MDRD.</p>
+      <h3>Como interpretar</h3>
+      <p>A classificação segue as categorias de TFG do KDIGO. Uma TFG persistentemente <strong>abaixo de 60 mL/min/1,73 m²</strong> por mais de três meses caracteriza doença renal crônica, mesmo na ausência de outros marcadores de lesão.</p>
+      <table class="tab">
+        <tr><th>Categoria</th><th>TFG (mL/min/1,73 m²)</th></tr>
+        <tr><td>G1 — normal ou alta</td><td>≥ 90</td></tr>
+        <tr><td>G2 — levemente reduzida</td><td>60–89</td></tr>
+        <tr><td>G3a — leve a moderada</td><td>45–59</td></tr>
+        <tr><td>G3b — moderada a grave</td><td>30–44</td></tr>
+        <tr><td>G4 — grave</td><td>15–29</td></tr>
+        <tr><td>G5 — falência renal</td><td>&lt; 15</td></tr>
+      </table>
+      <p>A albuminúria complementa o estágio: A1 (&lt; 30 mg/g), A2 (30 a 300 mg/g) e A3 (&gt; 300 mg/g). Quando informada, a página anexa essa categoria ao estágio G (por exemplo, G3a A2), reproduzindo a matriz de risco G/A do KDIGO. O clearance da Cockcroft-Gault, expresso em mL/min, recebe a mesma classificação apenas como referência — o estadiamento G/A é formalmente definido sobre a TFG normalizada.</p>
+      <h3>Quando usar e limitações</h3>
+      <p>A <strong>CKD-EPI 2021</strong> é a estimativa preferida para diagnóstico e estadiamento da doença renal crônica. A Cockcroft-Gault permanece útil no ajuste de dose de fármacos, já que muitas bulas foram construídas sobre ela. A MDRD tem valor sobretudo histórico. Todas pressupõem <strong>creatinina estável</strong>: não são válidas na lesão renal aguda nem quando a creatinina varia rapidamente. Massa muscular reduzida, dieta hiperproteica, amputações, gestação e extremos de idade ou de peso distorcem o resultado. As estimativas orientam, mas não substituem o julgamento clínico nem, quando indicada, a TFG medida por clearance com marcador exógeno.</p>
+      <p class="ref">Referência: Cockcroft DW, Gault MH. <em>Prediction of creatinine clearance from serum creatinine.</em> Nephron. 1976;16(1):31-41. · Inker LA, et al. <em>New creatinine- and cystatin C-based equations to estimate GFR without race.</em> N Engl J Med. 2021;385(19):1737-1749. · Diretriz KDIGO 2024 (avaliação e manejo da DRC).</p>
+    </section>
+
     <footer class="footer-buttons"></footer>
   </div>
 

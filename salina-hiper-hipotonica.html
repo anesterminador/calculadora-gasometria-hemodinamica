@@ -148,6 +148,45 @@
       <p class="rec-msg" id="rec-msg" role="status" aria-live="polite"></p>
     </section>
 
+    <section class="sobre">
+<style>
+.sobre { text-align: left; margin-top: 1.5rem; }
+.sobre h2 { text-align: center; }
+.sobre h3 { font-size: 0.98rem; font-weight: 700; color: #c3aef2; margin: 1.1rem 0 0.35rem; }
+.sobre p { font-size: 0.9rem; color: #c9d4de; margin-bottom: 0.7rem; line-height: 1.6; text-align: justify; }
+.sobre strong { color: #e4dcc4; font-weight: 700; }
+.sobre .tab { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin: 0.2rem 0 0.7rem; }
+.sobre .tab td, .sobre .tab th { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--border,#2d3843); text-align: left; }
+.sobre .tab th { color: var(--text,#e6edf3); font-weight: 700; }
+.sobre .tab td:last-child, .sobre .tab th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+.sobre .ref { font-size: 0.8rem; color: #c9d4de; border-top: 1px solid var(--border,#2d3843); padding-top: 0.7rem; margin-top: 0.3rem; }
+.sobre .ref em { font-style: italic; }
+</style>
+
+<h2>Sobre o preparo de salina hipertônica (NaCl)</h2>
+
+<p>Esta calculadora resolve a etapa prática do preparo de <strong>salina hipertônica</strong> (ou hipotônica) à beira do leito: a partir da concentração de NaCl da ampola disponível, da concentração final desejada, do diluente e do volume total, ela informa quantos mililitros do concentrado misturar com quantos mililitros de diluente. É uma ferramenta de diluição — não estima déficit de sódio, água livre ou velocidade de correção, que são decisões clínicas à parte.</p>
+
+<h3>Como calcular</h3>
+<p>A página converte toda concentração para mEq/mL de sódio usando <strong>1% de NaCl = 0,1711 mEq/mL</strong> (≈ 171 mEq/L); quem informa o valor já em mEq/mL entra direto. O diluente entra como 0 mEq/mL quando é água bidestilada e como <strong>0,154 mEq/mL</strong> (NaCl 0,9%, 154 mEq/L) quando é soro fisiológico. O volume do concentrado sai do balanço de massa: <strong>V_concentrado = V_total × (C_desejada − C_diluente) / (C_ampola − C_diluente)</strong>, e o diluente completa o restante (V_total − V_concentrado). Exemplo: para 100 mL de NaCl 3% a partir de ampola de 20% com água, o resultado é 15 mL do concentrado + 85 mL de água. Os volumes são arredondados a 2 casas decimais.</p>
+
+<h3>Como interpretar</h3>
+<p>As concentrações de rotina, na conversão que a página utiliza, correspondem aos seguintes teores de sódio:</p>
+<table class="tab">
+<tr><th>Solução de NaCl</th><th>Sódio</th></tr>
+<tr><td>0,9% (diluente ou soro fisiológico)</td><td>0,154 mEq/mL</td></tr>
+<tr><td>3% (hipertônica usual)</td><td>0,513 mEq/mL</td></tr>
+<tr><td>10% (ampola)</td><td>1,71 mEq/mL</td></tr>
+<tr><td>20% (ampola)</td><td>3,42 mEq/mL</td></tr>
+</table>
+<p>Se a concentração desejada for maior que a da ampola, não há como concentrá-la por diluição e a página não calcula, orientando usar ampola mais concentrada. Se for menor que a do diluente — por exemplo, pedir algo abaixo de 0,9% tendo NaCl 0,9% como diluente —, ela orienta trocar o diluente para água bidestilada, que permite chegar a soluções hipotônicas.</p>
+
+<h3>Quando usar e limitações</h3>
+<p>Serve para o preparo e o ajuste de concentração de soluções de NaCl (por exemplo, obter 3% a partir de ampolas de 10% ou 20%). O cálculo pressupõe volumes aditivos e considera apenas o sódio; não computa o déficit de sódio nem, sobretudo, a <strong>velocidade segura de correção</strong> — a correção da hiponatremia crônica não deve exceder cerca de <strong>8 a 10 mEq/L em 24 h</strong> pelo risco de síndrome de desmielinização osmótica, um limite que esta página não monitora. Salina hipertônica é medicação de alta vigilância: use a ferramenta apenas para o preparo e <strong>confira sempre o protocolo do seu serviço</strong> quanto a indicação, dose, via e monitorização.</p>
+
+<p class="ref">Referência: Verbalis JG, Goldsmith SR, Greenberg A, et al. <em>Diagnosis, evaluation, and treatment of hyponatremia: expert panel recommendations.</em> Am J Med. 2013;126(10 Suppl 1):S1–S42. Diretriz complementar: Spasovski G, et al., <em>Clinical practice guideline on diagnosis and treatment of hyponatraemia</em>, Nephrol Dial Transplant 2014;29(Suppl 2):i1–i39.</p>
+</section>
+
     <footer class="footer-buttons"></footer>
   </div>
   <script>

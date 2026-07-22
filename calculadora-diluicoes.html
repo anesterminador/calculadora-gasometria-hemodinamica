@@ -186,6 +186,39 @@
       <p class="recomendacao">Infundir a <span class="rec-val" id="rec-ml-min">—</span> mL/min (<span class="rec-val" id="rec-ml-h">—</span> mL/h).</p>
     </section>
 
+    <section class="sobre">
+  <style>
+.sobre { text-align: left; margin-top: 1.5rem; }
+.sobre h2 { text-align: center; }
+.sobre h3 { font-size: 0.98rem; font-weight: 700; color: #c3aef2; margin: 1.1rem 0 0.35rem; }
+.sobre p { font-size: 0.9rem; color: #c9d4de; margin-bottom: 0.7rem; line-height: 1.6; text-align: justify; }
+.sobre strong { color: #e4dcc4; font-weight: 700; }
+.sobre .tab { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin: 0.2rem 0 0.7rem; }
+.sobre .tab td, .sobre .tab th { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--border,#2d3843); text-align: left; }
+.sobre .tab th { color: var(--text,#e6edf3); font-weight: 700; }
+.sobre .tab td:last-child, .sobre .tab th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+.sobre .ref { font-size: 0.8rem; color: #c9d4de; border-top: 1px solid var(--border,#2d3843); padding-top: 0.7rem; margin-top: 0.3rem; }
+.sobre .ref em { font-style: italic; }
+  </style>
+  <h2>Sobre a diluição e infusão de drogas vasoativas</h2>
+  <p>Esta ferramenta reúne dois cálculos de beira-leito usados no preparo de <strong>drogas vasoativas</strong> e sedativos em infusão contínua: a diluição — quanto do fármaco e quanto de diluente aspirar para obter uma concentração-alvo num volume total definido — e a conversão entre a dose prescrita (<strong>mcg/kg/min</strong>, mg/h, UI/min e afins) e a velocidade da bomba em <strong>mL/h</strong>. É voltada ao centro cirúrgico e à terapia intensiva, onde vasopressores, inotrópicos e hipnóticos correm em bomba e uma mesma dose pode corresponder a velocidades bem diferentes conforme a concentração da solução preparada.</p>
+  <h3>Como calcular</h3>
+  <p>No bloco de diluição, o volume do medicamento a aspirar é a concentração desejada multiplicada pelo volume total e dividida pela concentração da apresentação; o diluente é o volume total menos esse valor. As duas concentrações precisam estar na mesma família de unidades — a calculadora converte internamente mg/mL, mcg/mL, g/mL, g/L, mg/L, mcg/L, % (p/v) e UI/mL — e adota que <strong>1% (p/v) equivale a 10 mg/mL</strong>. Como não se concentra uma solução, o resultado não é exibido quando a concentração desejada supera a da apresentação.</p>
+  <p>No bloco de taxa de infusão, a velocidade é a dose (reduzida a por minuto) dividida pela concentração desejada, apresentada em mL/min e em mL/h (mL/min × 60). Unidades por quilo (mcg/kg/min, mg/kg/h e afins) exigem o <strong>peso</strong> do paciente — o campo surge automaticamente ao selecioná-las. Doses em UI só combinam com concentração em UI/mL: <strong>unidades e massa não são interconversíveis</strong> sem um fator específico do medicamento.</p>
+  <h3>Como interpretar</h3>
+  <p>O resultado da diluição indica o volume do próprio medicamento a aspirar e o volume de diluente a completar; a soma dos dois é o volume total informado. O resultado da infusão traduz a prescrição na velocidade a programar na bomba. A tabela reúne as equivalências que a própria calculadora aplica ao converter as unidades:</p>
+  <table class="tab">
+    <tr><th>Unidade</th><th>Equivale a</th></tr>
+    <tr><td>1% (p/v)</td><td>10 mg/mL</td></tr>
+    <tr><td>1 g/L</td><td>1 mg/mL</td></tr>
+    <tr><td>1 mg/mL</td><td>1000 mcg/mL</td></tr>
+    <tr><td>1 mL/min</td><td>60 mL/h</td></tr>
+  </table>
+  <h3>Quando usar e limitações</h3>
+  <p>Aplica-se ao preparo e à programação de infusões contínuas de vasopressores, inotrópicos, vasodilatadores e sedativos. A calculadora não conhece o fármaco: opera apenas sobre os valores de apresentação, concentração desejada, volume, dose e peso que você digita — cabe a quem prepara garantir que esses dados estejam corretos. Por se tratar de medicamentos de alta vigilância, mantenha <strong>dupla checagem</strong> independente do preparo e da programação da bomba, e confira sempre o protocolo do seu serviço.</p>
+  <p class="ref">Referência: Institute for Safe Medication Practices (ISMP). <em>List of High-Alert Medications in Acute Care Settings.</em> Horsham (PA): ISMP; 2024. · ISMP Brasil, Boletim de Medicamentos Potencialmente Perigosos (de alta vigilância).</p>
+</section>
+
     <footer class="footer-buttons"></footer>
   </div>
   <script>

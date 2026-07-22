@@ -166,6 +166,35 @@
       inputs.forEach(function(cb) { cb.addEventListener('change', update); });
       update();
     </script>
+    <section class="sobre">
+  <style>
+  .sobre { text-align: left; margin-top: 1.5rem; }
+  .sobre h2 { text-align: center; }
+  .sobre h3 { font-size: 0.98rem; font-weight: 700; color: #c3aef2; margin: 1.1rem 0 0.35rem; }
+  .sobre p { font-size: 0.9rem; color: #c9d4de; margin-bottom: 0.7rem; line-height: 1.6; text-align: justify; }
+  .sobre strong { color: #e4dcc4; font-weight: 700; }
+  .sobre .tab { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin: 0.2rem 0 0.7rem; }
+  .sobre .tab td, .sobre .tab th { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--border,#2d3843); text-align: left; }
+  .sobre .tab th { color: var(--text,#e6edf3); font-weight: 700; }
+  .sobre .tab td:last-child, .sobre .tab th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+  .sobre .ref { font-size: 0.8rem; color: #c9d4de; border-top: 1px solid var(--border,#2d3843); padding-top: 0.7rem; margin-top: 0.3rem; }
+  .sobre .ref em { font-style: italic; }
+  </style>
+  <h2>Sobre o DASI (Duke Activity Status Index)</h2>
+  <p>O <strong>Duke Activity Status Index (DASI)</strong> e um questionario autoaplicavel de 12 perguntas que estima a <strong>capacidade funcional</strong> do paciente a partir das atividades do cotidiano que ele consegue realizar. Cada item tem peso proporcional ao gasto metabolico da tarefa; a soma traduz, de forma objetiva e reprodutivel, quanto de esforco o paciente tolera. No pre-operatorio de cirurgia nao cardiaca, e usado como estimativa de reserva cardiorrespiratoria, informacao que a impressao subjetiva do examinador costuma prever mal.</p>
+  <h3>Como calcular</h3>
+  <p>Marca-se apenas as atividades que o paciente consegue realizar e soma-se o peso correspondente a cada uma. Os pesos vao de 1,75 (andar dentro de casa) a 8,00 (correr uma distancia curta ou fazer trabalho pesado em casa), e o total varia de 0 a <strong>58,20</strong> pontos — quanto maior o escore, maior a capacidade funcional estimada. A partir do escore, a pagina estima o consumo de oxigenio de pico pela formula de Hlatky, <strong>VO<sub>2</sub> = DASI &times; 0,43 + 9,6</strong> (mL/kg/min), e converte em equivalentes metabolicos, <strong>METs = VO<sub>2</sub> &divide; 3,5</strong> (1 MET = 3,5 mL/kg/min).</p>
+  <h3>Como interpretar</h3>
+  <table class="tab">
+    <tr><th>Interpretacao</th><th>Escore DASI</th></tr>
+    <tr><td>Capacidade funcional preservada</td><td>&gt; 34</td></tr>
+    <tr><td>Risco perioperatorio aumentado</td><td>&le; 34</td></tr>
+  </table>
+  <p>O unico limiar aplicado pela calculadora e <strong>DASI &le; 34</strong>: abaixo desse ponto, dados do estudo internacional METS associaram o escore a maior chance de morte ou infarto do miocardio em 30 dias, lesao miocardica, complicacoes moderadas a graves e nova incapacidade pos-operatoria — motivando considerar investigacao adicional. No proprio limiar, a formula estima VO<sub>2</sub> em torno de 24 mL/kg/min (cerca de 7 METs); vale lembrar que esse valor deriva do escore, e o corte clinicamente relevante e definido sobre o DASI em si, nao sobre o METs calculado.</p>
+  <h3>Quando usar e limitacoes</h3>
+  <p>Aplica-se na avaliacao pre-operatoria de cirurgia nao cardiaca, sobretudo quando a historia de tolerancia ao esforco e ambigua e uma estimativa estruturada ajuda a graduar o risco. Por ser autorrelatado, o DASI pode superestimar a capacidade real, e os METs derivados da formula sao uma estimativa — nao equivalem a medida direta do VO<sub>2</sub> de pico obtida por <strong>ergoespirometria (CPET)</strong>, que segue como referencia objetiva. O escore nao incorpora comorbidades especificas nem substitui indices de risco cardiaco como o RCRI ou biomarcadores; integra, e nao substitui, o julgamento clinico.</p>
+  <p class="ref">Referencia: Hlatky MA, Boineau RE, Higginbotham MB, et al. <em>A brief self-administered questionnaire to determine functional capacity (the Duke Activity Status Index).</em> Am J Cardiol. 1989;64(10):651-654. &middot; Wijeysundera DN, Pearse RM, Shulman MA, et al. <em>Assessment of functional capacity before major non-cardiac surgery (METS study).</em> Lancet. 2018;391(10140):2631-2640. &middot; Diretriz ESC 2022 / ACC-AHA 2024 de avaliacao cardiovascular pre-operatoria.</p>
+</section>
     <footer class="footer-buttons"></footer>
   </div>
   <script src="analytics.js"></script>

@@ -211,6 +211,46 @@
       </div>
     </section>
 
+<section class="sobre">
+<style>
+.sobre { text-align: left; margin-top: 1.5rem; }
+.sobre h2 { text-align: center; }
+.sobre h3 { font-size: 0.98rem; font-weight: 700; color: #c3aef2; margin: 1.1rem 0 0.35rem; }
+.sobre p { font-size: 0.9rem; color: #c9d4de; margin-bottom: 0.7rem; line-height: 1.6; text-align: justify; }
+.sobre strong { color: #e4dcc4; font-weight: 700; }
+.sobre .tab { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin: 0.2rem 0 0.7rem; }
+.sobre .tab td, .sobre .tab th { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--border,#2d3843); text-align: left; }
+.sobre .tab th { color: var(--text,#e6edf3); font-weight: 700; }
+.sobre .tab td:last-child, .sobre .tab th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+.sobre .ref { font-size: 0.8rem; color: #c9d4de; border-top: 1px solid var(--border,#2d3843); padding-top: 0.7rem; margin-top: 0.3rem; }
+.sobre .ref em { font-style: italic; }
+</style>
+
+<h2>Sobre os escalares de peso na obesidade (IBW, LBM, FFM)</h2>
+
+<p>No paciente obeso, o <strong>peso corporal total (TBW)</strong> superestima o volume de distribuição de vários fármacos e o peso de referência para a ventilação, o que pode levar a sobredose quando usado sem ajuste. Por isso a prática recorre a diferentes escalares de peso derivados de altura, TBW e sexo. Esta calculadora deriva seis deles a partir dos três dados de entrada, para que se escolha o peso mais coerente com a farmacocinética do agente em uso.</p>
+
+<h3>Como calcular</h3>
+<p>Os três dados de entrada são altura, TBW e sexo. O <strong>peso corporal ideal (IBW)</strong> segue a equação de Devine: parte de 50 kg no homem e 45,5 kg na mulher em 152 cm de altura e acrescenta 0,91 kg por centímetro acima desse valor. O peso corrigido e a massa livre de gordura modificada aplicam o mesmo fator de <strong>0,4</strong>, que soma 40% da diferença entre o TBW e o peso magro correspondente. A massa magra usa a equação de James; a massa livre de gordura, a de Janmahasatian (dependente do IMC); e a massa farmacocinética, uma equação específica. As fórmulas completas estão exibidas sob cada resultado na própria calculadora.</p>
+
+<h3>Como interpretar</h3>
+<p>Cada escalar aproxima um compartimento corporal distinto e serve de peso de referência para finalidades diferentes; nenhum substitui a composição corporal medida. O <strong>peso corrigido</strong> (também chamado ajustado) fica entre o IBW e o TBW e costuma orientar o ajuste de fármacos hidrofílicos, enquanto a <strong>massa magra (LBM)</strong> e a <strong>massa livre de gordura (FFM)</strong> estimam o tecido sem gordura, mais próximo do volume de distribuição dos agentes lipofílicos.</p>
+<table class="tab">
+<tr><th>Escalar calculado</th><th>Compartimento / uso de referência</th></tr>
+<tr><td>Peso ideal (IBW)</td><td>Ventilação; base do peso corrigido</td></tr>
+<tr><td>Peso corrigido</td><td>Fármacos hidrofílicos</td></tr>
+<tr><td>Massa magra (LBM)</td><td>Tecido magro (James)</td></tr>
+<tr><td>Massa livre de gordura (FFM)</td><td>Compartimento sem gordura</td></tr>
+<tr><td>Massa farmacocinética</td><td>Específica do fentanil</td></tr>
+<tr><td>FFM modificada</td><td>FFM + fração da gordura</td></tr>
+</table>
+
+<h3>Quando usar e limitações</h3>
+<p>Útil quando o TBW distorce a dose ou o parâmetro ventilatório no paciente obeso e é preciso um peso de referência coerente com a farmacocinética do agente. Limitações: os escalares são estimativas populacionais, não medem composição corporal e perdem acurácia nos extremos de altura e IMC; a equação de James pode subestimar a massa magra na obesidade grave, motivo pelo qual a FFM de Janmahasatian foi proposta; a massa farmacocinética foi validada apenas para o <strong>fentanil</strong>. A ferramenta calcula pesos, não doses — confira sempre o protocolo do seu serviço antes de prescrever.</p>
+
+<p class="ref">Referência: Ingrande J, Lemmens HJM, <em>Dose adjustment of anaesthetics in the morbidly obese</em>, Br J Anaesth 2010;105(Suppl 1):i16–i23. Massa livre de gordura: Janmahasatian S et al., <em>Quantification of lean bodyweight</em>, Clin Pharmacokinet 2005;44:1051–65.</p>
+</section>
+
     <footer class="footer-buttons"></footer>
   </div>
 

@@ -184,6 +184,35 @@
       document.querySelectorAll('input[name^="eg-"]').forEach(function(el) { el.addEventListener('change', egUpdate); });
       egUpdate();
     </script>
+<section class="sobre">
+  <style>
+    .sobre { text-align: left; margin-top: 1.5rem; }
+    .sobre h2 { text-align: center; }
+    .sobre h3 { font-size: 0.98rem; font-weight: 700; color: #c3aef2; margin: 1.1rem 0 0.35rem; }
+    .sobre p { font-size: 0.9rem; color: #c9d4de; margin-bottom: 0.7rem; line-height: 1.6; text-align: justify; }
+    .sobre strong { color: #e4dcc4; font-weight: 700; }
+    .sobre .tab { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin: 0.2rem 0 0.7rem; }
+    .sobre .tab td, .sobre .tab th { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--border,#2d3843); text-align: left; }
+    .sobre .tab th { color: var(--text,#e6edf3); font-weight: 700; }
+    .sobre .tab td:last-child, .sobre .tab th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+    .sobre .ref { font-size: 0.8rem; color: #c9d4de; border-top: 1px solid var(--border,#2d3843); padding-top: 0.7rem; margin-top: 0.3rem; }
+    .sobre .ref em { font-style: italic; }
+  </style>
+  <h2>Sobre o Índice de Risco de El-Ganzouri (EGRI)</h2>
+  <p>O <strong>índice de El-Ganzouri</strong> (El-Ganzouri Risk Index, EGRI) é um escore de avaliação da <strong>via aérea difícil</strong> à beira do leito, derivado de um estudo prospectivo com mais de 10 mil pacientes. Ele combina sete parâmetros objetivos do exame pré-anestésico em uma pontuação única, no lugar de depender de um único teste, para estratificar a probabilidade de <strong>laringoscopia e intubação difíceis</strong> antes da indução.</p>
+  <h3>Como calcular</h3>
+  <p>Selecione uma opção por critério. Cada item contribui com pontos conforme a gravidade: <strong>abertura de boca</strong> e protrusão da mandíbula valem 0 ou 1 ponto, enquanto distância tireomentoniana, <strong>Mallampati</strong>, mobilidade cervical, peso e história de intubação difícil valem de 0 a 2 pontos. A soma varia de <strong>0 a 12</strong>. Os pontos de corte de cada parâmetro (por exemplo, tireomentoniana &lt; 6,0 cm ou peso &gt; 110 kg valendo 2 pontos) reproduzem os limiares originais do índice.</p>
+  <h3>Como interpretar</h3>
+  <table class="tab">
+    <tr><th>Escore</th><th>Interpretação</th></tr>
+    <tr><td>0 a 3</td><td>Via aérea provavelmente fácil</td></tr>
+    <tr><td>≥ 4</td><td>Risco de via aérea difícil</td></tr>
+  </table>
+  <p>Um escore <strong>≥ 4</strong> é o limiar clássico que sinaliza risco aumentado de intubação difícil e deve motivar planejamento antecipado — checagem de material, técnicas alternativas (videolaringoscopia, intubação acordado) e presença de auxílio treinado. Pontuações mais altas concentram maior número de preditores desfavoráveis; ainda assim, a decisão sobre a estratégia de manejo é clínica e individualizada.</p>
+  <h3>Quando usar e limitações</h3>
+  <p>É uma ferramenta de <strong>triagem pré-operatória</strong> em adultos, útil para documentar a avaliação e antecipar dificuldade. Foi validado sobretudo para prever laringoscopia difícil, e não necessariamente ventilação sob máscara difícil ou falha de dispositivo supraglótico. Nenhum preditor isolado é sensível o bastante, e o índice também não é infalível: escores baixos não excluem dificuldade inesperada, e escores altos não implicam impossibilidade de intubar. O resultado complementa, mas não substitui, o julgamento clínico e o exame completo da via aérea.</p>
+  <p class="ref">Referência: El-Ganzouri AR, McCarthy RJ, Tuman KJ, Tanck EN, Ivankovich AD. <em>Preoperative airway assessment: predictive value of a multivariate risk index.</em> Anesth Analg. 1996;82(6):1197-1204. · Diretriz ASA para manejo da via aérea difícil (Anesthesiology, 2022).</p>
+</section>
     <footer class="footer-buttons"></footer>
   </div>
   <script src="analytics.js"></script>

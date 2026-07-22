@@ -102,6 +102,40 @@
       }
       inputs.forEach(function(cb) { cb.addEventListener('change', update); });
     </script>
+    <section class="sobre">
+      <style>
+        .sobre { text-align: left; margin-top: 1.5rem; }
+        .sobre h2 { text-align: center; }
+        .sobre h3 { font-size: 0.98rem; font-weight: 700; color: #c3aef2; margin: 1.1rem 0 0.35rem; }
+        .sobre p { font-size: 0.9rem; color: #c9d4de; margin-bottom: 0.7rem; line-height: 1.6; text-align: justify; }
+        .sobre strong { color: #e4dcc4; font-weight: 700; }
+        .sobre .tab { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin: 0.2rem 0 0.7rem; }
+        .sobre .tab td, .sobre .tab th { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--border,#2d3843); text-align: left; }
+        .sobre .tab th { color: var(--text,#e6edf3); font-weight: 700; }
+        .sobre .tab td:last-child, .sobre .tab th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+        .sobre .ref { font-size: 0.8rem; color: #c9d4de; border-top: 1px solid var(--border,#2d3843); padding-top: 0.7rem; margin-top: 0.3rem; }
+        .sobre .ref em { font-style: italic; }
+      </style>
+      <h2>Sobre o Fenótipo de Fried</h2>
+      <p>O <strong>fenótipo de fragilidade de Fried</strong> operacionaliza a fragilidade como uma síndrome biológica de reserva fisiológica diminuída, mensurável à beira do leito por <strong>cinco domínios físicos</strong>. No pré-operatório, a fragilidade é preditora independente de complicações pós-operatórias, mortalidade, tempo de internação prolongado e perda de autonomia — informação que a idade cronológica e a lista de comorbidades isoladamente não capturam.</p>
+
+      <h3>Como calcular</h3>
+      <p>Cada um dos cinco critérios presentes vale <strong>1 ponto</strong>, com soma de <strong>0 a 5</strong>: perda de peso não intencional (≥4,5 kg ou ≥5% do peso no último ano), fraqueza (força de preensão reduzida), lentidão (velocidade da marcha reduzida), exaustão autorreferida e baixa atividade física. Na coorte original, força de preensão, velocidade de marcha e nível de atividade eram aferidos com pontos de corte ajustados por sexo e antropometria; aqui cada domínio é marcado como presente ou ausente.</p>
+
+      <h3>Como interpretar</h3>
+      <table class="tab">
+        <tr><th>Pontuação</th><th>Classificação</th></tr>
+        <tr><td>0</td><td>Robusto</td></tr>
+        <tr><td>1 a 2</td><td>Pré-frágil</td></tr>
+        <tr><td>3 a 5</td><td>Frágil</td></tr>
+      </table>
+      <p>O paciente <strong>frágil</strong> (<strong>3 ou mais critérios</strong>) concentra o maior risco perioperatório e se beneficia mais de otimização pré-operatória, discussão de metas de cuidado e planejamento de reabilitação. O estado <strong>pré-frágil</strong> (1 a 2 critérios) identifica transição potencialmente reversível, alvo de intervenção nutricional e de exercício.</p>
+
+      <h3>Quando usar e limitações</h3>
+      <p>Útil na triagem de idosos candidatos a cirurgia não cardíaca de médio e grande porte. A aferição objetiva (dinamômetro para preensão, teste cronometrado de marcha) é mais fidedigna que a estimativa por observação, e o desempenho pode ser mascarado por dor aguda, restrição de mobilidade ou doença descompensada no momento da avaliação. O escore quantifica risco, mas não substitui o julgamento clínico nem a avaliação funcional e cognitiva ampla.</p>
+
+      <p class="ref">Referência: Fried LP, Tangen CM, Walston J, et al. <em>Frailty in older adults: evidence for a phenotype.</em> J Gerontol A Biol Sci Med Sci. 2001;56(3):M146–M156. · Diretriz ESAIC de avaliação pré-operatória do paciente idoso.</p>
+    </section>
     <footer class="footer-buttons"></footer>
   </div>
   <script src="analytics.js"></script>

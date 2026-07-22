@@ -192,6 +192,39 @@
       </table>
     </section>
 
+    <section class="sobre">
+      <style>
+      .sobre { text-align: left; margin-top: 1.5rem; }
+      .sobre h2 { text-align: center; }
+      .sobre h3 { font-size: 0.98rem; font-weight: 700; color: #c3aef2; margin: 1.1rem 0 0.35rem; }
+      .sobre p { font-size: 0.9rem; color: #c9d4de; margin-bottom: 0.7rem; line-height: 1.6; text-align: justify; }
+      .sobre strong { color: #e4dcc4; font-weight: 700; }
+      .sobre .tab { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin: 0.2rem 0 0.7rem; }
+      .sobre .tab td, .sobre .tab th { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--border,#2d3843); text-align: left; }
+      .sobre .tab th { color: var(--text,#e6edf3); font-weight: 700; }
+      .sobre .tab td:last-child, .sobre .tab th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+      .sobre .ref { font-size: 0.8rem; color: #c9d4de; border-top: 1px solid var(--border,#2d3843); padding-top: 0.7rem; margin-top: 0.3rem; }
+      .sobre .ref em { font-style: italic; }
+      </style>
+      <h2>Sobre o Mechanical Power em PCV (MP)</h2>
+      <p>O <strong>mechanical power</strong> (potência mecânica) expressa, em joules por minuto (J/min), a energia total que o ventilador transfere ao sistema respiratório a cada minuto. Reúne num único número o volume corrente, a pressão e a frequência — os principais determinantes mecânicos da <strong>lesão pulmonar induzida pela ventilação (VILI)</strong> — e por isso funciona como índice integrador do risco de dano por estresse repetido a cada ciclo. Esta página aplica a equação simplificada de Becher, específica para a ventilação controlada a pressão (PCV).</p>
+      <h3>Como calcular</h3>
+      <p>A potência resulta de MP = 0,098 × FR × V<sub>T</sub> × (ΔP<sub>insp</sub> + PEEP), em que a constante 0,098 converte o produto pressão-volume (cmH₂O·L) em joules. Informe a frequência respiratória (ciclos/min), o volume corrente em <strong>litros</strong> (não em mL), a pressão de controle ajustada acima da PEEP (ΔP<sub>insp</sub>) e a PEEP. Como em PCV a pressão permanece constante durante a insuflação, a soma (ΔP<sub>insp</sub> + PEEP) equivale à pressão inspiratória de pico, e ΔP<sub>insp</sub> aproxima a driving pressure quando não há fluxo ao fim da inspiração.</p>
+      <h3>Como interpretar</h3>
+      <p>O resultado é sinalizado por cor conforme o risco crescente de VILI:</p>
+      <table class="tab">
+        <tr><th>MP (J/min)</th><th>Sinalização</th></tr>
+        <tr><td>&lt; 12</td><td>Baixo — meta protetora</td></tr>
+        <tr><td>12 – 17</td><td>Moderado</td></tr>
+        <tr><td>17 – 22</td><td>Alto</td></tr>
+        <tr><td>&gt; 22</td><td>Muito alto</td></tr>
+      </table>
+      <p>O limiar de <strong>17 J/min</strong> é o mais citado: valores acima dele associam-se de forma consistente a <strong>maior mortalidade hospitalar</strong>. Abaixo de <strong>12 J/min</strong> tem-se a meta desejável na ventilação protetora. Na faixa intermediária, revise os componentes que mais elevam a potência — volume corrente, driving pressure e frequência —, já que a MP cresce proporcionalmente a cada um deles.</p>
+      <h3>Quando usar e limitações</h3>
+      <p>A equação simplificada assume pressão em onda quadrada e despreza o componente resistivo/de fluxo da fórmula completa de Gattinoni; por isso tende a subestimar a potência real quando há resistência elevada de vias aéreas, e não se aplica à ventilação controlada a volume com fluxo constante. A MP absoluta não é normalizada pelo tamanho pulmonar, devendo ser lida junto da complacência e do peso predito, e nunca isolada do quadro clínico. É um marcador de risco, não um alvo terapêutico único — confira sempre o protocolo do seu serviço.</p>
+      <p class="ref">Referência: Becher T et al. <em>Calculation of mechanical power for pressure-controlled ventilation.</em> Intensive Care Med. 2019;45(9):1321-1323. · Serpa Neto A et al. <em>Mechanical power of ventilation is associated with mortality in critically ill patients.</em> Intensive Care Med. 2018;44(11):1914-1922. · Gattinoni L et al. <em>Ventilator-related causes of lung injury: the mechanical power.</em> Intensive Care Med. 2016;42(10):1567-1575.</p>
+    </section>
+
     <footer class="footer-buttons"></footer>
   </div>
 

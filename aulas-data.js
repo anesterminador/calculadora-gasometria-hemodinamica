@@ -49,5 +49,7 @@ window.AULAS = [
   { a: "Origem dos parâmetros e avaliação — parte 2", m: 5, d: "2026-06-17" },
   { a: "Instalação do CAP e Termodiluição na prática", m: 5, d: "2026-07-06" },
 
-  { a: "POCUS - USG do Diafragma", m: "bonus", d: "2026-07-21" }
+  { a: "POCUS - USG do Diafragma", m: "bonus", d: "2026-07-21" },
+  { a: "POCUS - USG do Pulmão (Perfil A)", m: "bonus", d: "2026-07-24" },
+  { a: "POCUS - USG do Pulmão (Perfis B e C)", m: "bonus", d: "2026-07-24" }
 ];
